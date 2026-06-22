@@ -1,8 +1,10 @@
 {
   "name": "cv.shykov.dev",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "license": "MIT",
+  "description": "Privacy-first CV toolkit — parse, analyze, JD-match, and build ATS-clean resumes entirely in the browser.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

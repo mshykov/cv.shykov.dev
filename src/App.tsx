@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import { extractPdf } from './lib/pdf'
-import { analyze, type Report, type Status, type Check } from './lib/analyze'
+import { type Report, type Status, type Check } from './lib/analyze'
 
 const TONE: Record<Status, { dot: string; text: string; ring: string; chip: string }> = {
   pass: { dot: 'bg-emerald-500', text: 'text-emerald-700', ring: 'text-emerald-500', chip: 'bg-emerald-50 text-emerald-700 ring-emerald-200' },
@@ -57,6 +56,11 @@ export default function App() {
     }
     setBusy(true); setFileName(file.name)
     try {
+      // Lazy-loaded: keeps pdf.js (~600 KB) out of the initial bundle.
+      const [{ extractPdf }, { analyze }] = await Promise.all([
+        import('./lib/pdf'),
+        import('./lib/analyze'),
+      ])
       const ex = await extractPdf(file)
       setReport(analyze(ex))
     } catch (e) {
