@@ -10,5 +10,10 @@
   },
   "compatibility_flags": [
     "nodejs_compat"
+  ],
+  // Attaches cv.shykov.dev to this Worker. On deploy, Cloudflare provisions
+  // the DNS record + TLS cert automatically (shykov.dev is on this account).
+  "routes": [
+    { "pattern": "cv.shykov.dev", "custom_domain": true }
   ]
 }
