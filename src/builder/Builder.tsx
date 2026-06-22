@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { pdf } from '@react-pdf/renderer'
 import { analyze, type Status } from '../lib/analyze'
 import { ResumeDoc } from './ResumeDoc'
-import { SAMPLE, synthExtracted, type BuilderState, type Spacing } from './model'
+import { SAMPLE, synthExtracted, type BuilderState, type Spacing, type Template } from './model'
 import type { ExperienceEntry, EducationEntry, ProjectEntry } from '../lib/parse'
 
 const TONE: Record<Status, string> = { pass: 'text-emerald-600', warn: 'text-amber-600', fail: 'text-rose-600' }
@@ -110,6 +110,11 @@ export default function Builder() {
               <option value="A4">A4</option><option value="LETTER">Letter</option>
             </select>
           </label>
+          <label className="flex items-center gap-1 text-xs text-stone-500">Template
+            <select value={state.settings.template} onChange={(e) => setCfg('template', e.target.value as Template)} className="rounded border border-stone-300 px-1 py-0.5 text-xs">
+              <option value="classic">Classic</option><option value="modern">Modern</option>
+            </select>
+          </label>
           <button onClick={() => importRef.current?.click()} className="rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-medium text-stone-700 hover:border-stone-400">Import CV</button>
           <button onClick={exportPdf} disabled={busy} className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-40">{busy ? 'Working…' : '↓ Export PDF'}</button>
           <input ref={importRef} type="file" accept="application/pdf,.pdf,.docx" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) importCv(f) }} />
@@ -194,19 +199,19 @@ export default function Builder() {
         {/* LIVE PREVIEW */}
         <div className="lg:sticky lg:top-6 lg:self-start">
           <div className="overflow-hidden rounded-xl bg-white p-8 text-[13px] leading-relaxed text-stone-800 shadow-sm ring-1 ring-stone-200" style={{ minHeight: 400 }}>
-            {eff.profile.name && <div className="text-xl font-bold">{eff.profile.name}</div>}
+            {eff.profile.name && <div className="text-xl font-bold" style={eff.settings.template === 'modern' ? { color: eff.settings.accent } : undefined}>{eff.profile.name}</div>}
             <div className="text-xs text-stone-500">{[eff.profile.email, eff.profile.phone, ...eff.profile.links].filter(Boolean).join('  •  ')}</div>
             {eff.profile.location && <div className="text-xs text-stone-500">{eff.profile.location}</div>}
-            {eff.profile.summary && <PreviewSection accent={eff.settings.accent} title="Summary"><p>{eff.profile.summary}</p></PreviewSection>}
-            {eff.experience.length > 0 && <PreviewSection accent={eff.settings.accent} title="Experience">{eff.experience.map((e, i) => (
+            {eff.profile.summary && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Summary"><p>{eff.profile.summary}</p></PreviewSection>}
+            {eff.experience.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Experience">{eff.experience.map((e, i) => (
               <div key={i} className="mb-2">
                 <div className="flex justify-between gap-2"><span className="font-semibold">{e.title}{e.company && ` — ${e.company}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>
                 <ul className="ml-4 list-disc">{e.bullets.filter((b) => b.trim()).map((b, j) => <li key={j}>{b}</li>)}</ul>
               </div>
             ))}</PreviewSection>}
-            {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} title="Skills"><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
-            {eff.projects.length > 0 && <PreviewSection accent={eff.settings.accent} title="Projects"><ul className="ml-4 list-disc">{eff.projects.map((p, i) => <li key={i}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
-            {eff.education.length > 0 && <PreviewSection accent={eff.settings.accent} title="Education">{eff.education.map((e, i) => <div key={i} className="flex justify-between gap-2"><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
+            {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Skills"><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
+            {eff.projects.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Projects"><ul className="ml-4 list-disc">{eff.projects.map((p, i) => <li key={i}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
+            {eff.education.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Education">{eff.education.map((e, i) => <div key={i} className="flex justify-between gap-2"><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
           </div>
           <p className="mt-2 text-center text-xs text-stone-400">Live preview · the exported PDF is single-column Helvetica, ATS-clean</p>
         </div>
@@ -215,11 +220,11 @@ export default function Builder() {
   )
 }
 
-function PreviewSection({ title, accent, children }: { title: string; accent: string; children: React.ReactNode }) {
+function PreviewSection({ title, accent, modern, children }: { title: string; accent: string; modern?: boolean; children: React.ReactNode }) {
   return (
     <div className="mt-4">
-      <div className="text-sm font-bold uppercase tracking-wide" style={{ color: accent }}>{title}</div>
-      <div className="mb-2 mt-1 border-b border-stone-300" />
+      <div className="text-sm font-bold uppercase" style={{ color: modern ? '#1a1a1a' : accent, letterSpacing: modern ? '0.1em' : '0.04em' }}>{title}</div>
+      <div className="mb-2 mt-1" style={modern ? undefined : { borderBottom: '1px solid #d6d3d1' }} />
       {children}
     </div>
   )
