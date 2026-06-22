@@ -64,7 +64,7 @@ function detectPhone(text: string): boolean {
 }
 
 export function analyze(ex: Extracted): Report {
-  const { text, lines, numPages, charCount } = ex
+  const { text, lines, numPages, charCount, source } = ex
   const words = text.split(/\s+/).filter(Boolean).length
   const checks: Check[] = []
   const add = (c: Check) => checks.push(c)
@@ -114,7 +114,9 @@ export function analyze(ex: Extracted): Report {
   add({ id: 'sec-bonus', label: 'Achievements / Projects / Certifications', category: 'Sections', status: bonusPts >= 7 ? 'pass' : bonusPts > 0 ? 'warn' : 'warn', points: bonusPts, max: 10, detail: bonusFound.length ? `Found: ${bonusFound.join(', ')}.` : 'None of these supporting sections were found.', fix: bonusPts >= 7 ? undefined : 'Add the missing sections (Key Achievements is highest-value — recruiters scan it first).' })
 
   // ── Format ───────────────────────────────────────────────────
-  if (numPages <= 2) {
+  if (source === 'docx' || numPages === 0) {
+    add({ id: 'pages', label: 'Page count', category: 'Format', status: 'pass', points: 5, max: 5, detail: 'Page count is not determinable from a DOCX — export to PDF to verify length (aim for 1–2).' })
+  } else if (numPages <= 2) {
     add({ id: 'pages', label: 'Page count', category: 'Format', status: 'pass', points: 5, max: 5, detail: `${numPages} page${numPages > 1 ? 's' : ''} — within the expected 1–2.` })
   } else if (numPages === 3) {
     add({ id: 'pages', label: 'Page count', category: 'Format', status: 'warn', points: 3, max: 5, detail: '3 pages — on the long side for most roles.', fix: 'Tighten older roles; aim for 2 pages unless you have 15+ years and deep history.' })

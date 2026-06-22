@@ -23,6 +23,8 @@ export interface Extracted {
   text: string
   numPages: number
   charCount: number
+  /** Which extractor produced this (affects which checks are meaningful). */
+  source: 'pdf' | 'docx'
 }
 
 function isBold(fontFamily: string | undefined): boolean {
@@ -97,5 +99,6 @@ export async function extractPdf(file: File): Promise<Extracted> {
     text,
     numPages: doc.numPages,
     charCount: text.replace(/\s/g, '').length,
+    source: 'pdf',
   }
 }
