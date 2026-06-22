@@ -77,6 +77,7 @@ export default function Analyzer() {
 
       <button
         type="button"
+        aria-label="Upload your CV as a PDF or DOCX file"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
         onDragLeave={() => setDrag(false)}
@@ -90,10 +91,10 @@ export default function Analyzer() {
       </button>
 
       {fileName && !error && <p className="mt-3 text-sm text-stone-500">Analyzed: <span className="font-medium text-stone-700">{fileName}</span></p>}
-      {error && <p className="mt-3 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">{error}</p>}
+      {error && <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">{error}</p>}
 
       {report && resume && (
-        <section className="mt-8">
+        <section className="mt-8" aria-live="polite">
           <div className="mb-5 flex items-center justify-between gap-3">
             <nav className="flex gap-1 rounded-xl bg-stone-100 p-1 text-sm font-medium">
               {([['analyze', 'Analyze'], ['jd', 'Job match'], ['data', 'Extracted data']] as [Tab, string][]).map(([id, label]) => (
