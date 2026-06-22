@@ -1,16 +1,30 @@
-# cv.shykov.dev — CV ATS Checker
+# cv.shykov.dev — CV Toolkit
 
-A privacy-first web app that scores a CV's ATS-readiness. Drop in a PDF and get a
-0–100 score with concrete fixes across parseability, contact info, sections,
-formatting, and content quality.
+A privacy-first CV toolkit that runs **100% in your browser**. Two modes:
 
-**Everything runs in the browser** via Mozilla's [pdf.js](https://mozilla.github.io/pdf.js/).
-The file is read into memory, analyzed, and discarded — nothing is uploaded, no
-tracking, no accounts.
+- **Analyze** — drop a PDF/DOCX for a 0–100 ATS-readiness score with concrete
+  fixes, a **job-description keyword match**, and the exact structured data a
+  parser extracts.
+- **Build** — a form-driven editor with live preview and a **live ATS score**
+  that exports a single-column, ATS-clean PDF (real selectable text, no
+  ligatures). Import an existing CV to prefill (round-trip).
+
+The file is read into memory, processed, and discarded — nothing is uploaded,
+no tracking, no accounts. Works offline (service worker) and is installable (PWA).
 
 ## Stack
 
-Vite + React + TypeScript + Tailwind CSS v4. Mirrors the `shykov.dev` setup.
+Vite + React + TypeScript + Tailwind CSS v4. PDF read: [pdf.js](https://mozilla.github.io/pdf.js/).
+DOCX read: mammoth. PDF write: [@react-pdf/renderer](https://react-pdf.org/). Mirrors the `shykov.dev` setup.
+
+## Non-goals (deliberately skipped)
+
+- **No backend / accounts / storage** — the privacy model depends on staying static.
+- **No AI rewrite for now** — it would send CV text to a third-party LLM, which
+  breaks "nothing leaves your browser". A future opt-in *bring-your-own-key* mode
+  is the only acceptable form.
+- **No multi-language UI** (yet) — English-first.
+- **No graphic/multi-column templates** — they look nice but tank ATS parsing.
 
 ## Develop
 

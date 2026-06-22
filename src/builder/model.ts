@@ -5,11 +5,13 @@ import type { Resume } from '../lib/parse'
 import type { Extracted } from '../lib/pdf'
 
 export type Spacing = 'compact' | 'standard' | 'relaxed'
+export type Template = 'classic' | 'modern'
 export interface Settings {
   accent: string
   fontSize: number // base pt
   spacing: Spacing
   pageSize: 'A4' | 'LETTER'
+  template: Template
 }
 export interface BuilderState extends Resume {
   settings: Settings
@@ -20,6 +22,7 @@ export const DEFAULT_SETTINGS: Settings = {
   fontSize: 10,
   spacing: 'standard',
   pageSize: 'A4',
+  template: 'classic',
 }
 
 export const EMPTY: BuilderState = {
