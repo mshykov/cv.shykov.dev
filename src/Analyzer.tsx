@@ -1,31 +1,11 @@
 import { useCallback, useRef, useState } from 'react'
-import { type Report, type Status, type Check } from './lib/analyze'
+import { type Report, type Check } from './lib/analyze'
 import { type Resume } from './lib/parse'
 import { type JDMatch } from './lib/jdmatch'
-
-const TONE: Record<Status, { dot: string; ring: string; chip: string }> = {
-  pass: { dot: 'bg-emerald-500', ring: 'text-emerald-500', chip: 'bg-emerald-50 text-emerald-700 ring-emerald-200' },
-  warn: { dot: 'bg-amber-500', ring: 'text-amber-500', chip: 'bg-amber-50 text-amber-700 ring-amber-200' },
-  fail: { dot: 'bg-rose-500', ring: 'text-rose-500', chip: 'bg-rose-50 text-rose-700 ring-rose-200' },
-}
+import { TONE } from './components/tone'
+import { ScoreRing } from './components/ScoreRing'
 
 type Tab = 'analyze' | 'jd' | 'data'
-
-function ScoreRing({ score, tone }: { score: number; tone: Status }) {
-  const r = 52, c = 2 * Math.PI * r
-  return (
-    <div className="relative grid place-items-center">
-      <svg width="132" height="132" viewBox="0 0 132 132" className="-rotate-90">
-        <circle cx="66" cy="66" r={r} fill="none" stroke="currentColor" strokeWidth="11" className="text-stone-200" />
-        <circle cx="66" cy="66" r={r} fill="none" stroke="currentColor" strokeWidth="11" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - score / 100)} className={TONE[tone].ring} style={{ transition: 'stroke-dashoffset 700ms ease' }} />
-      </svg>
-      <div className="absolute text-center">
-        <div className="text-4xl font-semibold tabular-nums text-stone-900">{score}</div>
-        <div className="text-xs font-medium tracking-wide text-stone-400">/ 100</div>
-      </div>
-    </div>
-  )
-}
 
 function CheckRow({ c }: { c: Check }) {
   return (
@@ -85,7 +65,7 @@ export default function Analyzer() {
 
   const download = useCallback(async () => {
     if (!report || !resume) return
-    const { toMarkdown, downloadText } = await import('./lib/report')
+    const [{ toMarkdown }, { downloadText }] = await Promise.all([import('./lib/report'), import('./lib/download')])
     downloadText(fileName.replace(/\.[^.]+$/, '') + '-ats-report.md', toMarkdown(fileName, report, resume, jd ?? undefined))
   }, [report, resume, jd, fileName])
 

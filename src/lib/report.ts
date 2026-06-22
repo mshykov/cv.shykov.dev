@@ -46,15 +46,3 @@ export function toMarkdown(fileName: string, report: Report, resume: Resume, jd?
   L.push('---', '_Generated locally by cv.shykov.dev — heuristic guidance, not a guarantee._')
   return L.join('\n')
 }
-
-export function downloadText(filename: string, text: string, mime = 'text/markdown') {
-  const blob = new Blob([text], { type: `${mime};charset=utf-8` })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
-}

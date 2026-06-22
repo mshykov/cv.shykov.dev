@@ -1,7 +1,7 @@
 {
-  "name": "CV ATS Checker",
-  "short_name": "ATS Checker",
-  "description": "Score your CV's ATS-readiness in your browser. No uploads, no tracking.",
+  "name": "CV Toolkit",
+  "short_name": "CV Toolkit",
+  "description": "Analyze, job-match, and build ATS-clean CVs in your browser. No uploads, no tracking.",
   "start_url": "/",
   "scope": "/",
   "display": "minimal-ui",

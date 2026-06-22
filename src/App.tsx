@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from 'react'
 import Analyzer from './Analyzer'
+import ErrorBoundary from './ErrorBoundary'
 
 // Builder pulls in @react-pdf/renderer — load it only when the Build tab opens.
 const Builder = lazy(() => import('./builder/Builder'))
@@ -26,9 +27,11 @@ export default function App() {
       </header>
 
       <main className="flex-1">
-        {mode === 'analyze'
-          ? <Analyzer />
-          : <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading builder…</p>}><Builder /></Suspense>}
+        <ErrorBoundary>
+          {mode === 'analyze'
+            ? <Analyzer />
+            : <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading builder…</p>}><Builder /></Suspense>}
+        </ErrorBoundary>
       </main>
 
       <footer className="mt-12 border-t border-stone-200 pt-6 text-sm text-stone-400">
