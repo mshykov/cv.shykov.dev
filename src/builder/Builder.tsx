@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { pdf } from '@react-pdf/renderer'
-import { analyze, type Status } from '../lib/analyze'
+import { analyze } from '../lib/analyze'
+import { downloadBlob } from '../lib/download'
+import { TONE } from '../components/tone'
 import { ResumeDoc } from './ResumeDoc'
 import { SAMPLE, synthExtracted, type BuilderState, type Spacing, type Template } from './model'
 import type { ExperienceEntry, EducationEntry, ProjectEntry } from '../lib/parse'
 
-const TONE: Record<Status, string> = { pass: 'text-emerald-600', warn: 'text-amber-600', fail: 'text-rose-600' }
 const parseList = (t: string) => t.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
 
 function Field({ label, value, onChange, area, placeholder }: { label: string; value: string; onChange: (v: string) => void; area?: boolean; placeholder?: string }) {
@@ -60,10 +61,7 @@ export default function Builder() {
     setBusy(true); setNote('')
     try {
       const blob = await pdf(<ResumeDoc state={eff} />).toBlob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url; a.download = `${(eff.profile.name || 'resume').replace(/\s+/g, '_')}_CV.pdf`
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url)
+      downloadBlob(`${(eff.profile.name || 'resume').replace(/\s+/g, '_')}_CV.pdf`, blob)
     } catch (e) {
       setNote(e instanceof Error ? e.message : 'Export failed.')
     } finally { setBusy(false) }
@@ -90,7 +88,7 @@ export default function Builder() {
       <div className="mb-5 flex flex-wrap items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-stone-200">
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-400">Score</span>
-          <span className={`text-xl font-semibold tabular-nums ${TONE[score.band.tone]}`}>{score.score}</span>
+          <span className={`text-xl font-semibold tabular-nums ${TONE[score.band.tone].text}`}>{score.score}</span>
         </div>
         <span className="text-xs text-stone-400">{score.band.label}</span>
         <div className="ml-auto flex flex-wrap items-center gap-2">
