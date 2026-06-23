@@ -30,6 +30,7 @@ export default function Analyzer() {
   const [fileName, setFileName] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [errDetail, setErrDetail] = useState('')
   const [drag, setDrag] = useState(false)
   const [tab, setTab] = useState<Tab>('analyze')
   const [jdText, setJdText] = useState('')
@@ -37,18 +38,28 @@ export default function Analyzer() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const run = useCallback(async (file: File) => {
-    setError(''); setReport(null); setResume(null); setJd(null)
+    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null)
     const ok = /\.(pdf|docx)$/i.test(file.name) || file.type === 'application/pdf' || file.type.includes('wordprocessingml')
     if (!ok) { setError('Please choose a PDF or DOCX file.'); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
+    let stage = 'loading modules'
     try {
       const [{ extractDocument }, { analyze }, { parseResume }] = await Promise.all([
         import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'),
       ])
+      stage = 'extracting text'
       const ex = await extractDocument(file)
-      setReport(analyze(ex)); setResume(parseResume(ex)); setCvText(ex.text)
+      stage = 'analyzing'
+      const rep = analyze(ex)
+      stage = 'parsing'
+      const res = parseResume(ex)
+      setReport(rep); setResume(res); setCvText(ex.text)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not read that file.')
+      const err = e instanceof Error ? e : new Error(String(e))
+      const detail = `stage: ${stage}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
+      console.error('[CV Toolkit] analyze failed —', detail)
+      setError(`Analysis failed while ${stage}. Please tap “Copy details” and send them to me.`)
+      setErrDetail(detail)
     } finally { setBusy(false) }
   }, [])
 
@@ -91,7 +102,23 @@ export default function Analyzer() {
       </button>
 
       {fileName && !error && <p className="mt-3 text-sm text-stone-500">Analyzed: <span className="font-medium text-stone-700">{fileName}</span></p>}
-      {error && <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">{error}</p>}
+      {error && (
+        <div role="alert" className="mt-3 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">
+          <p>{error}</p>
+          {errDetail && (
+            <>
+              <button
+                type="button"
+                onClick={() => { void navigator.clipboard?.writeText(errDetail) }}
+                className="mt-2 rounded border border-rose-300 px-2 py-1 text-xs font-medium hover:bg-rose-100"
+              >
+                Copy details
+              </button>
+              <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded bg-white/70 p-2 text-[11px] leading-snug text-rose-900 ring-1 ring-rose-200">{errDetail}</pre>
+            </>
+          )}
+        </div>
+      )}
 
       {report && resume && (
         <section className="mt-8" aria-live="polite">
