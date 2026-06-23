@@ -24,4 +24,6 @@ export default defineConfig({
   base: '/',
   plugins: [react(), tailwindcss(), cloudflare()],
   preview: { headers: prodCsp() },
+  // Source maps so production stack traces are decodable when debugging.
+  build: { sourcemap: true },
 })
