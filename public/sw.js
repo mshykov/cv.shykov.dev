@@ -2,7 +2,7 @@
 // so the app shell (and pdf.js/mammoth/react-pdf chunks, once fetched) work
 // with no network. Nothing here touches the user's CV — it only caches the
 // app's own static assets.
-const CACHE = 'cv-toolkit-v2'
+const CACHE = 'cv-toolkit-v3'
 
 self.addEventListener('install', () => self.skipWaiting())
 

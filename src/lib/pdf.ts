@@ -1,7 +1,12 @@
 // Browser-side PDF text extraction with Mozilla's pdf.js.
 // Nothing leaves the page: the file is read into memory, parsed, and discarded.
-import * as pdfjs from 'pdfjs-dist'
-import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
+// Legacy build: Babel + core-js transpiled for older browsers. Crucially, its
+// *worker* self-polyfills modern APIs (e.g. Promise.withResolvers, which Safari
+// only added in 17.4) — the standard build's worker only calls them and throws
+// on older iOS Safari/Chrome (both WebKit). The main-thread polyfill can't
+// reach the worker's separate global, so we need the legacy worker here.
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs'
+import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
 
