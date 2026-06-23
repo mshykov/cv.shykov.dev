@@ -41,7 +41,10 @@ function normalize(s: string): string {
 }
 
 function wordRe(term: string): RegExp {
-  return new RegExp('(?<![a-z0-9])' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-z0-9])', 'i')
+  // Custom word boundary that tolerates term chars like "ci/cd", "c#", ".net".
+  // Avoid look-behind (Safari < 16.4 lacks it); a leading non-alnum class works
+  // the same for the boolean .test() we use it for.
+  return new RegExp('(?:^|[^a-z0-9])' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-z0-9])', 'i')
 }
 
 export function matchJD(cvText: string, cvSkills: string[], jd: string): JDMatch {

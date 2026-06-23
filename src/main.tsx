@@ -1,3 +1,4 @@
+import './polyfills' // must run before anything that may load pdf.js
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

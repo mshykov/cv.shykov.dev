@@ -1,9 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { pdf } from '@react-pdf/renderer'
 import { analyze } from '../lib/analyze'
 import { downloadBlob } from '../lib/download'
 import { TONE } from '../components/tone'
-import { ResumeDoc } from './ResumeDoc'
 import { SAMPLE, synthExtracted, type BuilderState, type Spacing, type Template } from './model'
 import type { ExperienceEntry, EducationEntry, ProjectEntry } from '../lib/parse'
 
@@ -60,6 +58,8 @@ export default function Builder() {
   const exportPdf = useCallback(async () => {
     setBusy(true); setNote('')
     try {
+      // react-pdf (~485 KB gz) loads only on first export, not with the tab.
+      const [{ pdf }, { ResumeDoc }] = await Promise.all([import('@react-pdf/renderer'), import('./ResumeDoc')])
       const blob = await pdf(<ResumeDoc state={eff} />).toBlob()
       downloadBlob(`${(eff.profile.name || 'resume').replace(/\s+/g, '_')}_CV.pdf`, blob)
     } catch (e) {
@@ -118,7 +118,7 @@ export default function Builder() {
           <input ref={importRef} type="file" accept="application/pdf,.pdf,.docx" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) importCv(f) }} />
         </div>
       </div>
-      {note && <p className="mb-4 rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700 ring-1 ring-indigo-200">{note}</p>}
+      {note && <p role="status" className="mb-4 rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700 ring-1 ring-indigo-200">{note}</p>}
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* FORM */}
