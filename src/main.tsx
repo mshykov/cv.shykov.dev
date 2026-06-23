@@ -10,9 +10,11 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 )
 
-// Offline support: register the service worker after load (production only).
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {})
-  })
+// We no longer use a service worker — a cached one trapped iOS users on stale
+// bundles. Proactively unregister any that remain (the kill-switch sw.js also
+// self-destructs for clients still controlled by the old one).
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((regs) => {
+    regs.forEach((r) => r.unregister())
+  }).catch(() => {})
 }
