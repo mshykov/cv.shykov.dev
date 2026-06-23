@@ -1,14 +1,18 @@
 // Browser-side PDF text extraction with Mozilla's pdf.js.
 // Nothing leaves the page: the file is read into memory, parsed, and discarded.
-// Legacy build: Babel + core-js transpiled for older browsers. Crucially, its
-// *worker* self-polyfills modern APIs (e.g. Promise.withResolvers, which Safari
-// only added in 17.4) — the standard build's worker only calls them and throws
-// on older iOS Safari/Chrome (both WebKit). The main-thread polyfill can't
-// reach the worker's separate global, so we need the legacy worker here.
+// Legacy build (Babel + core-js transpiled for older browsers) run on the MAIN
+// THREAD — no Web Worker. On iOS Safari the module worker gets terminated
+// ("Worker task was terminated"), silently breaking extraction. Importing the
+// worker module registers `globalThis.pdfjsWorker`, so pd f.js uses its
+// in-process "fake worker" instead of spawning a real one. We use a *dynamic*
+// import (not a side-effect import, which Rollup could tree-shake) and
+// deliberately leave GlobalWorkerOptions.workerSrc unset.
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs'
-import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'
 
-pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
+let workerReady: Promise<unknown> | null = null
+function ensureMainThreadWorker(): Promise<unknown> {
+  return (workerReady ??= import('pdfjs-dist/legacy/build/pdf.worker.min.mjs'))
+}
 
 export interface TextPiece {
   text: string
@@ -39,6 +43,7 @@ function isBold(fontFamily: string | undefined): boolean {
 
 export async function extractPdf(file: File): Promise<Extracted> {
   const data = new Uint8Array(await file.arrayBuffer())
+  await ensureMainThreadWorker()
   const task = pdfjs.getDocument({ data })
   const doc = await task.promise
   const pieces: TextPiece[] = []
