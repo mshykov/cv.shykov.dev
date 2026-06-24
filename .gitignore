@@ -32,3 +32,7 @@ dist-ssr
 !.dev.vars.example
 .env*
 !.env.example
+
+# Personal / local-only scratch — never committed.
+# Real test CVs (personal data) for parser debugging, secrets, session notes.
+_do_not_commit/
