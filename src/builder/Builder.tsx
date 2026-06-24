@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { analyze } from '../lib/analyze'
 import { downloadBlob } from '../lib/download'
 import { TONE } from '../components/tone'
-import { SAMPLE, synthExtracted, type BuilderState, type Spacing, type Template } from './model'
+import { BUILDER_SECTION_TITLES, SAMPLE, synthExtracted, type BuilderState, type Spacing, type Template } from './model'
 import type { ExperienceEntry, EducationEntry, ProjectEntry } from '../lib/parse'
 
 const parseList = (t: string) => t.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
@@ -200,16 +200,16 @@ export default function Builder() {
             {eff.profile.name && <div className="text-xl font-bold" style={eff.settings.template === 'modern' ? { color: eff.settings.accent } : undefined}>{eff.profile.name}</div>}
             <div className="text-xs text-stone-500">{[eff.profile.email, eff.profile.phone, ...eff.profile.links].filter(Boolean).join('  •  ')}</div>
             {eff.profile.location && <div className="text-xs text-stone-500">{eff.profile.location}</div>}
-            {eff.profile.summary && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Summary"><p>{eff.profile.summary}</p></PreviewSection>}
-            {eff.experience.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Experience">{eff.experience.map((e, i) => (
+            {eff.profile.summary && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.summary}><p>{eff.profile.summary}</p></PreviewSection>}
+            {eff.experience.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.experience}>{eff.experience.map((e, i) => (
               <div key={i} className="mb-2">
                 <div className="flex justify-between gap-2"><span className="font-semibold">{e.title}{e.company && ` — ${e.company}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>
                 <ul className="ml-4 list-disc">{e.bullets.filter((b) => b.trim()).map((b, j) => <li key={j}>{b}</li>)}</ul>
               </div>
             ))}</PreviewSection>}
-            {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Skills"><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
-            {eff.projects.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Projects"><ul className="ml-4 list-disc">{eff.projects.map((p, i) => <li key={i}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
-            {eff.education.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title="Education">{eff.education.map((e, i) => <div key={i} className="flex justify-between gap-2"><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
+            {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.skills}><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
+            {eff.projects.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.projects}><ul className="ml-4 list-disc">{eff.projects.map((p, i) => <li key={i}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
+            {eff.education.length > 0 && <PreviewSection accent={eff.settings.accent} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.education}>{eff.education.map((e, i) => <div key={i} className="flex justify-between gap-2"><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
           </div>
           <p className="mt-2 text-center text-xs text-stone-400">Live preview · the exported PDF is single-column Helvetica, ATS-clean</p>
         </div>

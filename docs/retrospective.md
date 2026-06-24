@@ -76,7 +76,8 @@ that turned out to be a WebKit gap. This is the honest retro.
 
 - `no-cache` HTML + immutable hashed assets in `public/_headers`; the service
   worker is now a self-destruct kill-switch.
-- Production source maps + on-screen error capture with a Copy button.
+- On-screen error capture with a Copy button; `npm run build:debug` emits
+  production source maps when stack traces need decoding.
 - `node:test` suite wired into the CI `build` gate; Dependabot enabled.
 - pdf.js pinned to the **standard build on the main thread** with the required
   polyfills (`Promise.withResolvers`, `ReadableStream[Symbol.asyncIterator]`) —

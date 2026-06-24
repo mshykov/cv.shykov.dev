@@ -17,6 +17,14 @@ export interface BuilderState extends Resume {
   settings: Settings
 }
 
+export const BUILDER_SECTION_TITLES = {
+  summary: 'Summary',
+  experience: 'Experience',
+  skills: 'Skills',
+  projects: 'Projects',
+  education: 'Education',
+} as const
+
 export const DEFAULT_SETTINGS: Settings = {
   accent: '#4f46e5',
   fontSize: 10,
@@ -71,21 +79,21 @@ export function synthExtracted(s: BuilderState): Extracted {
   const contact = [p.email, p.phone, ...p.links].filter(Boolean).join(' · ')
   if (contact) lines.push(contact)
   if (p.location) lines.push(p.location)
-  if (p.summary) { lines.push('SUMMARY', p.summary) }
+  if (p.summary) { lines.push(BUILDER_SECTION_TITLES.summary.toUpperCase(), p.summary) }
   if (s.experience.length) {
-    lines.push('EXPERIENCE')
+    lines.push(BUILDER_SECTION_TITLES.experience.toUpperCase())
     for (const e of s.experience) {
       lines.push(`${e.title}${e.company ? ' — ' + e.company : ''} ${e.date}`.trim())
       for (const b of e.bullets) if (b.trim()) lines.push('• ' + b.trim())
     }
   }
-  if (s.skills.length) { lines.push('SKILLS', s.skills.join(', ')) }
+  if (s.skills.length) { lines.push(BUILDER_SECTION_TITLES.skills.toUpperCase(), s.skills.join(', ')) }
   if (s.projects.length) {
-    lines.push('PROJECTS')
+    lines.push(BUILDER_SECTION_TITLES.projects.toUpperCase())
     for (const pr of s.projects) lines.push(`• ${pr.name}${pr.description ? ' — ' + pr.description : ''}`)
   }
   if (s.education.length) {
-    lines.push('EDUCATION')
+    lines.push(BUILDER_SECTION_TITLES.education.toUpperCase())
     for (const ed of s.education) lines.push(`• ${ed.degree || ed.school}${ed.school && ed.degree ? ' — ' + ed.school : ''}, ${ed.date}`)
   }
   const text = lines.join('\n')

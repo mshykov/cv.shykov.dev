@@ -5,6 +5,7 @@
 // encoding, standard section headers, parseable contact info, sane structure,
 // and quantified content. Every check is transparent and explains its fix.
 import type { Extracted } from './pdf'
+import { hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 
 export type Status = 'pass' | 'warn' | 'fail'
 
@@ -43,13 +44,11 @@ const ACTION_VERBS = [
   'coordinated', 'analyzed', 'automated', 'migrated', 'negotiated',
 ]
 
-const BULLET_START = /^\s*[•·▪◦‣*‐-―-]\s+/
-
 function hasHeader(lines: string[], keywords: string[]): boolean {
   return lines.some((l) => {
     const t = l.trim()
     if (!t || t.length > 45) return false // headers are short lines
-    const norm = t.toLowerCase().replace(/[^a-z& ]/g, ' ').replace(/\s+/g, ' ').trim()
+    const norm = normalizeHeader(t)
     return keywords.some((k) => norm === k || norm.startsWith(k + ' ') || norm.endsWith(' ' + k) || norm.includes(k))
   })
 }
@@ -124,10 +123,10 @@ export function analyze(ex: Extracted): Report {
     add({ id: 'pages', label: 'Page count', category: 'Format', status: 'fail', points: 0, max: 5, detail: `${numPages} pages — too long; later pages often go unread.`, fix: 'Cut to 1–2 pages of the most relevant, recent experience.' })
   }
 
-  const hasDates = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\b/i.test(text) || /\b(19|20)\d{2}\b/.test(text)
+  const hasDates = hasDate(text)
   add({ id: 'dates', label: 'Dated history', category: 'Format', status: hasDates ? 'pass' : 'warn', points: hasDates ? 5 : 0, max: 5, detail: hasDates ? 'Dates detected — timeline is parseable.' : 'No clear dates found.', fix: hasDates ? undefined : 'Add start/end dates (e.g. “Feb 2023 – now”) to each role.' })
 
-  const bulletLines = lines.filter((l) => BULLET_START.test(l)).length
+  const bulletLines = lines.filter(isBulletLine).length
   add({ id: 'bullets', label: 'Bulleted structure', category: 'Format', status: bulletLines >= 3 ? 'pass' : 'warn', points: bulletLines >= 3 ? 5 : bulletLines > 0 ? 3 : 0, max: 5, detail: bulletLines >= 3 ? `${bulletLines} bullet lines detected.` : 'Few or no bullet points found.', fix: bulletLines >= 3 ? undefined : 'Use bullet points for responsibilities/achievements — easier to parse and to scan.' })
 
   // ── Content quality ──────────────────────────────────────────
@@ -135,7 +134,7 @@ export function analyze(ex: Extracted): Report {
   add({ id: 'quant', label: 'Quantified impact', category: 'Content', status: quantified >= 3 ? 'pass' : quantified > 0 ? 'warn' : 'fail', points: quantified >= 3 ? 5 : quantified > 0 ? 3 : 0, max: 5, detail: quantified >= 3 ? `${quantified} quantified results found (%, ×, counts).` : quantified > 0 ? `Only ${quantified} quantified result(s).` : 'No numbers/metrics detected.', fix: quantified >= 3 ? undefined : 'Quantify impact: “cut release time 2.5×”, “grew the team to 14”, “−30% bugs”.' })
 
   const verbHits = lines.filter((l) => {
-    const w = l.replace(BULLET_START, '').trim().split(/\s+/)[0]?.toLowerCase()
+    const w = stripBullet(l).split(/\s+/)[0]?.toLowerCase()
     return w && ACTION_VERBS.includes(w)
   }).length
   add({ id: 'verbs', label: 'Strong action verbs', category: 'Content', status: verbHits >= 3 ? 'pass' : verbHits > 0 ? 'warn' : 'warn', points: verbHits >= 3 ? 5 : verbHits > 0 ? 3 : 0, max: 5, detail: verbHits >= 3 ? `${verbHits} bullets start with an action verb.` : 'Few bullets start with an action verb.', fix: verbHits >= 3 ? undefined : 'Start bullets with verbs: Led, Shipped, Reduced, Built, Owned…' })

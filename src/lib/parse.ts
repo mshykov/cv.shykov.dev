@@ -4,6 +4,7 @@
 // the PDF/DOCX extractors, so it degrades gracefully when positional data is
 // absent (DOCX).
 import type { Extracted } from './pdf'
+import { findDate, hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 
 export interface ExperienceEntry {
   title: string
@@ -38,12 +39,9 @@ export interface Resume {
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i
 const PHONE_RE = /(?:\+?\d[\s\-().]?){9,}/
 const URL_RE = /((?:https?:\/\/)?(?:www\.)?(?:linkedin\.com|github\.com)\/\S+|[a-z0-9-]+\.(?:dev|io|me|com|net|org)(?:\/\S*)?)/i
-const DATE_RE = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*\d{0,4}|\b(19|20)\d{2}\b|present|current|now/i
-const BULLET_RE = /^\s*[•·▪◦‣*‐-―-]\s*/
-
 const SECTION_TITLES: Record<string, string[]> = {
   summary: ['summary', 'profile', 'objective', 'about', 'about me'],
-  experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience', 'employment'],
+  experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience', 'employment', 'career experience', 'career history'],
   education: ['education', 'academic background', 'academic'],
   skills: ['skills', 'core competencies', 'technical skills', 'expertise', 'technologies'],
   projects: ['projects', 'selected projects', 'side projects', 'personal projects'],
@@ -58,7 +56,7 @@ const SECTION_TITLES: Record<string, string[]> = {
 function classifyHeader(line: string): string | null {
   const t = line.trim()
   if (!t || t.length > 45) return null
-  const norm = t.toLowerCase().replace(/[^a-z& ]/g, ' ').replace(/\s+/g, ' ').trim()
+  const norm = normalizeHeader(t)
   for (const [key, names] of Object.entries(SECTION_TITLES)) {
     if (names.some((n) => norm === n || norm === n + 's' || norm.startsWith(n + ' ') || norm.endsWith(' ' + n))) {
       return key
@@ -120,22 +118,24 @@ function groupEntries(lines: string[]): { header: string; bullets: string[] }[] 
   const entries: { header: string; bullets: string[] }[] = []
   let cur: { header: string; bullets: string[] } | null = null
   for (const line of lines) {
-    const isBullet = BULLET_RE.test(line)
-    if (!isBullet && (DATE_RE.test(line) || !cur)) {
+    const isBullet = isBulletLine(line)
+    if (!isBullet && cur?.bullets.length === 0) {
+      cur.header += '\n' + line.trim()
+    } else if (!isBullet && (hasDate(line) || !cur)) {
       cur = { header: line.trim(), bullets: [] }
       entries.push(cur)
     } else if (cur) {
-      cur.bullets.push(line.replace(BULLET_RE, '').trim())
+      cur.bullets.push(stripBullet(line))
     }
   }
   return entries
 }
 
 function splitHeader(header: string): { left: string; date: string } {
-  const dm = header.match(DATE_RE)
+  const dm = findDate(header)
   if (!dm) return { left: header.trim(), date: '' }
   // Take the date span from its first match to the end of the date-ish tail.
-  const idx = header.search(DATE_RE)
+  const idx = dm.index ?? 0
   const left = header.slice(0, idx).replace(/[—–·|,\s]+$/, '').trim()
   const date = header.slice(idx).replace(/^[—–·|,\s]+/, '').trim()
   return { left: left || header.trim(), date }
@@ -143,11 +143,14 @@ function splitHeader(header: string): { left: string; date: string } {
 
 function parseExperience(lines: string[]): ExperienceEntry[] {
   return groupEntries(lines).map(({ header, bullets }) => {
-    const { left, date } = splitHeader(header)
+    const parts = header.split('\n').map((p) => p.trim()).filter(Boolean)
+    const headerLine = parts.at(-1) ?? header
+    const leadingCompany = parts.length > 1 ? parts.slice(0, -1).join(', ') : ''
+    const { left, date } = splitHeader(headerLine)
     // "Title — Company" or "Title at Company" or "Title, Company"
     const m = left.split(/\s+[—–]\s+| at | \| |,\s+/)
     const title = (m[0] || left).trim()
-    const company = (m.slice(1).join(', ') || '').trim()
+    const company = (leadingCompany || m.slice(1).join(', ') || '').trim()
     return { title, company, date, bullets }
   }).filter((e) => e.title)
 }
@@ -155,10 +158,10 @@ function parseExperience(lines: string[]): ExperienceEntry[] {
 /** Split a section into items. If it's a bullet list (education/projects often
  *  are), each bullet is an item; otherwise each line is an item. */
 function itemize(lines: string[]): string[] {
-  if (!lines.some((l) => BULLET_RE.test(l))) return lines.map((l) => l.trim()).filter(Boolean)
+  if (!lines.some(isBulletLine)) return lines.map((l) => l.trim()).filter(Boolean)
   const items: string[] = []
   for (const line of lines) {
-    if (BULLET_RE.test(line)) items.push(line.replace(BULLET_RE, '').trim())
+    if (isBulletLine(line)) items.push(stripBullet(line))
     else if (items.length) items[items.length - 1] += ' ' + line.trim()
     else if (line.trim()) items.push(line.trim())
   }
@@ -178,7 +181,7 @@ function parseEducation(lines: string[]): EducationEntry[] {
 function parseSkills(lines: string[]): string[] {
   const out: string[] = []
   for (const line of lines) {
-    const body = line.replace(BULLET_RE, '').replace(/^[A-Za-z &/]+:\s*/, '') // drop "Leadership:" prefix
+    const body = stripBullet(line).replace(/^[A-Za-z &/]+:\s*/, '') // drop "Leadership:" prefix
     for (const tok of body.split(/[,;•·|]/)) {
       const s = tok.trim()
       if (s && s.length <= 40) out.push(s)

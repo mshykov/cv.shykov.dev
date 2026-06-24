@@ -8,8 +8,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:debug": "tsc -b && VITE_SOURCEMAPS=true vite build",
     "lint": "eslint .",
     "test": "node --test \"src/**/*.test.ts\"",
+    "smoke:build": "node scripts/smoke-built.mjs",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy"
   },
