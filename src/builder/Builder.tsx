@@ -163,7 +163,17 @@ export default function Builder() {
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <button type="button" onClick={() => importRef.current?.click()} className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">Import CV</button>
           <button type="button" onClick={exportPdf} disabled={busy} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">{busy ? 'Working…' : '↓ Export PDF'}</button>
-          <input ref={importRef} type="file" accept="application/pdf,.pdf,.docx" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) importCv(f) }} />
+          <input
+            ref={importRef}
+            type="file"
+            accept="application/pdf,.pdf,.docx"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0]
+              if (f) importCv(f)
+              e.currentTarget.value = ''
+            }}
+          />
         </div>
       </div>
       {note && <p role="status" className="mb-4 rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700 ring-1 ring-indigo-200">{note}</p>}
