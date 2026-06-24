@@ -41,6 +41,26 @@ test('splits an experience header into title / company / date', () => {
   assert.equal(e[0].bullets.length, 1)
 })
 
+test('parses split company and role/date experience headers', () => {
+  const e = parseResume(ex([
+    'OLENA SHYKOVA',
+    'olena@example.com',
+    'CAREER EXPERIENCE',
+    'Data Platform Ltd',
+    'Senior Data Engineer | Feb 2021 – Present',
+    '● Built streaming pipelines',
+    '✓ Reduced warehouse cost by 25%',
+    'SKILLS',
+    'Python, SQL, GCP',
+  ])).experience
+
+  assert.equal(e.length, 1)
+  assert.equal(e[0].title, 'Senior Data Engineer')
+  assert.equal(e[0].company, 'Data Platform Ltd')
+  assert.match(e[0].date, /Feb 2021/)
+  assert.equal(e[0].bullets.length, 2)
+})
+
 test('itemizes a bulleted education list into separate entries', () => {
   assert.equal(parseResume(ex(LINES)).education.length, 2)
 })

@@ -50,6 +50,21 @@ test('DOCX source does not penalize page count', () => {
   assert.equal(r.checks.find((c) => c.id === 'pages')?.status, 'pass')
 })
 
+test('detects common PDF bullet glyph fallbacks', () => {
+  const r = analyze(ex([
+    'JANE DOE',
+    'jane@example.com · +1 555 123 4567',
+    'EXPERIENCE',
+    'Senior Engineer — Acme Jan 2020 – now',
+    '● Led a team of 8 engineers',
+    '✓ Reduced latency by 30%',
+    '– Built CI/CD automation',
+  ]))
+
+  assert.equal(r.checks.find((c) => c.id === 'bullets')?.status, 'pass')
+  assert.ok((r.checks.find((c) => c.id === 'verbs')?.points ?? 0) > 0)
+})
+
 test('a thin scanned-style doc scores low', () => {
   const r = analyze(ex(['Resume'], { charCount: 12 }))
   assert.ok(r.score < 50, `expected <50, got ${r.score}`)

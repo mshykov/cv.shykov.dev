@@ -15,6 +15,10 @@ function ensureMainThreadWorker(): Promise<unknown> {
   return (workerReady ??= import('pdfjs-dist/build/pdf.worker.min.mjs'))
 }
 
+function yieldToBrowser(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 0))
+}
+
 export interface TextPiece {
   text: string
   x: number // left edge, PDF points from bottom-left origin
@@ -69,12 +73,14 @@ export async function extractPdf(file: File): Promise<Extracted> {
           page: p,
         })
       }
+      await yieldToBrowser()
     }
   } finally {
     await task.destroy()
   }
 
   // Group pieces into visual lines: same page, baseline within ~3pt.
+  pieces.sort((a, b) => a.page - b.page || b.y - a.y || a.x - b.x)
   const lines: string[] = []
   let cur: TextPiece[] = []
   const flush = () => {

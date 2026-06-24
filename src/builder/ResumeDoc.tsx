@@ -2,7 +2,7 @@
 // ligature shaping), real selectable text — i.e. ATS-clean by construction.
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type { Style } from '@react-pdf/types'
-import type { BuilderState, Spacing } from './model'
+import { BUILDER_SECTION_TITLES, type BuilderState, type Spacing } from './model'
 
 const LINE_GAP: Record<Spacing, number> = { compact: 1.25, standard: 1.4, relaxed: 1.6 }
 const SECTION_GAP: Record<Spacing, number> = { compact: 8, standard: 11, relaxed: 15 }
@@ -50,11 +50,11 @@ export function ResumeDoc({ state }: { state: BuilderState }) {
         {p.location ? <Text style={s.contact}>{p.location}</Text> : null}
 
         {p.summary ? (
-          <Section title="Summary" h2={s.h2} rule={s.rule}><Text style={s.para}>{p.summary}</Text></Section>
+          <Section title={BUILDER_SECTION_TITLES.summary} h2={s.h2} rule={s.rule}><Text style={s.para}>{p.summary}</Text></Section>
         ) : null}
 
         {state.experience.length ? (
-          <Section title="Experience" h2={s.h2} rule={s.rule}>
+          <Section title={BUILDER_SECTION_TITLES.experience} h2={s.h2} rule={s.rule}>
             {state.experience.map((e, i) => (
               <View key={i} style={{ marginBottom: 4 }} wrap={false}>
                 <View style={s.entryRow}>
@@ -70,11 +70,11 @@ export function ResumeDoc({ state }: { state: BuilderState }) {
         ) : null}
 
         {state.skills.length ? (
-          <Section title="Skills" h2={s.h2} rule={s.rule}><Text style={s.skills}>{state.skills.join('  •  ')}</Text></Section>
+          <Section title={BUILDER_SECTION_TITLES.skills} h2={s.h2} rule={s.rule}><Text style={s.skills}>{state.skills.join('  •  ')}</Text></Section>
         ) : null}
 
         {state.projects.length ? (
-          <Section title="Projects" h2={s.h2} rule={s.rule}>
+          <Section title={BUILDER_SECTION_TITLES.projects} h2={s.h2} rule={s.rule}>
             {state.projects.map((pr, i) => (
               <View key={i} style={s.bulletRow}><Text style={s.bulletDot}>•</Text><Text style={s.bulletText}><Text style={s.entryTitle}>{pr.name}</Text>{pr.description ? ` — ${pr.description}` : ''}</Text></View>
             ))}
@@ -82,7 +82,7 @@ export function ResumeDoc({ state }: { state: BuilderState }) {
         ) : null}
 
         {state.education.length ? (
-          <Section title="Education" h2={s.h2} rule={s.rule}>
+          <Section title={BUILDER_SECTION_TITLES.education} h2={s.h2} rule={s.rule}>
             {state.education.map((ed, i) => (
               <View key={i} style={s.entryRow}>
                 <Text><Text style={s.entryTitle}>{ed.degree || ed.school}</Text>{ed.degree && ed.school ? ` — ${ed.school}` : ''}</Text>

@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
-import { type Report, type Check } from './lib/analyze'
-import { type Resume } from './lib/parse'
-import { type JDMatch } from './lib/jdmatch'
+import type { Report, Check } from './lib/analyze'
+import type { Resume } from './lib/parse'
+import type { JDMatch } from './lib/jdmatch'
 import { TONE } from './components/tone'
 import { ScoreRing } from './components/ScoreRing'
 

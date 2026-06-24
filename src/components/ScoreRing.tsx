@@ -1,4 +1,4 @@
-import { type Status } from '../lib/analyze'
+import type { Status } from '../lib/analyze'
 import { TONE } from './tone'
 
 export function ScoreRing({ score, tone }: { score: number; tone: Status }) {
