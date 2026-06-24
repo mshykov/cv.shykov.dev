@@ -65,6 +65,19 @@ test('detects common PDF bullet glyph fallbacks', () => {
   assert.ok((r.checks.find((c) => c.id === 'verbs')?.points ?? 0) > 0)
 })
 
+test('does not detect dates inside ordinary words', () => {
+  const r = analyze(ex([
+    'JANE DOE',
+    'jane@example.com',
+    'EXPERIENCE',
+    'Knowledge Manager',
+    '• Presentation skills',
+    '• Concurrent delivery',
+  ]))
+
+  assert.equal(r.checks.find((c) => c.id === 'dates')?.status, 'warn')
+})
+
 test('a thin scanned-style doc scores low', () => {
   const r = analyze(ex(['Resume'], { charCount: 12 }))
   assert.ok(r.score < 50, `expected <50, got ${r.score}`)

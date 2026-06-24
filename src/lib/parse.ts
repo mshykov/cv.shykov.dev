@@ -4,7 +4,7 @@
 // the PDF/DOCX extractors, so it degrades gracefully when positional data is
 // absent (DOCX).
 import type { Extracted } from './pdf'
-import { DATE_RE, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
+import { findDate, hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 
 export interface ExperienceEntry {
   title: string
@@ -119,9 +119,9 @@ function groupEntries(lines: string[]): { header: string; bullets: string[] }[] 
   let cur: { header: string; bullets: string[] } | null = null
   for (const line of lines) {
     const isBullet = isBulletLine(line)
-    if (!isBullet && cur && cur.bullets.length === 0) {
+    if (!isBullet && cur?.bullets.length === 0) {
       cur.header += '\n' + line.trim()
-    } else if (!isBullet && (DATE_RE.test(line) || !cur)) {
+    } else if (!isBullet && (hasDate(line) || !cur)) {
       cur = { header: line.trim(), bullets: [] }
       entries.push(cur)
     } else if (cur) {
@@ -132,10 +132,10 @@ function groupEntries(lines: string[]): { header: string; bullets: string[] }[] 
 }
 
 function splitHeader(header: string): { left: string; date: string } {
-  const dm = header.match(DATE_RE)
+  const dm = findDate(header)
   if (!dm) return { left: header.trim(), date: '' }
   // Take the date span from its first match to the end of the date-ish tail.
-  const idx = header.search(DATE_RE)
+  const idx = dm.index ?? 0
   const left = header.slice(0, idx).replace(/[—–·|,\s]+$/, '').trim()
   const date = header.slice(idx).replace(/^[—–·|,\s]+/, '').trim()
   return { left: left || header.trim(), date }

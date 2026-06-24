@@ -5,7 +5,7 @@
 // encoding, standard section headers, parseable contact info, sane structure,
 // and quantified content. Every check is transparent and explains its fix.
 import type { Extracted } from './pdf'
-import { isBulletLine, normalizeHeader, stripBullet } from './text.ts'
+import { hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 
 export type Status = 'pass' | 'warn' | 'fail'
 
@@ -123,7 +123,7 @@ export function analyze(ex: Extracted): Report {
     add({ id: 'pages', label: 'Page count', category: 'Format', status: 'fail', points: 0, max: 5, detail: `${numPages} pages — too long; later pages often go unread.`, fix: 'Cut to 1–2 pages of the most relevant, recent experience.' })
   }
 
-  const hasDates = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\b/i.test(text) || /\b(19|20)\d{2}\b/.test(text)
+  const hasDates = hasDate(text)
   add({ id: 'dates', label: 'Dated history', category: 'Format', status: hasDates ? 'pass' : 'warn', points: hasDates ? 5 : 0, max: 5, detail: hasDates ? 'Dates detected — timeline is parseable.' : 'No clear dates found.', fix: hasDates ? undefined : 'Add start/end dates (e.g. “Feb 2023 – now”) to each role.' })
 
   const bulletLines = lines.filter(isBulletLine).length
