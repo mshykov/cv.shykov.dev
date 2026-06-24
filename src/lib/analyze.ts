@@ -27,6 +27,19 @@ export interface Report {
   meta: { numPages: number; charCount: number; words: number }
 }
 
+const STATUS_RANK: Record<Status, number> = { fail: 2, warn: 1, pass: 0 }
+
+export function getTopFixes(report: Report, limit = 3): Check[] {
+  return report.checks
+    .filter((check) => check.status !== 'pass')
+    .sort((a, b) => {
+      const lost = (b.max - b.points) - (a.max - a.points)
+      if (lost !== 0) return lost
+      return STATUS_RANK[b.status] - STATUS_RANK[a.status]
+    })
+    .slice(0, limit)
+}
+
 const LIGATURES = /[ﬀ-ﬆ]/ // ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ
 
 const SECTION_KEYWORDS: Record<string, string[]> = {

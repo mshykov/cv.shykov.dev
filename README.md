@@ -1,4 +1,4 @@
-# cv.shykov.dev — CV Toolkit
+# cv.shykov.dev — ATS Resume Toolkit
 
 A privacy-first CV toolkit that runs **100% in your browser**. Two modes:
 

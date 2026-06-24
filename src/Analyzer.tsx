@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import type { Report, Check } from './lib/analyze'
+import { getTopFixes } from './lib/analyze'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import { TONE } from './components/tone'
@@ -19,6 +20,64 @@ function CheckRow({ c }: { c: Check }) {
         <p className="mt-0.5 text-sm text-stone-500">{c.detail}</p>
         {c.fix && <p className="mt-1 text-sm text-stone-700"><span className="font-medium">Fix:</span> {c.fix}</p>}
       </div>
+    </div>
+  )
+}
+
+function CategoryBreakdown({ report }: { report: Report }) {
+  const categories = [...new Set(report.checks.map((c) => c.category))]
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {categories.map((cat) => {
+        const items = report.checks.filter((c) => c.category === cat)
+        const points = items.reduce((s, c) => s + c.points, 0)
+        const max = items.reduce((s, c) => s + c.max, 0)
+        const pct = Math.round((points / max) * 100)
+
+        return (
+          <div key={cat} className="min-w-34 flex-1 rounded-xl bg-stone-50 px-3 py-2 ring-1 ring-stone-200">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-xs font-medium text-stone-500">{cat}</span>
+              <span className="text-xs tabular-nums text-stone-400">{points}/{max}</span>
+            </div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-stone-200">
+              <div className="h-full rounded-full bg-stone-900 transition-[width]" style={{ width: `${pct}%` }} />
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function TopFixes({ fixes }: { fixes: Check[] }) {
+  if (!fixes.length) {
+    return (
+      <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800 ring-1 ring-emerald-200">
+        No priority fixes found. The remaining report is mostly confirmation.
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-2">
+      {fixes.map((fix) => (
+        <div key={fix.id} className="rounded-xl bg-white px-4 py-3 ring-1 ring-stone-200">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className={`h-2 w-2 rounded-full ${TONE[fix.status].dot}`} aria-hidden />
+                <span className="text-sm font-semibold text-stone-900">{fix.label}</span>
+              </div>
+              <p className="mt-1 text-sm text-stone-600">{fix.fix ?? fix.detail}</p>
+            </div>
+            <span className="shrink-0 rounded-md bg-stone-100 px-2 py-1 text-xs tabular-nums text-stone-500">
+              -{fix.max - fix.points}
+            </span>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
@@ -57,7 +116,7 @@ export default function Analyzer() {
     } catch (e) {
       const err = e instanceof Error ? e : new Error(String(e))
       const detail = `stage: ${stage}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
-      console.error('[CV Toolkit] analyze failed —', detail)
+      console.error('[ATS Resume Toolkit] analyze failed —', detail)
       setError(`Analysis failed while ${stage}. Please tap “Copy details” and send them to me.`)
       setErrDetail(detail)
     } finally { setBusy(false) }
@@ -81,27 +140,45 @@ export default function Analyzer() {
   }, [report, resume, jd, fileName])
 
   const categories = report ? [...new Set(report.checks.map((c) => c.category))] : []
+  const topFixes = report ? getTopFixes(report, 3) : []
 
   return (
     <div>
-      <p className="mb-6 max-w-xl text-stone-500">Drop in your CV (PDF or DOCX) for an ATS-readiness score, a job-description match, and the exact data a parser extracts.</p>
+      <p className="mb-6 max-w-2xl text-stone-500">Get a fast ATS score for your resume or CV. Drop in a PDF or DOCX and see the highest-impact fixes first.</p>
 
-      <button
-        type="button"
-        aria-label="Upload your CV as a PDF or DOCX file"
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
-        onDragLeave={() => setDrag(false)}
-        onDrop={onDrop}
-        className={`group flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 text-center transition ${drag ? 'border-indigo-400 bg-indigo-50' : 'border-stone-300 bg-white hover:border-stone-400'}`}
-      >
-        <svg className="h-9 w-9 text-stone-400 group-hover:text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14" /></svg>
-        <span className="mt-3 font-medium text-stone-800">{busy ? 'Analyzing…' : 'Drop your CV here or click to choose'}</span>
-        <span className="mt-1 text-sm text-stone-400">PDF or DOCX · stays on your device</span>
-        <input ref={inputRef} type="file" accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) run(f) }} />
-      </button>
+      {!report ? (
+        <button
+          type="button"
+          aria-label="Upload your CV as a PDF or DOCX file"
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
+          onDragLeave={() => setDrag(false)}
+          onDrop={onDrop}
+          className={`group flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-12 text-center shadow-sm transition ${drag ? 'border-indigo-400 bg-indigo-50' : 'border-stone-300 bg-white hover:border-stone-400 hover:bg-stone-50/40'}`}
+        >
+          <svg className="h-9 w-9 text-stone-400 group-hover:text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14" /></svg>
+          <span className="mt-3 font-medium text-stone-800">{busy ? 'Scoring your CV…' : 'Drop your CV here for a fast ATS score'}</span>
+          <span className="mt-1 text-sm text-stone-400">PDF or DOCX · runs in your browser · no upload · no LLM</span>
+        </button>
+      ) : (
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
+          onDragLeave={() => setDrag(false)}
+          onDrop={onDrop}
+          className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 shadow-sm transition ${drag ? 'border-indigo-300 bg-indigo-50' : 'border-stone-200 bg-white'}`}
+        >
+          <p className="text-sm text-stone-500">Analyzed <span className="font-medium text-stone-800">{fileName}</span></p>
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
+          >
+            Analyze another CV
+          </button>
+        </div>
+      )}
+      <input ref={inputRef} type="file" accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) run(f) }} />
 
-      {fileName && !error && <p className="mt-3 text-sm text-stone-500">Analyzed: <span className="font-medium text-stone-700">{fileName}</span></p>}
       {error && (
         <div role="alert" className="mt-3 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">
           <p>{error}</p>
@@ -122,33 +199,48 @@ export default function Analyzer() {
 
       {report && resume && (
         <section className="mt-8" aria-live="polite">
-          <div className="mb-5 flex items-center justify-between gap-3">
-            <nav className="flex gap-1 rounded-xl bg-stone-100 p-1 text-sm font-medium">
-              {([['analyze', 'Analyze'], ['jd', 'Job match'], ['data', 'Extracted data']] as [Tab, string][]).map(([id, label]) => (
-                <button key={id} onClick={() => setTab(id)} className={`rounded-lg px-3 py-1.5 transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
-              ))}
-            </nav>
-            <button onClick={download} className="shrink-0 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 hover:border-stone-400">↓ Report</button>
+          <div className="mb-6 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
+            <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,0.8fr)]">
+              <div className="min-w-0 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+                  <ScoreRing score={report.score} tone={report.band.tone} />
+                  <div className="min-w-0 flex-1">
+                    <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ring-1 ${TONE[report.band.tone].chip}`}>
+                      <span className={`h-2 w-2 rounded-full ${TONE[report.band.tone].dot}`} />{report.band.label}
+                    </div>
+                    <h2 className="mt-3 text-xl font-semibold tracking-tight text-stone-900">Fast ATS score</h2>
+                    <p className="mt-1 text-sm text-stone-500">
+                      {report.meta.numPages ? `${report.meta.numPages} page${report.meta.numPages > 1 ? 's' : ''} · ` : ''}{report.meta.words.toLocaleString()} words · {report.meta.charCount.toLocaleString()} readable characters.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4"><CategoryBreakdown report={report} /></div>
+              </div>
+              <div className="min-w-0">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <h3 className="text-sm font-semibold text-stone-900">Top fixes</h3>
+                  <button onClick={download} className="shrink-0 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">↓ Report</button>
+                </div>
+                <TopFixes fixes={topFixes} />
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <nav className="flex shrink-0 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium">
+                {([['analyze', 'Full report'], ['jd', 'Job match'], ['data', 'Extracted data']] as [Tab, string][]).map(([id, label]) => (
+                  <button key={id} onClick={() => setTab(id)} className={`rounded-md px-3 py-1.5 transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
+                ))}
+              </nav>
+            </div>
           </div>
 
           {tab === 'analyze' && (
             <div>
-              <div className="flex flex-col items-center gap-5 rounded-2xl bg-white p-6 ring-1 ring-stone-200 sm:flex-row sm:gap-7">
-                <ScoreRing score={report.score} tone={report.band.tone} />
-                <div className="text-center sm:text-left">
-                  <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ring-1 ${TONE[report.band.tone].chip}`}>
-                    <span className={`h-2 w-2 rounded-full ${TONE[report.band.tone].dot}`} />{report.band.label}
-                  </div>
-                  <p className="mt-3 text-sm text-stone-500">
-                    {report.meta.numPages ? `${report.meta.numPages} page${report.meta.numPages > 1 ? 's' : ''} · ` : ''}{report.meta.words.toLocaleString()} words · {report.meta.charCount.toLocaleString()} readable characters.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-6 space-y-5">
+              <div className="mt-6 grid gap-5 lg:grid-cols-2">
                 {categories.map((cat) => {
                   const items = report.checks.filter((c) => c.category === cat)
                   return (
-                    <div key={cat} className="rounded-2xl bg-white p-5 ring-1 ring-stone-200">
+                    <div key={cat} className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                       <div className="flex items-baseline justify-between border-b border-stone-100 pb-2">
                         <h2 className="font-semibold text-stone-800">{cat}</h2>
                         <span className="text-sm tabular-nums text-stone-400">{items.reduce((s, c) => s + c.points, 0)}/{items.reduce((s, c) => s + c.max, 0)}</span>
@@ -162,11 +254,11 @@ export default function Analyzer() {
           )}
 
           {tab === 'jd' && (
-            <div className="rounded-2xl bg-white p-5 ring-1 ring-stone-200">
+            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
               <h2 className="font-semibold text-stone-800">Match against a job description</h2>
               <p className="mt-1 text-sm text-stone-500">Paste the job posting. We extract the keywords it emphasizes and check which your CV already contains.</p>
-              <textarea value={jdText} onChange={(e) => setJdText(e.target.value)} rows={6} placeholder="Paste the full job description here…" className="mt-3 w-full resize-y rounded-lg border border-stone-300 p-3 text-sm outline-none focus:border-indigo-400" />
-              <button onClick={runJd} disabled={!jdText.trim()} className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-40">Match keywords</button>
+              <textarea value={jdText} onChange={(e) => setJdText(e.target.value)} rows={6} placeholder="Paste the full job description here…" className="mt-3 w-full resize-y rounded-lg border border-stone-300 p-3 text-sm outline-none transition hover:border-stone-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+              <button onClick={runJd} disabled={!jdText.trim()} className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">Match keywords</button>
 
               {jd && (
                 <div className="mt-5">
@@ -193,7 +285,7 @@ export default function Analyzer() {
 
           {tab === 'data' && (
             <div className="space-y-5">
-              <div className="rounded-2xl bg-white p-5 ring-1 ring-stone-200">
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                 <h2 className="mb-2 font-semibold text-stone-800">Profile</h2>
                 <dl className="grid grid-cols-[7rem_1fr] gap-y-1.5 text-sm">
                   {([['Name', resume.profile.name], ['Email', resume.profile.email], ['Phone', resume.profile.phone], ['Location', resume.profile.location], ['Links', resume.profile.links.join('  ·  ')]] as [string, string][]).map(([k, v]) => (
@@ -202,7 +294,7 @@ export default function Analyzer() {
                 </dl>
                 <p className="mt-2 text-xs text-stone-400">This is what an ATS-style parser pulls out. Blank fields in red usually mean a formatting issue.</p>
               </div>
-              <div className="rounded-2xl bg-white p-5 ring-1 ring-stone-200">
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                 <h2 className="mb-3 font-semibold text-stone-800">Experience <span className="text-sm font-normal text-stone-400">({resume.experience.length} parsed)</span></h2>
                 <div className="space-y-3">
                   {resume.experience.map((e, i) => (
@@ -215,12 +307,12 @@ export default function Analyzer() {
                 </div>
               </div>
               <div className="grid gap-5 sm:grid-cols-2">
-                <div className="rounded-2xl bg-white p-5 ring-1 ring-stone-200">
+                <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                   <h2 className="mb-3 font-semibold text-stone-800">Education <span className="text-sm font-normal text-stone-400">({resume.education.length})</span></h2>
                   {resume.education.map((e, i) => <p key={i} className="text-sm text-stone-700">{e.degree || e.school}<span className="text-stone-400"> · {e.date}</span></p>)}
                   {!resume.education.length && <p className="text-sm text-rose-500">None parsed.</p>}
                 </div>
-                <div className="rounded-2xl bg-white p-5 ring-1 ring-stone-200">
+                <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                   <h2 className="mb-3 font-semibold text-stone-800">Skills <span className="text-sm font-normal text-stone-400">({resume.skills.length})</span></h2>
                   <div className="flex flex-wrap gap-1.5">{resume.skills.slice(0, 30).map((s, i) => <span key={i} className="rounded bg-stone-100 px-2 py-0.5 text-xs text-stone-600">{s}</span>)}</div>
                   {!resume.skills.length && <p className="text-sm text-rose-500">None parsed.</p>}
