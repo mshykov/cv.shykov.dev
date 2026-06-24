@@ -1,7 +1,8 @@
 import { lazy, Suspense, useState } from 'react'
-import Analyzer from './Analyzer'
 import ErrorBoundary from './ErrorBoundary'
 
+// Keep the app shell tiny; load the active workflow UI after first paint.
+const Analyzer = lazy(() => import('./Analyzer'))
 // Builder pulls in @react-pdf/renderer — load it only when the Build tab opens.
 const Builder = lazy(() => import('./builder/Builder'))
 
@@ -28,9 +29,9 @@ export default function App() {
 
       <main className="flex-1">
         <ErrorBoundary>
-          {mode === 'analyze'
-            ? <Analyzer />
-            : <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading builder…</p>}><Builder /></Suspense>}
+          <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading…</p>}>
+            {mode === 'analyze' ? <Analyzer /> : <Builder />}
+          </Suspense>
         </ErrorBoundary>
       </main>
 

@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:debug": "tsc -b && VITE_SOURCEMAPS=true vite build",
     "lint": "eslint .",
     "test": "node --test \"src/**/*.test.ts\"",
     "smoke:build": "node scripts/smoke-built.mjs",

@@ -17,6 +17,7 @@ Builds** — auto-deploys on push to `main`; custom domain in `wrangler.jsonc`.
 npm run dev      # dev server
 npm test         # node:test unit tests (lib + polyfills)
 npm run build    # tsc + vite build (CI gate runs lint + test + build)
+npm run build:debug # same build with production source maps for stack traces
 npx vite preview --port 4319   # serves the prod build WITH the production CSP
 ```
 
