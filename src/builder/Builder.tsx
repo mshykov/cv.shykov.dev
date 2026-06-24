@@ -10,6 +10,29 @@ const ACCENT_PRESETS = ['#4f46e5', '#0f766e', '#c2410c', '#be123c', '#111827'] a
 const PREVIEW_LINE_HEIGHT: Record<Spacing, number> = { compact: 1.35, standard: 1.5, relaxed: 1.7 }
 const PREVIEW_SECTION_GAP: Record<Spacing, number> = { compact: 10, standard: 15, relaxed: 21 }
 const PREVIEW_ENTRY_GAP: Record<Spacing, number> = { compact: 5, standard: 8, relaxed: 12 }
+const SPACING_LABELS: Record<Spacing, string> = { compact: 'Tight', standard: 'Std', relaxed: 'Airy' }
+
+type WithUiId<T> = T & { uiId: string }
+type BuilderUiState = Omit<BuilderState, 'experience' | 'education' | 'projects'> & {
+  experience: WithUiId<ExperienceEntry>[]
+  education: WithUiId<EducationEntry>[]
+  projects: WithUiId<ProjectEntry>[]
+}
+
+let nextBuilderItemId = 0
+const createUiId = (scope: string) => `${scope}-${nextBuilderItemId++}`
+const withUiIds = (state: BuilderState): BuilderUiState => ({
+  ...state,
+  experience: state.experience.map((entry) => ({ ...entry, uiId: createUiId('experience') })),
+  education: state.education.map((entry) => ({ ...entry, uiId: createUiId('education') })),
+  projects: state.projects.map((entry) => ({ ...entry, uiId: createUiId('project') })),
+})
+const stripUiIds = (state: BuilderUiState): BuilderState => ({
+  ...state,
+  experience: state.experience.map((entry) => ({ title: entry.title, company: entry.company, date: entry.date, bullets: entry.bullets })),
+  education: state.education.map((entry) => ({ school: entry.school, degree: entry.degree, date: entry.date })),
+  projects: state.projects.map((entry) => ({ name: entry.name, description: entry.description })),
+})
 
 function Field({ label, value, onChange, area, placeholder, type = 'text', autoComplete }: { label: string; value: string; onChange: (v: string) => void; area?: boolean; placeholder?: string; type?: string; autoComplete?: string }) {
   const cls = 'mt-1.5 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition hover:border-stone-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100'
@@ -81,7 +104,7 @@ function OptionButton<T extends string | number>({ value, selected, onSelect, ch
 }
 
 export default function Builder() {
-  const [state, setState] = useState<BuilderState>(SAMPLE)
+  const [state, setState] = useState<BuilderUiState>(() => withUiIds(SAMPLE))
   const [skillsText, setSkillsText] = useState(SAMPLE.skills.join(', '))
   const [linksText, setLinksText] = useState(SAMPLE.profile.links.join(', '))
   const [busy, setBusy] = useState(false)
@@ -91,7 +114,7 @@ export default function Builder() {
 
   // Effective state folds the free-text skills/links fields into the model.
   const eff = useMemo<BuilderState>(() => ({
-    ...state,
+    ...stripUiIds(state),
     skills: parseList(skillsText),
     profile: { ...state.profile, links: parseList(linksText) },
   }), [state, skillsText, linksText])
@@ -103,22 +126,22 @@ export default function Builder() {
   const previewSectionGap = PREVIEW_SECTION_GAP[state.settings.spacing]
   const previewEntryGap = PREVIEW_ENTRY_GAP[state.settings.spacing]
 
-  const setProfile = (k: keyof BuilderState['profile'], v: string) =>
+  const setProfile = (k: keyof BuilderUiState['profile'], v: string) =>
     setState((s) => ({ ...s, profile: { ...s.profile, [k]: v } }))
-  const setCfg = (k: keyof BuilderState['settings'], v: string | number) =>
+  const setCfg = (k: keyof BuilderUiState['settings'], v: string | number) =>
     setState((s) => ({ ...s, settings: { ...s.settings, [k]: v } }))
 
   // Generic list helpers
-  const addExp = () => setState((s) => ({ ...s, experience: [...s.experience, { title: '', company: '', date: '', bullets: [] }] }))
+  const addExp = () => setState((s) => ({ ...s, experience: [...s.experience, { title: '', company: '', date: '', bullets: [], uiId: createUiId('experience') }] }))
   const setExp = (i: number, patch: Partial<ExperienceEntry>) => setState((s) => ({ ...s, experience: s.experience.map((e, j) => j === i ? { ...e, ...patch } : e) }))
   const moveExp = (i: number, d: number) => setState((s) => { const a = [...s.experience]; const t = a[i + d]; if (!t) return s; a[i + d] = a[i]; a[i] = t; return { ...s, experience: a } })
   const delExp = (i: number) => setState((s) => ({ ...s, experience: s.experience.filter((_, j) => j !== i) }))
 
-  const addEdu = () => setState((s) => ({ ...s, education: [...s.education, { school: '', degree: '', date: '' }] }))
+  const addEdu = () => setState((s) => ({ ...s, education: [...s.education, { school: '', degree: '', date: '', uiId: createUiId('education') }] }))
   const setEdu = (i: number, patch: Partial<EducationEntry>) => setState((s) => ({ ...s, education: s.education.map((e, j) => j === i ? { ...e, ...patch } : e) }))
   const delEdu = (i: number) => setState((s) => ({ ...s, education: s.education.filter((_, j) => j !== i) }))
 
-  const addProj = () => setState((s) => ({ ...s, projects: [...s.projects, { name: '', description: '' }] }))
+  const addProj = () => setState((s) => ({ ...s, projects: [...s.projects, { name: '', description: '', uiId: createUiId('project') }] }))
   const setProj = (i: number, patch: Partial<ProjectEntry>) => setState((s) => ({ ...s, projects: s.projects.map((e, j) => j === i ? { ...e, ...patch } : e) }))
   const delProj = (i: number) => setState((s) => ({ ...s, projects: s.projects.filter((_, j) => j !== i) }))
 
@@ -139,7 +162,7 @@ export default function Builder() {
     try {
       const [{ extractDocument }, { parseResume }] = await Promise.all([import('../lib/extract'), import('../lib/parse')])
       const r = parseResume(await extractDocument(file))
-      setState((s) => ({ ...r, settings: s.settings }))
+      setState((s) => withUiIds({ ...r, settings: s.settings }))
       setSkillsText(r.skills.join(', ')); setLinksText(r.profile.links.join(', '))
       setNote(`Imported ${r.experience.length} roles from ${file.name}. Review and tweak below.`)
     } catch (e) {
@@ -197,7 +220,7 @@ export default function Builder() {
             <SectionTitle title="Experience" hint="Use action verbs, measurable impact, and one result per bullet." action={<AddButton onClick={addExp}>Add</AddButton>} />
             <div className="space-y-4">
               {state.experience.map((e, i) => (
-                <div key={i} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
+                <div key={e.uiId} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
                   <div className="mb-3 flex items-center justify-end gap-2">
                     <IconButton label="Move role up" onClick={() => moveExp(i, -1)} disabled={i === 0}>↑</IconButton>
                     <IconButton label="Move role down" onClick={() => moveExp(i, 1)} disabled={i === state.experience.length - 1}>↓</IconButton>
@@ -224,7 +247,7 @@ export default function Builder() {
             <SectionTitle title="Projects" hint="Optional, best for proof of ownership or portfolio-worthy work." action={<AddButton onClick={addProj}>Add</AddButton>} />
             <div className="space-y-3">
               {state.projects.map((p, i) => (
-                <div key={i} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
+                <div key={p.uiId} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
                   <div className="mb-2 flex justify-end"><IconButton label="Delete project" onClick={() => delProj(i)} tone="danger">×</IconButton></div>
                   <Field label="Name" value={p.name} onChange={(v) => setProj(i, { name: v })} />
                   <div className="mt-2"><Field label="Description" value={p.description} onChange={(v) => setProj(i, { description: v })} /></div>
@@ -238,7 +261,7 @@ export default function Builder() {
             <SectionTitle title="Education" hint="Keep dates and degree names consistent with your experience section." action={<AddButton onClick={addEdu}>Add</AddButton>} />
             <div className="space-y-3">
               {state.education.map((e, i) => (
-                <div key={i} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
+                <div key={e.uiId} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
                   <div className="mb-2 flex justify-end"><IconButton label="Delete education" onClick={() => delEdu(i)} tone="danger">×</IconButton></div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <Field label="Degree" value={e.degree} onChange={(v) => setEdu(i, { degree: v })} />
@@ -298,7 +321,7 @@ export default function Builder() {
                 <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-stone-50 p-1 ring-1 ring-stone-200">
                   {(['compact', 'standard', 'relaxed'] as Spacing[]).map((n) => (
                     <OptionButton key={n} value={n} selected={state.settings.spacing === n} onSelect={(value) => setCfg('spacing', value)}>
-                      {n === 'compact' ? 'Tight' : n === 'standard' ? 'Std' : 'Airy'}
+                      {SPACING_LABELS[n]}
                     </OptionButton>
                   ))}
                 </div>
@@ -331,15 +354,15 @@ export default function Builder() {
               <div className="text-stone-500" style={{ fontSize: previewContactSize }}>{[eff.profile.email, eff.profile.phone, ...eff.profile.links].filter(Boolean).join('  •  ')}</div>
               {eff.profile.location && <div className="text-stone-500" style={{ fontSize: previewContactSize }}>{eff.profile.location}</div>}
               {eff.profile.summary && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.summary}><p>{eff.profile.summary}</p></PreviewSection>}
-              {eff.experience.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.experience}>{eff.experience.map((e, i) => (
-                <div key={i} style={{ marginBottom: previewEntryGap }}>
+              {state.experience.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.experience}>{state.experience.map((e) => (
+                <div key={e.uiId} style={{ marginBottom: previewEntryGap }}>
                   <div className="flex justify-between gap-2"><span className="font-semibold">{e.title}{e.company && ` — ${e.company}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>
-                  <ul className="ml-4 list-disc">{e.bullets.filter((b) => b.trim()).map((b, j) => <li key={j}>{b}</li>)}</ul>
+                  <ul className="ml-4 list-disc">{e.bullets.filter((b) => b.trim()).map((b) => <li key={b}>{b}</li>)}</ul>
                 </div>
               ))}</PreviewSection>}
               {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.skills}><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
-              {eff.projects.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.projects}><ul className="ml-4 list-disc">{eff.projects.map((p, i) => <li key={i}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
-              {eff.education.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.education}>{eff.education.map((e, i) => <div key={i} className="flex justify-between gap-2" style={{ marginBottom: i === eff.education.length - 1 ? 0 : previewEntryGap }}><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
+              {state.projects.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.projects}><ul className="ml-4 list-disc">{state.projects.map((p) => <li key={p.uiId}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
+              {state.education.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.education}>{state.education.map((e, i) => <div key={e.uiId} className="flex justify-between gap-2" style={{ marginBottom: i === state.education.length - 1 ? 0 : previewEntryGap }}><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
             </div>
           </div>
           <p className="mt-2 text-center text-xs text-stone-400">Live preview · the exported PDF is single-column Helvetica, ATS-clean</p>
