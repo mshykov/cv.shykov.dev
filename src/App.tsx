@@ -27,11 +27,11 @@ function SourceIcon() {
 
 function LogoMark() {
   return (
-    <div className="flex items-center gap-3">
-      <img src="/logo.png" alt="" className="h-11 w-11 rounded-2xl shadow-sm ring-1 ring-black/5" />
-      <div>
-        <div className="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-700">cv.shykov.dev</div>
-        <div className="text-lg font-semibold tracking-tight text-stone-950">ATS Resume Toolkit</div>
+    <div className="flex min-w-0 items-center gap-3">
+      <img src="/logo.png" alt="" className="h-10 w-10 shrink-0 rounded-2xl shadow-sm ring-1 ring-black/5 sm:h-11 sm:w-11" />
+      <div className="min-w-0">
+        <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700 sm:text-sm">cv.shykov.dev</div>
+        <div className="truncate text-base font-semibold tracking-tight text-stone-950 sm:text-lg">ATS Resume Toolkit</div>
       </div>
     </div>
   )
@@ -40,7 +40,7 @@ function LogoMark() {
 function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => void }) {
   return (
     <nav
-      className="flex shrink-0 gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur"
+      className="flex w-full shrink-0 gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur sm:w-auto"
       aria-label="Primary app mode"
     >
       {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
@@ -48,7 +48,7 @@ function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => 
           key={id}
           type="button"
           onClick={() => onSwitch(id)}
-          className={`rounded-lg px-3 py-2 transition sm:px-4 ${mode === id ? 'bg-stone-950 text-white shadow-sm' : 'text-stone-500 hover:bg-white hover:text-stone-800'}`}
+          className={`min-h-10 flex-1 rounded-lg px-3 py-2 transition sm:flex-none sm:px-4 ${mode === id ? 'bg-stone-950 text-white shadow-sm' : 'text-stone-500 hover:bg-white hover:text-stone-800'}`}
         >
           {id === 'analyze' ? 'Fast ATS Score' : label}
         </button>
@@ -60,7 +60,7 @@ function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => 
 function SiteHeader({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => void }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200/80 bg-white/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-5">
+      <div className="mx-auto flex min-h-30 max-w-7xl flex-col justify-center gap-3 px-5 py-3 sm:h-20 sm:min-h-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
         <LogoMark />
         <ModeSwitch mode={mode} onSwitch={onSwitch} />
       </div>
@@ -236,7 +236,7 @@ export default function App() {
   return (
     <div className="min-h-full bg-stone-50">
       <SiteHeader mode={mode} onSwitch={switchMode} />
-      <section className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)] pt-20">
+      <section className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)] pt-30 sm:pt-20">
         <div className="relative mx-auto max-w-7xl px-5 lg:min-h-[30rem]">
           <HeroMedia />
           <div className="max-w-2xl py-10 sm:py-14 lg:py-16">
