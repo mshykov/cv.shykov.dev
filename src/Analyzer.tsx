@@ -144,7 +144,7 @@ export default function Analyzer() {
 
   return (
     <div>
-      <p className="mb-6 max-w-2xl text-stone-500">Get a fast ATS score for your resume or CV. Drop in a PDF or DOCX and see the highest-impact fixes first.</p>
+      <h2 className="sr-only">Upload a resume for a fast ATS score</h2>
 
       {!report ? (
         <button
@@ -177,7 +177,17 @@ export default function Analyzer() {
           </button>
         </div>
       )}
-      <input ref={inputRef} type="file" accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) run(f) }} />
+      <input
+        ref={inputRef}
+        type="file"
+        accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0]
+          if (f) run(f)
+          e.currentTarget.value = ''
+        }}
+      />
 
       {error && (
         <div role="alert" className="mt-3 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">

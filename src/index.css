@@ -12,3 +12,39 @@ body {
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
 }
+
+.hero-scan::after {
+  content: '';
+  position: absolute;
+  inset: 3rem 1.25rem auto;
+  height: 2px;
+  border-radius: 999px;
+  background: #4f46e5;
+  box-shadow: 0 0 18px rgba(79, 70, 229, 0.45);
+  animation: hero-scan-line 4.8s ease-in-out infinite;
+}
+
+@keyframes hero-scan-line {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  12%,
+  82% {
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: translateY(14rem);
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scan::after {
+    animation: none;
+    opacity: 0.35;
+  }
+}
