@@ -70,32 +70,62 @@ export const SAMPLE: BuilderState = {
   settings: DEFAULT_SETTINGS,
 }
 
+function addProfileLines(lines: string[], state: BuilderState) {
+  const { profile } = state
+  if (profile.name) lines.push(profile.name)
+
+  const contact = [profile.email, profile.phone, ...profile.links].filter(Boolean).join(' · ')
+  if (contact) lines.push(contact)
+  if (profile.location) lines.push(profile.location)
+  if (profile.summary) lines.push(BUILDER_SECTION_TITLES.summary.toUpperCase(), profile.summary)
+}
+
+function addExperienceLines(lines: string[], state: BuilderState) {
+  if (!state.experience.length) return
+
+  lines.push(BUILDER_SECTION_TITLES.experience.toUpperCase())
+  for (const entry of state.experience) {
+    lines.push(`${entry.title}${entry.company ? ' — ' + entry.company : ''} ${entry.date}`.trim())
+    for (const bullet of entry.bullets) {
+      const text = bullet.trim()
+      if (text) lines.push('• ' + text)
+    }
+  }
+}
+
+function addSkillsLines(lines: string[], state: BuilderState) {
+  if (state.skills.length) lines.push(BUILDER_SECTION_TITLES.skills.toUpperCase(), state.skills.join(', '))
+}
+
+function addProjectLines(lines: string[], state: BuilderState) {
+  if (!state.projects.length) return
+
+  lines.push(BUILDER_SECTION_TITLES.projects.toUpperCase())
+  for (const project of state.projects) {
+    lines.push(`• ${project.name}${project.description ? ' — ' + project.description : ''}`)
+  }
+}
+
+function addEducationLines(lines: string[], state: BuilderState) {
+  if (!state.education.length) return
+
+  lines.push(BUILDER_SECTION_TITLES.education.toUpperCase())
+  for (const education of state.education) {
+    const school = education.school && education.degree ? ' — ' + education.school : ''
+    lines.push(`• ${education.degree || education.school}${school}, ${education.date}`)
+  }
+}
+
 /** Render the builder state into an analyzer-ready document (UPPERCASE headers
  *  + bullets) so the live ATS score reflects the same heuristics. */
 export function synthExtracted(s: BuilderState): Extracted {
   const lines: string[] = []
-  const { profile: p } = s
-  if (p.name) lines.push(p.name)
-  const contact = [p.email, p.phone, ...p.links].filter(Boolean).join(' · ')
-  if (contact) lines.push(contact)
-  if (p.location) lines.push(p.location)
-  if (p.summary) { lines.push(BUILDER_SECTION_TITLES.summary.toUpperCase(), p.summary) }
-  if (s.experience.length) {
-    lines.push(BUILDER_SECTION_TITLES.experience.toUpperCase())
-    for (const e of s.experience) {
-      lines.push(`${e.title}${e.company ? ' — ' + e.company : ''} ${e.date}`.trim())
-      for (const b of e.bullets) if (b.trim()) lines.push('• ' + b.trim())
-    }
-  }
-  if (s.skills.length) { lines.push(BUILDER_SECTION_TITLES.skills.toUpperCase(), s.skills.join(', ')) }
-  if (s.projects.length) {
-    lines.push(BUILDER_SECTION_TITLES.projects.toUpperCase())
-    for (const pr of s.projects) lines.push(`• ${pr.name}${pr.description ? ' — ' + pr.description : ''}`)
-  }
-  if (s.education.length) {
-    lines.push(BUILDER_SECTION_TITLES.education.toUpperCase())
-    for (const ed of s.education) lines.push(`• ${ed.degree || ed.school}${ed.school && ed.degree ? ' — ' + ed.school : ''}, ${ed.date}`)
-  }
+  addProfileLines(lines, s)
+  addExperienceLines(lines, s)
+  addSkillsLines(lines, s)
+  addProjectLines(lines, s)
+  addEducationLines(lines, s)
+
   const text = lines.join('\n')
   // Rough page estimate from content volume (single-column ~ 48 lines/page).
   const numPages = Math.min(3, Math.max(1, Math.ceil(lines.length / 46)))

@@ -8,6 +8,20 @@ import { ScoreRing } from './components/ScoreRing'
 
 type Tab = 'analyze' | 'jd' | 'data'
 
+function jdCoverageClass(coverage: number): string {
+  if (coverage >= 70) return 'text-emerald-600'
+  if (coverage >= 40) return 'text-amber-600'
+  return 'text-rose-600'
+}
+
+function experienceKey(entry: Resume['experience'][number]): string {
+  return [entry.title, entry.company, entry.date, entry.bullets.join('|')].join('::')
+}
+
+function educationKey(entry: Resume['education'][number]): string {
+  return [entry.degree, entry.school, entry.date].join('::')
+}
+
 function CheckRow({ c }: { c: Check }) {
   return (
     <div className="flex gap-3 py-3">
@@ -273,7 +287,7 @@ export default function Analyzer() {
               {jd && (
                 <div className="mt-5">
                   <div className="flex items-center gap-3">
-                    <span className={`text-3xl font-semibold tabular-nums ${jd.coverage >= 70 ? 'text-emerald-600' : jd.coverage >= 40 ? 'text-amber-600' : 'text-rose-600'}`}>{jd.coverage}%</span>
+                    <span className={`text-3xl font-semibold tabular-nums ${jdCoverageClass(jd.coverage)}`}>{jd.coverage}%</span>
                     <span className="text-sm text-stone-500">keyword coverage · {jd.matched.length}/{jd.total} matched</span>
                   </div>
                   {jd.missing.length > 0 && (
@@ -307,8 +321,8 @@ export default function Analyzer() {
               <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                 <h2 className="mb-3 font-semibold text-stone-800">Experience <span className="text-sm font-normal text-stone-400">({resume.experience.length} parsed)</span></h2>
                 <div className="space-y-3">
-                  {resume.experience.map((e, i) => (
-                    <div key={i} className="border-l-2 border-stone-200 pl-3">
+                  {resume.experience.map((e) => (
+                    <div key={experienceKey(e)} className="border-l-2 border-stone-200 pl-3">
                       <div className="flex flex-wrap items-baseline justify-between gap-2"><span className="font-medium text-stone-800">{e.title}{e.company && <span className="font-normal text-stone-500"> — {e.company}</span>}</span><span className="text-xs text-stone-400">{e.date}</span></div>
                       <p className="text-xs text-stone-400">{e.bullets.length} bullet{e.bullets.length === 1 ? '' : 's'}</p>
                     </div>
@@ -319,12 +333,12 @@ export default function Analyzer() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                   <h2 className="mb-3 font-semibold text-stone-800">Education <span className="text-sm font-normal text-stone-400">({resume.education.length})</span></h2>
-                  {resume.education.map((e, i) => <p key={i} className="text-sm text-stone-700">{e.degree || e.school}<span className="text-stone-400"> · {e.date}</span></p>)}
+                  {resume.education.map((e) => <p key={educationKey(e)} className="text-sm text-stone-700">{e.degree || e.school}<span className="text-stone-400"> · {e.date}</span></p>)}
                   {!resume.education.length && <p className="text-sm text-rose-500">None parsed.</p>}
                 </div>
                 <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
                   <h2 className="mb-3 font-semibold text-stone-800">Skills <span className="text-sm font-normal text-stone-400">({resume.skills.length})</span></h2>
-                  <div className="flex flex-wrap gap-1.5">{resume.skills.slice(0, 30).map((s, i) => <span key={i} className="rounded bg-stone-100 px-2 py-0.5 text-xs text-stone-600">{s}</span>)}</div>
+                  <div className="flex flex-wrap gap-1.5">{resume.skills.slice(0, 30).map((s) => <span key={s} className="rounded bg-stone-100 px-2 py-0.5 text-xs text-stone-600">{s}</span>)}</div>
                   {!resume.skills.length && <p className="text-sm text-rose-500">None parsed.</p>}
                 </div>
               </div>

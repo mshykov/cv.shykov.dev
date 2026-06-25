@@ -171,13 +171,9 @@ function linkDetail(hasUrl: boolean, hasHiddenUrl: boolean): string {
   return 'No LinkedIn/website link found.'
 }
 
-export function analyze(ex: Extracted): Report {
-  const { text, lines, linkTargets = [], numPages, charCount, source } = ex
-  const words = text.split(/\s+/).filter(Boolean).length
-  const checks: Check[] = []
-  const add = (c: Check) => checks.push(c)
+type AddCheck = (check: Check) => void
 
-  // ── Parseability ─────────────────────────────────────────────
+function addParseabilityChecks(add: AddCheck, text: string, charCount: number) {
   if (charCount >= 300) {
     add({ id: 'machine-text', label: 'Machine-readable text', category: 'Parseability', status: 'pass', points: 15, max: 15, detail: `Extracted ${charCount.toLocaleString()} characters of selectable text.` })
   } else if (charCount >= 50) {
@@ -190,11 +186,16 @@ export function analyze(ex: Extracted): Report {
   const cid = text.includes('(cid:')
   if (!lig && !cid) {
     add({ id: 'encoding', label: 'Clean text encoding', category: 'Parseability', status: 'pass', points: 10, max: 10, detail: 'No ligature glyphs or broken character codes detected.' })
-  } else {
-    add({ id: 'encoding', label: 'Clean text encoding', category: 'Parseability', status: 'fail', points: 0, max: 10, detail: lig ? 'Ligature glyphs found (e.g. “ﬁ”, “ﬂ”) — keyword search for words like “fintech”/“significant” will miss them.' : 'Broken character codes “(cid:…)” found in the text stream.', fix: 'Disable OpenType ligatures, or re-export with a standard font (Helvetica/Arial/Calibri).' })
+    return
   }
 
-  // ── Contact ──────────────────────────────────────────────────
+  const detail = lig
+    ? 'Ligature glyphs found (e.g. “ﬁ”, “ﬂ”) — keyword search for words like “fintech”/“significant” will miss them.'
+    : 'Broken character codes “(cid:…)” found in the text stream.'
+  add({ id: 'encoding', label: 'Clean text encoding', category: 'Parseability', status: 'fail', points: 0, max: 10, detail, fix: 'Disable OpenType ligatures, or re-export with a standard font (Helvetica/Arial/Calibri).' })
+}
+
+function addContactChecks(add: AddCheck, text: string, linkTargets: string[]) {
   const hasEmail = hasEmailAddress(text)
   add({ id: 'email', label: 'Email address', category: 'Contact', status: hasEmail ? 'pass' : 'fail', points: hasEmail ? 5 : 0, max: 5, detail: hasEmail ? 'Email found.' : 'No email address detected.', fix: hasEmail ? undefined : 'Add your email as plain text near the top.' })
 
@@ -213,25 +214,36 @@ export function analyze(ex: Extracted): Report {
     detail: linkDetail(hasUrl, hasHiddenUrl),
     fix: hasUrl ? undefined : 'Add the full URL as visible text (e.g. linkedin.com/in/you) — parsers read text, not the link target.',
   })
+}
 
-  // ── Sections ─────────────────────────────────────────────────
-  const sec = (id: string, label: string, max: number, keys: string[], essential: boolean) => {
-    const ok = hasHeader(lines, keys)
-    add({ id, label, category: 'Sections', status: ok ? 'pass' : essential ? 'fail' : 'warn', points: ok ? max : 0, max, detail: ok ? `“${label}” section detected.` : `No “${label}” section header found.`, fix: ok ? undefined : `Add a clearly labeled ${label} section. Use a standard, ideally UPPERCASE, header.` })
-  }
-  sec('sec-exp', 'Experience', 8, SECTION_KEYWORDS.experience, true)
-  sec('sec-edu', 'Education', 6, SECTION_KEYWORDS.education, true)
-  sec('sec-skills', 'Skills', 6, SECTION_KEYWORDS.skills, true)
-  sec('sec-summary', 'Summary', 5, SECTION_KEYWORDS.summary, false)
+function missingSectionStatus(essential: boolean): Status {
+  return essential ? 'fail' : 'warn'
+}
 
+function addSectionCheck(add: AddCheck, lines: string[], id: string, label: string, max: number, keys: string[], essential: boolean) {
+  const ok = hasHeader(lines, keys)
+  const status: Status = ok ? 'pass' : missingSectionStatus(essential)
+  add({ id, label, category: 'Sections', status, points: ok ? max : 0, max, detail: ok ? `“${label}” section detected.` : `No “${label}” section header found.`, fix: ok ? undefined : `Add a clearly labeled ${label} section. Use a standard, ideally UPPERCASE, header.` })
+}
+
+function addBonusSectionCheck(add: AddCheck, lines: string[]) {
   const achievements = hasHeader(lines, ['achievements', 'key achievements', 'accomplishments', 'highlights'])
   const projects = hasHeader(lines, ['projects', 'selected projects', 'side projects'])
   const certs = hasHeader(lines, ['certifications', 'certificates', 'courses', 'licenses', 'certifications & courses'])
   const bonusPts = (achievements ? 4 : 0) + (projects ? 3 : 0) + (certs ? 3 : 0)
   const bonusFound = [achievements && 'Achievements', projects && 'Projects', certs && 'Certifications'].filter(Boolean)
-  add({ id: 'sec-bonus', label: 'Achievements / Projects / Certifications', category: 'Sections', status: bonusPts >= 7 ? 'pass' : bonusPts > 0 ? 'warn' : 'warn', points: bonusPts, max: 10, detail: bonusFound.length ? `Found: ${bonusFound.join(', ')}.` : 'None of these supporting sections were found.', fix: bonusPts >= 7 ? undefined : 'Add the missing sections (Key Achievements is highest-value — recruiters scan it first).' })
+  add({ id: 'sec-bonus', label: 'Achievements / Projects / Certifications', category: 'Sections', status: bonusPts >= 7 ? 'pass' : 'warn', points: bonusPts, max: 10, detail: bonusFound.length ? `Found: ${bonusFound.join(', ')}.` : 'None of these supporting sections were found.', fix: bonusPts >= 7 ? undefined : 'Add the missing sections (Key Achievements is highest-value — recruiters scan it first).' })
+}
 
-  // ── Format ───────────────────────────────────────────────────
+function addSectionChecks(add: AddCheck, lines: string[]) {
+  addSectionCheck(add, lines, 'sec-exp', 'Experience', 8, SECTION_KEYWORDS.experience, true)
+  addSectionCheck(add, lines, 'sec-edu', 'Education', 6, SECTION_KEYWORDS.education, true)
+  addSectionCheck(add, lines, 'sec-skills', 'Skills', 6, SECTION_KEYWORDS.skills, true)
+  addSectionCheck(add, lines, 'sec-summary', 'Summary', 5, SECTION_KEYWORDS.summary, false)
+  addBonusSectionCheck(add, lines)
+}
+
+function addPageCountCheck(add: AddCheck, source: Extracted['source'], numPages: number) {
   if (source === 'docx' || numPages === 0) {
     add({ id: 'pages', label: 'Page count', category: 'Format', status: 'pass', points: 5, max: 5, detail: 'Page count is not determinable from a DOCX — export to PDF to verify length (aim for 1–2).' })
   } else if (numPages <= 2) {
@@ -241,29 +253,79 @@ export function analyze(ex: Extracted): Report {
   } else {
     add({ id: 'pages', label: 'Page count', category: 'Format', status: 'fail', points: 0, max: 5, detail: `${numPages} pages — too long; later pages often go unread.`, fix: 'Cut to 1–2 pages of the most relevant, recent experience.' })
   }
+}
 
-  const hasDates = hasDate(text)
+function addFormatChecks(add: AddCheck, ex: Extracted) {
+  addPageCountCheck(add, ex.source, ex.numPages)
+
+  const hasDates = hasDate(ex.text)
   add({ id: 'dates', label: 'Dated history', category: 'Format', status: hasDates ? 'pass' : 'warn', points: hasDates ? 5 : 0, max: 5, detail: hasDates ? 'Dates detected — timeline is parseable.' : 'No clear dates found.', fix: hasDates ? undefined : 'Add start/end dates (e.g. “Feb 2023 – now”) to each role.' })
 
-  const bulletLines = lines.filter(isBulletLine).length
-  add({ id: 'bullets', label: 'Bulleted structure', category: 'Format', status: bulletLines >= 3 ? 'pass' : 'warn', points: bulletLines >= 3 ? 5 : bulletLines > 0 ? 3 : 0, max: 5, detail: bulletLines >= 3 ? `${bulletLines} bullet lines detected.` : 'Few or no bullet points found.', fix: bulletLines >= 3 ? undefined : 'Use bullet points for responsibilities/achievements — easier to parse and to scan.' })
+  const bulletLines = ex.lines.filter(isBulletLine).length
+  const bulletPoints = formatBulletPoints(bulletLines)
+  add({ id: 'bullets', label: 'Bulleted structure', category: 'Format', status: bulletLines >= 3 ? 'pass' : 'warn', points: bulletPoints, max: 5, detail: bulletLines >= 3 ? `${bulletLines} bullet lines detected.` : 'Few or no bullet points found.', fix: bulletLines >= 3 ? undefined : 'Use bullet points for responsibilities/achievements — easier to parse and to scan.' })
+}
 
-  // ── Content quality ──────────────────────────────────────────
+function formatBulletPoints(bulletLines: number): number {
+  if (bulletLines >= 3) return 5
+  if (bulletLines > 0) return 3
+  return 0
+}
+
+function quantifiedStatus(quantified: number): Status {
+  if (quantified >= 3) return 'pass'
+  if (quantified > 0) return 'warn'
+  return 'fail'
+}
+
+function quantifiedPoints(quantified: number): number {
+  if (quantified >= 3) return 5
+  if (quantified > 0) return 3
+  return 0
+}
+
+function quantifiedDetail(quantified: number): string {
+  if (quantified >= 3) return `${quantified} quantified results found (%, ×, counts).`
+  if (quantified > 0) return `Only ${quantified} quantified result(s).`
+  return 'No numbers/metrics detected.'
+}
+
+function verbPoints(verbHits: number): number {
+  if (verbHits >= 3) return 5
+  if (verbHits > 0) return 3
+  return 0
+}
+
+function addContentChecks(add: AddCheck, text: string, lines: string[]) {
   const quantified = (text.match(/\d+\s?%|[$€£]\s?\d|\b\d+(?:\.\d+)?\s?(?:x|×|k|m|bn|users|engineers|people|hours|days|weeks)\b/gi) || []).length
-  add({ id: 'quant', label: 'Quantified impact', category: 'Content', status: quantified >= 3 ? 'pass' : quantified > 0 ? 'warn' : 'fail', points: quantified >= 3 ? 5 : quantified > 0 ? 3 : 0, max: 5, detail: quantified >= 3 ? `${quantified} quantified results found (%, ×, counts).` : quantified > 0 ? `Only ${quantified} quantified result(s).` : 'No numbers/metrics detected.', fix: quantified >= 3 ? undefined : 'Quantify impact: “cut release time 2.5×”, “grew the team to 14”, “−30% bugs”.' })
+  add({ id: 'quant', label: 'Quantified impact', category: 'Content', status: quantifiedStatus(quantified), points: quantifiedPoints(quantified), max: 5, detail: quantifiedDetail(quantified), fix: quantified >= 3 ? undefined : 'Quantify impact: “cut release time 2.5×”, “grew the team to 14”, “−30% bugs”.' })
 
   const verbHits = lines.filter((l) => {
     const w = stripBullet(l).split(/\s+/)[0]?.toLowerCase()
     return w && ACTION_VERBS.includes(w)
   }).length
-  add({ id: 'verbs', label: 'Strong action verbs', category: 'Content', status: verbHits >= 3 ? 'pass' : verbHits > 0 ? 'warn' : 'warn', points: verbHits >= 3 ? 5 : verbHits > 0 ? 3 : 0, max: 5, detail: verbHits >= 3 ? `${verbHits} bullets start with an action verb.` : 'Few bullets start with an action verb.', fix: verbHits >= 3 ? undefined : 'Start bullets with verbs: Led, Shipped, Reduced, Built, Owned…' })
+  add({ id: 'verbs', label: 'Strong action verbs', category: 'Content', status: verbHits >= 3 ? 'pass' : 'warn', points: verbPoints(verbHits), max: 5, detail: verbHits >= 3 ? `${verbHits} bullets start with an action verb.` : 'Few bullets start with an action verb.', fix: verbHits >= 3 ? undefined : 'Start bullets with verbs: Led, Shipped, Reduced, Built, Owned…' })
+}
+
+function scoreBand(score: number): Report['band'] {
+  if (score >= 85) return { label: 'Excellent — ATS-ready', tone: 'pass' }
+  if (score >= 70) return { label: 'Good — a few fixes left', tone: 'pass' }
+  if (score >= 50) return { label: 'Needs work', tone: 'warn' }
+  return { label: 'Likely to be filtered out', tone: 'fail' }
+}
+
+export function analyze(ex: Extracted): Report {
+  const { text, lines, linkTargets = [], numPages, charCount, source } = ex
+  const words = text.split(/\s+/).filter(Boolean).length
+  const checks: Check[] = []
+  const add = (c: Check) => checks.push(c)
+
+  addParseabilityChecks(add, text, charCount)
+  addContactChecks(add, text, linkTargets)
+  addSectionChecks(add, lines)
+  addFormatChecks(add, { ...ex, source, numPages })
+  addContentChecks(add, text, lines)
 
   const score = Math.round(checks.reduce((s, c) => s + c.points, 0))
-  const band =
-    score >= 85 ? { label: 'Excellent — ATS-ready', tone: 'pass' as const } :
-    score >= 70 ? { label: 'Good — a few fixes left', tone: 'pass' as const } :
-    score >= 50 ? { label: 'Needs work', tone: 'warn' as const } :
-    { label: 'Likely to be filtered out', tone: 'fail' as const }
-
-  return { score, band, checks, meta: { numPages, charCount, words } }
+  return { score, band: scoreBand(score), checks, meta: { numPages, charCount, words } }
 }

@@ -119,14 +119,32 @@ function groupEntries(lines: string[]): { header: string; bullets: string[] }[] 
   let cur: { header: string; bullets: string[] } | null = null
   for (const line of lines) {
     const isBullet = isBulletLine(line)
-    if (!isBullet && cur?.bullets.length === 0) {
+
+    if (!cur) {
+      if (!isBullet) {
+        cur = { header: line.trim(), bullets: [] }
+        entries.push(cur)
+      }
+      continue
+    }
+
+    if (isBullet) {
+      cur.bullets.push(stripBullet(line))
+      continue
+    }
+
+    if (cur.bullets.length === 0) {
       cur.header += '\n' + line.trim()
-    } else if (!isBullet && (hasDate(line) || !cur)) {
+      continue
+    }
+
+    if (hasDate(line)) {
       cur = { header: line.trim(), bullets: [] }
       entries.push(cur)
-    } else if (cur) {
-      cur.bullets.push(stripBullet(line))
+      continue
     }
+
+    cur.bullets.push(stripBullet(line))
   }
   return entries
 }

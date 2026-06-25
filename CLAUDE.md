@@ -56,6 +56,15 @@ npx vite preview --port 4319   # serves the prod build WITH the production CSP
 `main` is branch-protected: **PR + green `build` check + linear history**;
 self-merge via squash. Never commit straight to `main` (check your branch first).
 
+## Code quality rules
+- Keep parser/scorer/extractor functions small. Split by category or stage instead
+  of growing one branching function.
+- Avoid nested ternaries and dense parser regexes. Prefer named helpers and
+  deterministic token logic with regression tests for false positives.
+- React editable lists need stable IDs for `key`; never use array indexes as keys.
+- Use semantic elements for dynamic result text (`<output>` when appropriate), and
+  keep conditional state mutations in clear multiline blocks.
+
 ## Read next
 - `docs/retrospective.md` — what went well / wrong + lessons.
 - `docs/session_2026-06-24_history.md` — last session's work + **current backlog**.

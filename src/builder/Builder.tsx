@@ -134,7 +134,15 @@ export default function Builder() {
   // Generic list helpers
   const addExp = () => setState((s) => ({ ...s, experience: [...s.experience, { title: '', company: '', date: '', bullets: [], uiId: createUiId('experience') }] }))
   const setExp = (i: number, patch: Partial<ExperienceEntry>) => setState((s) => ({ ...s, experience: s.experience.map((e, j) => j === i ? { ...e, ...patch } : e) }))
-  const moveExp = (i: number, d: number) => setState((s) => { const a = [...s.experience]; const t = a[i + d]; if (!t) return s; a[i + d] = a[i]; a[i] = t; return { ...s, experience: a } })
+  const moveExp = (i: number, d: number) => setState((s) => {
+    const a = [...s.experience]
+    const t = a[i + d]
+    if (!t) return s
+
+    a[i + d] = a[i]
+    a[i] = t
+    return { ...s, experience: a }
+  })
   const delExp = (i: number) => setState((s) => ({ ...s, experience: s.experience.filter((_, j) => j !== i) }))
 
   const addEdu = () => setState((s) => ({ ...s, education: [...s.education, { school: '', degree: '', date: '', uiId: createUiId('education') }] }))
@@ -199,7 +207,7 @@ export default function Builder() {
           />
         </div>
       </div>
-      {note && <p role="status" className="mb-4 rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700 ring-1 ring-indigo-200">{note}</p>}
+      {note && <output className="mb-4 block rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700 ring-1 ring-indigo-200">{note}</output>}
 
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(28rem,0.95fr)]">
         {/* FORM */}
