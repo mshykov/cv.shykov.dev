@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>CV Toolkit — analyze, match &amp; build ATS-clean CVs in your browser</title>
+    <title>Free ATS Resume Checker | Instant CV Score, No Uploads</title>
     <meta
       name="description"
-      content="Score your CV's ATS-readiness, match it to a job description, and build an ATS-clean CV — 100% in your browser. Nothing is ever uploaded."
+      content="Check your resume or CV with an instant ATS score for PDF and DOCX files. Runs 100% in your browser with no uploads, no accounts, and no LLMs."
     />
+    <link rel="canonical" href="https://cv.shykov.dev/" />
 
     <!-- Modern browsers: SVG -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -16,7 +17,7 @@
     <link rel="alternate icon" href="/favicon.ico" />
     <!-- iOS Safari: tab thumbnails + Add to Home Screen -->
     <link rel="apple-touch-icon" href="/logo.png" />
-    <meta name="apple-mobile-web-app-title" content="CV Toolkit" />
+    <meta name="apple-mobile-web-app-title" content="ATS Resume Toolkit" />
     <!-- Mobile address-bar tint -->
     <meta name="theme-color" content="#4f46e5" />
     <!-- PWA manifest -->
@@ -24,12 +25,85 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="CV Toolkit" />
+    <meta property="og:title" content="Free ATS Resume Checker" />
     <meta
       property="og:description"
-      content="Analyze, job-match, and build ATS-clean CVs in your browser. No uploads, no tracking."
+      content="Get an instant ATS score for PDF and DOCX resumes. Browser-only, privacy-first, no uploads, no LLMs."
     />
     <meta property="og:url" content="https://cv.shykov.dev/" />
+    <meta property="og:image" content="https://cv.shykov.dev/logo.png" />
+    <meta property="og:site_name" content="ATS Resume Toolkit" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Free ATS Resume Checker" />
+    <meta
+      name="twitter:description"
+      content="Instant ATS resume score for PDF and DOCX files. Runs locally in your browser with no uploads and no LLMs."
+    />
+    <meta name="twitter:image" content="https://cv.shykov.dev/logo.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SoftwareApplication",
+            "name": "ATS Resume Toolkit",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "url": "https://cv.shykov.dev/",
+            "description": "A privacy-first ATS resume checker, job-description keyword matcher, and ATS-clean CV builder that runs in the browser.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "Instant ATS resume score",
+              "PDF and DOCX parsing",
+              "Browser-only processing",
+              "Job-description keyword matching",
+              "ATS-clean PDF export"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is an ATS score?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "An ATS score is heuristic guidance for how easy a resume is for applicant tracking systems to parse, including readable text, standard sections, contact details, dates, bullets, and measurable impact."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is my CV uploaded?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. ATS Resume Toolkit processes PDF and DOCX files locally in your browser and does not upload resume content to a server."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does this resume checker use AI?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. The ATS score is deterministic and does not use LLMs, model calls, accounts, or API keys."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I check PDF and DOCX resumes?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. ATS Resume Toolkit accepts PDF and DOCX files. Text-based PDFs provide the clearest page-count and parseability signals."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

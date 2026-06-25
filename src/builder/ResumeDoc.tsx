@@ -3,9 +3,13 @@
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type { Style } from '@react-pdf/types'
 import { BUILDER_SECTION_TITLES, type BuilderState, type Spacing } from './model'
+import type { EducationEntry, ExperienceEntry, ProjectEntry } from '../lib/parse'
 
 const LINE_GAP: Record<Spacing, number> = { compact: 1.25, standard: 1.4, relaxed: 1.6 }
 const SECTION_GAP: Record<Spacing, number> = { compact: 8, standard: 11, relaxed: 15 }
+const experienceKey = (entry: ExperienceEntry) => ['experience', entry.title, entry.company, entry.date, entry.bullets.join('|')].join(':')
+const projectKey = (entry: ProjectEntry) => ['project', entry.name, entry.description].join(':')
+const educationKey = (entry: EducationEntry) => ['education', entry.degree, entry.school, entry.date].join(':')
 
 function Section({ title, h2, rule, children }: { title: string; h2: Style; rule: Style; children: React.ReactNode }) {
   return (
@@ -55,14 +59,14 @@ export function ResumeDoc({ state }: { state: BuilderState }) {
 
         {state.experience.length ? (
           <Section title={BUILDER_SECTION_TITLES.experience} h2={s.h2} rule={s.rule}>
-            {state.experience.map((e, i) => (
-              <View key={i} style={{ marginBottom: 4 }} wrap={false}>
+            {state.experience.map((e) => (
+              <View key={experienceKey(e)} style={{ marginBottom: 4 }} wrap={false}>
                 <View style={s.entryRow}>
                   <Text style={s.entryTitle}>{e.title}{e.company ? ` — ${e.company}` : ''}</Text>
                   <Text style={s.entryDate}>{e.date}</Text>
                 </View>
-                {e.bullets.filter((b) => b.trim()).map((b, j) => (
-                  <View key={j} style={s.bulletRow}><Text style={s.bulletDot}>•</Text><Text style={s.bulletText}>{b}</Text></View>
+                {e.bullets.filter((b) => b.trim()).map((b) => (
+                  <View key={`${experienceKey(e)}:${b}`} style={s.bulletRow}><Text style={s.bulletDot}>•</Text><Text style={s.bulletText}>{b}</Text></View>
                 ))}
               </View>
             ))}
@@ -75,16 +79,16 @@ export function ResumeDoc({ state }: { state: BuilderState }) {
 
         {state.projects.length ? (
           <Section title={BUILDER_SECTION_TITLES.projects} h2={s.h2} rule={s.rule}>
-            {state.projects.map((pr, i) => (
-              <View key={i} style={s.bulletRow}><Text style={s.bulletDot}>•</Text><Text style={s.bulletText}><Text style={s.entryTitle}>{pr.name}</Text>{pr.description ? ` — ${pr.description}` : ''}</Text></View>
+            {state.projects.map((pr) => (
+              <View key={projectKey(pr)} style={s.bulletRow}><Text style={s.bulletDot}>•</Text><Text style={s.bulletText}><Text style={s.entryTitle}>{pr.name}</Text>{pr.description ? ` — ${pr.description}` : ''}</Text></View>
             ))}
           </Section>
         ) : null}
 
         {state.education.length ? (
           <Section title={BUILDER_SECTION_TITLES.education} h2={s.h2} rule={s.rule}>
-            {state.education.map((ed, i) => (
-              <View key={i} style={s.entryRow}>
+            {state.education.map((ed) => (
+              <View key={educationKey(ed)} style={s.entryRow}>
                 <Text><Text style={s.entryTitle}>{ed.degree || ed.school}</Text>{ed.degree && ed.school ? ` — ${ed.school}` : ''}</Text>
                 <Text style={s.entryDate}>{ed.date}</Text>
               </View>

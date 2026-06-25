@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { analyze } from './analyze.ts'
+import { analyze, getTopFixes } from './analyze.ts'
 import type { Extracted } from './pdf.ts'
 
 function ex(lines: string[], over: Partial<Extracted> = {}): Extracted {
@@ -82,4 +82,18 @@ test('a thin scanned-style doc scores low', () => {
   const r = analyze(ex(['Resume'], { charCount: 12 }))
   assert.ok(r.score < 50, `expected <50, got ${r.score}`)
   assert.equal(r.checks.find((c) => c.id === 'machine-text')?.status, 'fail')
+})
+
+test('top fixes excludes passing checks and orders by lost points', () => {
+  const r = analyze(ex(['Resume'], { charCount: 12, numPages: 4 }))
+  const fixes = getTopFixes(r, 3)
+
+  assert.deepEqual(fixes.map((c) => c.id), ['machine-text', 'sec-bonus', 'sec-exp'])
+  assert.ok(fixes.every((c) => c.status !== 'pass'))
+})
+
+test('top fixes respects the requested limit', () => {
+  const r = analyze(ex(['Resume'], { charCount: 12, numPages: 4 }))
+
+  assert.equal(getTopFixes(r, 2).length, 2)
 })
