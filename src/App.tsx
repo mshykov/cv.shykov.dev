@@ -8,6 +8,111 @@ const Builder = lazy(() => import('./builder/Builder'))
 
 type Mode = 'analyze' | 'build'
 
+function LogoMark() {
+  return (
+    <div className="flex items-center gap-3">
+      <img src="/logo.png" alt="" className="h-11 w-11 rounded-2xl shadow-sm ring-1 ring-black/5" />
+      <div>
+        <div className="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-700">cv.shykov.dev</div>
+        <div className="text-lg font-semibold tracking-tight text-stone-950">ATS Resume Toolkit</div>
+      </div>
+    </div>
+  )
+}
+
+function HeroMedia() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <div className="absolute inset-y-0 right-0 hidden w-[58%] min-w-[38rem] lg:block">
+        <div className="absolute right-4 top-8 h-[28rem] w-[22rem] rotate-3 rounded-xl bg-white p-6 shadow-2xl shadow-indigo-950/15 ring-1 ring-stone-200">
+          <div className="mb-5 flex items-center justify-between">
+            <div className="h-3 w-28 rounded-full bg-stone-900" />
+            <div className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">83 / 100</div>
+          </div>
+          <div className="space-y-2">
+            <div className="h-2.5 rounded-full bg-stone-200" />
+            <div className="h-2.5 w-10/12 rounded-full bg-stone-200" />
+            <div className="h-2.5 w-8/12 rounded-full bg-stone-200" />
+          </div>
+          <div className="mt-7 space-y-3">
+            <div className="h-3 w-32 rounded-full bg-indigo-600" />
+            <div className="h-px bg-stone-200" />
+            <div className="h-2.5 rounded-full bg-stone-200" />
+            <div className="h-2.5 w-11/12 rounded-full bg-stone-200" />
+            <div className="h-2.5 w-9/12 rounded-full bg-stone-200" />
+          </div>
+          <div className="mt-7 space-y-3">
+            <div className="h-3 w-36 rounded-full bg-indigo-600" />
+            <div className="h-px bg-stone-200" />
+            <div className="flex gap-2">
+              <div className="mt-1.5 h-2 w-2 rounded-full bg-emerald-500" />
+              <div className="h-2.5 flex-1 rounded-full bg-stone-200" />
+            </div>
+            <div className="flex gap-2">
+              <div className="mt-1.5 h-2 w-2 rounded-full bg-amber-500" />
+              <div className="h-2.5 w-9/12 rounded-full bg-stone-200" />
+            </div>
+          </div>
+        </div>
+
+        <div className="hero-scan absolute right-60 top-20 h-[22rem] w-[18rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-5 shadow-xl shadow-indigo-950/10 backdrop-blur">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">local parse</div>
+            <div className="h-2 w-2 rounded-full bg-emerald-500" />
+          </div>
+          <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-indigo-100">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="grid h-14 w-14 place-items-center rounded-full bg-emerald-50 text-xl font-bold tabular-nums text-emerald-700 ring-4 ring-emerald-200">83</div>
+              <div className="space-y-2">
+                <div className="h-2.5 w-24 rounded-full bg-stone-900" />
+                <div className="h-2 w-32 rounded-full bg-stone-200" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              {['w-full', 'w-10/12', 'w-8/12'].map((width) => (
+                <div key={width} className="rounded-lg border border-stone-200 bg-stone-50 px-3 py-2">
+                  <div className={`h-2 rounded-full bg-stone-300 ${width}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[10px] font-semibold uppercase tracking-wide text-stone-500">
+            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No upload</span>
+            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No LLM</span>
+            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">PDF/DOCX</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HeroMiniMedia() {
+  return (
+    <div className="hero-scan relative mt-8 overflow-hidden rounded-2xl border border-indigo-100 bg-white/85 p-4 shadow-lg shadow-indigo-950/5 ring-1 ring-white/70 backdrop-blur lg:hidden" aria-label="Preview of local ATS scoring">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">Local parse</div>
+          <div className="mt-1 text-sm font-medium text-stone-700">Score, top fixes, keyword signals</div>
+        </div>
+        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-emerald-50 text-2xl font-bold tabular-nums text-emerald-700 ring-4 ring-emerald-200">
+          83
+        </div>
+      </div>
+      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+        {['Parseability', 'Sections', 'Content'].map((label) => (
+          <div key={label} className="rounded-xl bg-stone-50 p-3 ring-1 ring-stone-200">
+            <div className="text-xs font-medium text-stone-500">{label}</div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-stone-200">
+              <div className="h-full w-4/5 rounded-full bg-stone-900" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [mode, setMode] = useState<Mode>('analyze')
   const [buildLoaded, setBuildLoaded] = useState(false)
@@ -17,41 +122,80 @@ export default function App() {
     setMode(next)
   }
 
+  const focusAnalyze = () => {
+    switchMode('analyze')
+    window.requestAnimationFrame(() => document.getElementById('fast-ats-score')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
+
   return (
-    <div className="mx-auto flex min-h-full max-w-7xl flex-col px-5 py-10 sm:py-14">
-      <header className="mb-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">ATS Resume Toolkit</h1>
-          <nav className="flex gap-1 rounded-xl bg-stone-100 p-1 text-sm font-medium">
-            {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
-              <button key={id} onClick={() => switchMode(id)} className={`rounded-lg px-4 py-1.5 transition ${mode === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{id === 'analyze' ? 'Fast ATS score' : label}</button>
-            ))}
-          </nav>
-        </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
-          <span className="font-medium text-stone-700">Instant ATS scoring, keyword matching, and CV building</span>
-          <span className="rounded-full bg-emerald-50 px-2.5 py-1 font-medium text-emerald-700 ring-1 ring-emerald-200">100% in your browser</span>
-          <span className="rounded-full bg-stone-100 px-2.5 py-1 font-medium text-stone-600">No uploads</span>
-          <span className="rounded-full bg-stone-100 px-2.5 py-1 font-medium text-stone-600">No LLM</span>
+    <div className="min-h-full bg-stone-50">
+      <header className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)]">
+        <HeroMedia />
+        <div className="relative mx-auto flex max-w-7xl flex-col px-5 py-6 sm:py-8 lg:min-h-[34rem]">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <LogoMark />
+            <nav className="flex gap-1 rounded-xl bg-white/70 p-1 text-sm font-medium shadow-sm ring-1 ring-stone-200 backdrop-blur">
+              {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
+                <button key={id} onClick={() => switchMode(id)} className={`rounded-lg px-4 py-2 transition ${mode === id ? 'bg-stone-950 text-white shadow-sm' : 'text-stone-500 hover:bg-white hover:text-stone-800'}`}>{id === 'analyze' ? 'Fast ATS score' : label}</button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="max-w-2xl py-14 sm:py-20 lg:py-24">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-stone-700 shadow-sm ring-1 ring-stone-200 backdrop-blur">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              100% local resume analysis
+            </div>
+            <h1 className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl lg:text-6xl">
+              Fast ATS resume score. Private by default.
+            </h1>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-stone-600">
+              Score your PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={focusAnalyze}
+                className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Check my resume
+              </button>
+              <button
+                type="button"
+                onClick={() => switchMode('build')}
+                className="rounded-xl border border-stone-300 bg-white/80 px-5 py-3 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-400 hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Build ATS-clean CV
+              </button>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-2 text-sm">
+              <span className="rounded-full bg-emerald-50 px-3 py-1.5 font-medium text-emerald-700 ring-1 ring-emerald-200">Runs in your browser</span>
+              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No uploads</span>
+              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No LLM</span>
+              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">PDF & DOCX</span>
+            </div>
+            <HeroMiniMedia />
+          </div>
         </div>
       </header>
 
-      <main className="flex-1">
-        <ErrorBoundary>
-          <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading fast ATS score…</p>}>
-            <div className={mode === 'analyze' ? 'block' : 'hidden'}>
-              <Analyzer />
-            </div>
-          </Suspense>
-          {(mode === 'build' || buildLoaded) && (
-            <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading builder…</p>}>
-              <div className={mode === 'build' ? 'block' : 'hidden'}>
-                <Builder />
+      <div className="mx-auto flex max-w-7xl flex-col px-5 py-10 sm:py-14">
+        <main id="fast-ats-score" className="flex-1 scroll-mt-6">
+          <ErrorBoundary>
+            <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading fast ATS score…</p>}>
+              <div className={mode === 'analyze' ? 'block' : 'hidden'}>
+                <Analyzer />
               </div>
             </Suspense>
-          )}
-        </ErrorBoundary>
-      </main>
+            {(mode === 'build' || buildLoaded) && (
+              <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading builder…</p>}>
+                <div className={mode === 'build' ? 'block' : 'hidden'}>
+                  <Builder />
+                </div>
+              </Suspense>
+            )}
+          </ErrorBoundary>
+        </main>
 
       <section className="mt-16 grid gap-6 border-t border-stone-200 pt-8 text-sm text-stone-500 sm:grid-cols-2 lg:grid-cols-4" aria-label="ATS resume checker FAQ">
         <div>
@@ -76,6 +220,7 @@ export default function App() {
         <p>Heuristic guidance, not a guarantee. <a href="https://shykov.dev" className="font-medium text-stone-600 underline-offset-2 hover:underline">shykov.dev</a></p>
         <p className="mt-1 sm:mt-0">No tracking, no uploads, no accounts.</p>
       </footer>
+      </div>
     </div>
   )
 }
