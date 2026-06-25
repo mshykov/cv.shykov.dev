@@ -41,7 +41,9 @@ export function getTopFixes(report: Report, limit = 3): Check[] {
 }
 
 const LIGATURES = /[ﬀ-ﬆ]/ // ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ
-const PROFILE_URL_RE = /(linkedin\.com\/\S+|github\.com\/\S+|https?:\/\/\S+|[a-z0-9-]+\.(dev|io|me|com|net|org)\/\S*)/i
+const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i
+const EMAIL_GLOBAL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi
+const PROFILE_URL_RE = /\b(?:linkedin\.com\/\S+|github\.com\/\S+|https?:\/\/\S+|(?:www\.)?[a-z0-9-]+\.(?:dev|io|me|com|net|org)(?:\/\S*)?)\b/i
 
 const SECTION_KEYWORDS: Record<string, string[]> = {
   experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience'],
@@ -76,6 +78,10 @@ function detectPhone(text: string): boolean {
   })
 }
 
+function hasProfileUrl(value: string): boolean {
+  return PROFILE_URL_RE.test(value.replace(EMAIL_GLOBAL_RE, ' '))
+}
+
 export function analyze(ex: Extracted): Report {
   const { text, lines, linkTargets = [], numPages, charCount, source } = ex
   const words = text.split(/\s+/).filter(Boolean).length
@@ -100,14 +106,14 @@ export function analyze(ex: Extracted): Report {
   }
 
   // ── Contact ──────────────────────────────────────────────────
-  const hasEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(text)
+  const hasEmail = EMAIL_RE.test(text)
   add({ id: 'email', label: 'Email address', category: 'Contact', status: hasEmail ? 'pass' : 'fail', points: hasEmail ? 5 : 0, max: 5, detail: hasEmail ? 'Email found.' : 'No email address detected.', fix: hasEmail ? undefined : 'Add your email as plain text near the top.' })
 
   const hasPhone = detectPhone(text)
   add({ id: 'phone', label: 'Phone number', category: 'Contact', status: hasPhone ? 'pass' : 'warn', points: hasPhone ? 5 : 0, max: 5, detail: hasPhone ? 'Phone number found.' : 'No phone number detected.', fix: hasPhone ? undefined : 'Add a phone number as plain text (include country code, e.g. +44…).' })
 
-  const hasUrl = PROFILE_URL_RE.test(text)
-  const hasHiddenUrl = !hasUrl && linkTargets.some((url) => PROFILE_URL_RE.test(url))
+  const hasUrl = hasProfileUrl(text)
+  const hasHiddenUrl = !hasUrl && linkTargets.some(hasProfileUrl)
   add({
     id: 'links',
     label: 'LinkedIn / website link',
@@ -118,7 +124,7 @@ export function analyze(ex: Extracted): Report {
     detail: hasUrl
       ? 'A profile or website link is present.'
       : hasHiddenUrl
-        ? 'Clickable LinkedIn link target found, but the full URL is not visible as text.'
+        ? 'Clickable profile or website link target found, but the full URL is not visible as text.'
         : 'No LinkedIn/website link found.',
     fix: hasUrl ? undefined : 'Add the full URL as visible text (e.g. linkedin.com/in/you) — parsers read text, not the link target.',
   })
