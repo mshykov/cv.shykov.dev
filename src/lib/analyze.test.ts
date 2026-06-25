@@ -45,6 +45,19 @@ test('missing email fails the email check', () => {
   assert.equal(r.checks.find((c) => c.id === 'email')?.status, 'fail')
 })
 
+test('warns when a LinkedIn URL is only present as a hidden link target', () => {
+  const r = analyze(ex([
+    'OLENA SHYKOVA',
+    '+351937349120 | Lisbon, Portugal | okryvelova@gmail.com | LinkedIn',
+  ], { linkTargets: ['https://www.linkedin.com/in/olenashykova/'] }))
+  const links = r.checks.find((c) => c.id === 'links')
+
+  assert.equal(links?.status, 'warn')
+  assert.equal(links?.points, 0)
+  assert.match(links?.detail ?? '', /Clickable LinkedIn link target found/i)
+  assert.match(links?.fix ?? '', /visible text/i)
+})
+
 test('DOCX source does not penalize page count', () => {
   const r = analyze(ex(STRONG, { source: 'docx', numPages: 0 }))
   assert.equal(r.checks.find((c) => c.id === 'pages')?.status, 'pass')

@@ -41,6 +41,7 @@ export function getTopFixes(report: Report, limit = 3): Check[] {
 }
 
 const LIGATURES = /[ﬀ-ﬆ]/ // ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ
+const PROFILE_URL_RE = /(linkedin\.com\/\S+|github\.com\/\S+|https?:\/\/\S+|[a-z0-9-]+\.(dev|io|me|com|net|org)\/\S*)/i
 
 const SECTION_KEYWORDS: Record<string, string[]> = {
   experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience'],
@@ -76,7 +77,7 @@ function detectPhone(text: string): boolean {
 }
 
 export function analyze(ex: Extracted): Report {
-  const { text, lines, numPages, charCount, source } = ex
+  const { text, lines, linkTargets = [], numPages, charCount, source } = ex
   const words = text.split(/\s+/).filter(Boolean).length
   const checks: Check[] = []
   const add = (c: Check) => checks.push(c)
@@ -105,8 +106,22 @@ export function analyze(ex: Extracted): Report {
   const hasPhone = detectPhone(text)
   add({ id: 'phone', label: 'Phone number', category: 'Contact', status: hasPhone ? 'pass' : 'warn', points: hasPhone ? 5 : 0, max: 5, detail: hasPhone ? 'Phone number found.' : 'No phone number detected.', fix: hasPhone ? undefined : 'Add a phone number as plain text (include country code, e.g. +44…).' })
 
-  const hasUrl = /(linkedin\.com\/\S+|github\.com\/\S+|https?:\/\/\S+|[a-z0-9-]+\.(dev|io|me|com|net|org)\/\S*)/i.test(text)
-  add({ id: 'links', label: 'LinkedIn / website link', category: 'Contact', status: hasUrl ? 'pass' : 'warn', points: hasUrl ? 5 : 0, max: 5, detail: hasUrl ? 'A profile or website link is present.' : 'No LinkedIn/website link found.', fix: hasUrl ? undefined : 'Add the full URL as text (e.g. linkedin.com/in/you) — parsers read text, not the link target.' })
+  const hasUrl = PROFILE_URL_RE.test(text)
+  const hasHiddenUrl = !hasUrl && linkTargets.some((url) => PROFILE_URL_RE.test(url))
+  add({
+    id: 'links',
+    label: 'LinkedIn / website link',
+    category: 'Contact',
+    status: hasUrl ? 'pass' : 'warn',
+    points: hasUrl ? 5 : 0,
+    max: 5,
+    detail: hasUrl
+      ? 'A profile or website link is present.'
+      : hasHiddenUrl
+        ? 'Clickable LinkedIn link target found, but the full URL is not visible as text.'
+        : 'No LinkedIn/website link found.',
+    fix: hasUrl ? undefined : 'Add the full URL as visible text (e.g. linkedin.com/in/you) — parsers read text, not the link target.',
+  })
 
   // ── Sections ─────────────────────────────────────────────────
   const sec = (id: string, label: string, max: number, keys: string[], essential: boolean) => {

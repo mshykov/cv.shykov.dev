@@ -35,6 +35,8 @@ export interface Extracted {
   lines: string[]
   /** Whole document as plain text. */
   text: string
+  /** PDF hyperlink targets. These may not be visible to ATS-style text parsers. */
+  linkTargets?: string[]
   numPages: number
   charCount: number
   /** Which extractor produced this (affects which checks are meaningful). */
@@ -52,6 +54,7 @@ export async function extractPdf(file: File): Promise<Extracted> {
   const task = pdfjs.getDocument({ data })
   const doc = await task.promise
   const pieces: TextPiece[] = []
+  const linkTargets = new Set<string>()
 
   try {
     for (let p = 1; p <= doc.numPages; p++) {
@@ -72,6 +75,12 @@ export async function extractPdf(file: File): Promise<Extracted> {
           bold: isBold(styles?.[item.fontName]?.fontFamily),
           page: p,
         })
+      }
+      const annotations = await page.getAnnotations()
+      for (const annotation of annotations) {
+        const a = annotation as { url?: string; unsafeUrl?: string }
+        const url = a.url || a.unsafeUrl
+        if (url) linkTargets.add(url)
       }
       await yieldToBrowser()
     }
@@ -114,6 +123,7 @@ export async function extractPdf(file: File): Promise<Extracted> {
     pieces,
     lines,
     text,
+    linkTargets: [...linkTargets],
     numPages: doc.numPages,
     charCount: text.replace(/\s/g, '').length,
     source: 'pdf',
