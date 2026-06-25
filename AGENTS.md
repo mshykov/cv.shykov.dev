@@ -5,6 +5,7 @@ and easy to inspect.
 
 ## Code Quality Guardrails
 
+- Follow the detailed Sonar checklist in `docs/sonar.md`.
 - Keep scoring, parsing, PDF extraction, and UI helpers split into small functions.
   If a function starts collecting unrelated branches, extract category-specific
   helpers before Sonar has to complain.
