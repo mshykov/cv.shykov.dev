@@ -40,7 +40,7 @@ function LogoMark() {
 function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => void }) {
   return (
     <nav
-      className="fixed right-3 top-3 z-50 flex gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur sm:right-5 sm:top-5"
+      className="flex shrink-0 gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur"
       aria-label="Primary app mode"
     >
       {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
@@ -57,11 +57,22 @@ function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => 
   )
 }
 
+function SiteHeader({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => void }) {
+  return (
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200/80 bg-white/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-5">
+        <LogoMark />
+        <ModeSwitch mode={mode} onSwitch={onSwitch} />
+      </div>
+    </header>
+  )
+}
+
 function HeroMedia() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute inset-y-0 right-0 hidden w-[56%] min-w-[36rem] lg:block">
-        <div className="absolute right-8 top-[6.75rem] h-[22rem] w-[18rem] rotate-3 rounded-xl bg-white p-5 shadow-2xl shadow-indigo-950/15 ring-1 ring-stone-200">
+    <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] min-w-[34rem] overflow-hidden lg:block" aria-hidden>
+      <div className="absolute inset-y-0 right-0 w-full">
+        <div className="absolute right-2 top-[5.5rem] h-[22rem] w-[18rem] rotate-3 rounded-xl bg-white p-5 shadow-2xl shadow-indigo-950/15 ring-1 ring-stone-200">
           <div className="mb-5 flex items-center justify-between">
             <div className="h-3 w-28 rounded-full bg-stone-900" />
             <div className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">83 / 100</div>
@@ -92,7 +103,7 @@ function HeroMedia() {
           </div>
         </div>
 
-        <div className="hero-scan absolute right-56 top-[10.25rem] h-[18rem] w-[15rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
+        <div className="hero-scan absolute right-50 top-[9rem] h-[18rem] w-[15rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
           <div className="mb-4 flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">local parse</div>
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -224,14 +235,10 @@ export default function App() {
 
   return (
     <div className="min-h-full bg-stone-50">
-      <ModeSwitch mode={mode} onSwitch={switchMode} />
-      <header className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)]">
-        <HeroMedia />
-        <div className="relative mx-auto flex max-w-7xl flex-col px-5 py-6 sm:py-8 lg:min-h-[30rem]">
-          <div className="flex flex-wrap items-center justify-between gap-4 pr-40 sm:pr-56">
-            <LogoMark />
-          </div>
-
+      <SiteHeader mode={mode} onSwitch={switchMode} />
+      <section className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)] pt-20">
+        <div className="relative mx-auto max-w-7xl px-5 lg:min-h-[30rem]">
+          <HeroMedia />
           <div className="max-w-2xl py-10 sm:py-14 lg:py-16">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-stone-700 shadow-sm ring-1 ring-stone-200 backdrop-blur">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -268,7 +275,7 @@ export default function App() {
             <HeroMiniMedia />
           </div>
         </div>
-      </header>
+      </section>
 
       <div className="mx-auto flex max-w-7xl flex-col px-5 py-10 sm:py-14">
         <HowItWorks />
