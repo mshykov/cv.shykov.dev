@@ -58,8 +58,8 @@ test('warns when a LinkedIn URL is only present as a hidden link target', () => 
   assert.match(links?.fix ?? '', /visible text/i)
 })
 
-test('detects bare portfolio domains as visible profile links', () => {
-  for (const url of ['jane.dev', 'www.jane.dev', 'jane.dev/portfolio']) {
+test('detects visible profile and portfolio links', () => {
+  for (const url of ['jane.dev', 'www.jane.dev', 'jane.dev/portfolio', 'https://jane.dev', 'linkedin.com/in/jane']) {
     const r = analyze(ex([
       'JANE DOE',
       `jane@example.com · +1 555 123 4567 · ${url}`,

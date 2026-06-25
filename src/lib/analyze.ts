@@ -41,9 +41,9 @@ export function getTopFixes(report: Report, limit = 3): Check[] {
 }
 
 const LIGATURES = /[ﬀ-ﬆ]/ // ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ
-const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i
-const EMAIL_GLOBAL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi
-const PROFILE_URL_RE = /\b(?:linkedin\.com\/\S+|github\.com\/\S+|https?:\/\/\S+|(?:www\.)?[a-z0-9-]+\.(?:dev|io|me|com|net|org)(?:\/\S*)?)\b/i
+const CONTACT_SEPARATORS = new Set([' ', '\n', '\t', '\r', '|', ',', ';', '·'])
+const PROFILE_TLDS = new Set(['dev', 'io', 'me', 'com', 'net', 'org'])
+const TRIM_CHARS = '()[]{}<>"\'.,;:'
 
 const SECTION_KEYWORDS: Record<string, string[]> = {
   experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience'],
@@ -78,8 +78,97 @@ function detectPhone(text: string): boolean {
   })
 }
 
+function contactTokens(value: string): string[] {
+  const tokens: string[] = []
+  let token = ''
+
+  for (const char of value) {
+    if (CONTACT_SEPARATORS.has(char)) {
+      if (token) tokens.push(token)
+      token = ''
+    } else {
+      token += char
+    }
+  }
+
+  if (token) tokens.push(token)
+  return tokens
+}
+
+function cleanToken(value: string): string {
+  let start = 0
+  let end = value.length
+  while (start < end && TRIM_CHARS.includes(value[start])) start += 1
+  while (end > start && TRIM_CHARS.includes(value[end - 1])) end -= 1
+  return value.slice(start, end).toLowerCase()
+}
+
+function isDomainLabel(value: string): boolean {
+  if (!value || value.startsWith('-') || value.endsWith('-')) return false
+  for (const char of value) {
+    const code = char.charCodeAt(0)
+    const isDigit = code >= 48 && code <= 57
+    const isLowercase = code >= 97 && code <= 122
+    if (!isDigit && !isLowercase && char !== '-') return false
+  }
+  return true
+}
+
+function isEmailToken(raw: string): boolean {
+  const token = cleanToken(raw)
+  const at = token.indexOf('@')
+  if (at <= 0 || at !== token.lastIndexOf('@') || at === token.length - 1) return false
+
+  const domain = token.slice(at + 1)
+  const dot = domain.lastIndexOf('.')
+  const tld = domain.slice(dot + 1)
+  if (dot <= 0 || tld.length < 2) return false
+
+  const labels = domain.split('.')
+  return labels.every(isDomainLabel)
+}
+
+function hasEmailAddress(text: string): boolean {
+  return contactTokens(text).some(isEmailToken)
+}
+
+function stripUrlProtocol(value: string): string {
+  if (value.startsWith('https://')) return value.slice(8)
+  if (value.startsWith('http://')) return value.slice(7)
+  return value
+}
+
+function isProfileHost(host: string): boolean {
+  const hostname = host.startsWith('www.') ? host.slice(4) : host
+  if (hostname.includes('@')) return false
+
+  const labels = hostname.split('.')
+  if (labels.length < 2 || !labels.every(isDomainLabel)) return false
+
+  const tld = labels[labels.length - 1]
+  return PROFILE_TLDS.has(tld)
+}
+
+function isProfileUrlToken(raw: string): boolean {
+  if (isEmailToken(raw)) return false
+
+  const token = stripUrlProtocol(cleanToken(raw))
+  const normalized = token.startsWith('www.') ? token.slice(4) : token
+  if (normalized.startsWith('linkedin.com/') || normalized.startsWith('github.com/')) return true
+
+  const slash = normalized.indexOf('/')
+  const host = slash === -1 ? normalized : normalized.slice(0, slash)
+  return isProfileHost(host)
+}
+
 function hasProfileUrl(value: string): boolean {
-  return PROFILE_URL_RE.test(value.replace(EMAIL_GLOBAL_RE, ' '))
+  return contactTokens(value).some(isProfileUrlToken)
+}
+
+function linkDetail(hasUrl: boolean, hasHiddenUrl: boolean): string {
+  if (hasUrl) return 'A profile or website link is present.'
+  if (hasHiddenUrl) return 'Clickable profile or website link target found, but the full URL is not visible as text.'
+  return 'No LinkedIn/website link found.'
 }
 
 export function analyze(ex: Extracted): Report {
@@ -106,7 +195,7 @@ export function analyze(ex: Extracted): Report {
   }
 
   // ── Contact ──────────────────────────────────────────────────
-  const hasEmail = EMAIL_RE.test(text)
+  const hasEmail = hasEmailAddress(text)
   add({ id: 'email', label: 'Email address', category: 'Contact', status: hasEmail ? 'pass' : 'fail', points: hasEmail ? 5 : 0, max: 5, detail: hasEmail ? 'Email found.' : 'No email address detected.', fix: hasEmail ? undefined : 'Add your email as plain text near the top.' })
 
   const hasPhone = detectPhone(text)
@@ -121,11 +210,7 @@ export function analyze(ex: Extracted): Report {
     status: hasUrl ? 'pass' : 'warn',
     points: hasUrl ? 5 : 0,
     max: 5,
-    detail: hasUrl
-      ? 'A profile or website link is present.'
-      : hasHiddenUrl
-        ? 'Clickable profile or website link target found, but the full URL is not visible as text.'
-        : 'No LinkedIn/website link found.',
+    detail: linkDetail(hasUrl, hasHiddenUrl),
     fix: hasUrl ? undefined : 'Add the full URL as visible text (e.g. linkedin.com/in/you) — parsers read text, not the link target.',
   })
 
