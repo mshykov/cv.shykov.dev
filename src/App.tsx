@@ -104,7 +104,7 @@ function HeroMedia() {
           </div>
         </div>
 
-        <div className="hero-scan absolute right-[11.5rem] top-[9.5rem] h-[16.75rem] w-[14rem] -rotate-6 overflow-hidden rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
+        <div className="hero-scan absolute right-[11.5rem] top-[9.5rem] h-[16.75rem] w-[14rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
           <div className="mb-4 flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">local parse</div>
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
