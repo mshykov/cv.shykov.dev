@@ -10,7 +10,8 @@ A privacy-first CV toolkit that runs **100% in your browser**. Two modes:
   ligatures). Import an existing CV to prefill (round-trip).
 
 The file is read into memory, processed, and discarded — nothing is uploaded,
-no tracking, no accounts. Works offline (service worker) and is installable (PWA).
+no tracking, no accounts. The app intentionally does not register a service
+worker; `public/sw.js` is only a kill switch for older cached installs.
 
 ## Stack
 

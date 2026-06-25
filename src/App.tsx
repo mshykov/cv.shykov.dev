@@ -8,6 +8,23 @@ const Builder = lazy(() => import('./builder/Builder'))
 
 type Mode = 'analyze' | 'build'
 
+function ShieldIcon() {
+  return (
+    <svg className="h-4 w-4" aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3.75 5.75 6.1v5.45c0 4.03 2.58 7.62 6.25 8.7 3.67-1.08 6.25-4.67 6.25-8.7V6.1L12 3.75Z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="m9.4 12.2 1.75 1.75 3.7-4.05" />
+    </svg>
+  )
+}
+
+function SourceIcon() {
+  return (
+    <svg className="h-4 w-4" aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path strokeLinecap="round" strokeLinejoin="round" d="m8 9-3 3 3 3M16 9l3 3-3 3M13.5 5.5l-3 13" />
+    </svg>
+  )
+}
+
 function LogoMark() {
   return (
     <div className="flex items-center gap-3">
@@ -23,8 +40,8 @@ function LogoMark() {
 function HeroMedia() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute inset-y-0 right-0 hidden w-[58%] min-w-[38rem] lg:block">
-        <div className="absolute right-4 top-8 h-[28rem] w-[22rem] rotate-3 rounded-xl bg-white p-6 shadow-2xl shadow-indigo-950/15 ring-1 ring-stone-200">
+      <div className="absolute inset-y-0 right-0 hidden w-[56%] min-w-[36rem] lg:block">
+        <div className="absolute right-12 top-7 h-[26rem] w-[20rem] rotate-3 rounded-xl bg-white p-6 shadow-2xl shadow-indigo-950/15 ring-1 ring-stone-200">
           <div className="mb-5 flex items-center justify-between">
             <div className="h-3 w-28 rounded-full bg-stone-900" />
             <div className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">83 / 100</div>
@@ -55,7 +72,7 @@ function HeroMedia() {
           </div>
         </div>
 
-        <div className="hero-scan absolute right-60 top-20 h-[22rem] w-[18rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-5 shadow-xl shadow-indigo-950/10 backdrop-blur">
+        <div className="hero-scan absolute right-64 top-18 h-[21rem] w-[17rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-5 shadow-xl shadow-indigo-950/10 backdrop-blur">
           <div className="mb-4 flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">local parse</div>
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -113,6 +130,64 @@ function HeroMiniMedia() {
   )
 }
 
+function HowItWorks() {
+  const steps = [
+    ['Choose PDF/DOCX', 'Pick a resume file from your device.'],
+    ['Parse locally', 'Text extraction and scoring run in this browser.'],
+    ['Fix the top issues', 'See score, breakdown, keywords, and exportable notes.'],
+  ]
+
+  return (
+    <section className="-mt-8 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm lg:-mt-10" aria-label="How the local ATS resume checker works">
+      <div className="grid gap-3 md:grid-cols-3">
+        {steps.map(([title, body], index) => (
+          <div key={title} className="flex gap-3 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
+            <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-indigo-600 text-sm font-semibold text-white">{index + 1}</div>
+            <div>
+              <h2 className="text-sm font-semibold text-stone-900">{title}</h2>
+              <p className="mt-1 text-sm text-stone-500">{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium text-stone-600">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 ring-1 ring-emerald-200"><ShieldIcon />No server upload</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200">Deterministic checks, no LLM calls</span>
+        <a className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200 transition hover:bg-stone-200" href="https://github.com/mshykov/cv.shykov.dev" rel="noreferrer" target="_blank"><SourceIcon />Source available</a>
+      </div>
+    </section>
+  )
+}
+
+function TrustNotes() {
+  return (
+    <section className="mt-16 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm" aria-label="Privacy and trust notes">
+      <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight text-stone-900">Privacy claims you can inspect.</h2>
+          <p className="mt-2 text-sm leading-6 text-stone-500">
+            The source is public, and the product promise stays narrow: local document parsing, deterministic scoring, no account wall, and no AI model call hidden behind the interface.
+          </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
+            <div className="text-sm font-semibold text-stone-900">Local parser</div>
+            <p className="mt-1 text-sm text-stone-500">PDF and DOCX text is extracted in the browser with client-side libraries.</p>
+          </div>
+          <div className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
+            <div className="text-sm font-semibold text-stone-900">No LLM scoring</div>
+            <p className="mt-1 text-sm text-stone-500">Scores come from repeatable checks for parseability, sections, format, and content signals.</p>
+          </div>
+          <a className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200 transition hover:bg-stone-100" href="https://github.com/mshykov/cv.shykov.dev" rel="noreferrer" target="_blank">
+            <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-900"><SourceIcon />Public source</div>
+            <p className="mt-1 text-sm text-stone-500">Review the app code, scoring checks, parser, and export flow in the GitHub repository.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function App() {
   const [mode, setMode] = useState<Mode>('analyze')
   const [buildLoaded, setBuildLoaded] = useState(false)
@@ -131,7 +206,7 @@ export default function App() {
     <div className="min-h-full bg-stone-50">
       <header className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)]">
         <HeroMedia />
-        <div className="relative mx-auto flex max-w-7xl flex-col px-5 py-6 sm:py-8 lg:min-h-[34rem]">
+        <div className="relative mx-auto flex max-w-7xl flex-col px-5 py-6 sm:py-8 lg:min-h-[30rem]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <LogoMark />
             <nav className="flex gap-1 rounded-xl bg-white/70 p-1 text-sm font-medium shadow-sm ring-1 ring-stone-200 backdrop-blur">
@@ -141,7 +216,7 @@ export default function App() {
             </nav>
           </div>
 
-          <div className="max-w-2xl py-14 sm:py-20 lg:py-24">
+          <div className="max-w-2xl py-10 sm:py-14 lg:py-16">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-stone-700 shadow-sm ring-1 ring-stone-200 backdrop-blur">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               100% local resume analysis
@@ -169,7 +244,7 @@ export default function App() {
               </button>
             </div>
             <div className="mt-8 flex flex-wrap gap-2 text-sm">
-              <span className="rounded-full bg-emerald-50 px-3 py-1.5 font-medium text-emerald-700 ring-1 ring-emerald-200">Runs in your browser</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 font-medium text-emerald-700 ring-1 ring-emerald-200"><ShieldIcon />Runs in your browser</span>
               <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No uploads</span>
               <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No LLM</span>
               <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">PDF & DOCX</span>
@@ -180,7 +255,8 @@ export default function App() {
       </header>
 
       <div className="mx-auto flex max-w-7xl flex-col px-5 py-10 sm:py-14">
-        <main id="fast-ats-score" className="flex-1 scroll-mt-6">
+        <HowItWorks />
+        <main id="fast-ats-score" className="mt-8 flex-1 scroll-mt-6">
           <ErrorBoundary>
             <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading fast ATS score…</p>}>
               <div className={mode === 'analyze' ? 'block' : 'hidden'}>
@@ -196,6 +272,8 @@ export default function App() {
             )}
           </ErrorBoundary>
         </main>
+
+      <TrustNotes />
 
       <section className="mt-16 grid gap-6 border-t border-stone-200 pt-8 text-sm text-stone-500 sm:grid-cols-2 lg:grid-cols-4" aria-label="ATS resume checker FAQ">
         <div>
