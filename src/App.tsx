@@ -111,10 +111,10 @@ function HeroMedia() {
           </div>
           <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-indigo-100">
             <div className="mb-3 flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-full bg-emerald-50 text-lg font-bold tabular-nums text-emerald-700 ring-4 ring-emerald-200">83</div>
-              <div className="space-y-2">
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-emerald-50 text-lg font-bold tabular-nums text-emerald-700 ring-4 ring-emerald-200">83</div>
+              <div className="min-w-0 flex-1 space-y-2">
                 <div className="h-2.5 w-24 rounded-full bg-stone-900" />
-                <div className="h-2 w-32 rounded-full bg-stone-200" />
+                <div className="h-2 w-full rounded-full bg-stone-200" />
               </div>
             </div>
             <div className="space-y-2">
@@ -125,10 +125,10 @@ function HeroMedia() {
               ))}
             </div>
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[10px] font-semibold uppercase tracking-wide text-stone-500">
-            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No upload</span>
-            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No LLM</span>
-            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">PDF/DOCX</span>
+          <div className="mt-3 flex justify-center gap-1.5 text-center text-[9px] font-semibold uppercase tracking-wide text-stone-500">
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No upload</span>
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No LLM</span>
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">PDF/DOCX</span>
           </div>
         </div>
       </div>
