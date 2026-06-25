@@ -37,6 +37,26 @@ function LogoMark() {
   )
 }
 
+function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => void }) {
+  return (
+    <nav
+      className="fixed right-3 top-3 z-50 flex gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur sm:right-5 sm:top-5"
+      aria-label="Primary app mode"
+    >
+      {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
+        <button
+          key={id}
+          type="button"
+          onClick={() => onSwitch(id)}
+          className={`rounded-lg px-3 py-2 transition sm:px-4 ${mode === id ? 'bg-stone-950 text-white shadow-sm' : 'text-stone-500 hover:bg-white hover:text-stone-800'}`}
+        >
+          {id === 'analyze' ? 'Fast ATS Score' : label}
+        </button>
+      ))}
+    </nav>
+  )
+}
+
 function HeroMedia() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
@@ -204,16 +224,12 @@ export default function App() {
 
   return (
     <div className="min-h-full bg-stone-50">
+      <ModeSwitch mode={mode} onSwitch={switchMode} />
       <header className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)]">
         <HeroMedia />
         <div className="relative mx-auto flex max-w-7xl flex-col px-5 py-6 sm:py-8 lg:min-h-[30rem]">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 pr-40 sm:pr-56">
             <LogoMark />
-            <nav className="flex gap-1 rounded-xl bg-white/70 p-1 text-sm font-medium shadow-sm ring-1 ring-stone-200 backdrop-blur">
-              {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
-                <button key={id} onClick={() => switchMode(id)} className={`rounded-lg px-4 py-2 transition ${mode === id ? 'bg-stone-950 text-white shadow-sm' : 'text-stone-500 hover:bg-white hover:text-stone-800'}`}>{id === 'analyze' ? 'Fast ATS score' : label}</button>
-              ))}
-            </nav>
           </div>
 
           <div className="max-w-2xl py-10 sm:py-14 lg:py-16">
