@@ -104,17 +104,17 @@ function HeroMedia() {
           </div>
         </div>
 
-        <div className="hero-scan absolute right-[11.5rem] top-[9.5rem] h-[16.75rem] w-[14rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
+        <div className="hero-scan absolute right-[11.5rem] top-[9.5rem] h-[16.75rem] w-[14rem] -rotate-6 overflow-hidden rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
           <div className="mb-4 flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">local parse</div>
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
           </div>
           <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-indigo-100">
             <div className="mb-3 flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-full bg-emerald-50 text-lg font-bold tabular-nums text-emerald-700 ring-4 ring-emerald-200">83</div>
-              <div className="space-y-2">
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-emerald-50 text-lg font-bold tabular-nums text-emerald-700 ring-4 ring-emerald-200">83</div>
+              <div className="min-w-0 flex-1 space-y-2">
                 <div className="h-2.5 w-24 rounded-full bg-stone-900" />
-                <div className="h-2 w-32 rounded-full bg-stone-200" />
+                <div className="h-2 w-full rounded-full bg-stone-200" />
               </div>
             </div>
             <div className="space-y-2">
