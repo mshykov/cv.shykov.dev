@@ -18,6 +18,13 @@ type BuilderUiState = Omit<BuilderState, 'experience' | 'education' | 'projects'
   education: WithUiId<EducationEntry>[]
   projects: WithUiId<ProjectEntry>[]
 }
+type FieldProps = Readonly<{ label: string; value: string; onChange: (v: string) => void; area?: boolean; placeholder?: string; type?: string; autoComplete?: string }>
+type SectionTitleProps = Readonly<{ title: string; hint?: string; action?: React.ReactNode }>
+type IconButtonProps = Readonly<{ label: string; onClick: () => void; disabled?: boolean; tone?: 'neutral' | 'danger'; children: React.ReactNode }>
+type AddButtonProps = Readonly<{ onClick: () => void; children: React.ReactNode }>
+type SettingGroupProps = Readonly<{ label: string; children: React.ReactNode }>
+type OptionButtonProps<T extends string | number> = Readonly<{ value: T; selected: boolean; onSelect: (value: T) => void; children: React.ReactNode }>
+type PreviewSectionProps = Readonly<{ title: string; accent: string; gap: number; modern?: boolean; children: React.ReactNode }>
 
 let nextBuilderItemId = 0
 const createUiId = (scope: string) => `${scope}-${nextBuilderItemId++}`
@@ -34,7 +41,7 @@ const stripUiIds = (state: BuilderUiState): BuilderState => ({
   projects: state.projects.map((entry) => ({ name: entry.name, description: entry.description })),
 })
 
-function Field({ label, value, onChange, area, placeholder, type = 'text', autoComplete }: { label: string; value: string; onChange: (v: string) => void; area?: boolean; placeholder?: string; type?: string; autoComplete?: string }) {
+function Field({ label, value, onChange, area, placeholder, type = 'text', autoComplete }: FieldProps) {
   const cls = 'mt-1.5 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition hover:border-stone-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100'
   return (
     <label className="block">
@@ -46,7 +53,7 @@ function Field({ label, value, onChange, area, placeholder, type = 'text', autoC
   )
 }
 
-function SectionTitle({ title, hint, action }: { title: string; hint?: string; action?: React.ReactNode }) {
+function SectionTitle({ title, hint, action }: SectionTitleProps) {
   return (
     <>
       <legend className="rounded-md bg-indigo-50 px-2 py-0.5 text-lg font-semibold tracking-tight text-stone-900 ring-1 ring-indigo-100">{title}</legend>
@@ -58,7 +65,7 @@ function SectionTitle({ title, hint, action }: { title: string; hint?: string; a
   )
 }
 
-function IconButton({ label, onClick, disabled, tone = 'neutral', children }: { label: string; onClick: () => void; disabled?: boolean; tone?: 'neutral' | 'danger'; children: React.ReactNode }) {
+function IconButton({ label, onClick, disabled, tone = 'neutral', children }: IconButtonProps) {
   return (
     <button
       type="button"
@@ -73,7 +80,7 @@ function IconButton({ label, onClick, disabled, tone = 'neutral', children }: { 
   )
 }
 
-function AddButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+function AddButton({ onClick, children }: AddButtonProps) {
   return (
     <button type="button" onClick={onClick} className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100">
       + {children}
@@ -81,7 +88,7 @@ function AddButton({ onClick, children }: { onClick: () => void; children: React
   )
 }
 
-function SettingGroup({ label, children }: { label: string; children: React.ReactNode }) {
+function SettingGroup({ label, children }: SettingGroupProps) {
   return (
     <div className="min-w-0">
       <div className="mb-2 text-xs font-semibold uppercase text-stone-400">{label}</div>
@@ -90,7 +97,7 @@ function SettingGroup({ label, children }: { label: string; children: React.Reac
   )
 }
 
-function OptionButton<T extends string | number>({ value, selected, onSelect, children }: { value: T; selected: boolean; onSelect: (value: T) => void; children: React.ReactNode }) {
+function OptionButton<T extends string | number>({ value, selected, onSelect, children }: OptionButtonProps<T>) {
   return (
     <button
       type="button"
@@ -380,7 +387,7 @@ export default function Builder() {
   )
 }
 
-function PreviewSection({ title, accent, gap, modern, children }: { title: string; accent: string; gap: number; modern?: boolean; children: React.ReactNode }) {
+function PreviewSection({ title, accent, gap, modern, children }: PreviewSectionProps) {
   return (
     <div style={{ marginTop: gap }}>
       <div className="font-bold uppercase" style={{ color: modern ? '#1a1a1a' : accent, fontSize: '1em', letterSpacing: modern ? '0.1em' : '0.04em' }}>{title}</div>

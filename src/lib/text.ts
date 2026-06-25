@@ -8,13 +8,13 @@ const YEAR_RE = /\b(?:19|20)\d{2}\b/i
 const RELATIVE_DATE_RE = /\b(?:present|current|now)\b/i
 
 function findMonthYear(text: string): RegExpMatchArray | null {
-  const match = text.match(MONTH_YEAR_RE)
+  const match = MONTH_YEAR_RE.exec(text)
   if (!match) return null
   return MONTHS.has(match[1].toLowerCase()) ? match : null
 }
 
 export function findDate(text: string): RegExpMatchArray | null {
-  return [findMonthYear(text), text.match(YEAR_RE), text.match(RELATIVE_DATE_RE)]
+  return [findMonthYear(text), YEAR_RE.exec(text), RELATIVE_DATE_RE.exec(text)]
     .filter((match): match is RegExpMatchArray => match !== null)
     .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))[0] ?? null
 }

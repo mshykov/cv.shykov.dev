@@ -7,6 +7,8 @@ const Analyzer = lazy(() => import('./Analyzer'))
 const Builder = lazy(() => import('./builder/Builder'))
 
 type Mode = 'analyze' | 'build'
+type ModeSwitchProps = Readonly<{ mode: Mode; onSwitch: (next: Mode) => void }>
+type SiteHeaderProps = Readonly<{ mode: Mode; onSwitch: (next: Mode) => void }>
 
 function ShieldIcon() {
   return (
@@ -37,7 +39,7 @@ function LogoMark() {
   )
 }
 
-function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => void }) {
+function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
   return (
     <nav
       className="flex w-full shrink-0 gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur sm:w-auto"
@@ -58,7 +60,7 @@ function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => 
   )
 }
 
-function SiteHeader({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => void }) {
+function SiteHeader({ mode, onSwitch }: SiteHeaderProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200/80 bg-white/85 backdrop-blur-xl">
       <div className="mx-auto flex min-h-30 max-w-7xl flex-col justify-center gap-3 px-5 py-3 sm:h-20 sm:min-h-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
@@ -230,7 +232,7 @@ export default function App() {
   }
 
   const scrollToTool = () => {
-    window.requestAnimationFrame(() => document.getElementById('fast-ats-score')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    globalThis.requestAnimationFrame(() => document.getElementById('fast-ats-score')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
   }
 
   const switchModeAndFocusTool = (next: Mode) => {

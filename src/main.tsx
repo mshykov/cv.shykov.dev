@@ -14,7 +14,10 @@ createRoot(document.getElementById('root')!).render(
 // bundles. Proactively unregister any that remain (the kill-switch sw.js also
 // self-destructs for clients still controlled by the old one).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then((regs) => {
-    regs.forEach((r) => r.unregister())
-  }).catch(() => {})
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations()
+    await Promise.all(registrations.map((registration) => registration.unregister()))
+  } catch {
+    // Best-effort cleanup only.
+  }
 }

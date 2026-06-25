@@ -7,15 +7,15 @@
 // the network. It has NO fetch handler, so while briefly active it never
 // serves cached responses. The app no longer registers a service worker
 // (see main.tsx), so once this runs, clients end up with none.
-self.addEventListener('install', () => self.skipWaiting())
+globalThis.addEventListener('install', () => globalThis.skipWaiting())
 
-self.addEventListener('activate', (event) => {
+globalThis.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
       const keys = await caches.keys()
       await Promise.all(keys.map((k) => caches.delete(k)))
-      await self.registration.unregister()
-      const clients = await self.clients.matchAll({ type: 'window' })
+      await globalThis.registration.unregister()
+      const clients = await globalThis.clients.matchAll({ type: 'window' })
       for (const client of clients) client.navigate(client.url)
     })(),
   )

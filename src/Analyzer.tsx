@@ -7,6 +7,9 @@ import { TONE } from './components/tone'
 import { ScoreRing } from './components/ScoreRing'
 
 type Tab = 'analyze' | 'jd' | 'data'
+type CheckRowProps = Readonly<{ c: Check }>
+type CategoryBreakdownProps = Readonly<{ report: Report }>
+type TopFixesProps = Readonly<{ fixes: Check[] }>
 
 function jdCoverageClass(coverage: number): string {
   if (coverage >= 70) return 'text-emerald-600'
@@ -22,7 +25,13 @@ function educationKey(entry: Resume['education'][number]): string {
   return [entry.degree, entry.school, entry.date].join('::')
 }
 
-function CheckRow({ c }: { c: Check }) {
+function reportMetaSummary(report: Report): string {
+  const pageCount = report.meta.numPages
+  const pages = pageCount ? `${pageCount} ${pageCount === 1 ? 'page' : 'pages'} · ` : ''
+  return `${pages}${report.meta.words.toLocaleString()} words · ${report.meta.charCount.toLocaleString()} readable characters.`
+}
+
+function CheckRow({ c }: CheckRowProps) {
   return (
     <div className="flex gap-3 py-3">
       <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${TONE[c.status].dot}`} aria-hidden />
@@ -38,7 +47,7 @@ function CheckRow({ c }: { c: Check }) {
   )
 }
 
-function CategoryBreakdown({ report }: { report: Report }) {
+function CategoryBreakdown({ report }: CategoryBreakdownProps) {
   const categories = [...new Set(report.checks.map((c) => c.category))]
 
   return (
@@ -65,7 +74,7 @@ function CategoryBreakdown({ report }: { report: Report }) {
   )
 }
 
-function TopFixes({ fixes }: { fixes: Check[] }) {
+function TopFixes({ fixes }: TopFixesProps) {
   if (!fixes.length) {
     return (
       <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800 ring-1 ring-emerald-200">
@@ -160,21 +169,7 @@ export default function Analyzer() {
     <div>
       <h2 className="sr-only">Upload a resume for a fast ATS score</h2>
 
-      {!report ? (
-        <button
-          type="button"
-          aria-label="Upload your CV as a PDF or DOCX file"
-          onClick={() => inputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
-          onDragLeave={() => setDrag(false)}
-          onDrop={onDrop}
-          className={`group flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-12 text-center shadow-sm transition ${drag ? 'border-indigo-400 bg-indigo-50' : 'border-stone-300 bg-white hover:border-stone-400 hover:bg-stone-50/40'}`}
-        >
-          <svg className="h-9 w-9 text-stone-400 group-hover:text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14" /></svg>
-          <span className="mt-3 font-medium text-stone-800">{busy ? 'Scoring your CV…' : 'Drop your CV here for a fast ATS score'}</span>
-          <span className="mt-1 text-sm text-stone-400">PDF or DOCX · runs in your browser · no upload · no LLM</span>
-        </button>
-      ) : (
+      {report ? (
         <div
           onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
           onDragLeave={() => setDrag(false)}
@@ -190,6 +185,20 @@ export default function Analyzer() {
             Analyze another CV
           </button>
         </div>
+      ) : (
+        <button
+          type="button"
+          aria-label="Upload your CV as a PDF or DOCX file"
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
+          onDragLeave={() => setDrag(false)}
+          onDrop={onDrop}
+          className={`group flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-12 text-center shadow-sm transition ${drag ? 'border-indigo-400 bg-indigo-50' : 'border-stone-300 bg-white hover:border-stone-400 hover:bg-stone-50/40'}`}
+        >
+          <svg className="h-9 w-9 text-stone-400 group-hover:text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14" /></svg>
+          <span className="mt-3 font-medium text-stone-800">{busy ? 'Scoring your CV…' : 'Drop your CV here for a fast ATS score'}</span>
+          <span className="mt-1 text-sm text-stone-400">PDF or DOCX · runs in your browser · no upload · no LLM</span>
+        </button>
       )}
       <input
         ref={inputRef}
@@ -230,12 +239,11 @@ export default function Analyzer() {
                   <ScoreRing score={report.score} tone={report.band.tone} />
                   <div className="min-w-0 flex-1">
                     <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ring-1 ${TONE[report.band.tone].chip}`}>
-                      <span className={`h-2 w-2 rounded-full ${TONE[report.band.tone].dot}`} />{report.band.label}
+                      <span className={`h-2 w-2 rounded-full ${TONE[report.band.tone].dot}`} aria-hidden />
+                      <span>{report.band.label}</span>
                     </div>
                     <h2 className="mt-3 text-xl font-semibold tracking-tight text-stone-900">Fast ATS score</h2>
-                    <p className="mt-1 text-sm text-stone-500">
-                      {report.meta.numPages ? `${report.meta.numPages} page${report.meta.numPages > 1 ? 's' : ''} · ` : ''}{report.meta.words.toLocaleString()} words · {report.meta.charCount.toLocaleString()} readable characters.
-                    </p>
+                    <p className="mt-1 text-sm text-stone-500">{reportMetaSummary(report)}</p>
                   </div>
                 </div>
                 <div className="mt-4"><CategoryBreakdown report={report} /></div>
