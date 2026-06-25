@@ -125,10 +125,10 @@ function HeroMedia() {
               ))}
             </div>
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[10px] font-semibold uppercase tracking-wide text-stone-500">
-            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No upload</span>
-            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No LLM</span>
-            <span className="rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">PDF/DOCX</span>
+          <div className="mt-3 flex justify-center gap-1.5 text-center text-[9px] font-semibold uppercase tracking-wide text-stone-500">
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No upload</span>
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No LLM</span>
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">PDF/DOCX</span>
           </div>
         </div>
       </div>
