@@ -44,7 +44,19 @@ function wordRe(term: string): RegExp {
   // Custom word boundary that tolerates term chars like "ci/cd", "c#", ".net".
   // Avoid look-behind (Safari < 16.4 lacks it); a leading non-alnum class works
   // the same for the boolean .test() we use it for.
-  return new RegExp('(?:^|[^a-z0-9])' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-z0-9])', 'i')
+  return new RegExp('(?:^|[^a-z0-9])' + term.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) + '(?![a-z0-9])', 'i')
+}
+
+function wordTokens(value: string): string[] {
+  const tokenRe = /[a-z][a-z0-9+#.]{2,}/g
+  const tokens: string[] = []
+  let match: RegExpExecArray | null
+
+  while ((match = tokenRe.exec(value)) !== null) {
+    tokens.push(match[0])
+  }
+
+  return tokens
 }
 
 export function matchJD(cvText: string, cvSkills: string[], jd: string): JDMatch {
@@ -58,9 +70,8 @@ export function matchJD(cvText: string, cvSkills: string[], jd: string): JDMatch
   }
 
   // 2) Frequency of meaningful single tokens in the JD.
-  const tokens = jdLower.match(/[a-z][a-z0-9+#.]{2,}/g) || []
   const freq = new Map<string, number>()
-  for (const tok of tokens) {
+  for (const tok of wordTokens(jdLower)) {
     if (STOPWORDS.has(tok)) continue
     freq.set(tok, (freq.get(tok) ?? 0) + 1)
   }

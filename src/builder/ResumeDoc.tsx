@@ -10,8 +10,10 @@ const SECTION_GAP: Record<Spacing, number> = { compact: 8, standard: 11, relaxed
 const experienceKey = (entry: ExperienceEntry) => ['experience', entry.title, entry.company, entry.date, entry.bullets.join('|')].join(':')
 const projectKey = (entry: ProjectEntry) => ['project', entry.name, entry.description].join(':')
 const educationKey = (entry: EducationEntry) => ['education', entry.degree, entry.school, entry.date].join(':')
+type SectionProps = Readonly<{ title: string; h2: Style; rule: Style; children: React.ReactNode }>
+type ResumeDocProps = Readonly<{ state: BuilderState }>
 
-function Section({ title, h2, rule, children }: { title: string; h2: Style; rule: Style; children: React.ReactNode }) {
+function Section({ title, h2, rule, children }: SectionProps) {
   return (
     <View wrap={false}>
       <Text style={h2}>{title}</Text>
@@ -21,7 +23,7 @@ function Section({ title, h2, rule, children }: { title: string; h2: Style; rule
   )
 }
 
-export function ResumeDoc({ state }: { state: BuilderState }) {
+export function ResumeDoc({ state }: ResumeDocProps) {
   const { profile: p, settings: cfg } = state
   const fs = cfg.fontSize
   const lh = LINE_GAP[cfg.spacing]

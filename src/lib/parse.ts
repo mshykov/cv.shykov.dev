@@ -4,6 +4,7 @@
 // the PDF/DOCX extractors, so it degrades gracefully when positional data is
 // absent (DOCX).
 import type { Extracted } from './pdf'
+import { cleanContactToken, contactTokens, digitCount, findEmailAddress, findPhoneNumber, findProfileUrls, hasEmailAddress, hasPhoneNumber, hasProfileUrl } from './contact.ts'
 import { findDate, hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 
 export interface ExperienceEntry {
@@ -36,9 +37,6 @@ export interface Resume {
   projects: ProjectEntry[]
 }
 
-const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i
-const PHONE_RE = /(?:\+?\d[\s\-().]?){9,}/
-const URL_RE = /((?:https?:\/\/)?(?:www\.)?(?:linkedin\.com|github\.com)\/\S+|[a-z0-9-]+\.(?:dev|io|me|com|net|org)(?:\/\S*)?)/i
 const SECTION_TITLES: Record<string, string[]> = {
   summary: ['summary', 'profile', 'objective', 'about', 'about me'],
   experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience', 'employment', 'career experience', 'career history'],
@@ -52,6 +50,13 @@ const SECTION_TITLES: Record<string, string[]> = {
   awards: ['awards', 'honors', 'achievements', 'key achievements'],
   other: ['publications', 'volunteer', 'volunteering', 'references', 'contact'],
 }
+
+const TRIM_SEPARATORS = new Set(['—', '–', '·', '|', ',', ' ', '\t', '\n', '\r', '(', ':', '-'])
+const HEADER_SPLIT_SEPARATORS = [' — ', ' – ', ' at ', ' | ', ', ', ',']
+const DEGREE_WORDS = ['ph.d', 'phd', "master's", 'masters', 'master', "bachelor's", 'bachelors', 'bachelor', 'b.sc', 'msc', 'm.sc', 'b.a', 'm.a', 'associate', 'diploma']
+const EDUCATION_END_SEPARATORS = new Set(['—', '–', ',', '|'])
+const SKILL_SPLIT_SEPARATORS = new Set([',', ';', '•', '·', '|'])
+const PROJECT_SPLIT_SEPARATORS = new Set(['—', '–', '(', ':'])
 
 function classifyHeader(line: string): string | null {
   const t = line.trim()
@@ -83,31 +88,71 @@ function sectionize(lines: string[]): { preamble: string[]; sections: Record<str
   return { preamble, sections }
 }
 
-function parseProfile(preamble: string[], summarySection: string[] | undefined, fullText: string) {
-  const email = (fullText.match(EMAIL_RE) || [''])[0]
-  const emailDomain = email.split('@')[1]?.toLowerCase() ?? ''
-  const phoneM = fullText.match(PHONE_RE)
-  const phone = phoneM && phoneM[0].replace(/\D/g, '').length >= 9 ? phoneM[0].trim() : ''
-  const links = Array.from(new Set((fullText.match(new RegExp(URL_RE, 'gi')) || []).map((s) => s.trim())))
-    .filter((l) => l.toLowerCase() !== emailDomain) // drop the email's own domain
-    .slice(0, 4)
+function hasLetter(value: string): boolean {
+  for (const char of value) {
+    const code = char.toLowerCase().codePointAt(0) ?? 0
+    if (code >= 97 && code <= 122) return true
+  }
+  return false
+}
 
-  // Name: first preamble line that's mostly letters and not a contact line.
-  let name = ''
-  for (const l of preamble) {
-    const t = l.trim()
-    if (!t) continue
-    if (EMAIL_RE.test(t) || /\d{4,}/.test(t)) continue
-    if (/^[A-Za-z][A-Za-z .'-]+$/.test(t) && t.split(/\s+/).length <= 5) { name = t; break }
+function isNameChar(char: string): boolean {
+  const code = char.toLowerCase().codePointAt(0) ?? 0
+  return (code >= 97 && code <= 122) || char === ' ' || char === '.' || char === '\'' || char === '-'
+}
+
+function isLikelyName(value: string): boolean {
+  if (!value || !hasLetter(value) || digitCount(value) > 0) return false
+  return contactTokens(value).length <= 5 && [...value].every(isNameChar)
+}
+
+function trimStartSeparators(value: string): string {
+  let start = 0
+  while (start < value.length && TRIM_SEPARATORS.has(value[start])) start += 1
+  return value.slice(start).trim()
+}
+
+function trimEndSeparators(value: string): string {
+  let end = value.length
+  while (end > 0 && TRIM_SEPARATORS.has(value[end - 1])) end -= 1
+  return value.slice(0, end).trim()
+}
+
+function trimSeparators(value: string): string {
+  return trimStartSeparators(trimEndSeparators(value))
+}
+
+function stripAfterMiddleDot(value: string): string {
+  const dot = value.indexOf('·')
+  return (dot === -1 ? value : value.slice(0, dot)).trim()
+}
+
+function findName(preamble: string[]): string {
+  for (const line of preamble) {
+    const text = line.trim()
+    if (!text) continue
+    if (hasEmailAddress(text) || hasPhoneNumber(text) || hasProfileUrl(text)) continue
+    if (isLikelyName(text)) return text
   }
-  // Location: a preamble line with a comma that isn't the name/contact.
-  let location = ''
-  for (const l of preamble) {
-    const t = l.trim()
-    if (t === name) continue
-    if (EMAIL_RE.test(t) || URL_RE.test(t)) continue
-    if (/,/.test(t) && t.length <= 60 && /[A-Za-z]/.test(t)) { location = t.replace(/\s*·.*$/, '').trim(); break }
+  return ''
+}
+
+function findLocation(preamble: string[], name: string): string {
+  for (const line of preamble) {
+    const text = line.trim()
+    if (text === name) continue
+    if (hasEmailAddress(text) || hasProfileUrl(text)) continue
+    if (text.includes(',') && text.length <= 60 && hasLetter(text)) return stripAfterMiddleDot(text)
   }
+  return ''
+}
+
+function parseProfile(preamble: string[], summarySection: string[] | undefined, fullText: string) {
+  const email = findEmailAddress(fullText)
+  const phone = findPhoneNumber(fullText)
+  const links = findProfileUrls(fullText, 4)
+  const name = findName(preamble)
+  const location = findLocation(preamble, name)
   const summary = (summarySection || []).join(' ').trim()
   return { name, email, phone, location, links, summary }
 }
@@ -154,9 +199,17 @@ function splitHeader(header: string): { left: string; date: string } {
   if (!dm) return { left: header.trim(), date: '' }
   // Take the date span from its first match to the end of the date-ish tail.
   const idx = dm.index ?? 0
-  const left = header.slice(0, idx).replace(/[—–·|,\s]+$/, '').trim()
-  const date = header.slice(idx).replace(/^[—–·|,\s]+/, '').trim()
+  const left = trimEndSeparators(header.slice(0, idx))
+  const date = trimStartSeparators(header.slice(idx))
   return { left: left || header.trim(), date }
+}
+
+function splitRoleCompany(left: string): string[] {
+  for (const separator of HEADER_SPLIT_SEPARATORS) {
+    const index = left.indexOf(separator)
+    if (index > 0) return [left.slice(0, index), left.slice(index + separator.length)]
+  }
+  return [left]
 }
 
 function parseExperience(lines: string[]): ExperienceEntry[] {
@@ -166,7 +219,7 @@ function parseExperience(lines: string[]): ExperienceEntry[] {
     const leadingCompany = parts.length > 1 ? parts.slice(0, -1).join(', ') : ''
     const { left, date } = splitHeader(headerLine)
     // "Title — Company" or "Title at Company" or "Title, Company"
-    const m = left.split(/\s+[—–]\s+| at | \| |,\s+/)
+    const m = splitRoleCompany(left)
     const title = (m[0] || left).trim()
     const company = (leadingCompany || m.slice(1).join(', ') || '').trim()
     return { title, company, date, bullets }
@@ -180,7 +233,7 @@ function itemize(lines: string[]): string[] {
   const items: string[] = []
   for (const line of lines) {
     if (isBulletLine(line)) items.push(stripBullet(line))
-    else if (items.length) items[items.length - 1] += ' ' + line.trim()
+    else if (items.length) items.splice(items.length - 1, 1, `${items.at(-1) ?? ''} ${line.trim()}`)
     else if (line.trim()) items.push(line.trim())
   }
   return items.filter(Boolean)
@@ -189,30 +242,97 @@ function itemize(lines: string[]): string[] {
 function parseEducation(lines: string[]): EducationEntry[] {
   return itemize(lines).map((item) => {
     const { left, date } = splitHeader(item)
-    const degreeM = left.match(/(ph\.?d|master'?s?|bachelor'?s?|b\.?sc|m\.?sc|b\.?a|m\.?a|associate|diploma)[^—–,|]*/i)
-    const degree = degreeM ? degreeM[0].trim() : ''
-    const school = (degree ? left.replace(degree, '') : left).replace(/^[—–·|,\s]+|[—–·|,\s]+$/g, '').trim() || left.trim()
+    const degree = findDegree(left)
+    const school = trimSeparators(degree ? left.replace(degree, '') : left) || left.trim()
     return { school, degree, date }
   }).filter((e) => e.school)
+}
+
+function findDegree(left: string): string {
+  const lower = left.toLowerCase()
+  let start = -1
+
+  for (const word of DEGREE_WORDS) {
+    const index = lower.indexOf(word)
+    if (index !== -1 && (start === -1 || index < start)) start = index
+  }
+
+  if (start === -1) return ''
+
+  let end = left.length
+  for (let index = start; index < left.length; index += 1) {
+    if (EDUCATION_END_SEPARATORS.has(left[index])) {
+      end = index
+      break
+    }
+  }
+
+  return left.slice(start, end).trim()
+}
+
+function isSkillPrefix(value: string): boolean {
+  if (!value) return false
+  for (const char of value) {
+    const code = char.toLowerCase().codePointAt(0) ?? 0
+    const isLetter = code >= 97 && code <= 122
+    if (!isLetter && char !== ' ' && char !== '&' && char !== '/') return false
+  }
+  return true
+}
+
+function stripSkillPrefix(value: string): string {
+  const body = stripBullet(value)
+  const colon = body.indexOf(':')
+  if (colon === -1) return body
+  return isSkillPrefix(body.slice(0, colon)) ? body.slice(colon + 1) : body
+}
+
+function splitSkills(value: string): string[] {
+  const tokens: string[] = []
+  let token = ''
+
+  for (const char of value) {
+    if (SKILL_SPLIT_SEPARATORS.has(char)) {
+      if (token.trim()) tokens.push(token.trim())
+      token = ''
+    } else {
+      token += char
+    }
+  }
+
+  if (token.trim()) tokens.push(token.trim())
+  return tokens
 }
 
 function parseSkills(lines: string[]): string[] {
   const out: string[] = []
   for (const line of lines) {
-    const body = stripBullet(line).replace(/^[A-Za-z &/]+:\s*/, '') // drop "Leadership:" prefix
-    for (const tok of body.split(/[,;•·|]/)) {
-      const s = tok.trim()
+    const body = stripSkillPrefix(line)
+    for (const tok of splitSkills(body)) {
+      const s = cleanContactToken(tok)
       if (s && s.length <= 40) out.push(s)
     }
   }
   return Array.from(new Set(out))
 }
 
+function firstProjectSeparator(value: string): number {
+  for (let index = 0; index < value.length; index += 1) {
+    if (PROJECT_SPLIT_SEPARATORS.has(value[index])) return index
+  }
+  return -1
+}
+
+function projectName(item: string): string {
+  const separator = firstProjectSeparator(item)
+  if (separator > 0) return item.slice(0, separator).trim()
+  return contactTokens(item).slice(0, 3).join(' ').trim()
+}
+
 function parseProjects(lines: string[]): ProjectEntry[] {
   return itemize(lines).map((item) => {
-    const m = item.match(/^(.+?)\s*[—–(:]/) // split on dash/paren/colon, not hyphen
-    const name = (m ? m[1] : item.split(/\s+/).slice(0, 3).join(' ')).trim()
-    return { name, description: item.replace(name, '').replace(/^[\s—–(:-]+/, '').trim() }
+    const name = projectName(item)
+    return { name, description: trimStartSeparators(item.slice(name.length)) }
   }).filter((p) => p.name)
 }
 

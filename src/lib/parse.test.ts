@@ -32,6 +32,16 @@ test('parses profile and filters the email domain out of links', () => {
   assert.ok(r.profile.links.some((l) => l.includes('linkedin')))
 })
 
+test('parses bare portfolio domains without requiring a path', () => {
+  const r = parseResume(ex([
+    'JANE DOE',
+    'jane@example.com · www.jane.dev · jane.io/portfolio',
+    'Berlin, Germany',
+  ]))
+
+  assert.deepEqual(r.profile.links, ['www.jane.dev', 'jane.io/portfolio'])
+})
+
 test('splits an experience header into title / company / date', () => {
   const e = parseResume(ex(LINES)).experience
   assert.equal(e.length, 1)

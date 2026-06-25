@@ -5,6 +5,7 @@
 // encoding, standard section headers, parseable contact info, sane structure,
 // and quantified content. Every check is transparent and explains its fix.
 import type { Extracted } from './pdf'
+import { cleanContactToken, contactTokens, hasEmailAddress, hasPhoneNumber, hasProfileUrl } from './contact.ts'
 import { hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 
 export type Status = 'pass' | 'warn' | 'fail'
@@ -41,9 +42,6 @@ export function getTopFixes(report: Report, limit = 3): Check[] {
 }
 
 const LIGATURES = /[ﬀ-ﬆ]/ // ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ
-const CONTACT_SEPARATORS = new Set([' ', '\n', '\t', '\r', '|', ',', ';', '·'])
-const PROFILE_TLDS = new Set(['dev', 'io', 'me', 'com', 'net', 'org'])
-const TRIM_CHARS = '()[]{}<>"\'.,;:'
 
 const SECTION_KEYWORDS: Record<string, string[]> = {
   experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience'],
@@ -52,13 +50,15 @@ const SECTION_KEYWORDS: Record<string, string[]> = {
   summary: ['summary', 'profile', 'objective', 'about me', 'about'],
 }
 
-const ACTION_VERBS = [
+const ACTION_VERBS = new Set([
   'led', 'managed', 'built', 'shipped', 'delivered', 'improved', 'reduced',
   'increased', 'launched', 'created', 'developed', 'designed', 'implemented',
   'drove', 'owned', 'established', 'hired', 'mentored', 'partnered',
   'streamlined', 'optimized', 'spearheaded', 'architected', 'scaled',
   'coordinated', 'analyzed', 'automated', 'migrated', 'negotiated',
-]
+])
+const IMPACT_UNITS = new Set(['x', '×', 'k', 'm', 'bn', 'users', 'engineers', 'people', 'hours', 'days', 'weeks'])
+const CURRENCY_SYMBOLS = new Set(['$', '€', '£'])
 
 function hasHeader(lines: string[], keywords: string[]): boolean {
   return lines.some((l) => {
@@ -67,102 +67,6 @@ function hasHeader(lines: string[], keywords: string[]): boolean {
     const norm = normalizeHeader(t)
     return keywords.some((k) => norm === k || norm.startsWith(k + ' ') || norm.endsWith(' ' + k) || norm.includes(k))
   })
-}
-
-function detectPhone(text: string): boolean {
-  const m = text.match(/(?:\+?\d[\s\-().]?){9,}/g)
-  if (!m) return false
-  return m.some((cand) => {
-    const digits = cand.replace(/\D/g, '')
-    return digits.length >= 9 && digits.length <= 15
-  })
-}
-
-function contactTokens(value: string): string[] {
-  const tokens: string[] = []
-  let token = ''
-
-  for (const char of value) {
-    if (CONTACT_SEPARATORS.has(char)) {
-      if (token) tokens.push(token)
-      token = ''
-    } else {
-      token += char
-    }
-  }
-
-  if (token) tokens.push(token)
-  return tokens
-}
-
-function cleanToken(value: string): string {
-  let start = 0
-  let end = value.length
-  while (start < end && TRIM_CHARS.includes(value[start])) start += 1
-  while (end > start && TRIM_CHARS.includes(value[end - 1])) end -= 1
-  return value.slice(start, end).toLowerCase()
-}
-
-function isDomainLabel(value: string): boolean {
-  if (!value || value.startsWith('-') || value.endsWith('-')) return false
-  for (const char of value) {
-    const code = char.charCodeAt(0)
-    const isDigit = code >= 48 && code <= 57
-    const isLowercase = code >= 97 && code <= 122
-    if (!isDigit && !isLowercase && char !== '-') return false
-  }
-  return true
-}
-
-function isEmailToken(raw: string): boolean {
-  const token = cleanToken(raw)
-  const at = token.indexOf('@')
-  if (at <= 0 || at !== token.lastIndexOf('@') || at === token.length - 1) return false
-
-  const domain = token.slice(at + 1)
-  const dot = domain.lastIndexOf('.')
-  const tld = domain.slice(dot + 1)
-  if (dot <= 0 || tld.length < 2) return false
-
-  const labels = domain.split('.')
-  return labels.every(isDomainLabel)
-}
-
-function hasEmailAddress(text: string): boolean {
-  return contactTokens(text).some(isEmailToken)
-}
-
-function stripUrlProtocol(value: string): string {
-  if (value.startsWith('https://')) return value.slice(8)
-  if (value.startsWith('http://')) return value.slice(7)
-  return value
-}
-
-function isProfileHost(host: string): boolean {
-  const hostname = host.startsWith('www.') ? host.slice(4) : host
-  if (hostname.includes('@')) return false
-
-  const labels = hostname.split('.')
-  if (labels.length < 2 || !labels.every(isDomainLabel)) return false
-
-  const tld = labels[labels.length - 1]
-  return PROFILE_TLDS.has(tld)
-}
-
-function isProfileUrlToken(raw: string): boolean {
-  if (isEmailToken(raw)) return false
-
-  const token = stripUrlProtocol(cleanToken(raw))
-  const normalized = token.startsWith('www.') ? token.slice(4) : token
-  if (normalized.startsWith('linkedin.com/') || normalized.startsWith('github.com/')) return true
-
-  const slash = normalized.indexOf('/')
-  const host = slash === -1 ? normalized : normalized.slice(0, slash)
-  return isProfileHost(host)
-}
-
-function hasProfileUrl(value: string): boolean {
-  return contactTokens(value).some(isProfileUrlToken)
 }
 
 function linkDetail(hasUrl: boolean, hasHiddenUrl: boolean): string {
@@ -199,7 +103,7 @@ function addContactChecks(add: AddCheck, text: string, linkTargets: string[]) {
   const hasEmail = hasEmailAddress(text)
   add({ id: 'email', label: 'Email address', category: 'Contact', status: hasEmail ? 'pass' : 'fail', points: hasEmail ? 5 : 0, max: 5, detail: hasEmail ? 'Email found.' : 'No email address detected.', fix: hasEmail ? undefined : 'Add your email as plain text near the top.' })
 
-  const hasPhone = detectPhone(text)
+  const hasPhone = hasPhoneNumber(text)
   add({ id: 'phone', label: 'Phone number', category: 'Contact', status: hasPhone ? 'pass' : 'warn', points: hasPhone ? 5 : 0, max: 5, detail: hasPhone ? 'Phone number found.' : 'No phone number detected.', fix: hasPhone ? undefined : 'Add a phone number as plain text (include country code, e.g. +44…).' })
 
   const hasUrl = hasProfileUrl(text)
@@ -296,13 +200,79 @@ function verbPoints(verbHits: number): number {
   return 0
 }
 
+function hasDigit(value: string): boolean {
+  for (const char of value) {
+    const code = char.codePointAt(0) ?? 0
+    if (code >= 48 && code <= 57) return true
+  }
+  return false
+}
+
+function isNumericToken(value: string): boolean {
+  let hasNumber = false
+  let dotCount = 0
+
+  for (const char of value) {
+    if (char === '.') {
+      dotCount += 1
+      if (dotCount > 1) return false
+      continue
+    }
+
+    const code = char.codePointAt(0) ?? 0
+    if (code < 48 || code > 57) return false
+    hasNumber = true
+  }
+
+  return hasNumber
+}
+
+function currencyMetric(token: string, nextToken: string): boolean {
+  if (CURRENCY_SYMBOLS.has(token[0]) && hasDigit(token.slice(1))) return true
+  return CURRENCY_SYMBOLS.has(token) && hasDigit(nextToken)
+}
+
+function percentMetric(token: string): boolean {
+  return token.endsWith('%') && hasDigit(token.slice(0, -1))
+}
+
+function unitMetric(token: string, nextToken: string): boolean {
+  if (isNumericToken(token)) return IMPACT_UNITS.has(nextToken)
+
+  let splitAt = 0
+  while (splitAt < token.length) {
+    const char = token[splitAt]
+    const code = char.codePointAt(0) ?? 0
+    if ((code < 48 || code > 57) && char !== '.') break
+    splitAt += 1
+  }
+
+  if (splitAt === 0 || splitAt === token.length) return false
+  return isNumericToken(token.slice(0, splitAt)) && IMPACT_UNITS.has(token.slice(splitAt))
+}
+
+function countQuantifiedImpact(text: string): number {
+  const tokens = contactTokens(text).map((token) => cleanContactToken(token).toLowerCase())
+  let count = 0
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index]
+    if (!token) continue
+
+    const next = tokens[index + 1] ?? ''
+    if (percentMetric(token) || currencyMetric(token, next) || unitMetric(token, next)) count += 1
+  }
+
+  return count
+}
+
 function addContentChecks(add: AddCheck, text: string, lines: string[]) {
-  const quantified = (text.match(/\d+\s?%|[$€£]\s?\d|\b\d+(?:\.\d+)?\s?(?:x|×|k|m|bn|users|engineers|people|hours|days|weeks)\b/gi) || []).length
+  const quantified = countQuantifiedImpact(text)
   add({ id: 'quant', label: 'Quantified impact', category: 'Content', status: quantifiedStatus(quantified), points: quantifiedPoints(quantified), max: 5, detail: quantifiedDetail(quantified), fix: quantified >= 3 ? undefined : 'Quantify impact: “cut release time 2.5×”, “grew the team to 14”, “−30% bugs”.' })
 
   const verbHits = lines.filter((l) => {
     const w = stripBullet(l).split(/\s+/)[0]?.toLowerCase()
-    return w && ACTION_VERBS.includes(w)
+    return Boolean(w && ACTION_VERBS.has(w))
   }).length
   add({ id: 'verbs', label: 'Strong action verbs', category: 'Content', status: verbHits >= 3 ? 'pass' : 'warn', points: verbPoints(verbHits), max: 5, detail: verbHits >= 3 ? `${verbHits} bullets start with an action verb.` : 'Few bullets start with an action verb.', fix: verbHits >= 3 ? undefined : 'Start bullets with verbs: Led, Shipped, Reduced, Built, Owned…' })
 }

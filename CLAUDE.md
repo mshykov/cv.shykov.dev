@@ -57,7 +57,8 @@ npx vite preview --port 4319   # serves the prod build WITH the production CSP
 self-merge via squash. Never commit straight to `main` (check your branch first).
 
 ## Code quality rules
-- Follow the detailed Sonar checklist in `docs/sonar.md`.
+- Follow the reusable Sonar checklist in `docs/sonar.md` and the CV toolkit
+  rules in `docs/project-quality.md`.
 - Keep parser/scorer/extractor functions small. Split by category or stage instead
   of growing one branching function.
 - Avoid nested ternaries and dense parser regexes. Prefer named helpers and
@@ -68,4 +69,6 @@ self-merge via squash. Never commit straight to `main` (check your branch first)
 
 ## Read next
 - `docs/retrospective.md` — what went well / wrong + lessons.
+- `docs/sonar.md` — reusable Sonar/code-quality checklist.
+- `docs/project-quality.md` — CV toolkit-specific quality rules.
 - `docs/session_2026-06-24_history.md` — last session's work + **current backlog**.

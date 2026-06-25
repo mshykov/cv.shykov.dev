@@ -12,7 +12,10 @@ import * as pdfjs from 'pdfjs-dist'
 
 let workerReady: Promise<unknown> | null = null
 function ensureMainThreadWorker(): Promise<unknown> {
-  return (workerReady ??= import('pdfjs-dist/build/pdf.worker.min.mjs'))
+  if (!workerReady) {
+    workerReady = import('pdfjs-dist/build/pdf.worker.min.mjs')
+  }
+  return workerReady
 }
 
 function yieldToBrowser(): Promise<void> {
@@ -136,7 +139,8 @@ export async function extractPdf(file: File): Promise<Extracted> {
       cur.push(piece)
       continue
     }
-    const last = cur[cur.length - 1]
+    const last = cur.at(-1)
+    if (!last) continue
     const sameLine = piece.page === last.page && Math.abs(piece.y - last.y) <= 3
     if (sameLine) cur.push(piece)
     else {
