@@ -70,9 +70,9 @@ function SiteHeader({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => 
 
 function HeroMedia() {
   return (
-    <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] min-w-[34rem] overflow-hidden lg:block" aria-hidden>
+    <div className="pointer-events-none absolute inset-y-0 right-5 hidden w-[48%] min-w-[32rem] overflow-hidden lg:block" aria-hidden>
       <div className="absolute inset-y-0 right-0 w-full">
-        <div className="absolute right-2 top-[5.5rem] h-[22rem] w-[18rem] rotate-3 rounded-xl bg-white p-5 shadow-2xl shadow-indigo-950/15 ring-1 ring-stone-200">
+        <div className="absolute right-6 top-[5.75rem] h-[20.5rem] w-[16.75rem] rotate-3 rounded-xl bg-white p-5 shadow-2xl shadow-indigo-950/15 ring-1 ring-stone-200">
           <div className="mb-5 flex items-center justify-between">
             <div className="h-3 w-28 rounded-full bg-stone-900" />
             <div className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">83 / 100</div>
@@ -103,7 +103,7 @@ function HeroMedia() {
           </div>
         </div>
 
-        <div className="hero-scan absolute right-50 top-[9rem] h-[18rem] w-[15rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
+        <div className="hero-scan absolute right-[11.5rem] top-[9.5rem] h-[16.75rem] w-[14rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
           <div className="mb-4 flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">local parse</div>
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
