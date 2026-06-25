@@ -48,6 +48,7 @@ function ModeSwitch({ mode, onSwitch }: { mode: Mode; onSwitch: (next: Mode) => 
           key={id}
           type="button"
           onClick={() => onSwitch(id)}
+          aria-pressed={mode === id}
           className={`min-h-10 flex-1 rounded-lg px-3 py-2 transition sm:flex-none sm:px-4 ${mode === id ? 'bg-stone-950 text-white shadow-sm' : 'text-stone-500 hover:bg-white hover:text-stone-800'}`}
         >
           {id === 'analyze' ? 'Fast ATS Score' : label}
@@ -228,14 +229,22 @@ export default function App() {
     setMode(next)
   }
 
-  const focusAnalyze = () => {
-    switchMode('analyze')
+  const scrollToTool = () => {
     window.requestAnimationFrame(() => document.getElementById('fast-ats-score')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
+
+  const switchModeAndFocusTool = (next: Mode) => {
+    switchMode(next)
+    scrollToTool()
+  }
+
+  const focusAnalyze = () => {
+    switchModeAndFocusTool('analyze')
   }
 
   return (
     <div className="min-h-full bg-stone-50">
-      <SiteHeader mode={mode} onSwitch={switchMode} />
+      <SiteHeader mode={mode} onSwitch={switchModeAndFocusTool} />
       <section className="relative isolate overflow-hidden border-b border-stone-200 bg-[linear-gradient(110deg,#f8fafc_0%,#ffffff_45%,#eef2ff_100%)] pt-30 sm:pt-20">
         <div className="relative mx-auto max-w-7xl px-5 lg:min-h-[30rem]">
           <HeroMedia />
@@ -260,7 +269,7 @@ export default function App() {
               </button>
               <button
                 type="button"
-                onClick={() => switchMode('build')}
+                onClick={() => switchModeAndFocusTool('build')}
                 className="rounded-xl border border-stone-300 bg-white/80 px-5 py-3 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-400 hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Build ATS-clean CV
@@ -279,7 +288,7 @@ export default function App() {
 
       <div className="mx-auto flex max-w-7xl flex-col px-5 py-10 sm:py-14">
         <HowItWorks />
-        <main id="fast-ats-score" className="mt-8 flex-1 scroll-mt-6">
+        <main id="fast-ats-score" className="mt-8 flex-1 scroll-mt-32 sm:scroll-mt-24">
           <ErrorBoundary>
             <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading fast ATS score…</p>}>
               <div className={mode === 'analyze' ? 'block' : 'hidden'}>
