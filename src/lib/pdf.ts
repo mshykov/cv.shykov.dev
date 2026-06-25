@@ -35,15 +35,67 @@ export interface Extracted {
   lines: string[]
   /** Whole document as plain text. */
   text: string
+  /** PDF hyperlink targets. These may not be visible to ATS-style text parsers. */
+  linkTargets?: string[]
   numPages: number
   charCount: number
   /** Which extractor produced this (affects which checks are meaningful). */
   source: 'pdf' | 'docx'
 }
 
+interface PdfTextContent {
+  items: unknown[]
+  styles: Record<string, { fontFamily?: string }>
+}
+
+interface PdfTextItem {
+  str?: string
+  transform: number[]
+  width?: number
+  fontName: string
+}
+
+interface PdfPageLike {
+  getTextContent(): Promise<PdfTextContent>
+  getAnnotations(): Promise<unknown[]>
+}
+
 function isBold(fontFamily: string | undefined): boolean {
   if (!fontFamily) return false
   return /bold|black|heavy|semibold|800|700/i.test(fontFamily)
+}
+
+function isTextItem(item: unknown): item is PdfTextItem {
+  return typeof item === 'object' && item !== null && 'str' in item && 'transform' in item && 'fontName' in item
+}
+
+function addTextPiece(pieces: TextPiece[], item: PdfTextItem, styles: PdfTextContent['styles'], page: number) {
+  const str = item.str
+  if (!str) return
+
+  const tr = item.transform // [a,b,c,d,e,f]; e=x, f=y
+  pieces.push({
+    text: str,
+    x: tr[4],
+    y: tr[5],
+    w: item.width ?? 0,
+    bold: isBold(styles[item.fontName]?.fontFamily),
+    page,
+  })
+}
+
+async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPiece[], linkTargets: Set<string>) {
+  const content = await page.getTextContent()
+  for (const item of content.items) {
+    if (isTextItem(item)) addTextPiece(pieces, item, content.styles, pageNumber)
+  }
+
+  const annotations = await page.getAnnotations()
+  for (const annotation of annotations) {
+    const a = annotation as { url?: string; unsafeUrl?: string }
+    const url = a.url || a.unsafeUrl
+    if (url) linkTargets.add(url)
+  }
 }
 
 export async function extractPdf(file: File): Promise<Extracted> {
@@ -52,27 +104,12 @@ export async function extractPdf(file: File): Promise<Extracted> {
   const task = pdfjs.getDocument({ data })
   const doc = await task.promise
   const pieces: TextPiece[] = []
+  const linkTargets = new Set<string>()
 
   try {
     for (let p = 1; p <= doc.numPages; p++) {
       const page = await doc.getPage(p)
-      const content = await page.getTextContent()
-      const styles = content.styles as Record<string, { fontFamily?: string }>
-      for (const item of content.items) {
-        // TextItem has str/transform/width; TextMarkedContent does not.
-        if (!('str' in item)) continue
-        const str = item.str
-        if (!str) continue
-        const tr = item.transform // [a,b,c,d,e,f]; e=x, f=y
-        pieces.push({
-          text: str,
-          x: tr[4],
-          y: tr[5],
-          w: item.width ?? 0,
-          bold: isBold(styles?.[item.fontName]?.fontFamily),
-          page: p,
-        })
-      }
+      await collectPage(page, p, pieces, linkTargets)
       await yieldToBrowser()
     }
   } finally {
@@ -114,6 +151,7 @@ export async function extractPdf(file: File): Promise<Extracted> {
     pieces,
     lines,
     text,
+    linkTargets: [...linkTargets],
     numPages: doc.numPages,
     charCount: text.replace(/\s/g, '').length,
     source: 'pdf',

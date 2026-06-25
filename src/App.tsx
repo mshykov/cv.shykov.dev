@@ -250,8 +250,8 @@ export default function App() {
           <HeroMedia />
           <div className="max-w-2xl py-10 sm:py-14 lg:py-16">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-stone-700 shadow-sm ring-1 ring-stone-200 backdrop-blur">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              100% local resume analysis
+              <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
+              <span>100% local resume analysis</span>
             </div>
             <h1 className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl lg:text-6xl">
               Fast ATS resume score. Private by default.

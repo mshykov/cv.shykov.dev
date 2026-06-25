@@ -45,6 +45,49 @@ test('missing email fails the email check', () => {
   assert.equal(r.checks.find((c) => c.id === 'email')?.status, 'fail')
 })
 
+test('warns when a LinkedIn URL is only present as a hidden link target', () => {
+  const r = analyze(ex([
+    'OLENA SHYKOVA',
+    '+351937349120 | Lisbon, Portugal | okryvelova@gmail.com | LinkedIn',
+  ], { linkTargets: ['https://www.linkedin.com/in/olenashykova/'] }))
+  const links = r.checks.find((c) => c.id === 'links')
+
+  assert.equal(links?.status, 'warn')
+  assert.equal(links?.points, 0)
+  assert.match(links?.detail ?? '', /Clickable profile or website link target found/i)
+  assert.match(links?.fix ?? '', /visible text/i)
+})
+
+test('detects visible profile and portfolio links', () => {
+  for (const url of ['jane.dev', 'www.jane.dev', 'jane.dev/portfolio', 'https://jane.dev', 'linkedin.com/in/jane']) {
+    const r = analyze(ex([
+      'JANE DOE',
+      `jane@example.com · +1 555 123 4567 · ${url}`,
+    ]))
+    assert.equal(r.checks.find((c) => c.id === 'links')?.status, 'pass', url)
+  }
+})
+
+test('does not count email domains as profile links', () => {
+  const r = analyze(ex([
+    'JANE DOE',
+    'jane@example.com · +1 555 123 4567',
+  ]))
+
+  assert.equal(r.checks.find((c) => c.id === 'links')?.status, 'warn')
+})
+
+test('uses generic copy for hidden profile or website targets', () => {
+  const r = analyze(ex([
+    'JANE DOE',
+    'jane@example.com · +1 555 123 4567 · Portfolio',
+  ], { linkTargets: ['https://jane.dev'] }))
+  const links = r.checks.find((c) => c.id === 'links')
+
+  assert.equal(links?.status, 'warn')
+  assert.match(links?.detail ?? '', /profile or website link target/i)
+})
+
 test('DOCX source does not penalize page count', () => {
   const r = analyze(ex(STRONG, { source: 'docx', numPages: 0 }))
   assert.equal(r.checks.find((c) => c.id === 'pages')?.status, 'pass')
