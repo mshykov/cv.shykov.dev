@@ -328,7 +328,7 @@ export default function App() {
         </div>
       </section>
 
-      <footer className="mt-8 border-t border-stone-200 pt-5 text-xs text-stone-400 sm:flex sm:items-center sm:justify-between sm:gap-4">
+      <footer className="mt-8 border-t border-stone-200 pt-5 text-xs text-stone-600 sm:flex sm:items-center sm:justify-between sm:gap-4">
         <p>Heuristic guidance, not a guarantee. <a href="https://shykov.dev" className="font-medium text-stone-600 underline-offset-2 hover:underline">shykov.dev</a></p>
         <p className="mt-1 sm:mt-0">No tracking, no uploads, no accounts.</p>
       </footer>

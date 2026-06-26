@@ -188,7 +188,6 @@ export default function Analyzer() {
       ) : (
         <button
           type="button"
-          aria-label="Upload your CV as a PDF or DOCX file"
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
           onDragLeave={() => setDrag(false)}
@@ -197,7 +196,7 @@ export default function Analyzer() {
         >
           <svg className="h-9 w-9 text-stone-400 group-hover:text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14" /></svg>
           <span className="mt-3 font-medium text-stone-800">{busy ? 'Scoring your CV…' : 'Drop your CV here for a fast ATS score'}</span>
-          <span className="mt-1 text-sm text-stone-400">PDF or DOCX · runs in your browser · no upload · no LLM</span>
+          <span className="mt-1 text-sm text-stone-600">PDF or DOCX · runs in your browser · no upload · no LLM</span>
         </button>
       )}
       <input
