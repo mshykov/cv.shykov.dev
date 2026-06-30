@@ -23,8 +23,29 @@ dist-ssr
 *.sln
 *.sw?
 
-# Claude Code local preview config
-.claude/
+# AI coding assistant local artifacts (per-developer, never committed).
+# .claude/ is intentionally NOT ignored — its skills/ are project config.
+# AGENTS.md / CLAUDE.md are intentionally NOT ignored — they are project config.
+.claude/launch.json
+.antigravitycli/
+.antigravity/
+.codex/
+.openai/
+.openAI/
+.aider*
+.continue/
+.windsurf/
+.windsurfrules
+.gemini/
+.copilot/
+.github/copilot-instructions.md
+.cline/
+.clinerules
+.roo/
+.qodo/
+.tabnine/
+.sourcegraph/
+.cody/
 
 # wrangler files
 .wrangler
