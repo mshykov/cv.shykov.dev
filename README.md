@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="https://github.com/mshykov/cv.shykov.dev/actions/workflows/ci.yml"><img alt="Build" src="https://github.com/mshykov/cv.shykov.dev/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://sonarcloud.io/summary/new_code?id=mshykov_cv.shykov.dev"><img alt="Quality Gate" src="https://sonarcloud.io/api/project_badges/measure?project=mshykov_cv.shykov.dev&metric=alert_status"></a>
+  <a href="https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev"><img alt="Quality Gate" src="https://sonarcloud.io/api/project_badges/measure?project=mshykov_cv.shykov.dev&metric=alert_status"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
@@ -111,7 +111,7 @@ Versions tracked from `package.json`; Dependabot keeps them current.
 
 ## Project Health
 
-**Code quality** — [SonarCloud](https://sonarcloud.io/summary/new_code?id=mshykov_cv.shykov.dev), last analysis 2026-06-30, 2.7k lines of code (TypeScript, HTML):
+**Code quality** — [SonarCloud](https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev), last analysis 2026-06-30, 2.7k lines of code (TypeScript, HTML):
 
 | Security | Reliability | Maintainability | Hotspots Reviewed | Coverage | Duplications |
 |----------|-------------|------------------|--------------------|----------|---------------|
