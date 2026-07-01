@@ -18,6 +18,12 @@
   <a href="#how-the-score-works">How scoring works</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/mshykov/cv.shykov.dev/actions/workflows/ci.yml"><img alt="Build" src="https://github.com/mshykov/cv.shykov.dev/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev"><img alt="Quality Gate" src="https://sonarcloud.io/api/project_badges/measure?project=mshykov_cv.shykov.dev&metric=alert_status"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+</p>
+
 ## What It Does
 
 `cv.shykov.dev` is a privacy-first resume toolkit with two workflows:
@@ -91,13 +97,31 @@ PDF export uses `@react-pdf/renderer`.
 
 ## Tech Stack
 
-- Vite
-- React
-- TypeScript
-- Tailwind CSS v4
-- pdf.js
-- mammoth
-- @react-pdf/renderer
+| Package | Version |
+|---------|---------|
+| Vite | 8.1.0 |
+| React | 19.2.6 |
+| TypeScript | 6.0.2 |
+| Tailwind CSS | 4.3.1 |
+| pdf.js (`pdfjs-dist`) | 6.1.200 |
+| mammoth | 1.12.0 |
+| @react-pdf/renderer | 4.5.1 |
+
+Versions tracked from `package.json`; Dependabot keeps them current.
+
+## Project Health
+
+**Code quality** — [SonarCloud](https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev), last analysis 2026-06-30, 2.7k lines of code (TypeScript, HTML):
+
+| Security | Reliability | Maintainability | Hotspots Reviewed | Coverage | Duplications |
+|----------|-------------|------------------|--------------------|----------|---------------|
+| A (0 issues) | A (0 issues) | A (3 issues) | 100% | – | 0.0% |
+
+**Lighthouse** (mobile, cv.shykov.dev/, 2026-07-01):
+
+| Performance | Accessibility | Best Practices | SEO |
+|--------------|----------------|-----------------|-----|
+| 100 | 100 | 100 | 100 |
 
 ## Non-Goals
 
