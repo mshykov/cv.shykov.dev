@@ -47,6 +47,10 @@ dist-ssr
 .sourcegraph/
 .cody/
 
+# playwright artifacts
+test-results/
+playwright-report/
+
 # wrangler files
 .wrangler
 .dev.vars*
