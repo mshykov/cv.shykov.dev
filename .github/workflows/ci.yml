@@ -14,8 +14,12 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      # SHA-pinned (tags can be moved/hijacked); Dependabot bumps the SHAs weekly.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          # Read-only workflow — don't leave the token in .git/config for later steps.
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 22
           cache: npm
@@ -24,3 +28,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run smoke:build
+      # WebKit e2e under the production CSP — the project's worst historical
+      # bugs were Safari-only and invisible to everything above this line.
+      - run: npx playwright install --with-deps webkit
+      - run: npm run test:e2e

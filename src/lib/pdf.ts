@@ -96,6 +96,10 @@ async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPi
   const annotations = await page.getAnnotations()
   for (const annotation of annotations) {
     const a = annotation as { url?: string; unsafeUrl?: string }
+    // SECURITY: unsafeUrl is attacker-controlled and unvalidated (it can be a
+    // javascript:/data: URL from a malicious PDF). These values are only ever
+    // pattern-matched by the analyzer — never render them as hrefs or navigate
+    // to them.
     const url = a.url || a.unsafeUrl
     if (url) linkTargets.add(url)
   }
