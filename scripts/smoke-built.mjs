@@ -17,6 +17,8 @@ const headers = readFileSync(headersPath, 'utf8')
 assert.match(html, /<script[^>]+type="module"[^>]+src="\/assets\/index-[^"]+\.js"/, 'index.html should reference a hashed app chunk')
 assert.match(headers, /Content-Security-Policy:/, '_headers should include the production CSP')
 assert.match(headers, /Cache-Control: no-cache/, '_headers should keep HTML revalidated')
+assert.match(headers, /Strict-Transport-Security: max-age=\d+/, '_headers should pin HSTS in the repo, not rely on zone-level dashboard state')
+assert.match(headers, /object-src 'none'/, "CSP should keep object-src 'none' (blocks same-origin <object>/<embed> smuggling)")
 
 const assetDir = join(fileURLToPath(dist), 'assets')
 assert.ok(existsSync(assetDir), 'dist/assets should exist after build')

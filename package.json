@@ -12,8 +12,7 @@
     "lint": "eslint .",
     "test": "node --test \"src/**/*.test.ts\"",
     "smoke:build": "node scripts/smoke-built.mjs",
-    "preview": "npm run build && wrangler dev",
-    "deploy": "npm run build && wrangler deploy"
+    "preview": "npm run build && wrangler dev"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",
