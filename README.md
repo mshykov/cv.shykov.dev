@@ -130,17 +130,19 @@ Versions tracked from `package.json`; Dependabot keeps them current.
 - No graphic-heavy or multi-column templates
 - No promise that the score exactly matches every ATS vendor
 
-## Deploy To Cloudflare Pages
+## Deploy To Cloudflare (Workers Builds)
 
-1. Connect the GitHub repository in **Cloudflare Workers & Pages**.
-2. Use the Vite preset.
-3. Set the build command to `npm run build`.
-4. Set the output directory to `dist`.
-5. Use Node.js 20 or newer.
+Production deploys automatically on push to `main` via **Cloudflare Workers
+Builds** — there is no manual deploy path. To reproduce the setup:
 
-For the custom domain, add `cv.shykov.dev` in the Pages project custom domain
-settings. If DNS is outside Cloudflare, create a CNAME from `cv` to the generated
-Pages domain and verify it in Cloudflare.
+1. Connect the GitHub repository in **Cloudflare Workers & Pages** (Worker,
+   not a Pages project — config lives in `wrangler.jsonc`).
+2. Build command: `npm run build` · Deploy command: `npx wrangler deploy`.
+3. Production branch: `main`. Use a Worker-scoped API token (Account Settings
+   Read, Workers Scripts Write, Workers Routes Write).
+
+The custom domain (`cv.shykov.dev`) is declared in `wrangler.jsonc` and
+provisioned automatically on deploy (DNS record + TLS cert).
 
 Security headers, robots.txt, sitemap.xml, favicon, and app icons are already in
 `public/`.
