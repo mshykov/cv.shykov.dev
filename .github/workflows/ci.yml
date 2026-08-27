@@ -34,7 +34,10 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      # --ignore-scripts: a compromised transitive dep must not get arbitrary
+      # code execution on the runner just by being installed. Verified the
+      # build and both test suites pass without any postinstall hook.
+      - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm test
       - run: npm run build
@@ -56,9 +59,11 @@ jobs:
           key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
       - name: Install WebKit (browser + system deps)
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps webkit
+        # The repo's own pinned binary, not npx — npx will fetch and execute a
+        # package on demand if the name misses locally.
+        run: ./node_modules/.bin/playwright install --with-deps webkit
       - name: Install WebKit system deps only (browser restored from cache)
         if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps webkit
+        run: ./node_modules/.bin/playwright install-deps webkit
 
       - run: npm run test:e2e
