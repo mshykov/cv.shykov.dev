@@ -9,6 +9,17 @@ on:
 permissions:
   contents: read
 
+# Supersede in-flight runs for the same PR: pushing three times to a branch
+# should not run three full pipelines. Runs on `main` are never cancelled — that
+# is the commit that gates the deploy, so it must always complete.
+#
+# NOTE: deliberately no `paths-ignore` here. `build` is a required status check,
+# and a skipped workflow never reports one — so a docs-only PR would be blocked
+# from merging forever rather than merged quickly.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     name: build
@@ -23,12 +34,36 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      # --ignore-scripts: a compromised transitive dep must not get arbitrary
+      # code execution on the runner just by being installed. Verified the
+      # build and both test suites pass without any postinstall hook.
+      - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm test
       - run: npm run build
       - run: npm run smoke:build
+
       # WebKit e2e under the production CSP — the project's worst historical
       # bugs were Safari-only and invisible to everything above this line.
-      - run: npx playwright install --with-deps webkit
+      #
+      # The browser binary is ~80 MB and dominated CI time once this step landed
+      # (build went from ~22s to ~1m20s). Cache it, keyed on the Playwright
+      # version so a Dependabot bump invalidates the cache automatically.
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - name: Install WebKit (browser + system deps)
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        # The repo's own pinned binary, not npx — npx will fetch and execute a
+        # package on demand if the name misses locally.
+        run: ./node_modules/.bin/playwright install --with-deps webkit
+      - name: Install WebKit system deps only (browser restored from cache)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: ./node_modules/.bin/playwright install-deps webkit
+
       - run: npm run test:e2e
