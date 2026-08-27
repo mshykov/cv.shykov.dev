@@ -67,14 +67,20 @@ const VAGUE_QUANTIFIERS = [
 const PASSIVE_RE = /\b(?:was|were|is|are|been|being|be)\s+(?:\w+ly\s+)?\w+(?:ed|en)\b/i
 const NUMBER_RE = /\d/
 
+// U+0000 never appears in extracted CV text, so it is a safe break marker.
+const SENTINEL = '\u0000'
+
 function sentences(text: string): string[] {
   // No look-behind: Safari < 16.4 throws on it at parse time, and this module is
   // imported alongside the extractor, so a syntax error would break the whole
   // upload rather than just this tab. Same constraint jdmatch.ts documents.
   // Marking the break with a sentinel keeps the terminator on its sentence.
+  // The sentinel is split with String.split, not a regex — a control character
+  // inside a regex literal is a lint error (no-control-regex).
   return text
-    .replace(/([.!?])\s+/g, '$1\u0000')
-    .split(/\u0000|\n+/)
+    .replace(/([.!?])\s+/g, `$1${SENTINEL}`)
+    .split('\n')
+    .flatMap((line) => line.split(SENTINEL))
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
 }
