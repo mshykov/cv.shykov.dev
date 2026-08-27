@@ -20,5 +20,13 @@ assert.match(headers, /Cache-Control: no-cache/, '_headers should keep HTML reva
 assert.match(headers, /Strict-Transport-Security: max-age=\d+/, '_headers should pin HSTS in the repo, not rely on zone-level dashboard state')
 assert.match(headers, /object-src 'none'/, "CSP should keep object-src 'none' (blocks same-origin <object>/<embed> smuggling)")
 
+// The prerendered shell is the only thing a non-JS crawler ever sees. AI
+// crawlers (GPTBot, ClaudeBot, PerplexityBot, CCBot) do not execute JavaScript,
+// so if this regresses to a bare <div id="root"></div> the site becomes
+// invisible to them without any visible breakage for human users.
+assert.match(html, /<div id="root"><[^>]/, 'index.html should ship prerendered markup inside #root')
+assert.match(html, /<h1[^>]*>[^<]*ATS resume score/, 'prerendered HTML should carry the h1')
+assert.match(html, /What is an ATS score\?/, 'prerendered HTML should carry the FAQ copy')
+
 const assetDir = join(fileURLToPath(dist), 'assets')
 assert.ok(existsSync(assetDir), 'dist/assets should exist after build')
