@@ -92,30 +92,74 @@ function isProfileHost(host: string): boolean {
   return Boolean(tld && PROFILE_TLDS.has(tld))
 }
 
+/** A URL written out as one: a protocol, a www. prefix, or a path. */
 function isProfileUrlToken(raw: string): boolean {
   if (isEmailToken(raw)) return false
 
-  const token = stripUrlProtocol(cleanContactToken(raw).toLowerCase())
+  const cleaned = cleanContactToken(raw).toLowerCase()
+  const token = stripUrlProtocol(cleaned)
   const normalized = token.startsWith('www.') ? token.slice(4) : token
   if (normalized.startsWith('linkedin.com/') || normalized.startsWith('github.com/')) return true
 
   const slash = normalized.indexOf('/')
   const host = slash === -1 ? normalized : normalized.slice(0, slash)
-  return isProfileHost(host)
+  if (!isProfileHost(host)) return false
+
+  return cleaned !== token || token.startsWith('www.') || slash !== -1
+}
+
+/** A host and nothing else: "jane.dev" - but also "socket.io". */
+function isBareProfileHost(raw: string): boolean {
+  if (isEmailToken(raw)) return false
+
+  const cleaned = cleanContactToken(raw).toLowerCase()
+  if (cleaned !== stripUrlProtocol(cleaned)) return false
+  if (cleaned.startsWith('www.') || cleaned.includes('/')) return false
+  return isProfileHost(cleaned)
+}
+
+function lineCarriesContactDetails(line: string): boolean {
+  return contactTokens(line).some(isEmailToken) || hasPhoneNumber(line)
+}
+
+/**
+ * A bare host is structurally identical to a package name - "jane.dev" and
+ * "socket.io" are the same shape - so counting bare hosts anywhere credited any
+ * CV that merely mentioned a .io/.dev library with having a profile link, and
+ * then told it no link was needed.
+ *
+ * Position is not the discriminator (extraction order is unreliable); company
+ * is. A bare host counts only on a line that already carries an email or phone,
+ * which is what a contact line looks like. Anywhere else the URL has to be
+ * written out - the same "full URL as visible text" this check's own fix asks
+ * for, and the format the built-in Builder writes ("linkedin.com/in/you").
+ */
+function profileUrlsIn(value: string): string[] {
+  const found: string[] = []
+
+  for (const line of value.split('\n')) {
+    const bareAllowed = lineCarriesContactDetails(line)
+    for (const raw of contactTokens(line)) {
+      if (isProfileUrlToken(raw) || (bareAllowed && isBareProfileHost(raw))) {
+        found.push(cleanContactToken(raw))
+      }
+    }
+  }
+
+  return found
 }
 
 export function hasProfileUrl(value: string): boolean {
-  return contactTokens(value).some(isProfileUrlToken)
+  return profileUrlsIn(value).length > 0
 }
 
 export function findProfileUrls(value: string, limit = Number.POSITIVE_INFINITY): string[] {
   const links: string[] = []
   const seen = new Set<string>()
 
-  for (const raw of contactTokens(value)) {
-    const token = cleanContactToken(raw)
+  for (const token of profileUrlsIn(value)) {
     const key = token.toLowerCase()
-    if (!isProfileUrlToken(token) || seen.has(key)) continue
+    if (seen.has(key)) continue
     links.push(token)
     seen.add(key)
     if (links.length >= limit) break
@@ -128,6 +172,26 @@ function isPhoneChar(char: string): boolean {
   return isDigit(char) || PHONE_CHARS.has(char)
 }
 
+/**
+ * A 9-15 digit run is not enough on its own: '.' and ' ' are both phone
+ * separators and decimal points, so a line of metrics like "96.5 99.5 99.9"
+ * used to be reported as the candidate's phone number - on a tool whose own
+ * advice is to add exactly those metrics.
+ */
+function looksLikePhone(candidate: string): boolean {
+  const groups = candidate.split(/[^0-9]+/).filter(Boolean)
+  if (groups.length === 0) return false
+
+  // A one-digit group is a decimal fraction ("96.5"), not a phone segment. The
+  // sole exception is a leading country code: "+1 555 123 4567".
+  const leadingCountryCode = candidate.trimStart().startsWith('+')
+  if (groups.some((g, i) => g.length === 1 && !(i === 0 && leadingCountryCode))) return false
+
+  // "2019 2020 2021" is a run of years, not a number anyone can call.
+  const isYear = (g: string) => g.length === 4 && Number(g) >= 1900 && Number(g) <= 2099
+  return !groups.every(isYear)
+}
+
 export function findPhoneNumber(text: string): string {
   let candidate = ''
 
@@ -135,7 +199,8 @@ export function findPhoneNumber(text: string): string {
     const phone = candidate.trim()
     candidate = ''
     const digits = digitCount(phone)
-    return digits >= 9 && digits <= 15 ? phone : ''
+    if (digits < 9 || digits > 15) return ''
+    return looksLikePhone(phone) ? phone : ''
   }
 
   for (const char of text) {
