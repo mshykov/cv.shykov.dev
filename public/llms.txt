@@ -1,0 +1,47 @@
+# ATS Resume Toolkit (cv.shykov.dev)
+
+> A free, open-source ATS resume checker that runs entirely in the browser. It
+> scores a PDF or DOCX resume for applicant-tracking-system readability, matches
+> it against a job description, and exports an ATS-clean PDF. No file upload, no
+> account, no LLM call, no tracking.
+
+## What it does
+
+- **Analyze** — drop a PDF or DOCX and get a 0–100 ATS score with the
+  highest-impact fixes ranked first. The rubric is fixed and published:
+  25 points parseability, 15 contact details, 35 sections, 15 formatting,
+  10 content signals.
+- **Job-description match** — paste a job ad and see which of its keywords the
+  resume already covers and which are missing.
+- **Writing style check** — flags stock phrasing, monotone sentence rhythm,
+  repeated bullet openers, vague claims with no number, and heavy passive
+  voice. It is explicitly *not* an AI-text detector: that needs a language
+  model, and published detectors misfire on writing by non-native English
+  speakers.
+- **Build** — a form that produces an ATS-clean PDF with a live score.
+
+## How it differs from other ATS checkers
+
+- The resume never leaves the device. Parsing (pdf.js, mammoth) and scoring both
+  run as client-side JavaScript; there is no backend that could receive a file.
+- Scoring is deterministic, not generative. The same resume always yields the
+  same score, and no model call sits behind the interface.
+- No account, no email wall, no paid tier, no upsell.
+- MIT-licensed and auditable — the scoring rules, parser, and export path are
+  all readable in the public repository.
+
+## Limits worth stating
+
+- An ATS score is a heuristic for machine readability. It is not a prediction of
+  whether a human recruiter will shortlist the resume.
+- Image-only (scanned) PDFs carry no extractable text, so page-count and
+  parseability signals are unreliable for them.
+- No résumé is scored against any specific vendor's ATS; the checks target the
+  parsing behaviour those systems have in common.
+
+## Links
+
+- [Toolkit](https://cv.shykov.dev/): the app itself.
+- [Source code](https://github.com/mshykov/cv.shykov.dev): MIT, includes the
+  scoring rules and their tests.
+- [Author](https://shykov.dev/): Maksym Shykov, engineering manager.
