@@ -152,8 +152,15 @@ export default function Analyzer() {
   const [jd, setJd] = useState<JDMatch | null>(null)
   const [style, setStyle] = useState<StyleReport | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  // Nothing blocks a second upload while the first is still parsing - the
+  // dropzone stays droppable and `busy` only swaps a caption. Two runs then
+  // race, and the slower one lands last: the header said "Analyzed
+  // sample-cv.pdf" above a 60-page report. Stamp each run and let only the
+  // newest one write state.
+  const runId = useRef(0)
 
   const run = useCallback(async (file: File) => {
+    const id = (runId.current += 1)
     setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null)
     const ok = /\.(pdf|docx)$/i.test(file.name) || file.type === 'application/pdf' || file.type.includes('wordprocessingml')
     if (!ok) { setError('Please choose a PDF or DOCX file.'); return }
@@ -171,14 +178,19 @@ export default function Analyzer() {
       const res = parseResume(ex)
       stage = 'checking style'
       const sty = analyzeStyle(ex.text, ex.lines)
+      if (runId.current !== id) return
       setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty)
     } catch (e) {
+      if (runId.current !== id) return
       const err = e instanceof Error ? e : new Error(String(e))
       const detail = `stage: ${stage}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
       console.error('[ATS Resume Toolkit] analyze failed —', detail)
       setError(`Analysis failed while ${stage}. Please tap “Copy details” and send them to me.`)
       setErrDetail(detail)
-    } finally { setBusy(false) }
+    } finally {
+      // A superseded run must not clear the spinner out from under the new one.
+      if (runId.current === id) setBusy(false)
+    }
   }, [])
 
   const onDrop = useCallback((e: React.DragEvent) => {
@@ -188,7 +200,11 @@ export default function Analyzer() {
 
   const runJd = useCallback(async () => {
     if (!resume || !jdText.trim()) return
+    const id = runId.current
     const { matchJD } = await import('./lib/jdmatch')
+    // A new CV may have finished analyzing during that import; its own reset
+    // already cleared `jd`, and this match belongs to the previous document.
+    if (runId.current !== id) return
     setJd(matchJD(cvText, resume.skills, jdText))
   }, [resume, cvText, jdText])
 

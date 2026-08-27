@@ -93,7 +93,17 @@ async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPi
     if (isTextItem(item)) addTextPiece(pieces, item, content.styles, pageNumber)
   }
 
-  const annotations = await page.getAnnotations()
+  // Annotations are supplementary - they only feed the "a link exists but is
+  // not visible as text" hint. Text extraction for this page has already
+  // succeeded by now, so a malformed annotation dictionary in a hand-built or
+  // damaged PDF must not cost the user the entire analysis.
+  let annotations: unknown[] = []
+  try {
+    annotations = await page.getAnnotations()
+  } catch {
+    // Keep the text; drop the link hint for this page.
+  }
+
   for (const annotation of annotations) {
     const a = annotation as { url?: string; unsafeUrl?: string }
     // SECURITY: unsafeUrl is attacker-controlled and unvalidated (it can be a

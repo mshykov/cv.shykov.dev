@@ -38,3 +38,25 @@ test('analyzes a PDF when the engine lacks the APIs the polyfills patch', async 
   })
   await analyzeFixture(page)
 })
+
+// Nothing blocks a second upload while the first is still parsing, so two runs
+// race. Before the run-id guard the slower one landed last and overwrote the
+// newer result, leaving the header naming one file above another file's report:
+// "Analyzed sample-cv.pdf" over a 60-page document.
+test('a superseded upload never overwrites the newer result', async ({ page }) => {
+  await page.goto('/')
+  const input = page.locator('input[type="file"]')
+
+  // 60 pages, then 1 page. The big one is still parsing when the small one starts.
+  await input.setInputFiles('e2e/fixtures/many-pages.pdf')
+  await input.setInputFiles('e2e/fixtures/sample-cv.pdf')
+
+  await expect(page.getByRole('heading', { name: 'Fast ATS score' })).toBeVisible({ timeout: 30_000 })
+  // Give the superseded 60-page run time to finish and try to write.
+  await page.waitForTimeout(5_000)
+
+  await expect(page.getByText('sample-cv.pdf')).toBeVisible()
+  const body = await page.locator('body').innerText()
+  expect(body, 'the 60-page report must not be showing under the 1-page filename').not.toMatch(/\b60\s*pages\b/)
+  await expect(page.getByRole('alert')).toHaveCount(0)
+})
