@@ -9,6 +9,9 @@
 // (src/polyfills.ts patches Promise.withResolvers on the main thread, covering
 // the worker code now that it runs there — for the rare pre-17.4 Safari.)
 import * as pdfjs from 'pdfjs-dist'
+import { groupIntoLines, type TextPiece } from './lines.ts'
+
+export type { TextPiece }
 
 let workerReady: Promise<unknown> | null = null
 function ensureMainThreadWorker(): Promise<unknown> {
@@ -20,15 +23,6 @@ function ensureMainThreadWorker(): Promise<unknown> {
 
 function yieldToBrowser(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 0))
-}
-
-export interface TextPiece {
-  text: string
-  x: number // left edge, PDF points from bottom-left origin
-  y: number // baseline
-  w: number
-  bold: boolean
-  page: number
 }
 
 export interface Extracted {
@@ -133,36 +127,7 @@ export async function extractPdf(file: File): Promise<Extracted> {
     await task.destroy()
   }
 
-  // Group pieces into visual lines: same page, baseline within ~3pt.
-  pieces.sort((a, b) => a.page - b.page || b.y - a.y || a.x - b.x)
-  const lines: string[] = []
-  let cur: TextPiece[] = []
-  const flush = () => {
-    if (!cur.length) return
-    cur.sort((a, b) => a.x - b.x)
-    const s = cur
-      .map((p) => p.text)
-      .join('')
-      .replace(/\s+/g, ' ')
-      .trim()
-    if (s) lines.push(s)
-    cur = []
-  }
-  for (const piece of pieces) {
-    if (!cur.length) {
-      cur.push(piece)
-      continue
-    }
-    const last = cur.at(-1)
-    if (!last) continue
-    const sameLine = piece.page === last.page && Math.abs(piece.y - last.y) <= 3
-    if (sameLine) cur.push(piece)
-    else {
-      flush()
-      cur.push(piece)
-    }
-  }
-  flush()
+  const lines = groupIntoLines(pieces)
 
   const text = lines.join('\n')
   return {

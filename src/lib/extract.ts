@@ -1,6 +1,7 @@
 // File-type router for document extraction. Both paths run entirely in the
 // browser; nothing is uploaded.
-import { extractPdf, type Extracted } from './pdf'
+import { extractPdf, type Extracted } from './pdf.ts'
+import { documentKind } from './filetype.ts'
 
 export type { Extracted }
 
@@ -30,12 +31,8 @@ export async function extractDocument(file: File): Promise<Extracted> {
     throw new Error('This file is too large for in-browser analysis. Please use a PDF or DOCX under 20 MB.')
   }
 
-  const name = file.name.toLowerCase()
-  if (name.endsWith('.pdf') || file.type === 'application/pdf') {
-    return extractPdf(file)
-  }
-  if (name.endsWith('.docx') || file.type.includes('wordprocessingml')) {
-    return extractDocx(file)
-  }
+  const kind = documentKind(file)
+  if (kind === 'pdf') return extractPdf(file)
+  if (kind === 'docx') return extractDocx(file)
   throw new Error('Unsupported file type. Please upload a PDF or DOCX.')
 }
