@@ -3,14 +3,19 @@ const MONTHS = new Set([
   'may', 'jun', 'june', 'jul', 'july', 'aug', 'august', 'sep', 'sept',
   'september', 'oct', 'october', 'nov', 'november', 'dec', 'december',
 ])
-const MONTH_YEAR_RE = /\b([a-z]{3,9})\.?\s+\d{2,4}\b/i
+// Global on purpose: exec() returns only the FIRST word+number pair, and if that
+// pair is not a month ("latency 300 ms in Jan 24") the real date was reported as
+// absent. Scan every candidate instead. matchAll is safe with /g here — it walks
+// an internal clone, so this shared regex keeps lastIndex at 0.
+const MONTH_YEAR_RE = /\b([a-z]{3,9})\.?\s+\d{2,4}\b/gi
 const YEAR_RE = /\b(?:19|20)\d{2}\b/i
 const RELATIVE_DATE_RE = /\b(?:present|current|now)\b/i
 
 function findMonthYear(text: string): RegExpMatchArray | null {
-  const match = MONTH_YEAR_RE.exec(text)
-  if (!match) return null
-  return MONTHS.has(match[1].toLowerCase()) ? match : null
+  for (const match of text.matchAll(MONTH_YEAR_RE)) {
+    if (MONTHS.has(match[1].toLowerCase())) return match
+  }
+  return null
 }
 
 export function findDate(text: string): RegExpMatchArray | null {
