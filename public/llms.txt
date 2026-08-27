@@ -39,6 +39,10 @@
 - No résumé is scored against any specific vendor's ATS; the checks target the
   parsing behaviour those systems have in common.
 
+## Guides
+
+<!--GUIDES-->
+
 ## Links
 
 - [Toolkit](https://cv.shykov.dev/): the app itself.

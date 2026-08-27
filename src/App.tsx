@@ -1,5 +1,8 @@
 import { lazy, Suspense, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
+// Data only, no components: this keeps the guide list on the homepage in step
+// with the pages the build generates, instead of a hand-kept copy that rots.
+import { ARTICLES } from './content/articles.tsx'
 
 // Keep the app shell tiny; load the active workflow UI after first paint.
 const Analyzer = lazy(() => import('./Analyzer'))
@@ -326,6 +329,20 @@ export default function App() {
           <h2 className="font-semibold text-stone-800">PDF or DOCX?</h2>
           <p className="mt-2">Both work. Text-based PDFs give the clearest page-count and parseability signal.</p>
         </div>
+      </section>
+
+      <section className="mt-14 border-t border-stone-200 pt-8" aria-label="Guides">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-stone-500">Guides</h2>
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+          {ARTICLES.map((a) => (
+            <li key={a.slug}>
+              <a href={`/${a.slug}`} className="group block rounded-xl border border-stone-200 bg-white p-4 shadow-sm transition hover:border-indigo-200 hover:shadow">
+                <span className="block text-sm font-semibold text-stone-900 group-hover:text-indigo-700">{a.title}</span>
+                <span className="mt-1 block text-sm leading-6 text-stone-500">{a.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <footer className="mt-8 border-t border-stone-200 pt-5 text-xs text-stone-600 sm:flex sm:items-center sm:justify-between sm:gap-4">
