@@ -105,7 +105,8 @@ test('score is bounded and never negative', () => {
     'Significantly improved various things — numerous outcomes were delivered — moreover.',
   ]
   const r = run(awful)
-  assert.ok(r.score >= 0 && r.score <= 100, `score out of range: ${r.score}`)
+  assert.ok(r.score >= 0, `score below 0: ${r.score}`)
+  assert.ok(r.score <= 100, `score above 100: ${r.score}`)
 })
 
 test('short input does not produce confident verdicts', () => {
@@ -118,7 +119,8 @@ test('short input does not produce confident verdicts', () => {
 test('empty input is handled without throwing', () => {
   const r = analyzeStyle('', [])
   assert.equal(r.meta.words, 0)
-  assert.ok(r.score >= 0 && r.score <= 100)
+  assert.ok(r.score >= 0, `score below 0: ${r.score}`)
+  assert.ok(r.score <= 100, `score above 100: ${r.score}`)
 })
 
 test('every non-ok signal carries an actionable fix', () => {
@@ -144,4 +146,60 @@ test('job-title rows do not drive the repeated-opener signal', () => {
     'Rebuilt the release process so weekly releases became routine for everyone.',
   ])
   assert.equal(signal(r, 'openers').level, 'ok')
+})
+
+// --- Regressions found in code review ---
+
+test('passive detection does not skip alternating sentences', () => {
+  // PASSIVE_RE must not carry the /g flag: .test() on a global regex advances
+  // lastIndex between calls, so a filter silently skips every other match.
+  const allPassive = [
+    'A recommendation system was implemented by the team.',
+    'The release process was streamlined by the group.',
+    'Test coverage was increased by the engineers.',
+    'The migration was completed by the platform team.',
+    'The results were reviewed by the stakeholders.',
+    'The documentation was updated by the authors.',
+  ]
+  const r = run(allPassive)
+  const s = signal(r, 'passive')
+  assert.match(s.detail, /100%/, `expected all sentences passive, got: ${s.detail}`)
+  assert.equal(s.level, 'major')
+})
+
+test('sentence splitting works without look-behind (Safari < 16.4)', () => {
+  const r = analyzeStyle('One sentence here. Two sentence here! Three sentence here?', [])
+  assert.equal(r.meta.sentences, 3)
+})
+
+test('style module source contains no look-behind assertion', async () => {
+  // jdmatch.ts documents the same constraint. This module is imported alongside
+  // the extractor, so a parse error would break the whole upload, not just a tab.
+  const src = await import('node:fs/promises').then((fs) =>
+    fs.readFile(new URL('./style.ts', import.meta.url), 'utf8'))
+  const code = src.replace(/\/\/.*$/gm, '')
+  assert.ok(!code.includes('(?<='), 'look-behind found in style.ts')
+  assert.ok(!code.includes('(?<!'), 'negative look-behind found in style.ts')
+})
+
+test('overlapping filler phrases are not double-counted', () => {
+  const r = run([
+    'The report will delve into the details of the platform migration work.',
+    'Nothing else here is a stock phrase at all in this particular line.',
+  ])
+  const s = signal(r, 'filler')
+  assert.equal(s.examples?.length, 1, `one occurrence should yield one hit, got ${JSON.stringify(s.examples)}`)
+})
+
+test('em-dash separators in role headings are not counted as writing tics', () => {
+  // "Engineering Manager — Headway Inc." is typography, not a prose tic.
+  const r = run([
+    'Engineering Manager — Headway Inc. Feb 2025 – now Madrid, Spain',
+    'Engineering Manager — MacPaw Oct 2022 – Nov 2024 Kyiv, Ukraine',
+    'Area Lead — MacPaw Apr 2020 – Oct 2022 Kyiv, Ukraine',
+    'QA Engineer — Revenue Grid Apr 2013 – Jul 2019 Kyiv, Ukraine',
+    'Introduced integration testing and the bug count fell about 30% that year.',
+    'Rebuilt the release process so weekly releases became routine for the team.',
+  ])
+  assert.equal(signal(r, 'punctuation').level, 'ok')
 })

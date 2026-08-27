@@ -50,8 +50,8 @@ const FILLER_PHRASES = [
   'best-in-class', 'best in class', 'world-class', 'world class',
   'cutting-edge', 'cutting edge', 'state-of-the-art', 'state of the art',
   'passionate about', 'dynamic professional', 'seasoned professional',
-  'delve into', 'delve', 'tapestry', 'testament to', 'navigating the complexities',
-  'in today’s fast-paced', 'in today’s ever-evolving', 'ever-evolving',
+  'delve', 'tapestry', 'testament to', 'navigating the complexities',
+  'in today’s fast-paced', 'ever-evolving',
   'it is worth noting', 'it’s worth noting', 'furthermore', 'moreover',
   'leverage synergies', 'spearheaded', 'utilize', 'utilized', 'utilizing',
 ]
@@ -62,12 +62,19 @@ const VAGUE_QUANTIFIERS = [
   'greatly', 'various', 'numerous', 'several', 'many', 'multiple',
 ]
 
-const PASSIVE_RE = /\b(?:was|were|is|are|been|being|be)\s+(?:\w+ly\s+)?\w+(?:ed|en)\b/gi
+// NOT global: .test() on a /g regex advances lastIndex between calls, which
+// silently skips every other sentence when used inside a filter.
+const PASSIVE_RE = /\b(?:was|were|is|are|been|being|be)\s+(?:\w+ly\s+)?\w+(?:ed|en)\b/i
 const NUMBER_RE = /\d/
 
 function sentences(text: string): string[] {
+  // No look-behind: Safari < 16.4 throws on it at parse time, and this module is
+  // imported alongside the extractor, so a syntax error would break the whole
+  // upload rather than just this tab. Same constraint jdmatch.ts documents.
+  // Marking the break with a sentinel keeps the terminator on its sentence.
   return text
-    .split(/(?<=[.!?])\s+|\n+/)
+    .replace(/([.!?])\s+/g, '$1\u0000')
+    .split(/\u0000|\n+/)
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
 }
@@ -80,7 +87,7 @@ function countOccurrences(haystack: string, needle: string): number {
   // Word-boundary-ish match that tolerates hyphens and apostrophes in the term.
   const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
   const re = new RegExp(`(?:^|[^a-z])${escaped}(?![a-z])`, 'gi')
-  return (haystack.match(re) ?? []).length
+  return [...haystack.matchAll(re)].length
 }
 
 function pct(part: number, whole: number): number {
@@ -185,7 +192,6 @@ function checkVagueClaims(lines: string[]): StyleSignal {
 
 function checkPassive(sents: string[]): StyleSignal {
   const passive = sents.filter((s) => PASSIVE_RE.test(s))
-  PASSIVE_RE.lastIndex = 0
   const share = pct(passive.length, sents.length)
   const detail = `${share}% of sentences look passive.`
 
@@ -209,8 +215,8 @@ function checkPassive(sents: string[]): StyleSignal {
   return { id: 'passive', label: 'Passive voice', level: 'ok', detail }
 }
 
-function checkPunctuation(text: string, words: number): StyleSignal {
-  const emDashes = (text.match(/—/g) ?? []).length
+function checkPunctuation(prose: string, words: number): StyleSignal {
+  const emDashes = [...prose.matchAll(/—/g)].length
   const per100 = words === 0 ? 0 : (emDashes / words) * 100
   const detail = `${emDashes} em-dash${emDashes === 1 ? '' : 'es'} (${per100.toFixed(1)} per 100 words).`
 
@@ -269,7 +275,9 @@ export function analyzeStyle(text: string, lines: string[]): StyleReport {
     checkFiller(text),
     checkVagueClaims(contentLines),
     checkPassive(sents),
-    checkPunctuation(text, words.length),
+    // Prose only: role headings use ' — ' as a separator, which is typography,
+    // not a writing tic. Counting them fired 'major' on ordinary CVs.
+    checkPunctuation(contentLines.join('\n'), wordsOf(contentLines.join('\n')).length),
     checkVocabulary(words),
   ]
 

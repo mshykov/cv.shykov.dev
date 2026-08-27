@@ -286,7 +286,7 @@ export default function Analyzer() {
               <div className="min-w-0">
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <h3 className="text-sm font-semibold text-stone-900">Top fixes</h3>
-                  <button onClick={download} className="shrink-0 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">↓ Report</button>
+                  <button type="button" onClick={download} className="shrink-0 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">↓ Report</button>
                 </div>
                 <TopFixes fixes={topFixes} />
               </div>
@@ -295,7 +295,7 @@ export default function Analyzer() {
             <div className="mt-4 flex justify-end">
               <nav className="flex shrink-0 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium">
                 {([['analyze', 'Full report'], ['style', 'Writing style'], ['jd', 'Job match'], ['data', 'Extracted data']] as [Tab, string][]).map(([id, label]) => (
-                  <button key={id} onClick={() => setTab(id)} className={`rounded-md px-3 py-1.5 transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
+                  <button key={id} type="button" onClick={() => setTab(id)} className={`rounded-md px-3 py-1.5 transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
                 ))}
               </nav>
             </div>
@@ -345,7 +345,7 @@ export default function Analyzer() {
               <h2 className="font-semibold text-stone-800">Match against a job description</h2>
               <p className="mt-1 text-sm text-stone-500">Paste the job posting. We extract the keywords it emphasizes and check which your CV already contains.</p>
               <textarea value={jdText} onChange={(e) => setJdText(e.target.value)} rows={6} placeholder="Paste the full job description here…" className="mt-3 w-full resize-y rounded-lg border border-stone-300 p-3 text-sm outline-none transition hover:border-stone-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
-              <button onClick={runJd} disabled={!jdText.trim()} className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">Match keywords</button>
+              <button type="button" onClick={runJd} disabled={!jdText.trim()} className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">Match keywords</button>
 
               {jd && (
                 <div className="mt-5">
