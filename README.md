@@ -5,7 +5,7 @@
 <h1 align="center">ATS Resume Toolkit</h1>
 
 <p align="center">
-  Fast ATS resume scoring and CV building for PDF/DOCX files.
+  Fast ATS resume scoring, writing-style checks, and CV building for PDF/DOCX files.
   <br>
   <strong>Runs in your browser. No uploads. No accounts. No LLM calls.</strong>
 </p>
@@ -16,6 +16,8 @@
   <a href="#run-locally">Run locally</a>
   ·
   <a href="#how-the-score-works">How scoring works</a>
+  ·
+  <a href="#writing-style-check">Writing style check</a>
 </p>
 
 <p align="center">
@@ -28,9 +30,12 @@
 
 `cv.shykov.dev` is a privacy-first resume toolkit with two workflows:
 
-- **Fast ATS Score** — drop a PDF or DOCX and get a 0-100 ATS-readiness score,
-  top fixes, deterministic score breakdown, keyword match against a job
-  description, and the structured data extracted from the document.
+- **Fast ATS Score** — drop a PDF or DOCX and get a 0-100 ATS-readiness score
+  plus top fixes. Four tabs: **Full report** (the deterministic score
+  breakdown), **Writing style** (habits that make CV prose read as
+  boilerplate), **Job match** (keyword coverage against a pasted job
+  description), and **Extracted data** (what a parser actually reads out of the
+  document).
 - **Build** — edit a clean single-column CV with live preview, document settings,
   import from an existing CV, live score feedback, and export to selectable-text
   PDF.
@@ -56,6 +61,7 @@ Your CV is read in memory by the browser, analyzed locally, and then discarded.
 |------|--------------|
 | ATS scoring | Parseability, contact, sections, format, and content checks |
 | Top fixes | Highest-impact failed or warning checks first |
+| Writing style | Rhythm, filler, repeated openers, unquantified claims, passive voice |
 | Job matching | Deterministic keyword coverage against a pasted job description |
 | Extracted data | Contact details, links, sections, entries, dates, and skills |
 | CV builder | Form-driven editor, live preview, document settings, import, export |
@@ -95,27 +101,62 @@ guidance, not a guarantee; real ATS platforms differ.
 PDF text extraction uses `pdf.js`. DOCX extraction uses `mammoth`.
 PDF export uses `@react-pdf/renderer`.
 
+## Writing Style Check
+
+A second, separate score for how the CV *reads*. It lives in `src/lib/style.ts`
+and is deliberately kept out of `analyze.ts` so that adding it could not shift
+the 100-point ATS rubric above.
+
+| Signal | What it looks for |
+|--------|-------------------|
+| Sentence rhythm | Every sentence the same length. Measured as coefficient of variation, so short bullets are not punished for being short |
+| Repeated openers | The same word starting bullet after bullet. Dated role headings are excluded — they are headings, not bullets |
+| Filler phrases | Stock CV language: "results-driven", "proven track record", "team player" |
+| Claims without numbers | "Significantly improved" with no figure anywhere on the line |
+| Passive voice | "was implemented by" where "implemented" would do |
+| Punctuation tics | Em-dash overuse in prose. Role-heading separators are not counted |
+| Vocabulary range | Type-token ratio — how much the wording repeats itself |
+
+Bands: **85+** reads naturally · **65-84** a few habits to fix · **under 65**
+reads formulaic.
+
+### Is this an AI detector?
+
+**No, and it is not trying to be.** Detecting machine-written text requires a
+language model, which this app does not have and will not ship — everything
+here runs on your device with no model call. Published AI detectors are also
+unreliable, and they misfire hardest on writers whose first language is not
+English, which is a large share of the people writing a CV in English.
+
+What this does instead is name concrete habits and let you decide. Every signal
+points at a specific line you can rewrite. A CV can score badly here because a
+human wrote it in a hurry, and that is still worth fixing.
+
 ## Tech Stack
 
 | Package | Version |
 |---------|---------|
-| Vite | 8.1.0 |
-| React | 19.2.6 |
-| TypeScript | 6.0.2 |
-| Tailwind CSS | 4.3.1 |
-| pdf.js (`pdfjs-dist`) | 6.1.200 |
-| mammoth | 1.12.0 |
-| @react-pdf/renderer | 4.5.1 |
+| Vite | 8.2.2 |
+| React | 19.2.8 |
+| TypeScript | 6.0.3 |
+| Tailwind CSS | 4.3.3 |
+| pdf.js (`pdfjs-dist`) | 6.2.108 |
+| mammoth | 1.12.1 |
+| @react-pdf/renderer | 4.8.1 |
 
 Versions tracked from `package.json`; Dependabot keeps them current.
 
 ## Project Health
 
-**Code quality** — [SonarCloud](https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev), last analysis 2026-06-30, 2.7k lines of code (TypeScript, HTML):
+**Code quality** — [SonarCloud](https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev), last analysis 2026-08-27, 3.1k lines of code (TypeScript, HTML):
 
 | Security | Reliability | Maintainability | Hotspots Reviewed | Coverage | Duplications |
 |----------|-------------|------------------|--------------------|----------|---------------|
-| A (0 issues) | A (0 issues) | A (3 issues) | 100% | – | 0.0% |
+| A (0 issues) | A (0 issues) | A (7 issues) | 100% | – | 0.0% |
+
+**Tests** — 95 unit tests (`node:test`) plus 3 Playwright end-to-end tests that
+run WebKit under the production CSP, because this project's worst bugs have all
+been Safari-only.
 
 **Lighthouse** (mobile, cv.shykov.dev/, 2026-07-01):
 
@@ -127,6 +168,7 @@ Versions tracked from `package.json`; Dependabot keeps them current.
 
 - No backend, account system, or resume storage
 - No AI rewriting by default
+- No AI-text detection — see [above](#is-this-an-ai-detector) for why
 - No graphic-heavy or multi-column templates
 - No promise that the score exactly matches every ATS vendor
 
