@@ -3,10 +3,19 @@ import type { Report, Check } from './lib/analyze'
 import { getTopFixes } from './lib/analyze'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
+import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
 import { TONE } from './components/tone'
 import { ScoreRing } from './components/ScoreRing'
 
-type Tab = 'analyze' | 'jd' | 'data'
+type Tab = 'analyze' | 'style' | 'jd' | 'data'
+
+// Style levels are advisory, so they map onto the shared status palette rather
+// than introducing a second colour language.
+const STYLE_TONE: Record<StyleLevel, { dot: string; text: string }> = {
+  ok: TONE.pass,
+  minor: TONE.warn,
+  major: TONE.fail,
+}
 type CheckRowProps = Readonly<{ c: Check }>
 type CategoryBreakdownProps = Readonly<{ report: Report }>
 type TopFixesProps = Readonly<{ fixes: Check[] }>
@@ -105,6 +114,30 @@ function TopFixes({ fixes }: TopFixesProps) {
   )
 }
 
+type StyleRowProps = Readonly<{ s: StyleSignal }>
+
+function StyleRow({ s }: StyleRowProps) {
+  return (
+    <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-stone-200">
+      <div className="flex items-start gap-2.5">
+        <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${STYLE_TONE[s.level].dot}`} aria-hidden />
+        <div className="min-w-0">
+          <p className="font-medium text-stone-800">{s.label}</p>
+          <p className="mt-0.5 text-sm text-stone-500">{s.detail}</p>
+          {s.fix && <p className="mt-1.5 text-sm text-stone-700">{s.fix}</p>}
+          {s.examples && s.examples.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {s.examples.map((ex) => (
+                <li key={ex} className="truncate rounded bg-stone-50 px-2 py-1 font-mono text-xs text-stone-500 ring-1 ring-stone-200">{ex}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Analyzer() {
   const [report, setReport] = useState<Report | null>(null)
   const [resume, setResume] = useState<Resume | null>(null)
@@ -117,17 +150,18 @@ export default function Analyzer() {
   const [tab, setTab] = useState<Tab>('analyze')
   const [jdText, setJdText] = useState('')
   const [jd, setJd] = useState<JDMatch | null>(null)
+  const [style, setStyle] = useState<StyleReport | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const run = useCallback(async (file: File) => {
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null)
+    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null)
     const ok = /\.(pdf|docx)$/i.test(file.name) || file.type === 'application/pdf' || file.type.includes('wordprocessingml')
     if (!ok) { setError('Please choose a PDF or DOCX file.'); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
     let stage = 'loading modules'
     try {
-      const [{ extractDocument }, { analyze }, { parseResume }] = await Promise.all([
-        import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'),
+      const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }] = await Promise.all([
+        import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'),
       ])
       stage = 'extracting text'
       const ex = await extractDocument(file)
@@ -135,7 +169,9 @@ export default function Analyzer() {
       const rep = analyze(ex)
       stage = 'parsing'
       const res = parseResume(ex)
-      setReport(rep); setResume(res); setCvText(ex.text)
+      stage = 'checking style'
+      const sty = analyzeStyle(ex.text, ex.lines)
+      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty)
     } catch (e) {
       const err = e instanceof Error ? e : new Error(String(e))
       const detail = `stage: ${stage}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
@@ -258,7 +294,7 @@ export default function Analyzer() {
 
             <div className="mt-4 flex justify-end">
               <nav className="flex shrink-0 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium">
-                {([['analyze', 'Full report'], ['jd', 'Job match'], ['data', 'Extracted data']] as [Tab, string][]).map(([id, label]) => (
+                {([['analyze', 'Full report'], ['style', 'Writing style'], ['jd', 'Job match'], ['data', 'Extracted data']] as [Tab, string][]).map(([id, label]) => (
                   <button key={id} onClick={() => setTab(id)} className={`rounded-md px-3 py-1.5 transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
                 ))}
               </nav>
@@ -280,6 +316,26 @@ export default function Analyzer() {
                     </div>
                   )
                 })}
+              </div>
+            </div>
+          )}
+
+          {tab === 'style' && style && (
+            <div className="space-y-5">
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className={`text-3xl font-semibold tabular-nums ${STYLE_TONE[style.band.tone].text}`}>{style.score}</span>
+                  <span className="text-sm text-stone-500">{style.band.label} · {style.meta.sentences} sentences, {style.meta.words} words</span>
+                </div>
+                <p className="mt-3 text-sm text-stone-600">
+                  Deterministic writing checks, run on your device. <strong>This is not an AI detector</strong> — detecting
+                  machine-written text needs a language model, and published detectors are unreliable, especially against
+                  writers whose first language is not English. These are concrete habits you can fix instead.
+                </p>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                {style.signals.map((s) => <StyleRow key={s.id} s={s} />)}
               </div>
             </div>
           )}
