@@ -7,8 +7,8 @@
   "description": "Privacy-first CV toolkit — parse, analyze, JD-match, and build ATS-clean resumes entirely in the browser.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "build:debug": "tsc -b && VITE_SOURCEMAPS=true vite build",
+    "build": "tsc -b && vite build && node scripts/prerender.mjs",
+    "build:debug": "tsc -b && VITE_SOURCEMAPS=true vite build && node scripts/prerender.mjs",
     "lint": "eslint .",
     "test": "node --test \"src/**/*.test.ts\"",
     "test:e2e": "playwright test",
