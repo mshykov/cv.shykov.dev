@@ -53,13 +53,13 @@ console.log(`prerender: injected ${body.length} bytes of static HTML`)
 // search engines learn to ignore. If git is unavailable (some build sandboxes
 // ship no .git), leave whatever the checked-in file says.
 try {
-  // Pinned PATH of root-owned system directories. Inheriting the caller's PATH
-  // would let anything writable on it shadow `git` and run in the build.
-  // /usr/bin covers Xcode's git and every Linux runner; the rest are fallbacks.
-  const PATH = '/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin'
-  const day = execFileSync('git', ['log', '-1', '--format=%cs'], {
+  // Absolute path, no PATH lookup: a writable directory on the caller's PATH
+  // could otherwise shadow `git` and get executed during the build. /usr/bin is
+  // where both Xcode's git and every Linux runner's git live; if it is missing,
+  // the catch below keeps the checked-in lastmod.
+  const day = execFileSync('/usr/bin/git', ['log', '-1', '--format=%cs'], {
     encoding: 'utf8',
-    env: { PATH },
+    env: {},
   }).trim()
   if (/^\d{4}-\d{2}-\d{2}$/.test(day)) {
     const xml = readFileSync(SITEMAP, 'utf8')
