@@ -1,6 +1,8 @@
 import { useCallback, useRef, useState } from 'react'
 import type { Report, Check } from './lib/analyze'
 import { getTopFixes } from './lib/analyze'
+// Dependency-free, so this stays out of the lazily loaded extractor bundle.
+import { isSupportedDocument } from './lib/filetype.ts'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
@@ -162,8 +164,7 @@ export default function Analyzer() {
   const run = useCallback(async (file: File) => {
     const id = (runId.current += 1)
     setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null)
-    const ok = /\.(pdf|docx)$/i.test(file.name) || file.type === 'application/pdf' || file.type.includes('wordprocessingml')
-    if (!ok) { setError('Please choose a PDF or DOCX file.'); return }
+    if (!isSupportedDocument(file)) { setError('Please choose a PDF or DOCX file.'); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
     let stage = 'loading modules'
     try {
