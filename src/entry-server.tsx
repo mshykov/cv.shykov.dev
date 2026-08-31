@@ -11,7 +11,20 @@
 // and the pdf.js polyfills, which touch browser globals that do not exist here.
 import { renderToString } from 'react-dom/server'
 import App from './App.tsx'
+import { ARTICLES } from './content/articles.tsx'
+import { ArticlePage } from './content/ArticlePage.tsx'
 
 export function render(): string {
   return renderToString(<App />)
+}
+
+/** Metadata the prerender script needs to build each guide's <head>. */
+export function articleIndex(): { slug: string; title: string; description: string; updated: string }[] {
+  return ARTICLES.map(({ slug, title, description, updated }) => ({ slug, title, description, updated }))
+}
+
+export function renderArticle(slug: string): string {
+  const article = ARTICLES.find((a) => a.slug === slug)
+  if (!article) throw new Error(`renderArticle: no article with slug "${slug}"`)
+  return renderToString(<ArticlePage article={article} />)
 }

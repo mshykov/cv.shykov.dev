@@ -18,6 +18,8 @@
   <a href="#how-the-score-works">How scoring works</a>
   ·
   <a href="#writing-style-check">Writing style check</a>
+  ·
+  <a href="#guides">Guides</a>
 </p>
 
 <p align="center">
@@ -132,6 +134,25 @@ What this does instead is name concrete habits and let you decide. Every signal
 points at a specific line you can rewrite. A CV can score badly here because a
 human wrote it in a hurry, and that is still worth fixing.
 
+## Guides
+
+Static, JavaScript-free pages generated at build time by
+`scripts/prerender.mjs` from `src/content/articles.tsx`. They share the app's
+stylesheet, ship no bundle, and exist because a single URL can rank for a
+handful of queries at most.
+
+| Page | Covers |
+|------|--------|
+| [`/what-is-an-ats-score`](https://cv.shykov.dev/what-is-an-ats-score) | What the number measures, and the debunked "75% are auto-rejected" claim |
+| [`/ats-checker-without-upload`](https://cv.shykov.dev/ats-checker-without-upload) | What "upload your resume" usually means, and what to ask any checker |
+| [`/pdf-or-docx-for-ats`](https://cv.shykov.dev/pdf-or-docx-for-ats) | Which format to send, and the one PDF that fails every time |
+| [`/how-ats-parsing-works`](https://cv.shykov.dev/how-ats-parsing-works) | The four parsing stages, and which formatting rule maps to each |
+| [`/ats-resume-checklist`](https://cv.shykov.dev/ats-resume-checklist) | Fifteen checks ordered by what each one costs you |
+
+Adding one means adding an entry to `ARTICLES`. The sitemap, `llms.txt`, and the
+homepage guide list are all generated from that array, so none of them can drift
+out of step with the pages that actually exist.
+
 ## Tech Stack
 
 | Package | Version |
@@ -158,11 +179,19 @@ Versions tracked from `package.json`; Dependabot keeps them current.
 run WebKit under the production CSP, because this project's worst bugs have all
 been Safari-only.
 
-**Lighthouse** (mobile, cv.shykov.dev/, 2026-07-01):
+**Lighthouse** (mobile, cv.shykov.dev/, Lighthouse 12.8.2, 2026-08-27):
 
 | Performance | Accessibility | Best Practices | SEO |
 |--------------|----------------|-----------------|-----|
-| 100 | 100 | 100 | 100 |
+| 96 | 100 | 93 | 100 |
+
+LCP 2.2 s · TBT 0 ms · CLS 0.
+
+Best Practices is not 100 because Cloudflare auto-injects its Web Analytics
+beacon and this site's own CSP blocks it, logging a violation in every
+visitor's console. Nothing is tracked — the script never runs — but the fix is
+to turn the injection off in the Cloudflare dashboard rather than to widen the
+CSP, which would trade the "no tracking" promise for a green number.
 
 ## Non-Goals
 
