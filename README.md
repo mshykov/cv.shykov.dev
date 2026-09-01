@@ -179,19 +179,19 @@ Versions tracked from `package.json`; Dependabot keeps them current.
 run WebKit under the production CSP, because this project's worst bugs have all
 been Safari-only.
 
-**Lighthouse** (mobile, cv.shykov.dev/, Lighthouse 12.8.2, 2026-08-27):
+**Lighthouse** (mobile, cv.shykov.dev/, Lighthouse 12.8.2, 2026-09-01):
 
 | Performance | Accessibility | Best Practices | SEO |
 |--------------|----------------|-----------------|-----|
-| 96 | 100 | 93 | 100 |
+| 99 | 100 | 100 | 100 |
 
-LCP 2.2 s · TBT 0 ms · CLS 0.
+FCP 1.5 s · LCP 1.7 s · TBT 0 ms · CLS 0 · zero console errors.
 
-Best Practices is not 100 because Cloudflare auto-injects its Web Analytics
-beacon and this site's own CSP blocks it, logging a violation in every
-visitor's console. Nothing is tracked — the script never runs — but the fix is
-to turn the injection off in the Cloudflare dashboard rather than to widen the
-CSP, which would trade the "no tracking" promise for a green number.
+Best Practices was 93 until 2026-09-01. Cloudflare was auto-injecting its Web
+Analytics beacon, and this site's own CSP blocked it, logging a violation in
+every visitor's console. Nothing was ever tracked — the script never ran — and
+the fix was to turn RUM off in the Cloudflare dashboard rather than widen the
+CSP, which would have traded the "no tracking" promise for a green number.
 
 ## Non-Goals
 
