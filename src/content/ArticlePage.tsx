@@ -2,6 +2,7 @@
 // pages are prose, so the app bundle would cost load time and buy nothing.
 import type { Article } from './articles.tsx'
 import { ARTICLES } from './articles.tsx'
+import { REPO_URL } from '../components/GitHubMark'
 
 function SiteHeader() {
   return (
@@ -66,7 +67,10 @@ export function ArticlePage({ article }: { article: Article }) {
           <p>
             <a href="/" className="font-medium text-stone-700 underline underline-offset-2">ATS Resume Toolkit</a> — runs in your browser.
           </p>
-          <p>No uploads, no accounts, no tracking.</p>
+          <p>
+            No uploads, no accounts, no tracking.{' '}
+            <a href={REPO_URL} className="font-medium text-stone-700 underline underline-offset-2">Open source on GitHub</a>.
+          </p>
         </div>
       </footer>
     </div>

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
+import { GitHubMark, REPO_URL } from './components/GitHubMark'
 // Data only, no components: this keeps the guide list on the homepage in step
 // with the pages the build generates, instead of a hand-kept copy that rots.
 import { ARTICLES } from './content/articles.tsx'
@@ -22,14 +23,6 @@ function ShieldIcon() {
   )
 }
 
-function SourceIcon() {
-  return (
-    <svg className="h-4 w-4" aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path strokeLinecap="round" strokeLinejoin="round" d="m8 9-3 3 3 3M16 9l3 3-3 3M13.5 5.5l-3 13" />
-    </svg>
-  )
-}
-
 function LogoMark() {
   return (
     <div className="flex min-w-0 items-center gap-3">
@@ -45,7 +38,7 @@ function LogoMark() {
 function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
   return (
     <nav
-      className="flex w-full shrink-0 gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur sm:w-auto"
+      className="flex min-w-0 flex-1 gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur sm:flex-none"
       aria-label="Primary app mode"
     >
       {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
@@ -68,7 +61,19 @@ function SiteHeader({ mode, onSwitch }: SiteHeaderProps) {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200/80 bg-white/85 backdrop-blur-xl">
       <div className="mx-auto flex min-h-30 max-w-7xl flex-col justify-center gap-3 px-5 py-3 sm:h-20 sm:min-h-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
         <LogoMark />
-        <ModeSwitch mode={mode} onSwitch={onSwitch} />
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <ModeSwitch mode={mode} onSwitch={onSwitch} />
+          <a
+            href={REPO_URL}
+            rel="noreferrer"
+            target="_blank"
+            aria-label="Open source on GitHub"
+            className="inline-flex min-h-12 shrink-0 items-center gap-2 rounded-xl bg-white/85 px-3.5 text-sm font-medium text-stone-700 shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur transition hover:bg-white hover:text-stone-950"
+          >
+            <GitHubMark className="h-5 w-5" />
+            <span className="hidden md:inline">GitHub</span>
+          </a>
+        </div>
       </div>
     </header>
   )
@@ -190,7 +195,7 @@ function HowItWorks() {
       <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium text-stone-600">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 ring-1 ring-emerald-200"><ShieldIcon />No server upload</span>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200">Deterministic checks, no LLM calls</span>
-        <a className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200 transition hover:bg-stone-200" href="https://github.com/mshykov/cv.shykov.dev" rel="noreferrer" target="_blank"><SourceIcon />Source available</a>
+        <a className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200 transition hover:bg-stone-200" href={REPO_URL} rel="noreferrer" target="_blank"><GitHubMark />Open source, MIT license</a>
       </div>
     </section>
   )
@@ -203,7 +208,7 @@ function TrustNotes() {
         <div>
           <h2 className="text-lg font-semibold tracking-tight text-stone-900">Privacy claims you can inspect.</h2>
           <p className="mt-2 text-sm leading-6 text-stone-500">
-            The source is public, and the product promise stays narrow: local document parsing, deterministic scoring, no account wall, and no AI model call hidden behind the interface.
+            The code is open source under the MIT license, and the product promise stays narrow: local document parsing, deterministic scoring, no account wall, and no AI model call hidden behind the interface.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
@@ -215,9 +220,9 @@ function TrustNotes() {
             <div className="text-sm font-semibold text-stone-900">No LLM scoring</div>
             <p className="mt-1 text-sm text-stone-500">Scores come from repeatable checks for parseability, sections, format, and content signals.</p>
           </div>
-          <a className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200 transition hover:bg-stone-100" href="https://github.com/mshykov/cv.shykov.dev" rel="noreferrer" target="_blank">
-            <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-900"><SourceIcon />Public source</div>
-            <p className="mt-1 text-sm text-stone-500">Review the app code, scoring checks, parser, and export flow in the GitHub repository.</p>
+          <a className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200 transition hover:bg-stone-100" href={REPO_URL} rel="noreferrer" target="_blank">
+            <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-900"><GitHubMark />Open source on GitHub</div>
+            <p className="mt-1 text-sm text-stone-500">MIT-licensed. Read the scoring checks, parser, and export flow, open an issue, or send a pull request.</p>
           </a>
         </div>
       </div>
@@ -285,6 +290,7 @@ export default function App() {
               <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No uploads</span>
               <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No LLM</span>
               <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">PDF & DOCX</span>
+              <a className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200 transition hover:bg-white hover:text-stone-900" href={REPO_URL} rel="noreferrer" target="_blank"><GitHubMark />Open source</a>
             </div>
             <HeroMiniMedia />
           </div>
@@ -347,7 +353,7 @@ export default function App() {
 
       <footer className="mt-8 border-t border-stone-200 pt-5 text-xs text-stone-600 sm:flex sm:items-center sm:justify-between sm:gap-4">
         <p>Heuristic guidance, not a guarantee. <a href="https://shykov.dev" className="font-medium text-stone-600 underline-offset-2 hover:underline">shykov.dev</a></p>
-        <p className="mt-1 sm:mt-0">No tracking, no uploads, no accounts.</p>
+        <p className="mt-1 sm:mt-0">No tracking, no uploads, no accounts. <a href={REPO_URL} rel="noreferrer" target="_blank" className="font-medium text-stone-600 underline-offset-2 hover:underline">Open source on GitHub</a>.</p>
       </footer>
       </div>
     </div>
