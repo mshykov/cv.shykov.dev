@@ -159,24 +159,38 @@ writeFileSync(
 
 // The sitemap is generated, not hand-maintained: a guide added to articles.tsx
 // and forgotten in an XML file is a page search engines never hear about.
-// lastmod comes from the last commit, not from today - republishing an
-// unchanged page with a fresh date every deploy is a signal search engines
-// learn to discount.
-let lastmod = null
-try {
+// lastmod must move only when that page's content does. Republishing unchanged
+// pages with a fresh date (e.g. on every dependency bump) is a signal search
+// engines learn to discount — for the whole sitemap, not just the stale entry.
+// Guides use their editorial `updated` date, the same one in their Article
+// JSON-LD `dateModified`.
+// The homepage uses the last commit that touched the code it renders.
+const HOME_PATHS = ['src', 'index.html', ':(exclude,glob)src/**/*.test.ts']
+
+function homeLastmod() {
   // Absolute path, no PATH lookup: a writable directory on the caller's PATH
   // could otherwise shadow `git` and run in the build.
-  const day = execFileSync('/usr/bin/git', ['log', '-1', '--format=%cs'], { encoding: 'utf8', env: {} }).trim()
-  if (/^\d{4}-\d{2}-\d{2}$/.test(day)) lastmod = day
-} catch {
-  console.log('prerender: no git metadata, falling back to guide dates for lastmod')
+  const git = (...args) => execFileSync('/usr/bin/git', args, { encoding: 'utf8', env: {} }).trim()
+  try {
+    // In a shallow clone the boundary commit looks like it added every file, so
+    // a path-limited log would just return HEAD's date. No lastmod beats a wrong one.
+    if (git('rev-parse', '--is-shallow-repository') === 'true') {
+      console.log('prerender: shallow clone, omitting homepage lastmod')
+      return null
+    }
+    const day = git('log', '-1', '--format=%cs', '--', ...HOME_PATHS)
+    return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : null
+  } catch {
+    console.log('prerender: no git metadata, omitting homepage lastmod')
+    return null
+  }
 }
 
 const urls = [
-  { loc: `${SITE}/`, lastmod: lastmod ?? guides[0]?.updated, changefreq: 'monthly', priority: '1.0' },
+  { loc: `${SITE}/`, lastmod: homeLastmod(), changefreq: 'monthly', priority: '1.0' },
   ...guides.map((g) => ({
     loc: `${SITE}/${g.slug}`,
-    lastmod: lastmod ?? g.updated,
+    lastmod: g.updated,
     changefreq: 'yearly',
     priority: '0.8',
   })),
@@ -187,8 +201,8 @@ writeFileSync(
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url>
-    <loc>${u.loc}</loc>
-    <lastmod>${u.lastmod}</lastmod>
+    <loc>${u.loc}</loc>${u.lastmod ? `
+    <lastmod>${u.lastmod}</lastmod>` : ''}
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`).join('\n')}
