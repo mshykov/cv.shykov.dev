@@ -165,7 +165,7 @@ out of step with the pages that actually exist.
 | mammoth | 1.12.1 |
 | @react-pdf/renderer | 4.8.1 |
 
-Versions tracked from `package.json`; Dependabot keeps them current.
+Versions tracked from `package.json`; a monthly dependency sweep keeps them current.
 
 ## Project Health
 

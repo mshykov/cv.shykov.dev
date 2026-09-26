@@ -1,9 +1,10 @@
 name: CI
 
+# PRs only: main requires this check with strict status checks, so a merged
+# commit is the tree the PR run already passed — re-running it on the push to
+# main only spent Actions minutes.
 on:
   pull_request:
-    branches: [main]
-  push:
     branches: [main]
 
 permissions:
@@ -24,8 +25,9 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      # SHA-pinned (tags can be moved/hijacked); Dependabot bumps the SHAs weekly.
+      # SHA-pinned (tags can be moved/hijacked); bumped in the monthly dependency sweep.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           # Read-only workflow — don't leave the token in .git/config for later steps.
