@@ -13,6 +13,7 @@
     "test": "node --test \"src/**/*.test.ts\"",
     "test:e2e": "playwright test",
     "smoke:build": "node scripts/smoke-built.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
     "preview": "npm run build && wrangler dev"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -44,6 +44,12 @@ assert.ok(existsSync(new URL('404.html', dist)), 'dist/404.html should exist —
 
 const sitemap = readFileSync(new URL('sitemap.xml', dist), 'utf8')
 assert.equal((sitemap.match(/<loc>/g) ?? []).length, 6, 'sitemap should list the homepage plus all five guides')
+
+// IndexNow proves ownership by fetching <key>.txt; a build that drops it makes
+// every submission fail with 403.
+const keyFiles = readdirSync(dist).filter((f) => /^[0-9a-f]{32}\.txt$/.test(f))
+assert.equal(keyFiles.length, 1, 'dist should carry exactly one IndexNow <key>.txt')
+assert.equal(readFileSync(new URL(keyFiles[0], dist), 'utf8').trim(), keyFiles[0].slice(0, 32), 'IndexNow key file must contain its own key')
 
 const llms = readFileSync(new URL('llms.txt', dist), 'utf8')
 assert.ok(!llms.includes('<!--GUIDES-->'), 'llms.txt should have its guide list filled in, not the marker')
