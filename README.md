@@ -159,7 +159,7 @@ out of step with the pages that actually exist.
 |---------|---------|
 | Vite | 8.2.2 |
 | React | 19.2.8 |
-| TypeScript | 6.0.3 |
+| TypeScript | 7.0.2 (`tsc`; 6.0 API kept for typescript-eslint) |
 | Tailwind CSS | 4.3.3 |
 | pdf.js (`pdfjs-dist`) | 6.2.108 |
 | mammoth | 1.12.1 |

@@ -51,6 +51,13 @@ npx vite preview --port 4319   # serves the prod build WITH the production CSP
 5. **Test on real Safari/WebKit, not just Chromium.** The worst bugs this project
    hit were Safari-only and invisible in Chrome/Node. `vite preview` reproduces
    the prod CSP locally.
+6. **Two TypeScripts, on purpose** (`package.json`). `@typescript/native` is an
+   npm alias for **TypeScript 7** — it owns the `tsc` binary that `npm run build`
+   type-checks with. `typescript` is an alias for `@typescript/typescript6`,
+   because TS 7 ships **no JS API** and typescript-eslint (peer `typescript`)
+   still needs 6.0's. Don't collapse them into one `typescript@7` entry — `npm ci`
+   fails with ERESOLVE and lint can't load. Revisit when TS 7.1 ships its new
+   API and typescript-eslint supports it.
 
 ## Workflow
 `main` is branch-protected: **PR + green `build` check + linear history**;
