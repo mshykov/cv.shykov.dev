@@ -1,7 +1,7 @@
 // The standalone shell a guide is rendered into. Ships no JavaScript: these
 // pages are prose, so the app bundle would cost load time and buy nothing.
 import type { Article } from './articles.tsx'
-import { ARTICLES } from './articles.tsx'
+import { GUIDES } from './guides.ts'
 import { REPO_URL } from '../components/GitHubMark'
 
 function SiteHeader() {
@@ -27,7 +27,7 @@ function SiteHeader() {
 }
 
 function MoreGuides({ current }: { current: string }) {
-  const others = ARTICLES.filter((a) => a.slug !== current)
+  const others = GUIDES.filter((a) => a.slug !== current)
   return (
     <nav aria-label="More guides" className="mt-14 border-t border-stone-200 pt-8">
       <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-stone-500">More guides</h2>
@@ -45,20 +45,69 @@ function MoreGuides({ current }: { current: string }) {
   )
 }
 
+// Mirrors the BreadcrumbList JSON-LD that scripts/prerender.mjs emits, so the
+// trail a search engine is told about is also the one a reader can click.
+function Breadcrumbs({ title }: { title: string }) {
+  return (
+    <nav aria-label="Breadcrumb" className="text-sm text-stone-500">
+      <ol className="flex flex-wrap items-center gap-1.5">
+        <li><a href="/" className="underline underline-offset-2 hover:text-stone-700">ATS Resume Toolkit</a></li>
+        <li aria-hidden>›</li>
+        <li><a href="/#guides" className="underline underline-offset-2 hover:text-stone-700">Guides</a></li>
+        <li aria-hidden>›</li>
+        <li aria-current="page" className="text-stone-700">{title}</li>
+      </ol>
+    </nav>
+  )
+}
+
+// The answer first, in a couple of sentences: it is what a reader skimming from
+// search wants, and the passage an answer engine is most likely to quote.
+function ShortAnswer({ children }: { children: string }) {
+  return (
+    <section aria-labelledby="short-answer" className="mt-6 rounded-xl border border-indigo-100 bg-white p-4 shadow-sm">
+      <h2 id="short-answer" className="text-xs font-semibold uppercase tracking-[0.14em] text-indigo-700">Short answer</h2>
+      <p className="mt-2 text-[15px] leading-7 text-stone-800">{children}</p>
+    </section>
+  )
+}
+
+// Rendered from the same data as the FAQPage JSON-LD, so the marked-up answers
+// are always the visible ones - structured data that says something the page
+// does not is what search engines penalise.
+function Faq({ items }: { items: Article['faq'] }) {
+  return (
+    <section aria-labelledby="faq" className="mt-12">
+      <h2 id="faq" className="text-xl font-semibold tracking-tight text-stone-900">Frequently asked questions</h2>
+      <dl className="mt-4 divide-y divide-stone-200 rounded-xl border border-stone-200 bg-white">
+        {items.map(({ q, a }) => (
+          <div key={q} className="p-4">
+            <dt className="text-[15px] font-semibold text-stone-900">{q}</dt>
+            <dd className="mt-1.5 text-[15px] leading-7 text-stone-700">{a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )
+}
+
 export function ArticlePage({ article }: { article: Article }) {
   return (
     <div className="min-h-screen bg-stone-50">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-5 pb-16 pt-10">
-        <article>
-          <p className="text-sm font-medium text-indigo-700">Guide</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">{article.title}</h1>
+      <main className="mx-auto max-w-3xl px-5 pb-16 pt-8">
+        <Breadcrumbs title={article.title} />
+        <article className="mt-6">
+          <h1 className="text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">{article.title}</h1>
           <p className="mt-4 text-lg leading-8 text-stone-600">{article.description}</p>
           <p className="mt-4 text-sm text-stone-500">
-            Updated <time dateTime={article.updated}>{article.updated}</time> · by{' '}
+            Published <time dateTime={article.published}>{article.published}</time> · Updated{' '}
+            <time dateTime={article.updated}>{article.updated}</time> · by{' '}
             <a href="https://shykov.dev/" className="underline underline-offset-2 hover:text-stone-700">Maksym Shykov</a>
           </p>
+          <ShortAnswer>{article.summary}</ShortAnswer>
           <div className="mt-8">{article.body}</div>
+          <Faq items={article.faq} />
         </article>
         <MoreGuides current={article.slug} />
       </main>

@@ -7,6 +7,7 @@
 import type { Extracted } from './pdf'
 import { cleanContactToken, contactTokens, hasEmailAddress, hasPhoneNumber, hasProfileUrl } from './contact.ts'
 import { hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
+import { BONUS_SECTION_KEYWORDS, SECTION_KEYWORDS } from './sections.ts'
 
 export type Status = 'pass' | 'warn' | 'fail'
 
@@ -42,13 +43,6 @@ export function getTopFixes(report: Report, limit = 3): Check[] {
 }
 
 const LIGATURES = /[ﬀ-ﬆ]/ // ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ
-
-const SECTION_KEYWORDS: Record<string, string[]> = {
-  experience: ['experience', 'employment history', 'work experience', 'work history', 'professional experience'],
-  education: ['education', 'academic background'],
-  skills: ['skills', 'core competencies', 'technical skills', 'expertise'],
-  summary: ['summary', 'profile', 'objective', 'about me', 'about'],
-}
 
 const ACTION_VERBS = new Set([
   'led', 'managed', 'built', 'shipped', 'delivered', 'improved', 'reduced',
@@ -131,9 +125,9 @@ function addSectionCheck(add: AddCheck, lines: string[], id: string, label: stri
 }
 
 function addBonusSectionCheck(add: AddCheck, lines: string[]) {
-  const achievements = hasHeader(lines, ['achievements', 'key achievements', 'accomplishments', 'highlights'])
-  const projects = hasHeader(lines, ['projects', 'selected projects', 'side projects'])
-  const certs = hasHeader(lines, ['certifications', 'certificates', 'courses', 'licenses', 'certifications & courses'])
+  const achievements = hasHeader(lines, BONUS_SECTION_KEYWORDS.achievements)
+  const projects = hasHeader(lines, BONUS_SECTION_KEYWORDS.projects)
+  const certs = hasHeader(lines, BONUS_SECTION_KEYWORDS.certifications)
   const bonusPts = (achievements ? 4 : 0) + (projects ? 3 : 0) + (certs ? 3 : 0)
   const bonusFound = [achievements && 'Achievements', projects && 'Projects', certs && 'Certifications'].filter(Boolean)
   add({ id: 'sec-bonus', label: 'Achievements / Projects / Certifications', category: 'Sections', status: bonusPts >= 7 ? 'pass' : 'warn', points: bonusPts, max: 10, detail: bonusFound.length ? `Found: ${bonusFound.join(', ')}.` : 'None of these supporting sections were found.', fix: bonusPts >= 7 ? undefined : 'Add the missing sections (Key Achievements is highest-value — recruiters scan it first).' })

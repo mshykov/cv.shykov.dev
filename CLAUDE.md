@@ -27,6 +27,12 @@ npm run indexnow -- --dry-run  # IndexNow payload; without --dry-run it SUBMITS 
   text), `parse.ts` (structured résumé), `analyze.ts` (ATS score), `jdmatch.ts`
   (JD keyword match), `report.ts`, `download.ts`.
 - `src/components/` — shared UI (`ScoreRing`, `tone`).
+- `src/content/` — the five guide pages (`articles.tsx`: body, short answer, FAQ),
+  prerendered to static HTML with Article/Breadcrumb/FAQPage JSON-LD.
+  `rubric.ts` is the published scoring table — `rubric.test.ts` fails if it
+  drifts from `analyze.ts`. Heading lists come from `src/lib/sections.ts`, which
+  the scorer imports too. Bump an article's `updated` only for real content changes
+  (it drives the sitemap lastmod).
 - `src/builder/` — Build mode: `Builder.tsx`, `ResumeDoc.tsx` (the react-pdf
   template), `model.ts`.
 - `src/` — `App.tsx` (Analyze/Build shell), `Analyzer.tsx`, `ErrorBoundary.tsx`,

@@ -3,7 +3,7 @@ import ErrorBoundary from './ErrorBoundary'
 import { GitHubMark, REPO_URL } from './components/GitHubMark'
 // Data only, no components: this keeps the guide list on the homepage in step
 // with the pages the build generates, instead of a hand-kept copy that rots.
-import { ARTICLES } from './content/articles.tsx'
+import { GUIDES } from './content/guides.ts'
 
 // Keep the app shell tiny; load the active workflow UI after first paint.
 const Analyzer = lazy(() => import('./Analyzer'))
@@ -337,10 +337,10 @@ export default function App() {
         </div>
       </section>
 
-      <section className="mt-14 border-t border-stone-200 pt-8" aria-label="Guides">
+      <section id="guides" className="mt-14 border-t border-stone-200 pt-8" aria-label="Guides">
         <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-stone-500">Guides</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {ARTICLES.map((a) => (
+          {GUIDES.map((a) => (
             <li key={a.slug}>
               <a href={`/${a.slug}`} className="group block rounded-xl border border-stone-200 bg-white p-4 shadow-sm transition hover:border-indigo-200 hover:shadow">
                 <span className="block text-sm font-semibold text-stone-900 group-hover:text-indigo-700">{a.title}</span>

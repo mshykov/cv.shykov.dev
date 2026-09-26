@@ -11,7 +11,8 @@
 // and the pdf.js polyfills, which touch browser globals that do not exist here.
 import { renderToString } from 'react-dom/server'
 import App from './App.tsx'
-import { ARTICLES } from './content/articles.tsx'
+import { ARTICLES, type Article } from './content/articles.tsx'
+import { GUIDES } from './content/guides.ts'
 import { ArticlePage } from './content/ArticlePage.tsx'
 
 export function render(): string {
@@ -19,8 +20,14 @@ export function render(): string {
 }
 
 /** Metadata the prerender script needs to build each guide's <head>. */
-export function articleIndex(): { slug: string; title: string; description: string; updated: string }[] {
-  return ARTICLES.map(({ slug, title, description, updated }) => ({ slug, title, description, updated }))
+export function articleIndex(): Omit<Article, 'body'>[] {
+  // The homepage lists GUIDES; the build writes pages for ARTICLES. A guide
+  // listed without an article would be a homepage link to a 404.
+  const missing = GUIDES.filter((g) => !ARTICLES.some((a) => a.slug === g.slug))
+  if (missing.length) throw new Error(`articleIndex: no article body for ${missing.map((g) => g.slug).join(', ')}`)
+  return ARTICLES.map(({ slug, title, description, published, updated, summary, faq }) => ({
+    slug, title, description, published, updated, summary, faq,
+  }))
 }
 
 export function renderArticle(slug: string): string {
