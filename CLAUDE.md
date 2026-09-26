@@ -86,4 +86,5 @@ self-merge via squash. Never commit straight to `main` (check your branch first)
 - `docs/retrospective.md` — what went well / wrong + lessons.
 - `docs/sonar.md` — reusable Sonar/code-quality checklist.
 - `docs/project-quality.md` — CV toolkit-specific quality rules.
+- `docs/ai-visibility.md` — AI/search visibility baseline (2026-09-26) + re-run protocol.
 - `docs/session_2026-06-24_history.md` — last session's work + **current backlog**.
