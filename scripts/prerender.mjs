@@ -165,7 +165,7 @@ writeFileSync(
 // Guides use their editorial `updated` date, the same one in their Article
 // JSON-LD `dateModified`.
 // The homepage uses the last commit that touched the code it renders.
-const HOME_PATHS = ['src', 'index.html', ':(exclude)src/**/*.test.ts']
+const HOME_PATHS = ['src', 'index.html', ':(exclude,glob)src/**/*.test.ts']
 
 function homeLastmod() {
   // Absolute path, no PATH lookup: a writable directory on the caller's PATH
