@@ -19,6 +19,7 @@ npm test         # node:test unit tests (lib + polyfills)
 npm run build    # tsc + vite build (CI gate runs lint + test + build)
 npm run build:debug # same build with production source maps for stack traces
 npx vite preview --port 4319   # serves the prod build WITH the production CSP
+npm run indexnow -- --dry-run  # IndexNow payload; without --dry-run it SUBMITS (external write — owner approval)
 ```
 
 ## Structure
@@ -30,6 +31,7 @@ npx vite preview --port 4319   # serves the prod build WITH the production CSP
   template), `model.ts`.
 - `src/` — `App.tsx` (Analyze/Build shell), `Analyzer.tsx`, `ErrorBoundary.tsx`,
   `polyfills.ts` (loaded first in `main.tsx`).
+- `public/<32-hex>.txt` — IndexNow ownership key (public by design; `scripts/indexnow.mjs` reads it).
 - `public/_headers` — security headers + **CSP** + cache rules. `docs/` — design
   notes & retros. `_do_not_commit/` — gitignored local scratch (test CVs, secrets).
 
