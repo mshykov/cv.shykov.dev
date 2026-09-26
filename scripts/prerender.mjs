@@ -60,16 +60,51 @@ const escapeAttr = (value) =>
 
 function guidePage(meta, body) {
   const url = `${SITE}/${meta.slug}`
+  // One graph per page. The Person and WebSite @ids are the ones index.html
+  // declares, so every guide is attributed to the same entity as the tool.
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: meta.title,
-    description: meta.description,
-    dateModified: meta.updated,
-    mainEntityOfPage: url,
-    author: { '@type': 'Person', name: 'Maksym Shykov', url: 'https://shykov.dev/' },
-    publisher: { '@type': 'Person', name: 'Maksym Shykov', url: 'https://shykov.dev/' },
-    isAccessibleForFree: true,
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${url}#article`,
+        headline: meta.title,
+        description: meta.description,
+        abstract: meta.summary,
+        datePublished: meta.published,
+        dateModified: meta.updated,
+        inLanguage: 'en',
+        image: `${SITE}/og-image.png`,
+        mainEntityOfPage: url,
+        isPartOf: { '@id': `${SITE}/#website` },
+        author: { '@id': 'https://shykov.dev/#person' },
+        publisher: { '@id': 'https://shykov.dev/#person' },
+        isAccessibleForFree: true,
+      },
+      {
+        '@type': 'Person',
+        '@id': 'https://shykov.dev/#person',
+        name: 'Maksym Shykov',
+        url: 'https://shykov.dev/',
+        sameAs: ['https://github.com/mshykov'],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'ATS Resume Toolkit', item: `${SITE}/` },
+          { '@type': 'ListItem', position: 2, name: 'Guides', item: `${SITE}/#guides` },
+          { '@type': 'ListItem', position: 3, name: meta.title, item: url },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: meta.faq.map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      },
+    ],
   }
   // No app script: a guide is prose, and the bundle would only slow it down.
   return `<!doctype html>
@@ -85,6 +120,8 @@ function guidePage(meta, body) {
     <link rel="apple-touch-icon" href="/logo.png" />
     <meta name="theme-color" content="#4f46e5" />
     <meta property="og:type" content="article" />
+    <meta property="article:published_time" content="${meta.published}" />
+    <meta property="article:modified_time" content="${meta.updated}" />
     <meta property="og:title" content="${escapeAttr(meta.title)}" />
     <meta property="og:description" content="${escapeAttr(meta.description)}" />
     <meta property="og:url" content="${url}" />
@@ -95,7 +132,7 @@ function guidePage(meta, body) {
     <meta name="twitter:description" content="${escapeAttr(meta.description)}" />
     <meta name="twitter:image" content="${SITE}/og-image.png" />
     <link rel="stylesheet" href="${cssHref}" />
-    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+    <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>
   </head>
   <body>${body}</body>
 </html>

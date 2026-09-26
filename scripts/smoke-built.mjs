@@ -38,6 +38,21 @@ for (const slug of ['what-is-an-ats-score', 'ats-checker-without-upload', 'pdf-o
   assert.match(guide, new RegExp(`rel="canonical" href="https://cv\\.shykov\\.dev/${slug}"`), `${slug} should declare its canonical URL`)
   assert.ok(!guide.includes('<script type="module"'), `${slug} should ship no app bundle`)
   assert.match(guide, /<h1[^>]*>/, `${slug} should carry an h1`)
+
+  // The structured data has to parse and has to say what the page shows:
+  // FAQ answers that are marked up but not visible are a spam signal.
+  const ld = JSON.parse(guide.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)?.[1] ?? 'null')
+  const types = (ld?.['@graph'] ?? []).map((node) => node['@type'])
+  for (const type of ['Article', 'BreadcrumbList', 'FAQPage']) {
+    assert.ok(types.includes(type), `${slug} JSON-LD should include ${type}`)
+  }
+  const faq = ld['@graph'].find((node) => node['@type'] === 'FAQPage')
+  assert.ok(faq.mainEntity.length >= 3, `${slug} should carry at least three FAQ entries`)
+  for (const { name } of faq.mainEntity) {
+    const visible = name.replace(/&/g, '&amp;').replace(/'/g, '&#x27;')
+    assert.ok(guide.includes(`>${visible}</dt>`), `${slug}: FAQ question "${name}" is marked up but not visible`)
+  }
+  assert.match(guide, /Short answer/, `${slug} should open with a short answer`)
 }
 
 assert.ok(existsSync(new URL('404.html', dist)), 'dist/404.html should exist — the Worker serves it as the real 404')

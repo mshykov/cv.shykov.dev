@@ -6,25 +6,48 @@
 // same stylesheet the app uses. Do not move them outside src/ or the guides
 // will render unstyled.
 import type { ReactNode } from 'react'
-import { A, H2, LI, Note, P, UL } from './prose.tsx'
+import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from './prose.tsx'
+import { RUBRIC } from './rubric.ts'
+import { GUIDES, type Guide } from './guides.ts'
+import { BONUS_SECTION_KEYWORDS, SECTION_KEYWORDS } from '../lib/sections.ts'
 
-export interface Article {
-  slug: string
-  /** <title> and the page h1. */
-  title: string
-  /** <meta name="description">, and the standfirst under the h1. */
-  description: string
+export interface Article extends Guide {
+  /** First publication; Article JSON-LD `datePublished`. */
+  published: string
+  /** Last substantive content change; `dateModified` and the sitemap lastmod. */
   updated: string
+  /** Two or three plain sentences that answer the title outright. */
+  summary: string
   body: ReactNode
+  /** Plain-text answers: they are also emitted verbatim as FAQPage JSON-LD. */
+  faq: { q: string; a: string }[]
 }
+
+function guide(slug: string): Guide {
+  const meta = GUIDES.find((g) => g.slug === slug)
+  if (!meta) throw new Error(`articles: no entry for "${slug}" in guides.ts`)
+  return meta
+}
+
+const quoted = (words: string[]) => words.map((w) => `“${w}”`).join(', ')
+
+const SECTION_ROWS = [
+  ['Experience', quoted(SECTION_KEYWORDS.experience), '8'],
+  ['Education', quoted(SECTION_KEYWORDS.education), '6'],
+  ['Skills', quoted(SECTION_KEYWORDS.skills), '6'],
+  ['Summary', quoted(SECTION_KEYWORDS.summary), '5'],
+  ['Achievements', quoted(BONUS_SECTION_KEYWORDS.achievements), '4 (bonus)'],
+  ['Projects', quoted(BONUS_SECTION_KEYWORDS.projects), '3 (bonus)'],
+  ['Certifications', quoted(BONUS_SECTION_KEYWORDS.certifications), '3 (bonus)'],
+]
 
 export const ARTICLES: Article[] = [
   {
-    slug: 'what-is-an-ats-score',
-    title: 'What Is an ATS Score, and What Does It Actually Measure?',
-    description:
-      'An ATS score measures how cleanly a machine can read your CV — not how good a candidate you are. Here is what the number covers, what it cannot see, and the myth to ignore.',
-    updated: '2026-08-27',
+    ...guide('what-is-an-ats-score'),
+    published: '2026-08-31',
+    updated: '2026-09-26',
+    summary:
+      'An ATS score estimates how cleanly applicant tracking software can pull your text, contact details, sections and dates out of your CV. It says nothing about whether you fit the job. Above roughly 85, nothing important is getting lost — spend the time on the content instead.',
     body: (
       <>
         <P>
@@ -58,7 +81,7 @@ export const ARTICLES: Article[] = [
         <P>
           Every honest ATS score is a heuristic built from a handful of checks. On this site the
           rubric is fixed at 100 points and published, so you can see exactly where each point comes
-          from:
+          from. In five groups:
         </P>
         <UL>
           <LI><strong>Parseability (25)</strong> — is there real, selectable text, or is the page an image?</LI>
@@ -67,6 +90,18 @@ export const ARTICLES: Article[] = [
           <LI><strong>Format (15)</strong> — page count, dated roles, real bullet structure.</LI>
           <LI><strong>Content (10)</strong> — quantified impact and verb-led bullets.</LI>
         </UL>
+        <P>And check by check — this table is the one the scorer runs, not a summary of it:</P>
+        <Table
+          caption="ATS Resume Toolkit scoring rubric, check by check"
+          head={['Check', 'Group', 'Points']}
+          rows={RUBRIC.map((r) => [r.label, r.category, String(r.max)])}
+        />
+        <P>
+          Two details are easy to miss. A missing phone number or summary only costs its own points —
+          they are warnings, not failures — while a missing Experience, Education or Skills heading
+          fails outright. And the last Sections row is a bonus: an Achievements heading is worth 4,
+          Projects 3, Certifications 3.
+        </P>
         <P>
           Sections carry the most weight because they are what turns a wall of text into structured
           data. A parser that finds a heading called “Experience” knows the entries beneath it are
@@ -84,6 +119,15 @@ export const ARTICLES: Article[] = [
           the content. Chasing the last few points is almost always wasted effort.
         </P>
 
+        <H2>Why two checkers give you two different scores</H2>
+        <P>
+          There is no standard ATS score. Each checker invents its own rubric, weights it however it
+          likes, and — usually — does not tell you what it is. A 62 on one site and an 81 on another
+          are not a contradiction; they are two different tests. The useful question is never
+          “which number is right” but “which specific check failed, and do I agree it matters?”.
+          That is only answerable when the rules are published.
+        </P>
+
         <Note>
           <strong>Check yours in a few seconds.</strong> The{' '}
           <A href="/">ATS Resume Toolkit</A> scores a PDF or DOCX entirely inside your browser — the
@@ -98,14 +142,32 @@ export const ARTICLES: Article[] = [
         </UL>
       </>
     ),
+    faq: [
+      {
+        q: 'What is a good ATS score?',
+        a: 'On this checker, 85 or above means a parser will read the document cleanly and nothing important is lost. 70 to 84 is good with a few specific fixes left. 50 to 69 needs work, usually a missing section heading or contact detail. Below 50 something structural is wrong, most often text the parser cannot extract.',
+      },
+      {
+        q: 'Do employers see my ATS score?',
+        a: 'Not a score from a checker like this one. It is computed on your device and sent nowhere. The employer’s own system may rank applications against the job, but that ranking uses its rules and the recruiter’s search terms, not any third-party score.',
+      },
+      {
+        q: 'Why does my CV get a different score on every checker?',
+        a: 'Because there is no standard. Each checker defines its own checks and weights. Compare the individual checks that failed rather than the headline numbers.',
+      },
+      {
+        q: 'Is it true that 75% of resumes are rejected by an ATS?',
+        a: 'That figure has circulated for over a decade without a credible source. Applicant tracking systems store and search applications; recruiters set the filters. The real risk is a CV the parser misreads, which then fails to appear in a recruiter’s search.',
+      },
+    ],
   },
 
   {
-    slug: 'ats-checker-without-upload',
-    title: 'ATS Resume Checkers That Do Not Upload Your CV',
-    description:
-      'Most resume checkers require you to upload your CV and hand over an email address. Here is what happens to the file, why it matters while you are still employed, and how a local-only check differs.',
-    updated: '2026-08-27',
+    ...guide('ats-checker-without-upload'),
+    published: '2026-08-31',
+    updated: '2026-09-26',
+    summary:
+      'A browser can read and score a PDF or DOCX without sending it anywhere, so an upload is a design choice, not a technical necessity. You can verify a checker yourself in under a minute: open the browser’s Network panel, drop your CV in, and look for a request that carries the file.',
     body: (
       <>
         <P>
@@ -159,6 +221,32 @@ export const ARTICLES: Article[] = [
           are weak — which is the part that actually affects whether your application arrives intact.
         </P>
 
+        <H2>How to check that a checker really does not upload</H2>
+        <P>
+          “We never store your file” is a promise. Whether the file leaves your machine at all is
+          something you can watch happen — or not happen — in any desktop browser:
+        </P>
+        <OL>
+          <li>Open the checker, then open the browser’s developer tools: <Code>F12</Code> on Windows and Linux, <Code>⌥ ⌘ I</Code> on a Mac.</li>
+          <li>Switch to the <strong>Network</strong> tab and clear it, so only new requests show.</li>
+          <li>Drop your CV into the checker and wait for the result.</li>
+          <li>
+            Look through the new requests. An upload is a <Code>POST</Code> or <Code>PUT</Code> whose
+            request size is roughly the size of your file. Scripts and fonts the page loads for itself
+            are not uploads.
+          </li>
+        </OL>
+        <P>
+          If no request carries the file, the file did not leave. This works on any site, including
+          this one — which is the point: the claim should be checkable by you, not taken on trust.
+        </P>
+        <P>
+          This site adds a second, browser-enforced guarantee. Its Content-Security-Policy header sets{' '}
+          <Code>connect-src 'self' data: blob:</Code>, which means the browser itself refuses any
+          network connection to another domain, and the one domain it may talk to serves static files
+          only — there is no endpoint to receive a CV.
+        </P>
+
         <Note>
           <strong>This site is the local kind.</strong>{' '}
           <A href="/">ATS Resume Toolkit</A> parses your PDF or DOCX in the browser with{' '}
@@ -175,14 +263,28 @@ export const ARTICLES: Article[] = [
         </UL>
       </>
     ),
+    faq: [
+      {
+        q: 'Is it safe to upload my resume to an online resume checker?',
+        a: 'It depends on what happens to the file, which is usually described only in the terms. Uploaded CVs are commonly stored, tied to an account, and sometimes sent to third-party language models. If you are job hunting while employed, prefer a checker that never receives the file.',
+      },
+      {
+        q: 'How can a website read my CV without uploading it?',
+        a: 'Browsers can open a file you select into the page’s own memory. JavaScript libraries such as pdf.js and mammoth then extract the text, and the checks run on your device. Nothing needs a server.',
+      },
+      {
+        q: 'How do I know a resume checker is not uploading my file?',
+        a: 'Open the browser’s developer tools, go to the Network tab, clear it, then drop your CV in. An upload shows up as a POST or PUT request roughly the size of your file. If there is none, the file stayed on your device.',
+      },
+    ],
   },
 
   {
-    slug: 'pdf-or-docx-for-ats',
-    title: 'PDF or DOCX for an ATS: Which Should You Send?',
-    description:
-      'Send a PDF, unless the application form asks for something else. The reasoning, the one PDF that will fail every time, and what to do when the employer names a format.',
-    updated: '2026-08-27',
+    ...guide('pdf-or-docx-for-ats'),
+    published: '2026-08-31',
+    updated: '2026-09-26',
+    summary:
+      'Send a text-based PDF unless the application asks for another format — then send exactly what it asks for. The only PDF that reliably fails is one with no real text in it, such as a scan or an export with outlined fonts, and you can test for that in seconds.',
     body: (
       <>
         <P>
@@ -209,6 +311,28 @@ export const ARTICLES: Article[] = [
         <P>
           The test takes three seconds: open the PDF and try to select a line of text with your
           cursor. If you cannot highlight it, neither can the ATS.
+        </P>
+
+        <H2>A 30-second test for any PDF</H2>
+        <P>Selecting text proves the text exists. Two more steps show whether it comes out usable:</P>
+        <OL>
+          <li><strong>Select a line.</strong> If nothing highlights, the page is an image. Re-export from the original document.</li>
+          <li>
+            <strong>Search for your email</strong> with <Code>Ctrl F</Code> / <Code>⌘ F</Code>. If
+            the viewer cannot find it, a parser will not either — often because it lives in a header,
+            an image, or a text box.
+          </li>
+          <li>
+            <strong>Select all, copy, and paste into a plain-text editor</strong> (Notepad, or TextEdit
+            in plain-text mode). What you see is close to what a parser receives. If two columns come
+            out interleaved line by line, or your job titles appear far from their dates, fix the layout
+            before you worry about anything else.
+          </li>
+        </OL>
+        <P>
+          Exporting from Word, Google Docs or Pages with their normal <em>Download as PDF</em> or{' '}
+          <em>Export to PDF</em> produces text-based PDFs. The risky routes are “print to image”,
+          scanning, and design tools with an option to convert text to outlines.
         </P>
 
         <H2>When DOCX is the right answer</H2>
@@ -245,14 +369,28 @@ export const ARTICLES: Article[] = [
         </UL>
       </>
     ),
+    faq: [
+      {
+        q: 'Can an ATS read a PDF resume?',
+        a: 'Yes, as long as the PDF contains real text. Modern applicant tracking systems extract text from PDFs routinely. A scanned or image-only PDF has no text to extract and reads as blank.',
+      },
+      {
+        q: 'Should I send .doc or .docx?',
+        a: 'Prefer .docx, the current Word format, unless the employer specifically asks for .doc. Better still, send a text-based PDF unless the form limits you to Word files.',
+      },
+      {
+        q: 'How do I know if my PDF is text-based?',
+        a: 'Open it and try to highlight a line with your cursor, then search for your email address. If you can select text and the search finds your email, the PDF is text-based.',
+      },
+    ],
   },
 
   {
-    slug: 'how-ats-parsing-works',
-    title: 'How ATS Resume Parsing Actually Works',
-    description:
-      'What happens between uploading a CV and a recruiter seeing it: text extraction, section segmentation, entity extraction and search indexing — and where each stage breaks.',
-    updated: '2026-08-27',
+    ...guide('how-ats-parsing-works'),
+    published: '2026-08-31',
+    updated: '2026-09-26',
+    summary:
+      'An ATS parses a CV in four mechanical stages: it extracts the text, splits it into sections by their headings, pulls out entities such as email, dates and job titles, and indexes the result for recruiters to search. Nearly every piece of CV formatting advice exists because one of those stages breaks.',
     body: (
       <>
         <P>
@@ -269,6 +407,21 @@ export const ARTICLES: Article[] = [
           line” is geometry, and it is where multi-column layouts fall apart — two columns can be
           stitched into one nonsensical line.
         </P>
+        <P>
+          Here is what that looks like. A two-column CV, as a reader sees it, and the text a
+          line-by-line extractor — this site’s included — actually gets back:
+        </P>
+        <Pre label="What the reader sees">{`EXPERIENCE                        SKILLS
+Engineering Manager, Acme         Kubernetes, Go
+Jan 2020 – now                    Terraform, AWS`}</Pre>
+        <Pre label="What the parser receives">{`EXPERIENCE SKILLS
+Engineering Manager, Acme Kubernetes, Go
+Jan 2020 – now Terraform, AWS`}</Pre>
+        <P>
+          Every line is now a hybrid. The Experience heading shares a line with Skills, your job title
+          has two skills glued to it, and the date range is followed by cloud providers. Nothing was
+          lost — it was just put back together in the wrong order, which for a parser is the same thing.
+        </P>
         <P><strong>Fails when:</strong> the page is an image, the text is outlined, or the layout is multi-column.</P>
 
         <H2>Stage 2 — Section segmentation</H2>
@@ -277,6 +430,20 @@ export const ARTICLES: Article[] = [
           the clever one: a parser matching against a list of known words finds{' '}
           <em>Experience</em>, <em>Work Experience</em> and <em>Employment History</em>. It does not
           find <em>Where I've Made a Dent</em>.
+        </P>
+        <P>
+          To make this concrete: these are the exact headings this site’s checker looks for. It
+          accepts a short line — 45 characters or fewer, in any capitalisation — that contains one
+          of them, so <em>Relevant Work Experience</em> counts as Experience.
+        </P>
+        <Table
+          caption="Section headings the ATS Resume Toolkit recognises"
+          head={['Section', 'Headings it accepts', 'Points']}
+          rows={SECTION_ROWS}
+        />
+        <P>
+          Commercial parsers use longer lists, but the principle is identical — and none of them has
+          your invented heading on it.
         </P>
         <P><strong>Fails when:</strong> headings are creative, styled only by colour, or absent.</P>
 
@@ -327,14 +494,28 @@ export const ARTICLES: Article[] = [
         </UL>
       </>
     ),
+    faq: [
+      {
+        q: 'Can an ATS read a two-column resume?',
+        a: 'Often not in the right order. Text extraction rebuilds lines from positions on the page, so two columns can be stitched together line by line, mixing a job title with a skills list. A single-column layout avoids the problem entirely.',
+      },
+      {
+        q: 'Do applicant tracking systems read headers and footers?',
+        a: 'Some parsers skip those regions or treat them unreliably. Keep your name, email and phone number in the main body of the page so they are extracted whichever parser reads the file.',
+      },
+      {
+        q: 'Does hiding keywords in white text help?',
+        a: 'No. White text is still text: it is extracted into the parsed profile a recruiter reads, where it looks like an attempt to game the search. Use the job ad’s vocabulary only where you have genuinely earned it.',
+      },
+    ],
   },
 
   {
-    slug: 'ats-resume-checklist',
-    title: 'The ATS Resume Checklist',
-    description:
-      'Fifteen concrete checks, ordered by how much damage each one does if you skip it — from unreadable files down to the finishing touches.',
-    updated: '2026-08-27',
+    ...guide('ats-resume-checklist'),
+    published: '2026-08-31',
+    updated: '2026-09-26',
+    summary:
+      'Fix five things first: selectable text, your email in the body, a single column, standard section headings, and a date on every role. They decide whether the application arrives intact. Everything else decides whether it is found in a search, and then whether a human enjoys reading it.',
     body: (
       <>
         <P>
@@ -369,6 +550,29 @@ export const ARTICLES: Article[] = [
           <LI><strong>The filename is a name</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>, not <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_REAL.pdf</code>.</LI>
         </UL>
 
+        <H2>Which of these a checker can verify for you</H2>
+        <P>
+          Most of the list is mechanical, so software can check it. Some of it is judgement, so it
+          cannot. Here is the split for this site’s checker:
+        </P>
+        <H3>Checked automatically</H3>
+        <UL>
+          <LI>Selectable text, and clean character encoding</LI>
+          <LI>Email, phone, and a profile link visible as text — it also flags a link that exists only as a hidden hyperlink</LI>
+          <LI>Standard headings for Experience, Education, Skills and Summary, plus Achievements, Projects and Certifications</LI>
+          <LI>Dates, bullet structure and page count</LI>
+          <LI>Numbers in your bullets, and bullets that open with a verb</LI>
+          <LI>Stock phrasing and vague claims, in the separate writing-style tab</LI>
+          <LI>The job ad’s vocabulary, if you paste the ad into the job-description match</LI>
+        </UL>
+        <H3>Still on you</H3>
+        <UL>
+          <LI>Whether a sidebar or second column scrambles the reading order — use the copy-and-paste test</LI>
+          <LI>Whether your job titles are ones a recruiter would search for</LI>
+          <LI>Whether every keyword you added is one you have earned</LI>
+          <LI>The filename</LI>
+        </UL>
+
         <Note>
           <strong>Most of this list is checkable automatically.</strong> The{' '}
           <A href="/">ATS Resume Toolkit</A> runs the parseability, contact, section, format and
@@ -384,5 +588,19 @@ export const ARTICLES: Article[] = [
         </UL>
       </>
     ),
+    faq: [
+      {
+        q: 'How long should an ATS-friendly resume be?',
+        a: 'One page early in a career, two pages is normal after about a decade. Length does not stop a parser reading the file, but pages beyond the second are often not read by the recruiter.',
+      },
+      {
+        q: 'Are tables and text boxes safe in an ATS resume?',
+        a: 'Avoid them for anything important. Text inside text boxes can be skipped or extracted out of order, and tables used for layout create the same reading-order problems as columns. Plain paragraphs and bullet lists are safest.',
+      },
+      {
+        q: 'What should I fix first on my resume for ATS?',
+        a: 'Make sure the text is selectable, your email is in the body, the layout is a single column, section headings are standard, and every role has dates. Those five decide whether the application is read correctly at all.',
+      },
+    ],
   },
 ]
