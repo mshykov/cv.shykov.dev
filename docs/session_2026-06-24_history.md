@@ -37,7 +37,7 @@ Handoff for resuming work on cv.shykov.dev in a fresh session. Pairs with
    - **Experience not parsed** on import into Build (only Education) →
      section/entry detection in `parse.ts` doesn't recognize that CV's layout.
    - "Headers off" in the build preview.
-   → **Needs the real file.** Drop test CVs in `_do_not_commit/` and debug
+   → **Needs the real file.** Drop test CVs in `_do-not-commit/` and debug
      `parse.ts` / `analyze.ts` against them (they're pure functions — add fixtures
      to the `*.test.ts` suite once reproduced).
 2. **Per-section help text** (e.g. Experience vs Projects) — quick UX add, no file
