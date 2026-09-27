@@ -39,7 +39,7 @@ npm run indexnow -- --dry-run  # IndexNow payload; without --dry-run it SUBMITS 
   `polyfills.ts` (loaded first in `main.tsx`).
 - `public/<32-hex>.txt` — IndexNow ownership key (public by design; `scripts/indexnow.mjs` reads it).
 - `public/_headers` — security headers + **CSP** + cache rules. `docs/` — design
-  notes & retros. `_do_not_commit/` — gitignored local scratch (test CVs, secrets).
+  notes & retros. `_do-not-commit/` — gitignored local scratch (test CVs, secrets).
 
 ## ⚠️ Landmines — do NOT "simplify" these without reading why
 1. **pdf.js: standard build, on the MAIN THREAD** (`src/lib/pdf.ts`). It runs
