@@ -12,6 +12,20 @@ Vite 8 · React 19 · TypeScript · Tailwind v4. `pdf.js` (read PDF), `mammoth`
 (read DOCX), `@react-pdf/renderer` (write PDF). Deployed on **Cloudflare Workers
 Builds** — auto-deploys on push to `main`; custom domain in `wrangler.jsonc`.
 
+## Monitoring
+
+- **Uptime (5 min):** UptimeRobot HTTP(s) monitor 804122081 on `https://cv.shykov.dev`. Email alert to the owner. Catches the site being
+  down or answering 5xx/52x; it can't see content (Keyword monitors can't be created
+  on the free plan).
+- **Content + TLS (daily):** `mshykov/shykov.dev` → `.github/workflows/site-monitor.yml`
+  runs `scripts/site-check.sh` at 06:17 UTC — HTTP 200, keyword `ATS Resume Checker` in the HTML,
+  every certificate on the redirect path valid > 14 days. A failure opens (or comments
+  on) a "Site check failing" issue in that repo.
+- **Cert:** Cloudflare's edge cert (Workers custom domain) — renewed by Cloudflare; an origin
+  problem would show as a 5xx/52x, which the uptime monitor catches.
+- **If the domain or the page `<title>` changes,** update `SITES` in shykov.dev's `scripts/site-check.sh` (and the
+  UptimeRobot monitor if the URL changes) at the same time, or the daily check goes red.
+
 ## Commands
 ```bash
 npm run dev      # dev server
