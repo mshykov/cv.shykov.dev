@@ -59,6 +59,29 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      # Both install steps below run apt-get update, which refreshes EVERY
+      # source on the runner — including Google's Chrome repo. That repo has
+      # served a Packages.gz whose hash did not match its Release file ("Hash
+      # Sum mismatch"); apt exits 100 and, `build` being a required check,
+      # a broken third-party index we do not use would block every merge.
+      # (It took down engineering-changelog's e2e job.) We test Playwright's
+      # own WebKit; the google-chrome package is nothing to do with us.
+      #
+      # Unlike Chromium, WebKit really needs apt: ~180 packages (GTK 4,
+      # GStreamer) are absent from the runner image, so there is no skipping
+      # the install itself.
+      - name: Drop the google-chrome apt source
+        # Matched on the URL, not the filename: the runner image may declare
+        # the repo as .list or as deb822 .sources. Prints what it found so a
+        # future failure here is diagnosable from the log.
+        run: |
+          echo "--- before ---"; ls -1 /etc/apt/sources.list.d/ || true
+          grep -rl "dl\.google\.com" /etc/apt/sources.list.d/ 2>/dev/null \
+            | xargs -r sudo rm -f
+          sudo sed -i '/dl\.google\.com/d' /etc/apt/sources.list 2>/dev/null || true
+          echo "--- after ---"; ls -1 /etc/apt/sources.list.d/ || true
+          ! grep -rq "dl\.google\.com" /etc/apt/sources.list.d/ /etc/apt/sources.list 2>/dev/null \
+            && echo "google-chrome source gone" || echo "WARNING: still referenced"
       - name: Install WebKit (browser + system deps)
         if: steps.pw-cache.outputs.cache-hit != 'true'
         # The repo's own pinned binary, not npx — npx will fetch and execute a
