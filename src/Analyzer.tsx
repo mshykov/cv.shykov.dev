@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import type { Report, Check } from './lib/analyze'
+import type { Report, Check, Status } from './lib/analyze'
 import { getTopFixes } from './lib/analyze'
 // Dependency-free, so this stays out of the lazily loaded extractor bundle.
 import { isSupportedDocument } from './lib/filetype.ts'
@@ -112,6 +112,47 @@ function TopFixes({ fixes }: TopFixesProps) {
           </div>
         </div>
       ))}
+    </div>
+  )
+}
+
+const STYLE_STATUS: Record<StyleLevel, Status> = { ok: 'pass', minor: 'warn', major: 'fail' }
+
+type HumanizationCardProps = Readonly<{ style: StyleReport; onOpen: () => void }>
+
+// Surfaces the writing-style score next to the ATS score so it is not hidden
+// behind a tab. Same honesty as the tab: habits to fix, not an AI-detector verdict.
+function HumanizationCard({ style, onOpen }: HumanizationCardProps) {
+  const tone = STYLE_STATUS[style.band.tone]
+  const flagged = style.signals.filter((s) => s.level !== 'ok').sort((a, b) => Number(b.level === 'major') - Number(a.level === 'major'))
+  return (
+    <div className="mt-5 min-w-0 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+        <ScoreRing score={style.score} tone={tone} />
+        <div className="min-w-0 flex-1">
+          <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ring-1 ${TONE[tone].chip}`}>
+            <span className={`h-2 w-2 rounded-full ${TONE[tone].dot}`} aria-hidden />
+            <span>{style.band.label}</span>
+          </div>
+          <h2 className="mt-3 text-xl font-semibold tracking-tight text-stone-900">Humanization score</h2>
+          <p className="mt-1 text-sm text-stone-500">
+            How natural the writing reads: rhythm, filler, repeated openers, passive voice. Not an AI detector.
+          </p>
+          {flagged.length > 0 ? (
+            <ul className="mt-3 space-y-1 text-sm text-stone-700">
+              {flagged.slice(0, 3).map((s) => (
+                <li key={s.id} className="flex gap-2">
+                  <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${STYLE_TONE[s.level].dot}`} aria-hidden />
+                  <span><span className="font-medium">{s.label}.</span> {s.fix ?? s.detail}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-sm text-emerald-700">No writing habits flagged.</p>
+          )}
+          <button type="button" onClick={onOpen} className="mt-3 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">All writing checks →</button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -309,10 +350,12 @@ export default function Analyzer() {
               </div>
             </div>
 
-            <div className="mt-4 flex justify-end">
-              <nav className="flex shrink-0 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium">
+            {style && <HumanizationCard style={style} onOpen={() => setTab('style')} />}
+
+            <div className="mt-4 flex sm:justify-end">
+              <nav className="grid w-full grid-cols-2 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium sm:flex sm:w-auto sm:shrink-0">
                 {([['analyze', 'Full report'], ['style', 'Writing style'], ['jd', 'Job match'], ['data', 'Extracted data']] as [Tab, string][]).map(([id, label]) => (
-                  <button key={id} type="button" onClick={() => setTab(id)} className={`rounded-md px-3 py-1.5 transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
+                  <button key={id} type="button" onClick={() => setTab(id)} className={`rounded-md px-3 py-1.5 text-center transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
                 ))}
               </nav>
             </div>
