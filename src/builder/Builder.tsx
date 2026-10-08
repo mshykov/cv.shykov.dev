@@ -362,9 +362,11 @@ export default function Builder() {
           </div>
           <div className="rounded-2xl bg-stone-200/70 p-4 shadow-inner">
             <div
-              className="mx-auto overflow-hidden rounded-sm bg-white p-8 text-stone-800 shadow-2xl ring-1 ring-black/5"
+              className="relative mx-auto overflow-hidden rounded-sm bg-white text-stone-800 shadow-2xl ring-1 ring-black/5"
               style={{ aspectRatio: state.settings.pageSize === 'LETTER' ? '8.5 / 11' : '210 / 297', fontSize: previewFontSize, lineHeight: PREVIEW_LINE_HEIGHT[state.settings.spacing] }}
             >
+              {/* Inset box clips content at the page margin, so the bottom gap matches top and sides. */}
+              <div className="absolute inset-8 overflow-hidden">
               {eff.profile.name && <div className="font-bold" style={{ fontSize: previewNameSize, color: eff.settings.template === 'modern' ? eff.settings.accent : undefined }}>{eff.profile.name}</div>}
               <div className="text-stone-500" style={{ fontSize: previewContactSize }}>{[eff.profile.email, eff.profile.phone, ...eff.profile.links].filter(Boolean).join('  •  ')}</div>
               {eff.profile.location && <div className="text-stone-500" style={{ fontSize: previewContactSize }}>{eff.profile.location}</div>}
@@ -378,6 +380,7 @@ export default function Builder() {
               {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.skills}><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
               {state.projects.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.projects}><ul className="ml-4 list-disc">{state.projects.map((p) => <li key={p.uiId}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
               {state.education.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.education}>{state.education.map((e, i) => <div key={e.uiId} className="flex justify-between gap-2" style={{ marginBottom: i === state.education.length - 1 ? 0 : previewEntryGap }}><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
+              </div>
             </div>
           </div>
           <p className="mt-2 text-center text-xs text-stone-400">Live preview · the exported PDF is single-column Helvetica, ATS-clean</p>
