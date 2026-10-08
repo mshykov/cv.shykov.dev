@@ -22,7 +22,7 @@ npm run dev        # Vite dev server
 npm run lint
 npm test           # node:test unit tests in src/**/*.test.ts
 npm run build      # tsc + vite build + prerender
-npm run test:e2e   # Playwright (installs browsers on first run)
+npm run test:e2e   # Playwright; run `npx playwright install` once first
 ```
 
 CI runs lint, tests and build. Please run them before opening a pull request.
