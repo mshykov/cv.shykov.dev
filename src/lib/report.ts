@@ -3,71 +3,73 @@
 import type { Report } from './analyze'
 import type { Resume } from './parse'
 import type { JDMatch } from './jdmatch'
+import type { Messages } from '../i18n/messages/en.ts'
 
 const MARK: Record<string, string> = { pass: '✅', warn: '⚠️', fail: '❌' }
 
-function checkLine(c: Report['checks'][number]): string {
-  const fix = c.fix ? `  \n  _Fix:_ ${c.fix}` : ''
+function checkLine(m: Messages['report'], c: Report['checks'][number]): string {
+  const fix = c.fix ? `  \n  _${m.fix}_ ${c.fix}` : ''
   return `- ${MARK[c.status]} **${c.label}** (${c.points}/${c.max}) — ${c.detail}${fix}`
 }
 
-function categorySection(report: Report, cat: string): string[] {
+function categorySection(m: Messages, report: Report, cat: Report['checks'][number]['category']): string[] {
   const items = report.checks.filter((c) => c.category === cat)
   const pts = items.reduce((s, c) => s + c.points, 0)
   const max = items.reduce((s, c) => s + c.max, 0)
-  return [`## ${cat} — ${pts}/${max}`, '', ...items.map(checkLine), '']
+  return [`## ${m.analysis.categories[cat]} — ${pts}/${max}`, '', ...items.map((c) => checkLine(m.report, c)), '']
 }
 
-function categorySections(report: Report): string[] {
+function categorySections(m: Messages, report: Report): string[] {
   const cats = [...new Set(report.checks.map((c) => c.category))]
-  return cats.flatMap((cat) => categorySection(report, cat))
+  return cats.flatMap((cat) => categorySection(m, report, cat))
 }
 
-function jdSection(jd?: JDMatch): string[] {
+function jdSection(m: Messages['report'], jd?: JDMatch): string[] {
   if (!jd) return []
 
   const missing = jd.missing.length
-    ? ['**Missing keywords (consider adding if true):**', '', jd.missing.map((k) => `\`${k.term}\``).join(', '), '']
+    ? [`**${m.jdMissing}**`, '', jd.missing.map((k) => `\`${k.term}\``).join(', '), '']
     : []
 
   return [
-    `## Job-description match — ${jd.coverage}% coverage`,
+    `## ${m.jdTitle(jd.coverage)}`,
     '',
-    `Matched ${jd.matched.length}/${jd.total} emphasized keywords.`,
+    m.jdMatched(jd.matched.length, jd.total),
     '',
     ...missing,
   ]
 }
 
-function profileSection(resume: Resume): string[] {
+function profileSection(m: Messages['report'], resume: Resume): string[] {
   const p = resume.profile
   return [
-    '## Extracted profile',
+    `## ${m.profileTitle}`,
     '',
-    `- **Name:** ${p.name || '—'}`,
-    `- **Email:** ${p.email || '—'}`,
-    `- **Phone:** ${p.phone || '—'}`,
-    `- **Location:** ${p.location || '—'}`,
-    `- **Links:** ${p.links.join(', ') || '—'}`,
-    `- **Experience entries parsed:** ${resume.experience.length}`,
-    `- **Education entries parsed:** ${resume.education.length}`,
-    `- **Skills parsed:** ${resume.skills.length}`,
+    `- **${m.fields.name}:** ${p.name || '—'}`,
+    `- **${m.fields.email}:** ${p.email || '—'}`,
+    `- **${m.fields.phone}:** ${p.phone || '—'}`,
+    `- **${m.fields.location}:** ${p.location || '—'}`,
+    `- **${m.fields.links}:** ${p.links.join(', ') || '—'}`,
+    `- **${m.experienceEntries}:** ${resume.experience.length}`,
+    `- **${m.educationEntries}:** ${resume.education.length}`,
+    `- **${m.skillsParsed}:** ${resume.skills.length}`,
     '',
   ]
 }
 
-export function toMarkdown(fileName: string, report: Report, resume: Resume, jd?: JDMatch): string {
+export function toMarkdown(fileName: string, report: Report, resume: Resume, m: Messages, jd?: JDMatch): string {
+  const fmt = m.analysis.formatNumber
   return [
-    `# CV ATS Report — ${fileName}`,
+    `# ${m.report.title(fileName)}`,
     '',
-    `**Score: ${report.score}/100 — ${report.band.label}**`,
+    `**${m.report.score(report.score, report.band.label)}**`,
     '',
-    `${report.meta.numPages || '—'} pages · ${report.meta.words.toLocaleString()} words · ${report.meta.charCount.toLocaleString()} readable characters`,
+    m.report.stats(String(report.meta.numPages || '—'), fmt(report.meta.words), fmt(report.meta.charCount)),
     '',
-    ...categorySections(report),
-    ...jdSection(jd),
-    ...profileSection(resume),
+    ...categorySections(m, report),
+    ...jdSection(m.report, jd),
+    ...profileSection(m.report, resume),
     '---',
-    '_Generated locally by cv.shykov.dev — heuristic guidance, not a guarantee._',
+    `_${m.report.footer}_`,
   ].join('\n')
 }

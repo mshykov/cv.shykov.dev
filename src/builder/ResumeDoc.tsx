@@ -2,7 +2,7 @@
 // ligature shaping), real selectable text — i.e. ATS-clean by construction.
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type { Style } from '@react-pdf/types'
-import { BUILDER_SECTION_TITLES, type BuilderState, type Spacing } from './model'
+import type { BuilderState, SectionTitles, Spacing } from './model'
 import type { EducationEntry, ExperienceEntry, ProjectEntry } from '../lib/parse'
 
 const LINE_GAP: Record<Spacing, number> = { compact: 1.25, standard: 1.4, relaxed: 1.6 }
@@ -11,7 +11,7 @@ const experienceKey = (entry: ExperienceEntry) => ['experience', entry.title, en
 const projectKey = (entry: ProjectEntry) => ['project', entry.name, entry.description].join(':')
 const educationKey = (entry: EducationEntry) => ['education', entry.degree, entry.school, entry.date].join(':')
 type SectionProps = Readonly<{ title: string; h2: Style; rule: Style; children: React.ReactNode }>
-type ResumeDocProps = Readonly<{ state: BuilderState }>
+type ResumeDocProps = Readonly<{ state: BuilderState; titles: SectionTitles; docTitle: string }>
 
 function Section({ title, h2, rule, children }: SectionProps) {
   return (
@@ -23,7 +23,7 @@ function Section({ title, h2, rule, children }: SectionProps) {
   )
 }
 
-export function ResumeDoc({ state }: ResumeDocProps) {
+export function ResumeDoc({ state, titles, docTitle }: ResumeDocProps) {
   const { profile: p, settings: cfg } = state
   const fs = cfg.fontSize
   const lh = LINE_GAP[cfg.spacing]
@@ -49,18 +49,18 @@ export function ResumeDoc({ state }: ResumeDocProps) {
   const contact = [p.email, p.phone, ...p.links].filter(Boolean).join('   •   ')
 
   return (
-    <Document title={`${p.name || 'Resume'} — CV`} author={p.name}>
+    <Document title={docTitle} author={p.name}>
       <Page size={cfg.pageSize} style={s.page}>
         {p.name ? <Text style={s.name}>{p.name}</Text> : null}
         {contact ? <Text style={s.contact}>{contact}</Text> : null}
         {p.location ? <Text style={s.contact}>{p.location}</Text> : null}
 
         {p.summary ? (
-          <Section title={BUILDER_SECTION_TITLES.summary} h2={s.h2} rule={s.rule}><Text style={s.para}>{p.summary}</Text></Section>
+          <Section title={titles.summary} h2={s.h2} rule={s.rule}><Text style={s.para}>{p.summary}</Text></Section>
         ) : null}
 
         {state.experience.length ? (
-          <Section title={BUILDER_SECTION_TITLES.experience} h2={s.h2} rule={s.rule}>
+          <Section title={titles.experience} h2={s.h2} rule={s.rule}>
             {state.experience.map((e) => (
               <View key={experienceKey(e)} style={{ marginBottom: 4 }} wrap={false}>
                 <View style={s.entryRow}>
@@ -76,11 +76,11 @@ export function ResumeDoc({ state }: ResumeDocProps) {
         ) : null}
 
         {state.skills.length ? (
-          <Section title={BUILDER_SECTION_TITLES.skills} h2={s.h2} rule={s.rule}><Text style={s.skills}>{state.skills.join('  •  ')}</Text></Section>
+          <Section title={titles.skills} h2={s.h2} rule={s.rule}><Text style={s.skills}>{state.skills.join('  •  ')}</Text></Section>
         ) : null}
 
         {state.projects.length ? (
-          <Section title={BUILDER_SECTION_TITLES.projects} h2={s.h2} rule={s.rule}>
+          <Section title={titles.projects} h2={s.h2} rule={s.rule}>
             {state.projects.map((pr) => (
               <View key={projectKey(pr)} style={s.bulletRow}><Text style={s.bulletDot}>•</Text><Text style={s.bulletText}><Text style={s.entryTitle}>{pr.name}</Text>{pr.description ? ` — ${pr.description}` : ''}</Text></View>
             ))}
@@ -88,7 +88,7 @@ export function ResumeDoc({ state }: ResumeDocProps) {
         ) : null}
 
         {state.education.length ? (
-          <Section title={BUILDER_SECTION_TITLES.education} h2={s.h2} rule={s.rule}>
+          <Section title={titles.education} h2={s.h2} rule={s.rule}>
             {state.education.map((ed) => (
               <View key={educationKey(ed)} style={s.entryRow}>
                 <Text><Text style={s.entryTitle}>{ed.degree || ed.school}</Text>{ed.degree && ed.school ? ` — ${ed.school}` : ''}</Text>

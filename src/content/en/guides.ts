@@ -2,46 +2,46 @@
 // the homepage imports it for its guide list, while the article bodies (in
 // articles.tsx) are needed only by the build-time prerender and must stay out
 // of the homepage bundle.
-export interface Guide {
-  slug: string
-  /** <title> and the page h1. */
-  title: string
-  /** <meta name="description">, and the standfirst under the h1. */
-  description: string
-}
+import type { Guide } from '../types.ts'
 
 export const GUIDES: Guide[] = [
   {
+    id: 'what-is-an-ats-score',
     slug: 'what-is-an-ats-score',
     title: 'What Is an ATS Score, and What Does It Actually Measure?',
     description:
       'An ATS score measures how cleanly a machine can read your CV — not how good a candidate you are. Here is what the number covers, what it cannot see, and the myth to ignore.',
   },
   {
+    id: 'ats-checker-without-upload',
     slug: 'ats-checker-without-upload',
     title: 'ATS Resume Checkers That Do Not Upload Your CV',
     description:
       'Most resume checkers require you to upload your CV and hand over an email address. Here is what happens to the file, why it matters while you are still employed, and how a local-only check differs.',
   },
   {
+    id: 'pdf-or-docx-for-ats',
     slug: 'pdf-or-docx-for-ats',
     title: 'PDF or DOCX for an ATS: Which Should You Send?',
     description:
       'Send a PDF, unless the application form asks for something else. The reasoning, the one PDF that will fail every time, and what to do when the employer names a format.',
   },
   {
+    id: 'how-ats-parsing-works',
     slug: 'how-ats-parsing-works',
     title: 'How ATS Resume Parsing Actually Works',
     description:
       'What happens between uploading a CV and a recruiter seeing it: text extraction, section segmentation, entity extraction and search indexing — and where each stage breaks.',
   },
   {
+    id: 'ats-resume-checklist',
     slug: 'ats-resume-checklist',
     title: 'The ATS Resume Checklist',
     description:
       'Fifteen concrete checks, ordered by how much damage each one does if you skip it — from unreadable files down to the finishing touches.',
   },
   {
+    id: 'how-to-check-your-cv-score',
     slug: 'how-to-check-your-cv-score',
     title: 'How to Check Your CV Score for Free (and What to Fix First)',
     description:

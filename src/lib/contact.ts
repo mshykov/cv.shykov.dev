@@ -183,9 +183,10 @@ function looksLikePhone(candidate: string): boolean {
   if (groups.length === 0) return false
 
   // A one-digit group is a decimal fraction ("96.5"), not a phone segment. The
-  // sole exception is a leading country code: "+1 555 123 4567".
+  // exceptions are a leading country code ("+1 555 123 4567") and the single
+  // digit that follows one, the mobile prefix in French numbers ("+33 6 12 34 56 78").
   const leadingCountryCode = candidate.trimStart().startsWith('+')
-  if (groups.some((g, i) => g.length === 1 && !(i === 0 && leadingCountryCode))) return false
+  if (groups.some((g, i) => g.length === 1 && !(i <= 1 && leadingCountryCode))) return false
 
   // "2019 2020 2021" is a run of years, not a number anyone can call.
   const isYear = (g: string) => g.length === 4 && Number(g) >= 1900 && Number(g) <= 2099

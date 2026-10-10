@@ -41,6 +41,11 @@ test('finds phone numbers in the formats CVs actually use', () => {
     '555.123.4567',
     '(555) 123-4567',
     '07700 900123',
+    '+33 6 12 34 56 78', // French mobile with the country code
+    '06 12 34 56 78',
+    '+49 151 23456789',
+    '+351 912 345 678',
+    '+55 11 91234-5678',
   ]) {
     assert.equal(hasPhoneNumber(input), true, `should detect ${input}`)
   }
@@ -50,6 +55,7 @@ test('finds phone numbers in the formats CVs actually use', () => {
 // separators and decimal points. A CV following this tool's own advice to add
 // metrics had those metrics reported back as its phone number.
 test('a run of decimal metrics is not a phone number', () => {
+  assert.equal(findPhoneNumber('Latency 1 2 3 4 5 6 7 8 9'), '')
   assert.equal(findPhoneNumber('Crash-free sessions 96.5 99.5 99.9'), '')
   assert.equal(findPhoneNumber('96.5 99.5 99.9'), '')
 })

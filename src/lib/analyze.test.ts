@@ -1,7 +1,10 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { analyze, getTopFixes } from './analyze.ts'
+import { analyze as analyzeWith, getTopFixes } from './analyze.ts'
 import type { Extracted } from './pdf.ts'
+import { en } from '../i18n/messages/en.ts'
+
+const analyze = (extracted: Extracted) => analyzeWith(extracted, en.analysis)
 
 function ex(lines: string[], over: Partial<Extracted> = {}): Extracted {
   const text = lines.join('\n')

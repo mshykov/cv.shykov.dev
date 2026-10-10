@@ -1,25 +1,52 @@
-const MONTHS = new Set([
-  'jan', 'january', 'feb', 'february', 'mar', 'march', 'apr', 'april',
-  'may', 'jun', 'june', 'jul', 'july', 'aug', 'august', 'sep', 'sept',
-  'september', 'oct', 'october', 'nov', 'november', 'dec', 'december',
-])
+import { MONTHS, ONGOING_PATTERN, fold, foldHeading } from './lang/index.ts'
+
+// Month names of every supported language (see lang/*.ts), compared accent-folded.
+// A word counts as a month only when a number follows it.
+//
 // Global on purpose: exec() returns only the FIRST word+number pair, and if that
 // pair is not a month ("latency 300 ms in Jan 24") the real date was reported as
 // absent. Scan every candidate instead. matchAll is safe with /g here — it walks
 // an internal clone, so this shared regex keeps lastIndex at 0.
-const MONTH_YEAR_RE = /\b([a-z]{3,9})\.?\s+\d{2,4}\b/gi
+// Unicode letters, not [a-z]: "março 2021", "févr. 2022", "Mär 2020". The leading
+// group stands in for a look-behind, which Safari < 16.4 lacks.
+const MONTH_YEAR_RE = /(^|[^\p{L}\d])(\p{L}{3,9})\.?\s+(\d{2,4})(?![\p{L}\d])/giu
+// Portuguese and Spanish abbreviations that are also English words ("out", "set",
+// "ago"): a date only when followed by a full year, so "pulled out 30 people"
+// does not read as October 2030.
+const NEEDS_FULL_YEAR = new Set(['out', 'set', 'ago'])
+// "03/2022", "3.2022": numeric month and year, the usual form on German CVs.
+const NUMERIC_MONTH_YEAR_RE = /(^|[^\d./])((?:0?[1-9]|1[0-2])[./]\d{4})(?!\d)/g
 const YEAR_RE = /\b(?:19|20)\d{2}\b/i
-const RELATIVE_DATE_RE = /\b(?:present|current|now)\b/i
+const RELATIVE_DATE_RE = new RegExp(`(^|[^\\p{L}])(${ONGOING_PATTERN})(?![\\p{L}])`, 'giu')
+
+/** The matched date itself, without the delimiter the regex swallowed in front of it. */
+function dateMatch(match: RegExpMatchArray, lead: string, text: string, group = 0): RegExpMatchArray {
+  const value = group ? match[group] : match[0].slice(lead.length)
+  return Object.assign([value], { index: (match.index ?? 0) + match[0].indexOf(value, lead.length), input: text }) as RegExpMatchArray
+}
 
 function findMonthYear(text: string): RegExpMatchArray | null {
   for (const match of text.matchAll(MONTH_YEAR_RE)) {
-    if (MONTHS.has(match[1].toLowerCase())) return match
+    const word = fold(match[2])
+    if (!MONTHS.has(word)) continue
+    if (NEEDS_FULL_YEAR.has(word) && match[3].length !== 4) continue
+    return dateMatch(match, match[1], text)
   }
   return null
 }
 
+function findNumericMonthYear(text: string): RegExpMatchArray | null {
+  const match = text.matchAll(NUMERIC_MONTH_YEAR_RE).next().value
+  return match ? dateMatch(match, match[1], text, 2) : null
+}
+
+function findOngoing(text: string): RegExpMatchArray | null {
+  const match = text.matchAll(RELATIVE_DATE_RE).next().value
+  return match ? dateMatch(match, match[1], text, 2) : null
+}
+
 export function findDate(text: string): RegExpMatchArray | null {
-  return [findMonthYear(text), YEAR_RE.exec(text), RELATIVE_DATE_RE.exec(text)]
+  return [findMonthYear(text), YEAR_RE.exec(text), findOngoing(text), findNumericMonthYear(text)]
     .filter((match): match is RegExpMatchArray => match !== null)
     .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))[0] ?? null
 }
@@ -47,10 +74,5 @@ export function isBulletLine(line: string): boolean {
 }
 
 export function normalizeHeader(line: string): string {
-  return line
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z&/ ]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
+  return foldHeading(line)
 }
