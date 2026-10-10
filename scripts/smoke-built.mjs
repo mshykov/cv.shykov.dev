@@ -25,13 +25,13 @@ assert.match(headers, /object-src 'none'/, "CSP should keep object-src 'none' (b
 // so if this regresses to a bare <div id="root"></div> the site becomes
 // invisible to them without any visible breakage for human users.
 assert.match(html, /<div id="root"><[^>]/, 'index.html should ship prerendered markup inside #root')
-assert.match(html, /<h1[^>]*>[^<]*ATS resume score/, 'prerendered HTML should carry the h1')
+assert.match(html, /<h1[^>]*>[^<]*CV ATS score/, 'prerendered HTML should carry the h1')
 assert.match(html, /What is an ATS score\?/, 'prerendered HTML should carry the FAQ copy')
 
 // The guide pages are the site's only non-app content and its whole long-tail
-// search surface. They are generated, so a broken prerender would drop all five
+// search surface. They are generated, so a broken prerender would drop all six
 // silently - the app itself would still build and deploy fine.
-for (const slug of ['what-is-an-ats-score', 'ats-checker-without-upload', 'pdf-or-docx-for-ats', 'how-ats-parsing-works', 'ats-resume-checklist']) {
+for (const slug of ['what-is-an-ats-score', 'ats-checker-without-upload', 'pdf-or-docx-for-ats', 'how-ats-parsing-works', 'ats-resume-checklist', 'how-to-check-your-cv-score']) {
   const page = new URL(`${slug}.html`, dist)
   assert.ok(existsSync(page), `dist/${slug}.html should exist after build`)
   const guide = readFileSync(page, 'utf8')
@@ -58,7 +58,7 @@ for (const slug of ['what-is-an-ats-score', 'ats-checker-without-upload', 'pdf-o
 assert.ok(existsSync(new URL('404.html', dist)), 'dist/404.html should exist — the Worker serves it as the real 404')
 
 const sitemap = readFileSync(new URL('sitemap.xml', dist), 'utf8')
-assert.equal((sitemap.match(/<loc>/g) ?? []).length, 6, 'sitemap should list the homepage plus all five guides')
+assert.equal((sitemap.match(/<loc>/g) ?? []).length, 7, 'sitemap should list the homepage plus all six guides')
 
 // IndexNow proves ownership by fetching <key>.txt; a build that drops it makes
 // every submission fail with 403.
