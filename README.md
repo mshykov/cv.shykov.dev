@@ -87,6 +87,9 @@ npm run build
 npm run smoke:build
 ```
 
+Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[`good first issue`](https://github.com/mshykov/cv.shykov.dev/labels/good%20first%20issue) label.
+
 ## How The Score Works
 
 The score is deterministic and lives in `src/lib/analyze.ts`. It is heuristic
