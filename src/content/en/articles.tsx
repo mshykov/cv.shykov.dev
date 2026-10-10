@@ -5,41 +5,20 @@
 // They live in src/ so Tailwind's scanner sees these class names and emits the
 // same stylesheet the app uses. Do not move them outside src/ or the guides
 // will render unstyled.
-import type { ReactNode } from 'react'
-import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from './prose.tsx'
-import { RUBRIC } from './rubric.ts'
-import { GUIDES, type Guide } from './guides.ts'
-import { BONUS_SECTION_KEYWORDS, SECTION_KEYWORDS } from '../lib/sections.ts'
+import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from '../prose.tsx'
+import { rubricRows, sectionRows } from '../tables.ts'
+import { GUIDES } from './guides.ts'
+import type { Article, Guide } from '../types.ts'
+import { en } from '../../i18n/messages/en.ts'
 
-export interface Article extends Guide {
-  /** First publication; Article JSON-LD `datePublished`. */
-  published: string
-  /** Last substantive content change; `dateModified` and the sitemap lastmod. */
-  updated: string
-  /** Two or three plain sentences that answer the title outright. */
-  summary: string
-  body: ReactNode
-  /** Plain-text answers: they are also emitted verbatim as FAQPage JSON-LD. */
-  faq: { q: string; a: string }[]
-}
-
-function guide(slug: string): Guide {
-  const meta = GUIDES.find((g) => g.slug === slug)
-  if (!meta) throw new Error(`articles: no entry for "${slug}" in guides.ts`)
+function guide(id: Guide['id']): Guide {
+  const meta = GUIDES.find((g) => g.id === id)
+  if (!meta) throw new Error(`articles: no entry for "${id}" in guides.ts`)
   return meta
 }
 
-const quoted = (words: string[]) => words.map((w) => `“${w}”`).join(', ')
-
-const SECTION_ROWS = [
-  ['Experience', quoted(SECTION_KEYWORDS.experience), '8'],
-  ['Education', quoted(SECTION_KEYWORDS.education), '6'],
-  ['Skills', quoted(SECTION_KEYWORDS.skills), '6'],
-  ['Summary', quoted(SECTION_KEYWORDS.summary), '5'],
-  ['Achievements', quoted(BONUS_SECTION_KEYWORDS.achievements), '4 (bonus)'],
-  ['Projects', quoted(BONUS_SECTION_KEYWORDS.projects), '3 (bonus)'],
-  ['Certifications', quoted(BONUS_SECTION_KEYWORDS.certifications), '3 (bonus)'],
-]
+const RUBRIC_ROWS = rubricRows(en)
+const SECTION_ROWS = sectionRows('en', en)
 
 export const ARTICLES: Article[] = [
   {
@@ -94,7 +73,7 @@ export const ARTICLES: Article[] = [
         <Table
           caption="ATS Resume Toolkit scoring rubric, check by check"
           head={['Check', 'Group', 'Points']}
-          rows={RUBRIC.map((r) => [r.label, r.category, String(r.max)])}
+          rows={RUBRIC_ROWS}
         />
         <P>
           Two details are easy to miss. A missing phone number or summary only costs its own points —

@@ -2,7 +2,8 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { analyze } from '../lib/analyze'
 import { downloadBlob } from '../lib/download'
 import { TONE } from '../components/tone'
-import { BUILDER_SECTION_TITLES, SAMPLE, synthExtracted, type BuilderState, type Spacing, type Template } from './model'
+import { sampleState, synthExtracted, type BuilderState, type Spacing, type Template } from './model'
+import { useMessages } from '../i18n/context.ts'
 import type { ExperienceEntry, EducationEntry, ProjectEntry } from '../lib/parse'
 
 const parseList = (t: string) => t.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
@@ -10,7 +11,6 @@ const ACCENT_PRESETS = ['#4f46e5', '#0f766e', '#c2410c', '#be123c', '#111827'] a
 const PREVIEW_LINE_HEIGHT: Record<Spacing, number> = { compact: 1.35, standard: 1.5, relaxed: 1.7 }
 const PREVIEW_SECTION_GAP: Record<Spacing, number> = { compact: 10, standard: 15, relaxed: 21 }
 const PREVIEW_ENTRY_GAP: Record<Spacing, number> = { compact: 5, standard: 8, relaxed: 12 }
-const SPACING_LABELS: Record<Spacing, string> = { compact: 'Tight', standard: 'Std', relaxed: 'Airy' }
 
 type WithUiId<T> = T & { uiId: string }
 type BuilderUiState = Omit<BuilderState, 'experience' | 'education' | 'projects'> & {
@@ -111,9 +111,12 @@ function OptionButton<T extends string | number>({ value, selected, onSelect, ch
 }
 
 export default function Builder() {
-  const [state, setState] = useState<BuilderUiState>(() => withUiIds(SAMPLE))
-  const [skillsText, setSkillsText] = useState(SAMPLE.skills.join(', '))
-  const [linksText, setLinksText] = useState(SAMPLE.profile.links.join(', '))
+  const m = useMessages()
+  const b = m.builder
+  const sample = useMemo(() => sampleState(b.sample), [b.sample])
+  const [state, setState] = useState<BuilderUiState>(() => withUiIds(sample))
+  const [skillsText, setSkillsText] = useState(sample.skills.join(', '))
+  const [linksText, setLinksText] = useState(sample.profile.links.join(', '))
   const [busy, setBusy] = useState(false)
   const [note, setNote] = useState('')
   const importRef = useRef<HTMLInputElement>(null)
@@ -126,7 +129,7 @@ export default function Builder() {
     profile: { ...state.profile, links: parseList(linksText) },
   }), [state, skillsText, linksText])
 
-  const score = useMemo(() => analyze(synthExtracted(eff)), [eff])
+  const score = useMemo(() => analyze(synthExtracted(eff, b.docSections), m.analysis), [eff, b.docSections, m.analysis])
   const previewFontSize = state.settings.fontSize + 3
   const previewContactSize = Math.max(10, previewFontSize - 2)
   const previewNameSize = previewFontSize + 7
@@ -165,12 +168,12 @@ export default function Builder() {
     try {
       // react-pdf (~485 KB gz) loads only on first export, not with the tab.
       const [{ pdf }, { ResumeDoc }] = await Promise.all([import('@react-pdf/renderer'), import('./ResumeDoc')])
-      const blob = await pdf(<ResumeDoc state={eff} />).toBlob()
-      downloadBlob(`${(eff.profile.name || 'resume').replace(/\s+/g, '_')}_CV.pdf`, blob)
+      const blob = await pdf(<ResumeDoc state={eff} titles={b.docSections} docTitle={b.docTitle(eff.profile.name)} />).toBlob()
+      downloadBlob(b.fileName(eff.profile.name), blob)
     } catch (e) {
-      setNote(e instanceof Error ? e.message : 'Export failed.')
+      setNote(e instanceof Error ? e.message : b.exportFailed)
     } finally { setBusy(false) }
-  }, [eff])
+  }, [eff, b])
 
   const importCv = useCallback(async (file: File) => {
     setBusy(true); setNote('')
@@ -179,28 +182,28 @@ export default function Builder() {
       const r = parseResume(await extractDocument(file))
       setState((s) => withUiIds({ ...r, settings: s.settings }))
       setSkillsText(r.skills.join(', ')); setLinksText(r.profile.links.join(', '))
-      setNote(`Imported ${r.experience.length} roles from ${file.name}. Review and tweak below.`)
+      setNote(b.imported(r.experience.length, file.name))
     } catch (e) {
-      setNote(e instanceof Error ? e.message : 'Could not import that file.')
+      setNote(e instanceof Error ? e.message : b.importFailed)
     } finally { setBusy(false) }
-  }, [])
+  }, [b])
 
   return (
     <div>
-      <p className="mb-5 max-w-4xl text-stone-500">Build an ATS-clean resume with plain text, standard sections, and a live preview. Import an existing CV, tune the layout, then export a selectable single-column PDF.</p>
+      <p className="mb-5 max-w-4xl text-stone-500">{b.intro}</p>
 
       {/* toolbar */}
       <div className="sticky top-3 z-10 mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-stone-200 bg-white/95 p-3 shadow-sm backdrop-blur">
         <div className="flex items-center gap-3">
           <div className={`grid h-12 w-12 place-items-center rounded-full bg-stone-50 text-xl font-semibold tabular-nums ring-4 ring-white ${TONE[score.band.tone].text}`}>{score.score}</div>
           <div>
-            <div className="text-xs font-medium uppercase tracking-wide text-stone-400">Live score</div>
+            <div className="text-xs font-medium uppercase tracking-wide text-stone-400">{b.liveScore}</div>
             <div className="text-sm font-medium text-stone-700">{score.band.label}</div>
           </div>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
-          <button type="button" onClick={() => importRef.current?.click()} className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">Import CV</button>
-          <button type="button" onClick={exportPdf} disabled={busy} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">{busy ? 'Working…' : '↓ Export PDF'}</button>
+          <button type="button" onClick={() => importRef.current?.click()} className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">{b.importCv}</button>
+          <button type="button" onClick={exportPdf} disabled={busy} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">{busy ? b.working : b.exportPdf}</button>
           <input
             ref={importRef}
             type="file"
@@ -220,72 +223,72 @@ export default function Builder() {
         {/* FORM */}
         <div className="space-y-5">
           <fieldset className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-            <SectionTitle title="Profile" hint="Keep contact details plain-text so parsers can read them." />
+            <SectionTitle title={b.profile.title} hint={b.profile.hint} />
             <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Full name" value={state.profile.name} onChange={(v) => setProfile('name', v)} />
-              <Field label="Email" value={state.profile.email} onChange={(v) => setProfile('email', v)} type="email" autoComplete="email" />
-              <Field label="Phone" value={state.profile.phone} onChange={(v) => setProfile('phone', v)} type="tel" autoComplete="tel" />
-              <Field label="Location" value={state.profile.location} onChange={(v) => setProfile('location', v)} autoComplete="address-level2" />
+              <Field label={b.profile.fullName} value={state.profile.name} onChange={(v) => setProfile('name', v)} />
+              <Field label={b.profile.email} value={state.profile.email} onChange={(v) => setProfile('email', v)} type="email" autoComplete="email" />
+              <Field label={b.profile.phone} value={state.profile.phone} onChange={(v) => setProfile('phone', v)} type="tel" autoComplete="tel" />
+              <Field label={b.profile.location} value={state.profile.location} onChange={(v) => setProfile('location', v)} autoComplete="address-level2" />
             </div>
-            <div className="mt-3"><Field label="Links (comma-separated)" value={linksText} onChange={setLinksText} placeholder="linkedin.com/in/you, github.com/you" /></div>
-            <div className="mt-3"><Field label="Summary" value={state.profile.summary} onChange={(v) => setProfile('summary', v)} area /></div>
+            <div className="mt-3"><Field label={b.profile.links} value={linksText} onChange={setLinksText} placeholder={b.profile.linksPlaceholder} /></div>
+            <div className="mt-3"><Field label={b.profile.summary} value={state.profile.summary} onChange={(v) => setProfile('summary', v)} area /></div>
           </fieldset>
 
           <fieldset className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-            <SectionTitle title="Experience" hint="Use action verbs, measurable impact, and one result per bullet." action={<AddButton onClick={addExp}>Add</AddButton>} />
+            <SectionTitle title={b.experience.title} hint={b.experience.hint} action={<AddButton onClick={addExp}>{b.experience.add}</AddButton>} />
             <div className="space-y-4">
               {state.experience.map((e, i) => (
                 <div key={e.uiId} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
                   <div className="mb-3 flex items-center justify-end gap-2">
-                    <IconButton label="Move role up" onClick={() => moveExp(i, -1)} disabled={i === 0}>↑</IconButton>
-                    <IconButton label="Move role down" onClick={() => moveExp(i, 1)} disabled={i === state.experience.length - 1}>↓</IconButton>
-                    <IconButton label="Delete role" onClick={() => delExp(i)} tone="danger">×</IconButton>
+                    <IconButton label={b.experience.moveUp} onClick={() => moveExp(i, -1)} disabled={i === 0}>↑</IconButton>
+                    <IconButton label={b.experience.moveDown} onClick={() => moveExp(i, 1)} disabled={i === state.experience.length - 1}>↓</IconButton>
+                    <IconButton label={b.experience.delete} onClick={() => delExp(i)} tone="danger">×</IconButton>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <Field label="Title" value={e.title} onChange={(v) => setExp(i, { title: v })} />
-                    <Field label="Company" value={e.company} onChange={(v) => setExp(i, { company: v })} />
+                    <Field label={b.experience.jobTitle} value={e.title} onChange={(v) => setExp(i, { title: v })} />
+                    <Field label={b.experience.company} value={e.company} onChange={(v) => setExp(i, { company: v })} />
                   </div>
-                  <div className="mt-3"><Field label="Dates" value={e.date} onChange={(v) => setExp(i, { date: v })} placeholder="Jan 2022 – now" /></div>
-                  <div className="mt-3"><Field label="Bullets (one per line)" value={e.bullets.join('\n')} onChange={(v) => setExp(i, { bullets: v.split('\n') })} area placeholder={'Led a team of…\nReduced X by 30%…'} /></div>
+                  <div className="mt-3"><Field label={b.experience.dates} value={e.date} onChange={(v) => setExp(i, { date: v })} placeholder={b.experience.datesPlaceholder} /></div>
+                  <div className="mt-3"><Field label={b.experience.bullets} value={e.bullets.join('\n')} onChange={(v) => setExp(i, { bullets: v.split('\n') })} area placeholder={b.experience.bulletsPlaceholder} /></div>
                 </div>
               ))}
-              {!state.experience.length && <p className="text-sm text-stone-400">No roles yet — add one.</p>}
+              {!state.experience.length && <p className="text-sm text-stone-400">{b.experience.empty}</p>}
             </div>
           </fieldset>
 
           <fieldset className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-            <SectionTitle title="Skills" hint="Separate skills by comma or line break; keep terms recruiter-friendly." />
-            <Field label="Skills (comma or new-line separated)" value={skillsText} onChange={setSkillsText} area />
+            <SectionTitle title={b.skills.title} hint={b.skills.hint} />
+            <Field label={b.skills.field} value={skillsText} onChange={setSkillsText} area />
           </fieldset>
 
           <fieldset className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-            <SectionTitle title="Projects" hint="Optional, best for proof of ownership or portfolio-worthy work." action={<AddButton onClick={addProj}>Add</AddButton>} />
+            <SectionTitle title={b.projects.title} hint={b.projects.hint} action={<AddButton onClick={addProj}>{b.projects.add}</AddButton>} />
             <div className="space-y-3">
               {state.projects.map((p, i) => (
                 <div key={p.uiId} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
-                  <div className="mb-2 flex justify-end"><IconButton label="Delete project" onClick={() => delProj(i)} tone="danger">×</IconButton></div>
-                  <Field label="Name" value={p.name} onChange={(v) => setProj(i, { name: v })} />
-                  <div className="mt-2"><Field label="Description" value={p.description} onChange={(v) => setProj(i, { description: v })} /></div>
+                  <div className="mb-2 flex justify-end"><IconButton label={b.projects.delete} onClick={() => delProj(i)} tone="danger">×</IconButton></div>
+                  <Field label={b.projects.name} value={p.name} onChange={(v) => setProj(i, { name: v })} />
+                  <div className="mt-2"><Field label={b.projects.description} value={p.description} onChange={(v) => setProj(i, { description: v })} /></div>
                 </div>
               ))}
-              {!state.projects.length && <p className="text-sm text-stone-400">Optional.</p>}
+              {!state.projects.length && <p className="text-sm text-stone-400">{b.projects.empty}</p>}
             </div>
           </fieldset>
 
           <fieldset className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-            <SectionTitle title="Education" hint="Keep dates and degree names consistent with your experience section." action={<AddButton onClick={addEdu}>Add</AddButton>} />
+            <SectionTitle title={b.education.title} hint={b.education.hint} action={<AddButton onClick={addEdu}>{b.education.add}</AddButton>} />
             <div className="space-y-3">
               {state.education.map((e, i) => (
                 <div key={e.uiId} className="rounded-xl border border-stone-200 bg-stone-50/60 p-4">
-                  <div className="mb-2 flex justify-end"><IconButton label="Delete education" onClick={() => delEdu(i)} tone="danger">×</IconButton></div>
+                  <div className="mb-2 flex justify-end"><IconButton label={b.education.delete} onClick={() => delEdu(i)} tone="danger">×</IconButton></div>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <Field label="Degree" value={e.degree} onChange={(v) => setEdu(i, { degree: v })} />
-                    <Field label="School" value={e.school} onChange={(v) => setEdu(i, { school: v })} />
+                    <Field label={b.education.degree} value={e.degree} onChange={(v) => setEdu(i, { degree: v })} />
+                    <Field label={b.education.school} value={e.school} onChange={(v) => setEdu(i, { school: v })} />
                   </div>
-                  <div className="mt-2"><Field label="Dates" value={e.date} onChange={(v) => setEdu(i, { date: v })} /></div>
+                  <div className="mt-2"><Field label={b.education.dates} value={e.date} onChange={(v) => setEdu(i, { date: v })} /></div>
                 </div>
               ))}
-              {!state.education.length && <p className="text-sm text-stone-400">Add your degree(s).</p>}
+              {!state.education.length && <p className="text-sm text-stone-400">{b.education.empty}</p>}
             </div>
           </fieldset>
         </div>
@@ -295,19 +298,19 @@ export default function Builder() {
           <div className="mb-4 rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
             <div className="mb-5 flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-sm font-semibold text-stone-900">Document settings</h2>
-                <p className="mt-0.5 text-xs text-stone-400">Affects preview and exported PDF.</p>
+                <h2 className="text-sm font-semibold text-stone-900">{b.settings.title}</h2>
+                <p className="mt-0.5 text-xs text-stone-400">{b.settings.blurb}</p>
               </div>
-              <span className="rounded-full bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-500">{state.settings.pageSize === 'A4' ? 'A4' : 'Letter'} preview</span>
+              <span className="rounded-full bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-500">{b.settings.pagePreview(state.settings.pageSize === 'A4' ? 'A4' : b.settings.letter)}</span>
             </div>
             <div className="grid gap-x-5 gap-y-4 text-sm sm:grid-cols-2 2xl:grid-cols-3">
-              <SettingGroup label="Accent">
+              <SettingGroup label={b.settings.accent}>
                 <div className="flex flex-wrap items-center gap-2">
                   {ACCENT_PRESETS.map((color) => (
                     <button
                       key={color}
                       type="button"
-                      aria-label={`Use ${color} accent`}
+                      aria-label={b.settings.useAccent(color)}
                       onClick={() => setCfg('accent', color)}
                       className={`h-8 w-8 rounded-full border-2 transition ${state.settings.accent.toLowerCase() === color ? 'border-white shadow-sm ring-2 ring-stone-900' : 'border-white ring-1 ring-stone-200 hover:ring-stone-400'}`}
                       style={{ backgroundColor: color }}
@@ -317,8 +320,8 @@ export default function Builder() {
                     type="button"
                     onClick={() => accentRef.current?.click()}
                     className="grid h-8 w-8 place-items-center rounded-full border border-stone-300 bg-white text-xs font-semibold text-stone-500 transition hover:bg-stone-50"
-                    title="Choose custom accent"
-                    aria-label="Choose custom accent"
+                    title={b.settings.customAccent}
+                    aria-label={b.settings.customAccent}
                   >
                     +
                   </button>
@@ -326,34 +329,34 @@ export default function Builder() {
                 </div>
               </SettingGroup>
 
-              <SettingGroup label="Size">
+              <SettingGroup label={b.settings.size}>
                 <div className="grid grid-cols-4 gap-1.5 rounded-xl bg-stone-50 p-1 ring-1 ring-stone-200">
                   {[9, 10, 11, 12].map((n) => <OptionButton key={n} value={n} selected={state.settings.fontSize === n} onSelect={(value) => setCfg('fontSize', value)}>{n}pt</OptionButton>)}
                 </div>
               </SettingGroup>
 
-              <SettingGroup label="Spacing">
+              <SettingGroup label={b.settings.spacing}>
                 <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-stone-50 p-1 ring-1 ring-stone-200">
                   {(['compact', 'standard', 'relaxed'] as Spacing[]).map((n) => (
                     <OptionButton key={n} value={n} selected={state.settings.spacing === n} onSelect={(value) => setCfg('spacing', value)}>
-                      {SPACING_LABELS[n]}
+                      {b.settings.spacingOptions[n]}
                     </OptionButton>
                   ))}
                 </div>
               </SettingGroup>
 
-              <SettingGroup label="Page">
+              <SettingGroup label={b.settings.page}>
                 <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-stone-50 p-1 ring-1 ring-stone-200">
                   <OptionButton value="A4" selected={state.settings.pageSize === 'A4'} onSelect={(value) => setCfg('pageSize', value)}>A4</OptionButton>
-                  <OptionButton value="LETTER" selected={state.settings.pageSize === 'LETTER'} onSelect={(value) => setCfg('pageSize', value)}>Letter</OptionButton>
+                  <OptionButton value="LETTER" selected={state.settings.pageSize === 'LETTER'} onSelect={(value) => setCfg('pageSize', value)}>{b.settings.letter}</OptionButton>
                 </div>
               </SettingGroup>
 
-              <SettingGroup label="Template">
+              <SettingGroup label={b.settings.template}>
                 <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-stone-50 p-1 ring-1 ring-stone-200">
                   {(['classic', 'modern'] as Template[]).map((n) => (
                     <OptionButton key={n} value={n} selected={state.settings.template === n} onSelect={(value) => setCfg('template', value)}>
-                      {n === 'classic' ? 'Classic' : 'Modern'}
+                      {b.settings.templates[n]}
                     </OptionButton>
                   ))}
                 </div>
@@ -370,20 +373,20 @@ export default function Builder() {
               {eff.profile.name && <div className="font-bold" style={{ fontSize: previewNameSize, color: eff.settings.template === 'modern' ? eff.settings.accent : undefined }}>{eff.profile.name}</div>}
               <div className="text-stone-500" style={{ fontSize: previewContactSize }}>{[eff.profile.email, eff.profile.phone, ...eff.profile.links].filter(Boolean).join('  •  ')}</div>
               {eff.profile.location && <div className="text-stone-500" style={{ fontSize: previewContactSize }}>{eff.profile.location}</div>}
-              {eff.profile.summary && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.summary}><p>{eff.profile.summary}</p></PreviewSection>}
-              {state.experience.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.experience}>{state.experience.map((e) => (
+              {eff.profile.summary && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.summary}><p>{eff.profile.summary}</p></PreviewSection>}
+              {state.experience.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.experience}>{state.experience.map((e) => (
                 <div key={e.uiId} style={{ marginBottom: previewEntryGap }}>
                   <div className="flex justify-between gap-2"><span className="font-semibold">{e.title}{e.company && ` — ${e.company}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>
                   <ul className="ml-4 list-disc">{e.bullets.filter((b) => b.trim()).map((b) => <li key={b}>{b}</li>)}</ul>
                 </div>
               ))}</PreviewSection>}
-              {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.skills}><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
-              {state.projects.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.projects}><ul className="ml-4 list-disc">{state.projects.map((p) => <li key={p.uiId}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
-              {state.education.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={BUILDER_SECTION_TITLES.education}>{state.education.map((e, i) => <div key={e.uiId} className="flex justify-between gap-2" style={{ marginBottom: i === state.education.length - 1 ? 0 : previewEntryGap }}><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
+              {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.skills}><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
+              {state.projects.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.projects}><ul className="ml-4 list-disc">{state.projects.map((p) => <li key={p.uiId}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
+              {state.education.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.education}>{state.education.map((e, i) => <div key={e.uiId} className="flex justify-between gap-2" style={{ marginBottom: i === state.education.length - 1 ? 0 : previewEntryGap }}><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-stone-500">{e.date}</span></div>)}</PreviewSection>}
               </div>
             </div>
           </div>
-          <p className="mt-2 text-center text-xs text-stone-400">Live preview · the exported PDF is single-column Helvetica, ATS-clean</p>
+          <p className="mt-2 text-center text-xs text-stone-400">{b.previewNote}</p>
         </div>
       </div>
     </div>

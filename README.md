@@ -140,7 +140,7 @@ human wrote it in a hurry, and that is still worth fixing.
 ## Guides
 
 Static, JavaScript-free pages generated at build time by
-`scripts/prerender.mjs` from `src/content/articles.tsx`. They share the app's
+`scripts/prerender.mjs` from `src/content/<locale>/articles.tsx`. They share the app's
 stylesheet, ship no bundle, and exist because a single URL can rank for a
 handful of queries at most.
 
@@ -152,9 +152,18 @@ handful of queries at most.
 | [`/how-ats-parsing-works`](https://cv.shykov.dev/how-ats-parsing-works) | The four parsing stages, and which formatting rule maps to each |
 | [`/ats-resume-checklist`](https://cv.shykov.dev/ats-resume-checklist) | Fifteen checks ordered by what each one costs you |
 
-Adding one means adding an entry to `ARTICLES`. The sitemap, `llms.txt`, and the
-homepage guide list are all generated from that array, so none of them can drift
-out of step with the pages that actually exist.
+Adding one means adding an entry to `ARTICLES` (and `GUIDES`) in every language.
+The sitemap, `llms.txt`, and the homepage guide list are all generated from those
+arrays, so none of them can drift out of step with the pages that actually exist.
+
+## Languages
+
+The toolkit and the guides are published in English (`/`), Spanish (`/es/`),
+Brazilian Portuguese (`/pt-br/`), European Portuguese (`/pt-pt/`), French (`/fr/`)
+and German (`/de/`). The interface, the scorer's messages, the report export and the
+builder are translated, and the scorer reads CVs written in any of these languages
+whatever language the page is in. `docs/localization.md` describes the architecture
+and how to add another language.
 
 ## Tech Stack
 

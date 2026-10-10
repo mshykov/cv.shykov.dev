@@ -3,6 +3,8 @@
 // overlap — no uploads, no model calls. Honest heuristic, close to how a
 // recruiter's keyword search or an ATS filter behaves.
 
+import { STOPWORDS, fold } from './lang/index.ts'
+
 export interface Keyword {
   term: string
   weight: number // higher = more emphasized in the JD
@@ -14,12 +16,6 @@ export interface JDMatch {
   missing: Keyword[]
   total: number
 }
-
-const STOPWORDS = new Set(
-  ('a an the and or but if then else for to of in on at by with from as is are be been being will would can could should may might must have has had do does did you your we our they their this that these those it its will across into over under more most other such including etc role team work working experience years ability strong excellent good great able help build using use used within across will plays plus nice want looking join including responsibilities requirements qualifications about who what when where why how also per via etc company candidate candidates ideal preferred bonus must should week day days month months year benefits salary apply position opportunity environment culture people new like well make made making get got').split(
-    /\s+/,
-  ),
-)
 
 // Curated, domain-leaning lexicon. Multi-word entries are matched as phrases.
 // The frequency extractor catches anything not listed here.
@@ -36,19 +32,21 @@ const SKILL_LEXICON = [
   'cross-functional', 'engineering manager', 'team lead', 'architecture', 'testing', 'automation', 'security',
 ]
 
+// Accent-folded, so "gestión" in the job ad meets "gestion" in the CV. Only used
+// for matching; the keywords shown to the user keep their accents.
 function normalize(s: string): string {
-  return s.toLowerCase()
+  return fold(s)
 }
 
 function wordRe(term: string): RegExp {
   // Custom word boundary that tolerates term chars like "ci/cd", "c#", ".net".
   // Avoid look-behind (Safari < 16.4 lacks it); a leading non-alnum class works
   // the same for the boolean .test() we use it for.
-  return new RegExp('(?:^|[^a-z0-9])' + term.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) + '(?![a-z0-9])', 'i')
+  return new RegExp('(?:^|[^\\p{L}\\p{N}])' + term.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) + '(?![\\p{L}\\p{N}])', 'iu')
 }
 
 function wordTokens(value: string): string[] {
-  const tokenRe = /[a-z][a-z0-9+#.]{2,}/g
+  const tokenRe = /\p{L}[\p{L}\p{N}+#.]{2,}/gu
   const tokens: string[] = []
   let match: RegExpExecArray | null
 
@@ -60,19 +58,20 @@ function wordTokens(value: string): string[] {
 }
 
 export function matchJD(cvText: string, cvSkills: string[], jd: string): JDMatch {
-  const jdLower = normalize(jd)
+  const jdLower = jd.toLowerCase() // shown to the user, accents intact
+  const jdFolded = normalize(jd)
   const cvHaystack = normalize(cvText + ' ' + cvSkills.join(' '))
   const weights = new Map<string, number>()
 
   // 1) Lexicon skills present in the JD get a high base weight.
   for (const skill of SKILL_LEXICON) {
-    if (wordRe(skill).test(jdLower)) weights.set(skill, (weights.get(skill) ?? 0) + 3)
+    if (wordRe(skill).test(jdFolded)) weights.set(skill, (weights.get(skill) ?? 0) + 3)
   }
 
   // 2) Frequency of meaningful single tokens in the JD.
   const freq = new Map<string, number>()
   for (const tok of wordTokens(jdLower)) {
-    if (STOPWORDS.has(tok)) continue
+    if (STOPWORDS.has(fold(tok))) continue
     freq.set(tok, (freq.get(tok) ?? 0) + 1)
   }
   for (const [tok, count] of freq) {
@@ -82,8 +81,8 @@ export function matchJD(cvText: string, cvSkills: string[], jd: string): JDMatch
   // 3) Build, dedupe (drop tokens already covered by a multi-word skill), rank.
   const multi = [...weights.keys()].filter((k) => k.includes(' '))
   const keywords: Keyword[] = [...weights.entries()]
-    .filter(([term]) => !(/^[a-z]/.test(term) && !term.includes(' ') && multi.some((m) => m.includes(term))))
-    .map(([term, weight]) => ({ term, weight, inCv: wordRe(term).test(cvHaystack) }))
+    .filter(([term]) => !(/^\p{L}/u.test(term) && !term.includes(' ') && multi.some((m) => m.includes(term))))
+    .map(([term, weight]) => ({ term, weight, inCv: wordRe(fold(term)).test(cvHaystack) }))
     .sort((a, b) => b.weight - a.weight)
     .slice(0, 30)
 
