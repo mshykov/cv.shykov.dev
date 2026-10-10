@@ -264,10 +264,10 @@ export default function App() {
               <span>100% local resume analysis</span>
             </div>
             <h1 className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl lg:text-6xl">
-              Fast ATS resume score. Private by default.
+              Free CV ATS score checker. Private by default.
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-stone-600">
-              Score your PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.
+              Get your CV ATS score from a PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <button

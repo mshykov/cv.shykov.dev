@@ -130,7 +130,7 @@ export const ARTICLES: Article[] = [
 
         <Note>
           <strong>Check yours in a few seconds.</strong> The{' '}
-          <A href="/">ATS Resume Toolkit</A> scores a PDF or DOCX entirely inside your browser — the
+          <A href="/">free CV score checker</A> scores a PDF or DOCX entirely inside your browser — the
           file is never uploaded, there is no account, and no language model is involved. You can
           read the exact scoring rules in the public source.
         </Note>
@@ -249,7 +249,7 @@ export const ARTICLES: Article[] = [
 
         <Note>
           <strong>This site is the local kind.</strong>{' '}
-          <A href="/">ATS Resume Toolkit</A> parses your PDF or DOCX in the browser with{' '}
+          <A href="/">free CV score checker</A> parses your PDF or DOCX in the browser with{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> and{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
           scores it with fixed rules, and has no backend that could receive a file. It is MIT
@@ -357,7 +357,7 @@ export const ARTICLES: Article[] = [
 
         <Note>
           <strong>Not sure which category your file falls into?</strong> Drop it on the{' '}
-          <A href="/">ATS Resume Toolkit</A> — it reads both PDF and DOCX in your browser and tells
+          <A href="/">free CV score checker</A> — it reads both PDF and DOCX in your browser and tells
           you straight away whether there is extractable text, how many pages a parser sees, and
           which sections it managed to identify.
         </Note>
@@ -482,7 +482,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
 
         <Note>
           <strong>See it from the parser's side.</strong> The{' '}
-          <A href="/">ATS Resume Toolkit</A> has an <em>Extracted data</em> tab that shows exactly
+          <A href="/">free CV score checker</A> has an <em>Extracted data</em> tab that shows exactly
           what came out of your file — the name, contact details, links, and each role it managed to
           identify. If something is missing there, it will be missing for the employer too.
         </Note>
@@ -575,7 +575,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
 
         <Note>
           <strong>Most of this list is checkable automatically.</strong> The{' '}
-          <A href="/">ATS Resume Toolkit</A> runs the parseability, contact, section, format and
+          <A href="/">free CV score checker</A> runs the parseability, contact, section, format and
           content checks in your browser and orders the failures by how many points each one costs —
           so you fix the expensive things first. The writing-style tab covers the stock-phrasing and
           unquantified-claim items.
@@ -600,6 +600,95 @@ Jan 2020 – now Terraform, AWS`}</Pre>
       {
         q: 'What should I fix first on my resume for ATS?',
         a: 'Make sure the text is selectable, your email is in the body, the layout is a single column, section headings are standard, and every role has dates. Those five decide whether the application is read correctly at all.',
+      },
+    ],
+  },
+
+  {
+    ...guide('how-to-check-your-cv-score'),
+    published: '2026-10-10',
+    updated: '2026-10-10',
+    summary:
+      'Drop your PDF or DOCX into a CV score checker, read the score and the failed checks, fix the most expensive ones first, then check again. Here the whole thing runs in your browser: no upload, no account, no AI. A score of 85 or above means nothing important is getting lost.',
+    body: (
+      <>
+        <P>
+          A CV score is an estimate of how cleanly software can read your document. Employers use
+          applicant tracking systems (ATS) to store and search applications, so a CV the system
+          misreads can be missing your email or your job titles. Checking the score takes under a
+          minute, and it is free.
+        </P>
+
+        <H2>Check your CV score in four steps</H2>
+        <OL>
+          <LI>
+            Open the <A href="/">free CV score checker</A> and choose <em>Check my resume</em>.
+          </LI>
+          <LI>
+            Drop in your CV as a PDF or DOCX. The file is read inside your browser and never sent
+            anywhere, so it is safe to use on the CV you are sending to a current employer's
+            competitor.
+          </LI>
+          <LI>
+            Read the score and the list of failed checks. Failures are ordered by how many points
+            each one costs, so the first item is the most valuable fix.
+          </LI>
+          <LI>
+            Fix the top two or three items, export again, and drop the new file in. Repeat until
+            nothing expensive is left.
+          </LI>
+        </OL>
+
+        <H2>What a good CV score is</H2>
+        <P>
+          On this checker 85 or above means a parser will read the document cleanly. 70 to 84 is
+          good with a few specific fixes left. 50 to 69 needs work, usually a missing section
+          heading or contact detail. Below 50 something structural is wrong, most often text the
+          parser cannot extract. Do not chase the last few points: past about 85 the content matters
+          more than the score.
+        </P>
+
+        <H2>What to fix first</H2>
+        <UL>
+          <LI>Make sure the text is selectable. A scanned or image-only PDF scores near zero.</LI>
+          <LI>Put your email and phone in the body of the page, not in a header or an image.</LI>
+          <LI>Use standard headings: Experience, Education, Skills, Summary.</LI>
+          <LI>Give every role dates, and use real bullets.</LI>
+        </UL>
+
+        <H2>What the score does not tell you</H2>
+        <P>
+          It does not know whether you fit the job, and it is not what an employer sees. For job
+          fit, paste the job ad into the keyword match. For the full rule set, read{' '}
+          <A href="/what-is-an-ats-score">what an ATS score actually measures</A>.
+        </P>
+
+        <Note>
+          <strong>Try it on your own file.</strong> The{' '}
+          <A href="/">free CV score checker</A> is open source, runs in your browser, and does not
+          ask for an email address.
+        </Note>
+
+        <H2>Related</H2>
+        <UL>
+          <LI><A href="/what-is-an-ats-score">What an ATS score actually measures</A></LI>
+          <LI><A href="/ats-resume-checklist">The ATS resume checklist</A></LI>
+          <LI><A href="/ats-checker-without-upload">ATS resume checkers that do not upload your CV</A></LI>
+        </UL>
+      </>
+    ),
+    faq: [
+      {
+        q: 'How do I check my CV score for free?',
+        a: 'Open a CV score checker that does not require signup, drop in your PDF or DOCX, and read the score and the failed checks. On this site the file is processed in your browser and is never uploaded.',
+      },
+      {
+        q: 'What is a good CV score?',
+        a: 'On this checker, 85 or above means the document parses cleanly. 70 to 84 is good with a few fixes left. Below 50 usually means the text cannot be extracted.',
+      },
+      {
+        q: 'Is a CV score the same as an ATS score?',
+        a: 'In practice yes: both estimate how cleanly applicant tracking software can read your document. There is no standard score, so different checkers give different numbers.',
       },
     ],
   },

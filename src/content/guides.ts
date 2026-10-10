@@ -41,4 +41,10 @@ export const GUIDES: Guide[] = [
     description:
       'Fifteen concrete checks, ordered by how much damage each one does if you skip it — from unreadable files down to the finishing touches.',
   },
+  {
+    slug: 'how-to-check-your-cv-score',
+    title: 'How to Check Your CV Score for Free (and What to Fix First)',
+    description:
+      'Check your CV score in four steps without uploading the file or creating an account. What the number means, what a good score is, and which fixes move it most.',
+  },
 ]
