@@ -121,6 +121,7 @@ export const fr: Messages = {
       author: 'Maksym Shykov',
       noTracking: 'Aucun suivi, aucun envoi, aucun compte.',
       openSource: 'Code source ouvert sur GitHub',
+      moreFrom: 'Du même auteur',
     },
     errorBoundary: {
       title: 'Une erreur est survenue',

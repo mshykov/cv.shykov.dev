@@ -132,6 +132,7 @@ export const en = {
       author: 'Maksym Shykov',
       noTracking: 'No tracking, no uploads, no accounts.',
       openSource: 'Open source on GitHub',
+      moreFrom: 'More from the author',
     },
     errorBoundary: {
       title: 'Something went wrong',

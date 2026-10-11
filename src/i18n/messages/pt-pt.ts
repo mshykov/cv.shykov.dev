@@ -121,6 +121,7 @@ export const ptPT: Messages = {
       author: 'Maksym Shykov',
       noTracking: 'Sem rastreamento, sem carregamentos, sem contas.',
       openSource: 'Código aberto no GitHub',
+      moreFrom: 'Mais do autor',
     },
     errorBoundary: {
       title: 'Algo correu mal',
