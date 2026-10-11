@@ -24,7 +24,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('what-is-an-ats-score'),
     published: '2026-08-31',
-    updated: '2026-09-26',
+    updated: '2026-10-11',
     summary:
       'An ATS score estimates how cleanly applicant tracking software can pull your text, contact details, sections and dates out of your CV. It says nothing about whether you fit the job. Above roughly 85, nothing important is getting lost — spend the time on the content instead.',
     body: (
@@ -144,7 +144,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-09-26',
+    updated: '2026-10-11',
     summary:
       'A browser can read and score a PDF or DOCX without sending it anywhere, so an upload is a design choice, not a technical necessity. You can verify a checker yourself in under a minute: open the browser’s Network panel, drop your CV in, and look for a request that carries the file.',
     body: (
@@ -367,7 +367,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('how-ats-parsing-works'),
     published: '2026-08-31',
-    updated: '2026-09-26',
+    updated: '2026-10-11',
     summary:
       'An ATS parses a CV in four mechanical stages: it extracts the text, splits it into sections by their headings, pulls out entities such as email, dates and job titles, and indexes the result for recruiters to search. Nearly every piece of CV formatting advice exists because one of those stages breaks.',
     body: (
@@ -492,7 +492,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-09-26',
+    updated: '2026-10-11',
     summary:
       'Fix five things first: selectable text, your email in the body, a single column, standard section headings, and a date on every role. They decide whether the application arrives intact. Everything else decides whether it is found in a search, and then whether a human enjoys reading it.',
     body: (

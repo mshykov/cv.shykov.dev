@@ -143,9 +143,10 @@ Across 10 non-brand queries × 4 engines, the site was **never mentioned or cite
 
 ## Next run
 
-Planned for about 2026-10-03, after Google and Bing have recrawled the updated
-guides. Fill in the gaps first: Perplexity 8, 10–12 and Claude 1–2, 4–12. Then
-re-run everything and add a new dated section above *Baseline*.
+The 2026-10-03 run was not done; it is superseded by the localization rollout
+section below, whose measurement window is **2026-11-08 → 2026-12-06**. When you run
+it, also fill the gaps in the 2026-09-26 baseline first (Perplexity 8, 10–12 and Claude
+1–2, 4–12), then re-run everything and add a new dated section.
 
 ## Localization rollout — 2026-10-11 (baseline for the language versions)
 
@@ -154,7 +155,8 @@ Five language versions went live on 2026-10-11 next to English (PR #96, polish i
 (42 URLs in the sitemap). Rollout steps taken the same day: IndexNow (42 URLs, HTTP 200),
 sitemap resubmitted in Search Console (`sc-domain:cv.shykov.dev`) and Bing Webmaster,
 "Request indexing" for the five new homepages. The new URLs were "not indexed / unknown
-to Google" at submission, so every impression and position for them starts at zero.
+to Google" at submission, so they start with zero impressions; Search Console records a position only once a
+result has been shown, so leave position blank until there is data.
 
 ### Baseline of the English site at the moment of rollout (GSC, 7 days to 2026-10-09)
 
@@ -183,7 +185,9 @@ to Google" at submission, so every impression and position for them starts at ze
 ### Next measurement: 2026-11-08 → 2026-12-06 (4–8 weeks)
 
 1. GSC → Pages: how many of the 42 URLs are indexed; any "Alternate page with proper
-   canonical" or "Duplicate" reports (would mean hreflang is being ignored).
+   canonical" or "Duplicate" reports. Neither proves hreflang is ignored (Search Console
+   does not detect alternate-language pages): inspect those URLs and confirm the
+   canonical Google chose is the page's own.
 2. GSC → Performance, filter **Country** (Spain, Brazil, Portugal, France, Germany) and
    **Query**: impressions, position, clicks per language; compare with the table above for
    English.

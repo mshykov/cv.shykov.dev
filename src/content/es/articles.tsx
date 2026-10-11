@@ -145,7 +145,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un navegador puede leer y puntuar un PDF o un DOCX sin enviarlo a ninguna parte, así que subir el archivo es una decisión de diseño, no una necesidad técnica. Puedes comprobar un analizador tú mismo en menos de un minuto: abre el panel Network (Red) del navegador, arrastra tu CV y busca una petición que lleve el archivo.',
     body: (
@@ -372,7 +372,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('how-ats-parsing-works'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un ATS analiza un CV en cuatro fases mecánicas: extrae el texto, lo divide en secciones según sus títulos, saca datos como el correo, las fechas y los puestos, e indexa el resultado para que los reclutadores lo busquen. Casi todo consejo de formato existe porque una de esas fases falla.',
     body: (
@@ -503,7 +503,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Corrige primero cinco cosas: texto seleccionable, el correo en el cuerpo, una sola columna, títulos de sección estándar y una fecha en cada puesto. De ellas depende que la candidatura llegue intacta. Todo lo demás decide si te encuentran en una búsqueda y, después, si a una persona le gusta leerla.',
     body: (

@@ -24,7 +24,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('what-is-an-ats-score'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un score ATS estime avec quelle netteté un logiciel de suivi des candidatures extrait le texte, les coordonnées, les rubriques et les dates de votre CV. Il ne dit rien de votre adéquation au poste. Au-dessus de 85 environ, rien d’important ne se perd : consacrez plutôt votre temps au contenu.',
     body: (
@@ -150,7 +150,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un navigateur peut lire et noter un PDF ou un DOCX sans l’envoyer nulle part : l’envoi est un choix de conception, pas une nécessité technique. Vous pouvez vérifier un outil vous-même en moins d’une minute : ouvrez le panneau Réseau du navigateur, déposez votre CV et cherchez une requête qui transporte le fichier.',
     body: (
@@ -273,7 +273,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('pdf-or-docx-for-ats'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Envoyez un PDF avec du vrai texte, sauf si la candidature demande un autre format : envoyez alors exactement ce qui est demandé. Le seul PDF qui échoue de façon fiable est celui qui ne contient pas de vrai texte, comme un scan ou un export aux polices vectorisées, et cela se teste en quelques secondes.',
     body: (
@@ -380,7 +380,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('how-ats-parsing-works'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un ATS analyse un CV en quatre étapes mécaniques : il extrait le texte, le découpe en rubriques d’après leurs titres, en tire des données comme l’adresse e-mail, les dates et les intitulés de poste, puis indexe le résultat pour que les recruteurs puissent le rechercher. Presque tous les conseils de mise en forme existent parce qu’une de ces étapes échoue.',
     body: (
@@ -512,7 +512,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Corrigez d’abord cinq points : du texte sélectionnable, votre adresse e-mail dans le corps, une seule colonne, des titres de rubriques standard et une date sur chaque poste. Ils décident si la candidature arrive intacte. Tout le reste décide si elle est trouvée dans une recherche, puis si un humain prend plaisir à la lire.',
     body: (
