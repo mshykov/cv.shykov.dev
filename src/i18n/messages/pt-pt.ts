@@ -25,12 +25,6 @@ export const ptPT: Messages = {
       'Verificação do estilo de escrita',
       'Exportação de PDF compatível com ATS',
     ],
-    faq: [
-      { q: 'O que é a pontuação ATS?', a: 'A pontuação ATS é uma orientação heurística sobre a facilidade com que os sistemas de acompanhamento de candidaturas (ATS) leem um CV: texto legível, secções padrão, dados de contacto, datas, marcadores e resultados mensuráveis.' },
-      { q: 'O meu CV é carregado para algum servidor?', a: 'Não. O ATS Resume Toolkit processa os ficheiros PDF e DOCX localmente no seu navegador e não envia o conteúdo do CV para nenhum servidor.' },
-      { q: 'Este verificador de CV usa IA?', a: 'Não. A pontuação ATS é determinística e não usa LLM, chamadas a modelos, contas nem chaves de API.' },
-      { q: 'Posso verificar CV em PDF e em DOCX?', a: 'Sim. O ATS Resume Toolkit aceita ficheiros PDF e DOCX. Os PDF com texto real dão os sinais mais claros sobre o número de páginas e a legibilidade.' },
-    ],
   },
 
   notFound: {
@@ -169,7 +163,7 @@ export const ptPT: Messages = {
     fix: 'Correção:',
     tabs: { analyze: 'Relatório completo', style: 'Estilo de escrita', jd: 'Correspondência com o anúncio', data: 'Dados extraídos' },
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
-    reportMeta: (pages: string, words: string, chars: string) => `${pages ? `${pages} · ` : ''}${words} palavras · ${chars} carateres legíveis.`,
+    reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palavras · ${chars} carateres legíveis.`,
     humanization: {
       title: 'Pontuação de naturalidade',
       blurb: 'Quão natural soa a escrita: ritmo, palavreado vazio, inícios repetidos, voz passiva. Não é um detetor de IA.',

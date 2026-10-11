@@ -110,6 +110,16 @@ test('words that look like another language’s month are not dates without a fu
   assert.equal(hasDate('Managed 12 people'), false)
 })
 
+test('a month with its connector is one date: "septiembre de 2021"', () => {
+  for (const [text, span] of [
+    ['Responsable — Acme septiembre de 2021', 'septiembre de 2021'],
+    ['Gestora — Acme setembro de 2021', 'setembro de 2021'],
+    ['Jefa, enero del 2020', 'enero del 2020'],
+    ['Cheffe de projet — Acme septembre 2021', 'septembre 2021'],
+  ]) assert.equal(findDate(text)?.[0], span, text)
+  assert.equal(findDate('Responsable — Acme septiembre de 2021')?.index, 'Responsable — Acme '.length)
+})
+
 test('findDate reports the date itself, not the delimiter in front of it', () => {
   const match = findDate('Responsable — Acme (ene 2022 – actualidad)')
   assert.equal(match?.[0], 'ene 2022')
@@ -145,4 +155,25 @@ test('a heading must contain a keyword as a whole word', () => {
   assert.equal(sections(['Relevant Work Experience'])['sec-exp'], 'pass')
   assert.equal(sections(['Technical Skills & Tools'])['sec-skills'], 'pass')
   assert.equal(sections(['IT-Kenntnisse'])['sec-skills'], 'pass')
+})
+
+test('a specific heading is not also credited to the general one it contains', () => {
+  const sections = (lines: string[]) => Object.fromEntries(score(lines).checks.filter((c) => c.id.startsWith('sec-')).map((c) => [c.id, c]))
+  for (const heading of ['FORMACIÓN COMPLEMENTARIA', 'FORMATIONS COMPLÉMENTAIRES', 'FORMAÇÃO COMPLEMENTAR']) {
+    const found = sections([heading])
+    assert.equal(found['sec-edu'].status, 'fail', `${heading} is not an Education section`)
+    assert.equal(found['sec-bonus'].points, 3, `${heading} is the certifications bonus`)
+  }
+  // Two real headings on one line still count twice.
+  const both = sections(['Education & Certifications'])
+  assert.equal(both['sec-edu'].status, 'pass')
+  assert.equal(both['sec-bonus'].points, 3)
+})
+
+test('the parser files a specific heading under the right section', () => {
+  const resume = parseResume(ex([
+    'ANA PÉREZ', 'ana@correo.es', 'FORMACIÓN', '• Grado en Informática — UPM, 2014', 'FORMACIÓN COMPLEMENTARIA', '• Curso de Kotlin — Udemy, 2020', 'HABILIDADES', 'Kotlin, Swift',
+  ]))
+  assert.equal(resume.education.length, 1, 'the course is not an education entry')
+  assert.deepEqual(resume.skills, ['Kotlin', 'Swift'])
 })

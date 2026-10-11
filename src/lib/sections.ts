@@ -7,7 +7,7 @@
 // the scorer matches against: every supported language merged, accent-folded.
 // sectionsFor() is one language's slice, which is what that language's guide
 // publishes.
-import { SCORER_SECTIONS, scorerSectionsFor, LANGS, type LangCode } from './lang/index.ts'
+import { SCORER_SECTIONS, LANGS, type LangCode } from './lang/index.ts'
 
 export const SECTION_KEYWORDS = {
   experience: SCORER_SECTIONS.experience,
@@ -31,5 +31,5 @@ export function publishedSections(code: LangCode) {
   }
 }
 
-export { scorerSectionsFor }
+export { scorerSectionsFor } from './lang/index.ts'
 export type { LangCode }

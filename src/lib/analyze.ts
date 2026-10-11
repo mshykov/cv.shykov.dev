@@ -8,6 +8,7 @@ import type { Extracted } from './pdf'
 import { cleanContactToken, contactTokens, hasEmailAddress, hasPhoneNumber, hasProfileUrl } from './contact.ts'
 import { hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 import { BONUS_SECTION_KEYWORDS, SECTION_KEYWORDS } from './sections.ts'
+import { headingCategories, type KeywordTable } from './headings.ts'
 import { ACTION_VERBS, IMPACT_UNITS, fold } from './lang/index.ts'
 import type { Messages } from '../i18n/messages/en.ts'
 
@@ -54,16 +55,17 @@ const LIGATURES = /[ﬀ-ﬆ]/ // ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ
 
 const CURRENCY_SYMBOLS = new Set(['$', '€', '£'])
 
-function hasHeader(lines: string[], keywords: string[]): boolean {
-  return lines.some((l) => {
-    const t = l.trim()
-    if (!t || t.length > 45) return false // headers are short lines
-    const norm = normalizeHeader(t)
-    // Whole words only: with six languages' headings, a substring match let
-    // "Informations personnelles" pass as Education ("formation") and "Sprachkenntnisse" as Skills.
-    const padded = ` ${norm} `
-    return keywords.some((k) => padded.includes(` ${k} `))
-  })
+const SCORER_TABLE: KeywordTable = { ...SECTION_KEYWORDS, ...BONUS_SECTION_KEYWORDS }
+
+/** Section categories the CV has a heading for. Headers are short lines. */
+function foundSections(lines: string[]): Set<string> {
+  const found = new Set<string>()
+  for (const line of lines) {
+    const t = line.trim()
+    if (!t || t.length > 45) continue
+    for (const category of headingCategories(normalizeHeader(t), SCORER_TABLE)) found.add(category)
+  }
+  return found
 }
 
 function linkDetail(m: AnalysisMessages, hasUrl: boolean, hasHiddenUrl: boolean): string {
@@ -122,28 +124,29 @@ function missingSectionStatus(essential: boolean): Status {
   return essential ? 'fail' : 'warn'
 }
 
-function addSectionCheck(add: AddCheck, m: AnalysisMessages, lines: string[], id: 'sec-exp' | 'sec-edu' | 'sec-skills' | 'sec-summary', max: number, keys: string[], essential: boolean) {
+function addSectionCheck(add: AddCheck, m: AnalysisMessages, found: Set<string>, id: 'sec-exp' | 'sec-edu' | 'sec-skills' | 'sec-summary', max: number, category: string, essential: boolean) {
   const label = m.labels[id]
-  const ok = hasHeader(lines, keys)
+  const ok = found.has(category)
   const status: Status = ok ? 'pass' : missingSectionStatus(essential)
   add({ id, label, category: 'Sections', status, points: ok ? max : 0, max, detail: ok ? m.section.detected(label) : m.section.missing(label), fix: ok ? undefined : m.section.fix(label) })
 }
 
-function addBonusSectionCheck(add: AddCheck, m: AnalysisMessages, lines: string[]) {
-  const achievements = hasHeader(lines, BONUS_SECTION_KEYWORDS.achievements)
-  const projects = hasHeader(lines, BONUS_SECTION_KEYWORDS.projects)
-  const certs = hasHeader(lines, BONUS_SECTION_KEYWORDS.certifications)
+function addBonusSectionCheck(add: AddCheck, m: AnalysisMessages, found: Set<string>) {
+  const achievements = found.has('achievements')
+  const projects = found.has('projects')
+  const certs = found.has('certifications')
   const bonusPts = (achievements ? 4 : 0) + (projects ? 3 : 0) + (certs ? 3 : 0)
   const bonusFound = [achievements && m.bonus.names.achievements, projects && m.bonus.names.projects, certs && m.bonus.names.certifications].filter(Boolean)
   add({ id: 'sec-bonus', label: m.labels['sec-bonus'], category: 'Sections', status: bonusPts >= 7 ? 'pass' : 'warn', points: bonusPts, max: 10, detail: bonusFound.length ? m.bonus.found(bonusFound.join(', ')) : m.bonus.none, fix: bonusPts >= 7 ? undefined : m.bonus.fix })
 }
 
 function addSectionChecks(add: AddCheck, m: AnalysisMessages, lines: string[]) {
-  addSectionCheck(add, m, lines, 'sec-exp', 8, SECTION_KEYWORDS.experience, true)
-  addSectionCheck(add, m, lines, 'sec-edu', 6, SECTION_KEYWORDS.education, true)
-  addSectionCheck(add, m, lines, 'sec-skills', 6, SECTION_KEYWORDS.skills, true)
-  addSectionCheck(add, m, lines, 'sec-summary', 5, SECTION_KEYWORDS.summary, false)
-  addBonusSectionCheck(add, m, lines)
+  const found = foundSections(lines)
+  addSectionCheck(add, m, found, 'sec-exp', 8, 'experience', true)
+  addSectionCheck(add, m, found, 'sec-edu', 6, 'education', true)
+  addSectionCheck(add, m, found, 'sec-skills', 6, 'skills', true)
+  addSectionCheck(add, m, found, 'sec-summary', 5, 'summary', false)
+  addBonusSectionCheck(add, m, found)
 }
 
 function addPageCountCheck(add: AddCheck, m: AnalysisMessages, source: Extracted['source'], numPages: number) {

@@ -5,8 +5,9 @@ file is intentionally project-independent and can be copied into other
 TypeScript/React projects.
 
 > **How Sonar runs in this repo:** SonarCloud **Automatic Analysis** (project
-> `mshykov_cv.shykov.dev`). There is no `sonar-project.properties` and no scanner
-> step in CI — SonarCloud analyses every push to `main` on its own, and the
+> `mshykov_cv.shykov.dev`). `sonar-project.properties` carries one setting (the
+> duplication detector skips the per-language content, see the file) and there is no
+> scanner step in CI — SonarCloud analyses every push to `main` on its own, and the
 > README badge shows its quality gate. Verified 2026-09-27. Drop this note when
 > copying the checklist elsewhere.
 

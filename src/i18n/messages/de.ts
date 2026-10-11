@@ -26,12 +26,6 @@ export const de: Messages = {
       'Prüfung des Schreibstils',
       'Export als ATS-taugliches PDF',
     ],
-    faq: [
-      { q: 'Was ist ein ATS-Score?', a: 'Ein ATS-Score ist eine heuristische Orientierung dafür, wie leicht ein Lebenslauf von Bewerbermanagementsystemen (ATS) ausgelesen werden kann: lesbarer Text, Standardabschnitte, Kontaktdaten, Datumsangaben, Aufzählungen und messbare Ergebnisse.' },
-      { q: 'Wird mein Lebenslauf hochgeladen?', a: 'Nein. ATS Resume Toolkit verarbeitet PDF- und DOCX-Dateien lokal in Ihrem Browser und lädt keinen Lebenslaufinhalt auf einen Server hoch.' },
-      { q: 'Nutzt dieser Lebenslauf-Check KI?', a: 'Nein. Der ATS-Score ist deterministisch und verwendet weder LLMs noch Modellaufrufe, Konten oder API-Schlüssel.' },
-      { q: 'Kann ich Lebensläufe als PDF und als DOCX prüfen?', a: 'Ja. ATS Resume Toolkit akzeptiert PDF- und DOCX-Dateien. Textbasierte PDFs liefern die klarsten Hinweise zu Seitenzahl und Lesbarkeit.' },
-    ],
   },
 
   notFound: {
@@ -170,7 +164,7 @@ export const de: Messages = {
     fix: 'Korrektur:',
     tabs: { analyze: 'Vollständiger Bericht', style: 'Schreibstil', jd: 'Stellenabgleich', data: 'Extrahierte Daten' },
     pages: (n: number) => `${n} ${n === 1 ? 'Seite' : 'Seiten'}`,
-    reportMeta: (pages: string, words: string, chars: string) => `${pages ? `${pages} · ` : ''}${words} Wörter · ${chars} lesbare Zeichen.`,
+    reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} Wörter · ${chars} lesbare Zeichen.`,
     humanization: {
       title: 'Natürlichkeits-Score',
       blurb: 'Wie natürlich der Text klingt: Rhythmus, Füllwörter, wiederholte Satzanfänge, Passiv. Kein KI-Detektor.',
@@ -326,7 +320,7 @@ export const de: Messages = {
     importFailed: 'Diese Datei konnte nicht importiert werden.',
     imported: (roles: number, file: string) => `${roles} Stationen aus ${file} importiert. Prüfen und ergänzen Sie unten.`,
     docSections: { summary: 'Profil', experience: 'Berufserfahrung', skills: 'Kenntnisse', projects: 'Projekte', education: 'Ausbildung' },
-    docTitle: (name: string) => `${name ? `${name} – ` : ''}Lebenslauf`,
+    docTitle: (name: string) => `${name ? name + ' – ' : ''}Lebenslauf`,
     fileName: (name: string) => (name ? `${name.replace(/\s+/g, '_')}_Lebenslauf.pdf` : 'Lebenslauf.pdf'),
     profile: {
       title: 'Profil',

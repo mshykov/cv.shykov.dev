@@ -42,7 +42,7 @@ function wordRe(term: string): RegExp {
   // Custom word boundary that tolerates term chars like "ci/cd", "c#", ".net".
   // Avoid look-behind (Safari < 16.4 lacks it); a leading non-alnum class works
   // the same for the boolean .test() we use it for.
-  return new RegExp('(?:^|[^\\p{L}\\p{N}])' + term.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) + '(?![\\p{L}\\p{N}])', 'iu')
+  return new RegExp(String.raw`(?:^|[^\p{L}\p{N}])` + term.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) + String.raw`(?![\p{L}\p{N}])`, 'iu')
 }
 
 function wordTokens(value: string): string[] {

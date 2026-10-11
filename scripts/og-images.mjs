@@ -104,8 +104,9 @@ function card(og) {
 mkdirSync(new URL('og/', publicDir), { recursive: true })
 const work = mkdtempSync(join(tmpdir(), 'og-'))
 try {
-  for (const loc of targets) {
-    const { bundle } = await import(pathToFileURL(new URL(`../src/i18n/bundles/${loc.code}.ts`, import.meta.url).pathname).href)
+  const bundles = await Promise.all(targets.map((loc) => import(pathToFileURL(new URL(`../src/i18n/bundles/${loc.code}.ts`, import.meta.url).pathname).href)))
+  for (const [index, loc] of targets.entries()) {
+    const { bundle } = bundles[index]
     const html = join(work, `${loc.code}.html`)
     writeFileSync(html, card(bundle.messages.og))
     const out = loc.code === 'en' ? new URL('og-image.png', publicDir).pathname : new URL(`og/${loc.code}.png`, publicDir).pathname

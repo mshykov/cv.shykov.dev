@@ -24,12 +24,6 @@ export const es: Messages = {
       'Revisión del estilo de redacción',
       'Exportación a PDF compatible con ATS',
     ],
-    faq: [
-      { q: '¿Qué es la puntuación ATS?', a: 'Es una orientación heurística sobre lo fácil que resulta para un sistema de seguimiento de candidatos (ATS) leer un CV: texto legible, secciones estándar, datos de contacto, fechas, viñetas y resultados medibles.' },
-      { q: '¿Se sube mi CV a algún servidor?', a: 'No. ATS Resume Toolkit procesa los archivos PDF y DOCX en local, en tu navegador, y no envía el contenido del CV a ningún servidor.' },
-      { q: '¿Este analizador de CV usa IA?', a: 'No. La puntuación ATS es determinista y no usa LLM, ni llamadas a modelos, ni cuentas, ni claves de API.' },
-      { q: '¿Puedo revisar CV en PDF y en DOCX?', a: 'Sí. ATS Resume Toolkit acepta archivos PDF y DOCX. Los PDF con texto real dan la señal más clara sobre el número de páginas y la legibilidad.' },
-    ],
   },
 
   notFound: {
@@ -168,7 +162,7 @@ export const es: Messages = {
     fix: 'Solución:',
     tabs: { analyze: 'Informe completo', style: 'Estilo de redacción', jd: 'Coincidencia con la oferta', data: 'Datos extraídos' },
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
-    reportMeta: (pages: string, words: string, chars: string) => `${pages ? `${pages} · ` : ''}${words} palabras · ${chars} caracteres legibles.`,
+    reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palabras · ${chars} caracteres legibles.`,
     humanization: {
       title: 'Puntuación de naturalidad',
       blurb: 'Lo natural que suena la redacción: ritmo, relleno, inicios repetidos, voz pasiva. No es un detector de IA.',

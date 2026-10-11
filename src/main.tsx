@@ -14,9 +14,12 @@ import { DEFAULT_LOCALE, isLocale, localeFromHtmlLang, localeFromPath } from './
 // handling), so there the language comes from ?lang=es instead.
 const fromQuery = import.meta.env.DEV ? new URLSearchParams(location.search).get('lang') : null
 const fromPath = localeFromPath(location.pathname)
-const locale = fromQuery && isLocale(fromQuery)
-  ? fromQuery
-  : fromPath === DEFAULT_LOCALE ? (localeFromHtmlLang(document.documentElement.lang) ?? DEFAULT_LOCALE) : fromPath
+function pickLocale() {
+  if (fromQuery && isLocale(fromQuery)) return fromQuery
+  if (fromPath !== DEFAULT_LOCALE) return fromPath
+  return localeFromHtmlLang(document.documentElement.lang) ?? DEFAULT_LOCALE
+}
+const locale = pickLocale()
 const bundle = await loadLocale(locale)
 
 createRoot(document.getElementById('root')!).render(

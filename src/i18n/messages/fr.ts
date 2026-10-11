@@ -25,12 +25,6 @@ export const fr: Messages = {
       'Vérification du style rédactionnel',
       'Export PDF compatible ATS',
     ],
-    faq: [
-      { q: 'Qu’est-ce qu’un score ATS ?', a: 'Un score ATS est une indication heuristique de la facilité avec laquelle un logiciel de suivi des candidatures (ATS) peut lire un CV : texte lisible, rubriques standard, coordonnées, dates, puces et résultats chiffrés.' },
-      { q: 'Mon CV est-il envoyé sur un serveur ?', a: 'Non. ATS Resume Toolkit traite les fichiers PDF et DOCX localement, dans votre navigateur, et n’envoie jamais le contenu de votre CV à un serveur.' },
-      { q: 'Ce vérificateur de CV utilise-t-il l’IA ?', a: 'Non. Le score ATS est déterministe : aucun LLM, aucun appel à un modèle, ni compte ni clé d’API.' },
-      { q: 'Puis-je analyser un CV en PDF et en DOCX ?', a: 'Oui. ATS Resume Toolkit accepte les fichiers PDF et DOCX. Un PDF avec du vrai texte donne les signaux les plus nets sur le nombre de pages et la lisibilité.' },
-    ],
   },
 
   notFound: {
@@ -175,7 +169,7 @@ export const fr: Messages = {
     fix: 'Correction :',
     tabs: { analyze: 'Rapport complet', style: 'Style rédactionnel', jd: 'Correspondance avec l’offre', data: 'Données extraites' },
     pages: (n: number) => `${n} ${n > 1 ? 'pages' : 'page'}`,
-    reportMeta: (pages: string, words: string, chars: string) => `${pages ? `${pages} · ` : ''}${words} mots · ${chars} caractères lisibles.`,
+    reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} mots · ${chars} caractères lisibles.`,
     humanization: {
       title: 'Score de naturel',
       blurb: 'Mesure le naturel de l’écriture : rythme, remplissage, débuts de phrase répétés, voix passive. Ce n’est pas un détecteur d’IA.',

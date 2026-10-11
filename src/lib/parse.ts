@@ -6,6 +6,7 @@
 import type { Extracted } from './pdf'
 import { cleanContactToken, contactTokens, digitCount, findEmailAddress, findPhoneNumber, findProfileUrls, hasEmailAddress, hasPhoneNumber, hasProfileUrl } from './contact.ts'
 import { DEGREE_WORDS, PARSER_SECTIONS } from './lang/index.ts'
+import { bestHeadingCategory } from './headings.ts'
 import { findDate, hasDate, isBulletLine, normalizeHeader, stripBullet } from './text.ts'
 
 export interface ExperienceEntry {
@@ -46,16 +47,17 @@ const EDUCATION_END_SEPARATORS = new Set(['—', '–', ',', '|'])
 const SKILL_SPLIT_SEPARATORS = new Set([',', ';', '•', '·', '|'])
 const PROJECT_SPLIT_SEPARATORS = new Set(['—', '–', '(', ':'])
 
+function matchesHeading(norm: string, name: string): boolean {
+  return norm === name || norm === name + 's' || norm.startsWith(name + ' ') || norm.endsWith(' ' + name)
+}
+
+// The longest matching heading wins across ALL sections, not the first one in
+// table order: "Formación complementaria" starts with the education word
+// "formación" but is the certifications heading, and must reach it.
 function classifyHeader(line: string): string | null {
   const t = line.trim()
   if (!t || t.length > 45) return null
-  const norm = normalizeHeader(t)
-  for (const [key, names] of Object.entries(SECTION_TITLES)) {
-    if (names.some((n) => norm === n || norm === n + 's' || norm.startsWith(n + ' ') || norm.endsWith(' ' + n))) {
-      return key
-    }
-  }
-  return null
+  return bestHeadingCategory(normalizeHeader(t), SECTION_TITLES, matchesHeading)
 }
 
 /** Split the full line list into the profile preamble + named sections. */

@@ -33,13 +33,6 @@ export const en = {
       'Writing style check',
       'ATS-clean PDF export',
     ],
-    // FAQPage structured data on the homepage.
-    faq: [
-      { q: 'What is an ATS score?', a: 'An ATS score is heuristic guidance for how easy a resume is for applicant tracking systems to parse, including readable text, standard sections, contact details, dates, bullets, and measurable impact.' },
-      { q: 'Is my CV uploaded?', a: 'No. ATS Resume Toolkit processes PDF and DOCX files locally in your browser and does not upload resume content to a server.' },
-      { q: 'Does this resume checker use AI?', a: 'No. The ATS score is deterministic and does not use LLMs, model calls, accounts, or API keys.' },
-      { q: 'Can I check PDF and DOCX resumes?', a: 'Yes. ATS Resume Toolkit accepts PDF and DOCX files. Text-based PDFs provide the clearest page-count and parseability signals.' },
-    ],
   },
 
   // The 404 page served for a mistyped URL in this language.
@@ -183,7 +176,7 @@ export const en = {
     fix: 'Fix:',
     tabs: { analyze: 'Full report', style: 'Writing style', jd: 'Job match', data: 'Extracted data' },
     pages: (n: number) => `${n} ${n === 1 ? 'page' : 'pages'}`,
-    reportMeta: (pages: string, words: string, chars: string) => `${pages ? `${pages} · ` : ''}${words} words · ${chars} readable characters.`,
+    reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} words · ${chars} readable characters.`,
     humanization: {
       title: 'Humanization score',
       blurb: 'How natural the writing reads: rhythm, filler, repeated openers, passive voice. Not an AI detector.',

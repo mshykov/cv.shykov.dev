@@ -10,7 +10,7 @@ export const escapeAttr = (value: string): string =>
 
 /** JSON for a <script type="application/ld+json">: "<" escaped so nothing can close the tag. */
 export const ldScript = (data: unknown): string =>
-  `<script type="application/ld+json">${JSON.stringify(data).replaceAll('<', '\\u003c')}</script>`
+  `<script type="application/ld+json">${JSON.stringify(data).replaceAll('<', String.raw`\u003c`)}</script>`
 
 type AnyAlternate = Alternate | { locale: 'x-default'; hreflang: 'x-default'; url: string }
 

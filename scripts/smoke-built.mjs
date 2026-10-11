@@ -27,7 +27,9 @@ assert.match(headers, /object-src 'none'/, "CSP should keep object-src 'none' (b
 // for each language: a locale that ships an empty shell is a locale search
 // engines cannot read.
 const jsonLd = (html) => JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)?.[1] ?? 'null')
-const decode = (s) => s.replace(/&amp;/g, '&').replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+// &amp; last: decoding it first would turn "&amp;lt;" into "<" (double unescape).
+const decode = (value) => value.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#x27;', "'").replaceAll('&amp;', '&')
+const escapeRegExp = (value) => value.replaceAll(/[.*+?^${}()|[\]\\/]/g, String.raw`\$&`)
 const pageFile = (path) => (path.endsWith('/') ? `${path}index.html` : `${path}.html`)
 const internalLinks = (html) => [...html.matchAll(/<a [^>]*href="(\/[^"#?]*)/g)].map((m) => m[1])
 const hreflangs = (html) => [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g)].map((m) => [m[1], m[2]])
@@ -58,9 +60,13 @@ for (const loc of LOCALES) {
   const types = (ld?.['@graph'] ?? []).map((node) => node['@type'])
   for (const type of ['SoftwareApplication', 'Person', 'WebSite', 'FAQPage']) assert.ok(types.includes(type), `${label} homepage JSON-LD should include ${type}`)
   assert.equal(ld['@graph'].find((n) => n['@type'] === 'SoftwareApplication').inLanguage, loc.htmlLang, `${label} JSON-LD inLanguage`)
+  // FAQ structured data must be the FAQ the page shows, word for word.
+  for (const { name } of ld['@graph'].find((n) => n['@type'] === 'FAQPage').mainEntity) {
+    assert.ok(decode(home).includes(`>${name}</h2>`), `${label} homepage FAQ question "${name}" is marked up but not visible`)
+  }
 
   assert.ok(existsSync(new URL(`${homeUrl.slice(1)}404.html`, dist)), `${label} should have its own 404.html`)
-  assert.match(headers, new RegExp(`^${homeUrl.replace(/[/]/g, '\\/')}\\s*\\n\\s+Cache-Control: no-cache`, 'm'), `${label} homepage should revalidate (add it to public/_headers)`)
+  assert.match(headers, new RegExp(String.raw`^${escapeRegExp(homeUrl)}\s*\n\s+Cache-Control: no-cache`, 'm'), `${label} homepage should revalidate (add it to public/_headers)`)
 
   // The social card exists and is a real image, not the English one under another name.
   const ogImage = loc.code === 'en' ? 'og-image.png' : `og/${loc.code}.png`
@@ -87,15 +93,14 @@ for (const loc of LOCALES) {
     // The structured data has to parse and has to say what the page shows:
     // FAQ answers that are marked up but not visible are a spam signal.
     const gld = jsonLd(guide)
-    const gtypes = (gld?.['@graph'] ?? []).map((node) => node['@type'])
-    for (const type of ['Article', 'BreadcrumbList', 'FAQPage']) assert.ok(gtypes.includes(type), `${label} ${href} JSON-LD should include ${type}`)
+    const gtypes = new Set((gld?.['@graph'] ?? []).map((node) => node['@type']))
+    for (const type of ['Article', 'BreadcrumbList', 'FAQPage']) assert.ok(gtypes.has(type), `${label} ${href} JSON-LD should include ${type}`)
     const article = gld['@graph'].find((node) => node['@type'] === 'Article')
     assert.equal(article.inLanguage, loc.htmlLang, `${label} ${href} Article inLanguage`)
     const faq = gld['@graph'].find((node) => node['@type'] === 'FAQPage')
     assert.ok(faq.mainEntity.length >= 3, `${label} ${href} should carry at least three FAQ entries`)
     for (const { name } of faq.mainEntity) {
-      const visible = name.replace(/&/g, '&amp;').replace(/'/g, '&#x27;')
-      assert.ok(guide.includes(`>${visible}</dt>`) || guide.includes(`>${decode(visible)}</dt>`) || decode(guide).includes(`>${name}</dt>`), `${label} ${href}: FAQ question "${name}" is marked up but not visible`)
+      assert.ok(decode(guide).includes(`>${name}</dt>`), `${label} ${href}: FAQ question "${name}" is marked up but not visible`)
     }
     assert.ok(guide.includes('id="short-answer"'), `${label} ${href} should open with a short answer`)
 
@@ -106,7 +111,7 @@ for (const loc of LOCALES) {
 
     // No dead internal links: every local href must be a built page or file.
     for (const link of new Set(internalLinks(guide))) {
-      const target = /\.\w+$/.test(link) ? link : pageFile(link.endsWith('/') ? link : link)
+      const target = /\.\w+$/.test(link) ? link : pageFile(link)
       assert.ok(existsSync(new URL(target.slice(1), dist)), `${label} ${href} links to ${link}, which was not built`)
     }
     slugs.push(href.slice(href.lastIndexOf('/') + 1))

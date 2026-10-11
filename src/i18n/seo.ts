@@ -68,7 +68,8 @@ export function homeJsonLd(locale: Locale, m: Messages) {
       },
       {
         '@type': 'FAQPage',
-        mainEntity: m.meta.faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+        // The FAQ shown on the page, verbatim: structured data must say what the page says.
+        mainEntity: m.home.faq.items.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
       },
     ],
   }
