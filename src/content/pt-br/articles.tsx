@@ -4,7 +4,7 @@
 //
 // Ficam em src/ para o scanner do Tailwind enxergar estas classes e gerar o
 // mesmo CSS do app. Não mova para fora de src/, ou os guias saem sem estilo.
-import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from '../prose.tsx'
+import { A, Code, H2, H3, Li, Note, Ol, P, Pre, Table, Ul } from '../prose.tsx'
 import { rubricRows, sectionRows } from '../tables.ts'
 import { GUIDES } from './guides.ts'
 import type { Article, Guide } from '../types.ts'
@@ -62,13 +62,13 @@ export const ARTICLES: Article[] = [
           site a tabela de critérios é fixa, soma 100 pontos e é pública, então você vê exatamente de
           onde vem cada ponto. Em cinco grupos:
         </P>
-        <UL>
-          <LI><strong>Legibilidade (25)</strong> — há texto real e selecionável, ou a página é uma imagem?</LI>
-          <LI><strong>Contato (15)</strong> — e-mail, telefone e um link escrito como texto visível.</LI>
-          <LI><strong>Seções (35)</strong> — títulos que o leitor reconhece: Experiência, Formação, Habilidades, Resumo.</LI>
-          <LI><strong>Formato (15)</strong> — número de páginas, cargos com datas, estrutura real de marcadores.</LI>
-          <LI><strong>Conteúdo (10)</strong> — resultados quantificados e marcadores que começam com um verbo.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Legibilidade (25)</strong> — há texto real e selecionável, ou a página é uma imagem?</Li>
+          <Li><strong>Contato (15)</strong> — e-mail, telefone e um link escrito como texto visível.</Li>
+          <Li><strong>Seções (35)</strong> — títulos que o leitor reconhece: Experiência, Formação, Habilidades, Resumo.</Li>
+          <Li><strong>Formato (15)</strong> — número de páginas, cargos com datas, estrutura real de marcadores.</Li>
+          <Li><strong>Conteúdo (10)</strong> — resultados quantificados e marcadores que começam com um verbo.</Li>
+        </Ul>
         <P>E verificação por verificação — esta tabela é a que o verificador executa, não um resumo dela:</P>
         <Table
           caption="Tabela de pontuação do ATS Resume Toolkit, verificação por verificação"
@@ -88,11 +88,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>O que nenhuma pontuação consegue medir</H2>
-        <UL>
-          <LI>Se a sua experiência combina com a vaga. Isso é julgamento do recrutador.</LI>
-          <LI>Qual ATS específico a empresa usa. Cada fornecedor lê de um jeito e nenhum publica suas regras.</LI>
-          <LI>Se a sua escrita convence. Um currículo perfeitamente legível ainda pode ser monótono.</LI>
-        </UL>
+        <Ul>
+          <Li>Se a sua experiência combina com a vaga. Isso é julgamento do recrutador.</Li>
+          <Li>Qual ATS específico a empresa usa. Cada fornecedor lê de um jeito e nenhum publica suas regras.</Li>
+          <Li>Se a sua escrita convence. Um currículo perfeitamente legível ainda pode ser monótono.</Li>
+        </Ul>
         <P>
           Trate uma pontuação acima de uns 85 como “nada aqui vai se perder no caminho” e passe para
           o conteúdo. Correr atrás dos últimos pontos quase sempre é esforço perdido.
@@ -115,10 +115,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Leia também</H2>
-        <UL>
-          <LI><A href="/pt-br/como-o-ats-le-seu-curriculo">Como o ATS lê o seu currículo, na prática</A></LI>
-          <LI><A href="/pt-br/checklist-de-curriculo-para-ats">Checklist de currículo para ATS</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-br/como-o-ats-le-seu-curriculo">Como o ATS lê o seu currículo, na prática</A></Li>
+          <Li><A href="/pt-br/checklist-de-curriculo-para-ats">Checklist de currículo para ATS</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -166,12 +166,12 @@ export const ARTICLES: Article[] = [
           servidor. Dali, alguma combinação destas coisas é normal e muitas vezes está descrita nos
           termos de uso:
         </P>
-        <UL>
-          <LI>O arquivo é armazenado, às vezes por tempo indeterminado, e vinculado à conta que você criou.</LI>
-          <LI>O texto é enviado a um modelo de linguagem de terceiros para pontuar ou reescrever.</LI>
-          <LI>O e-mail com que você se cadastrou entra em uma sequência de marketing.</LI>
-          <LI>Dados agregados alimentam um produto de recrutamento vendido a empresas.</LI>
-        </UL>
+        <Ul>
+          <Li>O arquivo é armazenado, às vezes por tempo indeterminado, e vinculado à conta que você criou.</Li>
+          <Li>O texto é enviado a um modelo de linguagem de terceiros para pontuar ou reescrever.</Li>
+          <Li>O e-mail com que você se cadastrou entra em uma sequência de marketing.</Li>
+          <Li>Dados agregados alimentam um produto de recrutamento vendido a empresas.</Li>
+        </Ul>
         <P>
           Nada disso é necessariamente mal-intencionado. É só o modelo de negócio: a verificação é
           grátis porque você e o seu documento são o produto. Mas vale saber antes de clicar, e não
@@ -179,13 +179,13 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>As perguntas que valem para qualquer verificador</H2>
-        <UL>
-          <LI><strong>O arquivo sai do dispositivo?</strong> Se não há envio, a maioria das outras perguntas deixa de importar.</LI>
-          <LI><strong>É preciso criar conta?</strong> O muro de e-mail existe para capturar o e-mail, não para melhorar a pontuação.</LI>
-          <LI><strong>A pontuação é determinística ou gerada?</strong> Se um modelo escreve o parecer, seu currículo foi enviado a esse modelo.</LI>
-          <LI><strong>Dá para ler as regras?</strong> Um critério público pode ser contestado. Um escondido, não.</LI>
-          <LI><strong>Como se apaga o arquivo?</strong> Se a resposta é um e-mail de suporte, suponha que ele fica.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>O arquivo sai do dispositivo?</strong> Se não há envio, a maioria das outras perguntas deixa de importar.</Li>
+          <Li><strong>É preciso criar conta?</strong> O muro de e-mail existe para capturar o e-mail, não para melhorar a pontuação.</Li>
+          <Li><strong>A pontuação é determinística ou gerada?</strong> Se um modelo escreve o parecer, seu currículo foi enviado a esse modelo.</Li>
+          <Li><strong>Dá para ler as regras?</strong> Um critério público pode ser contestado. Um escondido, não.</Li>
+          <Li><strong>Como se apaga o arquivo?</strong> Se a resposta é um e-mail de suporte, suponha que ele fica.</Li>
+        </Ul>
 
         <H2>Como funciona uma verificação 100% local</H2>
         <P>
@@ -206,7 +206,7 @@ export const ARTICLES: Article[] = [
           “Nunca guardamos o seu arquivo” é uma promessa. Se o arquivo sai ou não da sua máquina é
           algo que você pode ver acontecer, ou não acontecer, em qualquer navegador de computador:
         </P>
-        <OL>
+        <Ol>
           <li>Abra o verificador e depois as ferramentas do desenvolvedor do navegador: <Code>F12</Code> no Windows e no Linux, <Code>⌥ ⌘ I</Code> no Mac.</li>
           <li>Vá para a aba <strong>Rede</strong> (Network) e limpe-a, para aparecerem só as requisições novas.</li>
           <li>Solte seu currículo no verificador e espere o resultado.</li>
@@ -215,7 +215,7 @@ export const ARTICLES: Article[] = [
             cujo tamanho é mais ou menos o do seu arquivo. Scripts e fontes que a própria página
             carrega não são envios.
           </li>
-        </OL>
+        </Ol>
         <P>
           Se nenhuma requisição leva o arquivo, ele não saiu. Isso vale em qualquer site, inclusive
           neste, e é esse o ponto: a promessa deve poder ser conferida por você, não aceita na
@@ -239,10 +239,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Leia também</H2>
-        <UL>
-          <LI><A href="/pt-br/o-que-e-pontuacao-ats-do-curriculo">O que a pontuação ATS do currículo mede de fato</A></LI>
-          <LI><A href="/pt-br/curriculo-em-pdf-ou-docx-para-ats">Currículo em PDF ou DOCX: qual enviar?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-br/o-que-e-pontuacao-ats-do-curriculo">O que a pontuação ATS do currículo mede de fato</A></Li>
+          <Li><A href="/pt-br/curriculo-em-pdf-ou-docx-para-ats">Currículo em PDF ou DOCX: qual enviar?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -277,11 +277,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Por que o PDF é o padrão hoje</H2>
-        <UL>
-          <LI><strong>Ele fica igual em todo lugar.</strong> Um DOCX se reorganiza conforme as fontes e a versão do Word de quem abre. Seu layout de duas páginas bem cuidado pode chegar como três páginas desalinhadas.</LI>
-          <LI><strong>Os leitores modernos dão conta.</strong> Extrair texto de PDF é um problema resolvido; os principais sistemas oferecem esse suporte há anos.</LI>
-          <LI><strong>É mais difícil de estragar.</strong> Ninguém edita seu PDF sem querer entre o envio e a análise.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Ele fica igual em todo lugar.</strong> Um DOCX se reorganiza conforme as fontes e a versão do Word de quem abre. Seu layout de duas páginas bem cuidado pode chegar como três páginas desalinhadas.</Li>
+          <Li><strong>Os leitores modernos dão conta.</strong> Extrair texto de PDF é um problema resolvido; os principais sistemas oferecem esse suporte há anos.</Li>
+          <Li><strong>É mais difícil de estragar.</strong> Ninguém edita seu PDF sem querer entre o envio e a análise.</Li>
+        </Ul>
 
         <H2>O único PDF que falha sempre</H2>
         <P>
@@ -297,7 +297,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Um teste de 30 segundos para qualquer PDF</H2>
         <P>Selecionar o texto prova que ele existe. Mais dois passos mostram se ele sai utilizável:</P>
-        <OL>
+        <Ol>
           <li><strong>Selecione uma linha.</strong> Se nada é destacado, a página é uma imagem. Exporte de novo a partir do documento original.</li>
           <li>
             <strong>Busque o seu e-mail</strong> com <Code>Ctrl F</Code> / <Code>⌘ F</Code>. Se o
@@ -310,7 +310,7 @@ export const ARTICLES: Article[] = [
             recebe. Se duas colunas saem misturadas linha a linha, ou seus cargos aparecem longe das
             datas, corrija o layout antes de se preocupar com qualquer outra coisa.
           </li>
-        </OL>
+        </Ol>
         <P>
           Exportar do Word, do Google Docs ou do Pages com o comando normal de <em>Baixar como PDF</em>{' '}
           ou <em>Exportar como PDF</em> gera PDFs com texto. Os caminhos arriscados são “imprimir
@@ -319,24 +319,24 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Quando o DOCX é a resposta certa</H2>
-        <UL>
-          <LI><strong>O formulário exige.</strong> Se o campo de envio lista só <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto que o formulário.</LI>
-          <LI><strong>Um recrutador pediu.</strong> Agências costumam colocar seu currículo no modelo delas, e isso exige um arquivo editável.</LI>
-          <LI><strong>A empresa usa um sistema antigo.</strong> Hoje é raro, mas não custa nada atender.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>O formulário exige.</strong> Se o campo de envio lista só <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto que o formulário.</Li>
+          <Li><strong>Um recrutador pediu.</strong> Agências costumam colocar seu currículo no modelo delas, e isso exige um arquivo editável.</Li>
+          <Li><strong>A empresa usa um sistema antigo.</strong> Hoje é raro, mas não custa nada atender.</Li>
+        </Ul>
 
         <H2>O que importa mais do que a extensão</H2>
         <P>
           O formato é a decisão mais fácil que você vai tomar sobre o currículo. Estas são as que
           realmente fazem diferença:
         </P>
-        <UL>
-          <LI><strong>Uma coluna.</strong> Layouts com várias colunas podem ser lidos na ordem errada, misturando duas linhas sem relação.</LI>
-          <LI><strong>Nenhum texto dentro de imagens.</strong> Um logotipo tudo bem; seu cargo desenhado como imagem, não.</LI>
-          <LI><strong>Nenhum dado crítico no cabeçalho ou no rodapé.</strong> Alguns leitores ignoram essas áreas. Coloque seu e-mail no corpo da página.</LI>
-          <LI><strong>Marcadores de verdade,</strong> não travessões desenhados à mão dentro de uma célula de tabela.</LI>
-          <LI><strong>Um nome de arquivo sensato</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Sobrenome_Curriculo.pdf</code>. Uma pessoa o vê em uma pasta com centenas de arquivos.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Uma coluna.</strong> Layouts com várias colunas podem ser lidos na ordem errada, misturando duas linhas sem relação.</Li>
+          <Li><strong>Nenhum texto dentro de imagens.</strong> Um logotipo tudo bem; seu cargo desenhado como imagem, não.</Li>
+          <Li><strong>Nenhum dado crítico no cabeçalho ou no rodapé.</strong> Alguns leitores ignoram essas áreas. Coloque seu e-mail no corpo da página.</Li>
+          <Li><strong>Marcadores de verdade,</strong> não travessões desenhados à mão dentro de uma célula de tabela.</Li>
+          <Li><strong>Um nome de arquivo sensato</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Sobrenome_Curriculo.pdf</code>. Uma pessoa o vê em uma pasta com centenas de arquivos.</Li>
+        </Ul>
 
         <Note>
           <strong>Não sabe em que categoria o seu arquivo se enquadra?</strong> Solte-o no{' '}
@@ -346,10 +346,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Leia também</H2>
-        <UL>
-          <LI><A href="/pt-br/como-o-ats-le-seu-curriculo">Como o ATS lê o seu currículo, na prática</A></LI>
-          <LI><A href="/pt-br/checklist-de-curriculo-para-ats">Checklist de currículo para ATS</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-br/como-o-ats-le-seu-curriculo">Como o ATS lê o seu currículo, na prática</A></Li>
+          <Li><A href="/pt-br/checklist-de-curriculo-para-ats">Checklist de currículo para ATS</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -461,11 +461,11 @@ jan 2020 – atual Terraform, AWS`}</Pre>
         <P><strong>Falha quando:</strong> o vocabulário do currículo e o da vaga não têm nenhuma sobreposição.</P>
 
         <H2>O que isso implica</H2>
-        <UL>
-          <LI>Dica de formatação não é superstição: cada regra corresponde a uma etapa acima.</LI>
-          <LI>Dica de palavras-chave é sobre sobreposição de vocabulário, não densidade. Nunca declare uma habilidade que você não tem.</LI>
-          <LI>Nada nesse processo avalia você. Ele coloca você em um formato pesquisável, ou não consegue.</LI>
-        </UL>
+        <Ul>
+          <Li>Dica de formatação não é superstição: cada regra corresponde a uma etapa acima.</Li>
+          <Li>Dica de palavras-chave é sobre sobreposição de vocabulário, não densidade. Nunca declare uma habilidade que você não tem.</Li>
+          <Li>Nada nesse processo avalia você. Ele coloca você em um formato pesquisável, ou não consegue.</Li>
+        </Ul>
 
         <Note>
           <strong>Veja pelo lado do leitor.</strong> O{' '}
@@ -476,10 +476,10 @@ jan 2020 – atual Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Leia também</H2>
-        <UL>
-          <LI><A href="/pt-br/o-que-e-pontuacao-ats-do-curriculo">O que a pontuação ATS do currículo mede de fato</A></LI>
-          <LI><A href="/pt-br/verificador-de-curriculo-ats-sem-enviar-arquivo">Verificadores que não pedem o envio do seu currículo</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-br/o-que-e-pontuacao-ats-do-curriculo">O que a pontuação ATS do currículo mede de fato</A></Li>
+          <Li><A href="/pt-br/verificador-de-curriculo-ats-sem-enviar-arquivo">Verificadores que não pedem o envio do seu currículo</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -512,31 +512,31 @@ jan 2020 – atual Terraform, AWS`}</Pre>
         </P>
 
         <H2>Crítico — se pular estes, a candidatura pode não chegar</H2>
-        <UL>
-          <LI><strong>O texto é selecionável.</strong> Abra o arquivo e tente destacar uma linha. Se não dá, o leitor enxerga uma página em branco.</LI>
-          <LI><strong>O e-mail é texto simples no corpo da página.</strong> Não no cabeçalho, não só atrás de um ícone de e-mail, não só como hiperlink.</LI>
-          <LI><strong>Uma coluna.</strong> Barras laterais são a causa mais comum de extração embaralhada.</LI>
-          <LI><strong>Títulos de seção padrão.</strong> Experiência, Formação, Habilidades, Resumo. Aqui, o sem graça ganha.</LI>
-          <LI><strong>Todo cargo tem datas.</strong> Mês e ano, em um formato consistente, na mesma linha do cargo.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>O texto é selecionável.</strong> Abra o arquivo e tente destacar uma linha. Se não dá, o leitor enxerga uma página em branco.</Li>
+          <Li><strong>O e-mail é texto simples no corpo da página.</strong> Não no cabeçalho, não só atrás de um ícone de e-mail, não só como hiperlink.</Li>
+          <Li><strong>Uma coluna.</strong> Barras laterais são a causa mais comum de extração embaralhada.</Li>
+          <Li><strong>Títulos de seção padrão.</strong> Experiência, Formação, Habilidades, Resumo. Aqui, o sem graça ganha.</Li>
+          <Li><strong>Todo cargo tem datas.</strong> Mês e ano, em um formato consistente, na mesma linha do cargo.</Li>
+        </Ul>
 
         <H2>Importante — estes decidem se você aparece em uma busca</H2>
-        <UL>
-          <LI><strong>Os cargos são reconhecíveis.</strong> Se o seu título interno é “Ninja de Entregas”, coloque ao lado o título padrão do mercado.</LI>
-          <LI><strong>O vocabulário da vaga aparece</strong>, mas só onde você o conquistou de verdade.</LI>
-          <LI><strong>Existe uma seção de habilidades,</strong> em texto simples separado por vírgulas, e não um gráfico de barras de nível.</LI>
-          <LI><strong>Os links estão escritos</strong> como texto visível: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/voce</code>. O leitor lê texto, não o destino do link.</LI>
-          <LI><strong>Nenhum texto fica dentro de uma imagem ou de uma caixa de texto.</strong></LI>
-        </UL>
+        <Ul>
+          <Li><strong>Os cargos são reconhecíveis.</strong> Se o seu título interno é “Ninja de Entregas”, coloque ao lado o título padrão do mercado.</Li>
+          <Li><strong>O vocabulário da vaga aparece</strong>, mas só onde você o conquistou de verdade.</Li>
+          <Li><strong>Existe uma seção de habilidades,</strong> em texto simples separado por vírgulas, e não um gráfico de barras de nível.</Li>
+          <Li><strong>Os links estão escritos</strong> como texto visível: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/voce</code>. O leitor lê texto, não o destino do link.</Li>
+          <Li><strong>Nenhum texto fica dentro de uma imagem ou de uma caixa de texto.</strong></Li>
+        </Ul>
 
         <H2>Vale fazer — estes são lidos por uma pessoa</H2>
-        <UL>
-          <LI><strong>Os marcadores começam com um verbo.</strong> Liderei, entreguei, reduzi, reconstruí, assumi.</LI>
-          <LI><strong>O impacto traz um número.</strong> “Melhorei a confiabilidade” é uma afirmação; “sessões sem falha de 96% para 99,5%” é evidência.</LI>
-          <LI><strong>Nada de frases-padrão.</strong> “Profissional focado em resultados e com histórico comprovado” não diz nada ao leitor.</LI>
-          <LI><strong>O tamanho acompanha a carreira.</strong> Uma página no começo; duas é normal depois de uma década. Três precisam de um motivo.</LI>
-          <LI><strong>O nome do arquivo é um nome</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Sobrenome_Curriculo.pdf</code>, não <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">curriculo_final_v3_AGORA_VAI.pdf</code>.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Os marcadores começam com um verbo.</strong> Liderei, entreguei, reduzi, reconstruí, assumi.</Li>
+          <Li><strong>O impacto traz um número.</strong> “Melhorei a confiabilidade” é uma afirmação; “sessões sem falha de 96% para 99,5%” é evidência.</Li>
+          <Li><strong>Nada de frases-padrão.</strong> “Profissional focado em resultados e com histórico comprovado” não diz nada ao leitor.</Li>
+          <Li><strong>O tamanho acompanha a carreira.</strong> Uma página no começo; duas é normal depois de uma década. Três precisam de um motivo.</Li>
+          <Li><strong>O nome do arquivo é um nome</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Sobrenome_Curriculo.pdf</code>, não <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">curriculo_final_v3_AGORA_VAI.pdf</code>.</Li>
+        </Ul>
 
         <H2>O que um verificador consegue conferir por você</H2>
         <P>
@@ -544,22 +544,22 @@ jan 2020 – atual Terraform, AWS`}</Pre>
           julgamento, e não consegue. Veja a divisão no verificador deste site:
         </P>
         <H3>Verificado automaticamente</H3>
-        <UL>
-          <LI>Texto selecionável e codificação de caracteres limpa</LI>
-          <LI>E-mail, telefone e um link de perfil visível como texto; ele também sinaliza um link que existe só como hiperlink escondido</LI>
-          <LI>Títulos padrão de Experiência, Formação, Habilidades e Resumo, além de Conquistas, Projetos e Certificações</LI>
-          <LI>Datas, estrutura de marcadores e número de páginas</LI>
-          <LI>Números nos seus marcadores e marcadores que começam com um verbo</LI>
-          <LI>Frases-padrão e afirmações vagas, na aba separada de estilo de escrita</LI>
-          <LI>O vocabulário da vaga, se você colar o anúncio na comparação com a vaga</LI>
-        </UL>
+        <Ul>
+          <Li>Texto selecionável e codificação de caracteres limpa</Li>
+          <Li>E-mail, telefone e um link de perfil visível como texto; ele também sinaliza um link que existe só como hiperlink escondido</Li>
+          <Li>Títulos padrão de Experiência, Formação, Habilidades e Resumo, além de Conquistas, Projetos e Certificações</Li>
+          <Li>Datas, estrutura de marcadores e número de páginas</Li>
+          <Li>Números nos seus marcadores e marcadores que começam com um verbo</Li>
+          <Li>Frases-padrão e afirmações vagas, na aba separada de estilo de escrita</Li>
+          <Li>O vocabulário da vaga, se você colar o anúncio na comparação com a vaga</Li>
+        </Ul>
         <H3>Ainda é com você</H3>
-        <UL>
-          <LI>Se uma barra lateral ou uma segunda coluna embaralha a ordem de leitura: use o teste de copiar e colar</LI>
-          <LI>Se os seus cargos são os que um recrutador pesquisaria</LI>
-          <LI>Se cada palavra-chave que você adicionou é uma que você conquistou</LI>
-          <LI>O nome do arquivo</LI>
-        </UL>
+        <Ul>
+          <Li>Se uma barra lateral ou uma segunda coluna embaralha a ordem de leitura: use o teste de copiar e colar</Li>
+          <Li>Se os seus cargos são os que um recrutador pesquisaria</Li>
+          <Li>Se cada palavra-chave que você adicionou é uma que você conquistou</Li>
+          <Li>O nome do arquivo</Li>
+        </Ul>
 
         <Note>
           <strong>Quase toda essa lista pode ser conferida automaticamente.</strong> O{' '}
@@ -570,10 +570,10 @@ jan 2020 – atual Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Leia também</H2>
-        <UL>
-          <LI><A href="/pt-br/como-o-ats-le-seu-curriculo">Como o ATS lê o seu currículo, na prática</A></LI>
-          <LI><A href="/pt-br/curriculo-em-pdf-ou-docx-para-ats">Currículo em PDF ou DOCX: qual enviar?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-br/como-o-ats-le-seu-curriculo">Como o ATS lê o seu currículo, na prática</A></Li>
+          <Li><A href="/pt-br/curriculo-em-pdf-ou-docx-para-ats">Currículo em PDF ou DOCX: qual enviar?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -608,25 +608,25 @@ jan 2020 – atual Terraform, AWS`}</Pre>
         </P>
 
         <H2>Verifique a pontuação do seu currículo em quatro passos</H2>
-        <OL>
-          <LI>
+        <Ol>
+          <Li>
             Abra o <A href="/pt-br/">verificador de currículo ATS grátis</A> e escolha{' '}
             <em>Verificar meu currículo</em>.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Solte seu currículo em PDF ou DOCX. O arquivo é lido dentro do navegador e não é enviado
             a lugar nenhum, então é seguro usar mesmo com o currículo que você está mandando para um
             concorrente do seu empregador atual.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Leia a pontuação e a lista de verificações que falharam. As falhas vêm ordenadas pelo
             número de pontos que cada uma custa, então o primeiro item é a correção mais valiosa.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Corrija os dois ou três primeiros itens, exporte de novo e solte o arquivo novo. Repita
             até não sobrar nada caro.
-          </LI>
-        </OL>
+          </Li>
+        </Ol>
 
         <H2>O que é uma boa pontuação de currículo</H2>
         <P>
@@ -638,12 +638,12 @@ jan 2020 – atual Terraform, AWS`}</Pre>
         </P>
 
         <H2>O que corrigir primeiro</H2>
-        <UL>
-          <LI>Garanta que o texto seja selecionável. Um PDF digitalizado ou só com imagem tem pontuação próxima de zero.</LI>
-          <LI>Coloque e-mail e telefone no corpo da página, não em um cabeçalho nem em uma imagem.</LI>
-          <LI>Use títulos padrão: Experiência, Formação, Habilidades, Resumo.</LI>
-          <LI>Dê datas a todos os cargos e use marcadores de verdade.</LI>
-        </UL>
+        <Ul>
+          <Li>Garanta que o texto seja selecionável. Um PDF digitalizado ou só com imagem tem pontuação próxima de zero.</Li>
+          <Li>Coloque e-mail e telefone no corpo da página, não em um cabeçalho nem em uma imagem.</Li>
+          <Li>Use títulos padrão: Experiência, Formação, Habilidades, Resumo.</Li>
+          <Li>Dê datas a todos os cargos e use marcadores de verdade.</Li>
+        </Ul>
 
         <H2>O que a pontuação não diz</H2>
         <P>
@@ -660,11 +660,11 @@ jan 2020 – atual Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Leia também</H2>
-        <UL>
-          <LI><A href="/pt-br/o-que-e-pontuacao-ats-do-curriculo">O que a pontuação ATS do currículo mede de fato</A></LI>
-          <LI><A href="/pt-br/checklist-de-curriculo-para-ats">Checklist de currículo para ATS</A></LI>
-          <LI><A href="/pt-br/verificador-de-curriculo-ats-sem-enviar-arquivo">Verificador de currículo ATS que não pede para enviar seu arquivo</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-br/o-que-e-pontuacao-ats-do-curriculo">O que a pontuação ATS do currículo mede de fato</A></Li>
+          <Li><A href="/pt-br/checklist-de-curriculo-para-ats">Checklist de currículo para ATS</A></Li>
+          <Li><A href="/pt-br/verificador-de-curriculo-ats-sem-enviar-arquivo">Verificador de currículo ATS que não pede para enviar seu arquivo</A></Li>
+        </Ul>
       </>
     ),
     faq: [

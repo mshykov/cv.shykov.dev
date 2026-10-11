@@ -5,7 +5,7 @@
 // Ils vivent dans src/ pour que le scanner de Tailwind voie ces noms de classes
 // et produise la même feuille de style que l'application. Ne pas les déplacer
 // hors de src/, sinon les guides s'affichent sans style.
-import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from '../prose.tsx'
+import { A, Code, H2, H3, Li, Note, Ol, P, Pre, Table, Ul } from '../prose.tsx'
 import { rubricRows, sectionRows } from '../tables.ts'
 import { GUIDES } from './guides.ts'
 import type { Article, Guide } from '../types.ts'
@@ -65,13 +65,13 @@ export const ARTICLES: Article[] = [
           Sur ce site, le barème est fixé à 100 points et publié : vous voyez exactement d’où vient
           chaque point. Il se répartit en cinq groupes :
         </P>
-        <UL>
-          <LI><strong>Lisibilité (25)</strong> — y a-t-il du vrai texte sélectionnable, ou la page est-elle une image ?</LI>
-          <LI><strong>Contact (15)</strong> — adresse e-mail, téléphone et un lien écrit en texte visible.</LI>
-          <LI><strong>Rubriques (35)</strong> — des titres qu’un analyseur reconnaît : Expérience, Formation, Compétences, Profil.</LI>
-          <LI><strong>Format (15)</strong> — nombre de pages, postes datés, vraie structure en puces.</LI>
-          <LI><strong>Contenu (10)</strong> — résultats chiffrés et puces qui commencent par un verbe.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Lisibilité (25)</strong> — y a-t-il du vrai texte sélectionnable, ou la page est-elle une image ?</Li>
+          <Li><strong>Contact (15)</strong> — adresse e-mail, téléphone et un lien écrit en texte visible.</Li>
+          <Li><strong>Rubriques (35)</strong> — des titres qu’un analyseur reconnaît : Expérience, Formation, Compétences, Profil.</Li>
+          <Li><strong>Format (15)</strong> — nombre de pages, postes datés, vraie structure en puces.</Li>
+          <Li><strong>Contenu (10)</strong> — résultats chiffrés et puces qui commencent par un verbe.</Li>
+        </Ul>
         <P>Et vérification par vérification — ce tableau est celui que le calcul applique, pas un résumé :</P>
         <Table
           caption="Barème de notation d’ATS Resume Toolkit, vérification par vérification"
@@ -92,11 +92,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Ce qu’aucun score ne peut mesurer</H2>
-        <UL>
-          <LI>Si votre expérience correspond au poste. C’est le jugement du recruteur.</LI>
-          <LI>Quel ATS précis l’employeur utilise. Les éditeurs n’analysent pas tous de la même façon, et aucun ne publie ses règles.</LI>
-          <LI>Si votre rédaction est convaincante. Un CV parfaitement lisible par une machine peut rester terne.</LI>
-        </UL>
+        <Ul>
+          <Li>Si votre expérience correspond au poste. C’est le jugement du recruteur.</Li>
+          <Li>Quel ATS précis l’employeur utilise. Les éditeurs n’analysent pas tous de la même façon, et aucun ne publie ses règles.</Li>
+          <Li>Si votre rédaction est convaincante. Un CV parfaitement lisible par une machine peut rester terne.</Li>
+        </Ul>
         <P>
           Considérez un score supérieur à 85 environ comme « rien ne se perdra en route », et passez
           au contenu. Courir après les derniers points est presque toujours du temps perdu.
@@ -121,10 +121,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>À lire aussi</H2>
-        <UL>
-          <LI><A href="/fr/comment-un-ats-lit-un-cv">Comment un ATS lit un CV</A></LI>
-          <LI><A href="/fr/checklist-cv-compatible-ats">La checklist du CV compatible ATS</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/fr/comment-un-ats-lit-un-cv">Comment un ATS lit un CV</A></Li>
+          <Li><A href="/fr/checklist-cv-compatible-ats">La checklist du CV compatible ATS</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -173,12 +173,12 @@ export const ARTICLES: Article[] = [
           sur un serveur. À partir de là, plusieurs des cas suivants sont courants, et souvent
           mentionnés dans les conditions d’utilisation :
         </P>
-        <UL>
-          <LI>Le fichier est conservé, parfois indéfiniment, et rattaché au compte que vous avez créé.</LI>
-          <LI>Le texte est transmis à un modèle de langage tiers pour être noté ou réécrit.</LI>
-          <LI>L’adresse e-mail saisie à l’inscription entre dans une séquence de prospection.</LI>
-          <LI>Des données agrégées alimentent un produit de recrutement vendu aux employeurs.</LI>
-        </UL>
+        <Ul>
+          <Li>Le fichier est conservé, parfois indéfiniment, et rattaché au compte que vous avez créé.</Li>
+          <Li>Le texte est transmis à un modèle de langage tiers pour être noté ou réécrit.</Li>
+          <Li>L’adresse e-mail saisie à l’inscription entre dans une séquence de prospection.</Li>
+          <Li>Des données agrégées alimentent un produit de recrutement vendu aux employeurs.</Li>
+        </Ul>
         <P>
           Rien de tout cela n’est forcément malveillant. C’est simplement le modèle économique : la
           vérification est gratuite parce que vous et votre document êtes le produit. Mais mieux vaut
@@ -186,13 +186,13 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Les questions à poser à tout vérificateur</H2>
-        <UL>
-          <LI><strong>Le fichier quitte-t-il l’appareil ?</strong> S’il n’y a pas d’envoi, la plupart des autres questions perdent leur importance.</LI>
-          <LI><strong>Faut-il un compte ?</strong> Un mur d’inscription sert à récupérer votre adresse e-mail, pas à améliorer le score.</LI>
-          <LI><strong>Le score est-il déterministe ou généré ?</strong> Si un modèle rédige les commentaires, votre CV lui a été envoyé.</LI>
-          <LI><strong>Peut-on lire les règles ?</strong> Un barème publié peut se discuter. Un barème caché, non.</LI>
-          <LI><strong>Comment supprimer ses données ?</strong> Si la réponse est « écrivez au support », supposez que le fichier est conservé.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Le fichier quitte-t-il l’appareil ?</strong> S’il n’y a pas d’envoi, la plupart des autres questions perdent leur importance.</Li>
+          <Li><strong>Faut-il un compte ?</strong> Un mur d’inscription sert à récupérer votre adresse e-mail, pas à améliorer le score.</Li>
+          <Li><strong>Le score est-il déterministe ou généré ?</strong> Si un modèle rédige les commentaires, votre CV lui a été envoyé.</Li>
+          <Li><strong>Peut-on lire les règles ?</strong> Un barème publié peut se discuter. Un barème caché, non.</Li>
+          <Li><strong>Comment supprimer ses données ?</strong> Si la réponse est « écrivez au support », supposez que le fichier est conservé.</Li>
+        </Ul>
 
         <H2>Comment fonctionne une vérification purement locale</H2>
         <P>
@@ -214,7 +214,7 @@ export const ARTICLES: Article[] = [
           votre ordinateur, vous pouvez le constater — ou non — dans n’importe quel navigateur de
           bureau :
         </P>
-        <OL>
+        <Ol>
           <li>Ouvrez l’outil, puis les outils de développement du navigateur : <Code>F12</Code> sous Windows et Linux, <Code>⌥ ⌘ I</Code> sur Mac.</li>
           <li>Passez à l’onglet <strong>Réseau</strong> (<em>Network</em>) et videz-le, pour que seules les nouvelles requêtes s’affichent.</li>
           <li>Déposez votre CV dans l’outil et attendez le résultat.</li>
@@ -223,7 +223,7 @@ export const ARTICLES: Article[] = [
             <Code>PUT</Code> dont la taille est à peu près celle de votre fichier. Les scripts et les
             polices que la page charge pour elle-même ne sont pas des envois.
           </li>
-        </OL>
+        </Ol>
         <P>
           Si aucune requête ne transporte le fichier, le fichier n’est pas sorti. Cela fonctionne sur
           n’importe quel site, y compris celui-ci — et c’est le but : l’affirmation doit pouvoir être
@@ -248,10 +248,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>À lire aussi</H2>
-        <UL>
-          <LI><A href="/fr/score-ats-cv-cest-quoi">Ce que mesure vraiment un score ATS</A></LI>
-          <LI><A href="/fr/cv-pdf-ou-word-pour-ats">CV en PDF ou en Word : lequel envoyer ?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/fr/score-ats-cv-cest-quoi">Ce que mesure vraiment un score ATS</A></Li>
+          <Li><A href="/fr/cv-pdf-ou-word-pour-ats">CV en PDF ou en Word : lequel envoyer ?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -286,11 +286,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Pourquoi le PDF est devenu le choix par défaut</H2>
-        <UL>
-          <LI><strong>Il s’affiche partout à l’identique.</strong> Un DOCX se remet en page selon les polices et la version de Word de l’autre côté. Votre mise en page soignée sur deux pages peut arriver sur trois pages décousues.</LI>
-          <LI><strong>Les analyseurs modernes le gèrent.</strong> L’extraction de texte d’un PDF est un problème résolu ; les principaux systèmes la prennent en charge depuis des années.</LI>
-          <LI><strong>Il est plus difficile à abîmer.</strong> Personne ne modifie votre PDF par accident entre l’envoi et la lecture.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Il s’affiche partout à l’identique.</strong> Un DOCX se remet en page selon les polices et la version de Word de l’autre côté. Votre mise en page soignée sur deux pages peut arriver sur trois pages décousues.</Li>
+          <Li><strong>Les analyseurs modernes le gèrent.</strong> L’extraction de texte d’un PDF est un problème résolu ; les principaux systèmes la prennent en charge depuis des années.</Li>
+          <Li><strong>Il est plus difficile à abîmer.</strong> Personne ne modifie votre PDF par accident entre l’envoi et la lecture.</Li>
+        </Ul>
 
         <H2>Le seul PDF qui échoue à tous les coups</H2>
         <P>
@@ -306,7 +306,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Un test de 30 secondes pour n’importe quel PDF</H2>
         <P>Pouvoir sélectionner du texte prouve qu’il existe. Deux étapes de plus montrent s’il ressort de façon exploitable :</P>
-        <OL>
+        <Ol>
           <li><strong>Sélectionnez une ligne.</strong> Si rien ne se surligne, la page est une image. Réexportez depuis le document d’origine.</li>
           <li>
             <strong>Recherchez votre adresse e-mail</strong> avec <Code>Ctrl F</Code> / <Code>⌘ F</Code>.
@@ -319,7 +319,7 @@ export const ARTICLES: Article[] = [
             Si deux colonnes ressortent entremêlées ligne par ligne, ou si vos intitulés de poste
             apparaissent loin de leurs dates, corrigez la mise en page avant toute autre chose.
           </li>
-        </OL>
+        </Ol>
         <P>
           L’export depuis Word, Google Docs ou Pages avec leur commande habituelle{' '}
           <em>Télécharger au format PDF</em> ou <em>Exporter en PDF</em> produit des PDF avec du vrai
@@ -328,24 +328,24 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Quand le DOCX est la bonne réponse</H2>
-        <UL>
-          <LI><strong>Le formulaire l’exige.</strong> Si le champ d’envoi n’accepte que <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, c’est la réponse. Inutile de faire plus malin que le formulaire.</LI>
-          <LI><strong>Un recruteur l’a demandé.</strong> Les cabinets remettent souvent votre CV dans leur propre modèle, ce qui suppose un fichier modifiable.</LI>
-          <LI><strong>L’employeur utilise un système plus ancien.</strong> Rare aujourd’hui, mais sans inconvénient à respecter.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Le formulaire l’exige.</strong> Si le champ d’envoi n’accepte que <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, c’est la réponse. Inutile de faire plus malin que le formulaire.</Li>
+          <Li><strong>Un recruteur l’a demandé.</strong> Les cabinets remettent souvent votre CV dans leur propre modèle, ce qui suppose un fichier modifiable.</Li>
+          <Li><strong>L’employeur utilise un système plus ancien.</strong> Rare aujourd’hui, mais sans inconvénient à respecter.</Li>
+        </Ul>
 
         <H2>Ce qui compte plus que l’extension</H2>
         <P>
           Le format est la décision la plus facile que vous prendrez pour votre CV. Voici celles qui
           pèsent vraiment :
         </P>
-        <UL>
-          <LI><strong>Une seule colonne.</strong> Les mises en page à plusieurs colonnes peuvent être lues dans le mauvais ordre, en entremêlant deux lignes sans rapport.</LI>
-          <LI><strong>Pas de texte dans des images.</strong> Un logo passe ; votre intitulé de poste transformé en image, non.</LI>
-          <LI><strong>Aucune information essentielle dans l’en-tête ou le pied de page.</strong> Certains analyseurs ignorent ces zones. Mettez votre adresse e-mail dans le corps.</LI>
-          <LI><strong>De vraies puces,</strong> pas des tirets tracés à la main dans une cellule de tableau.</LI>
-          <LI><strong>Un nom de fichier sensé</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>. Un humain le voit dans un dossier de centaines de fichiers.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Une seule colonne.</strong> Les mises en page à plusieurs colonnes peuvent être lues dans le mauvais ordre, en entremêlant deux lignes sans rapport.</Li>
+          <Li><strong>Pas de texte dans des images.</strong> Un logo passe ; votre intitulé de poste transformé en image, non.</Li>
+          <Li><strong>Aucune information essentielle dans l’en-tête ou le pied de page.</strong> Certains analyseurs ignorent ces zones. Mettez votre adresse e-mail dans le corps.</Li>
+          <Li><strong>De vraies puces,</strong> pas des tirets tracés à la main dans une cellule de tableau.</Li>
+          <Li><strong>Un nom de fichier sensé</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>. Un humain le voit dans un dossier de centaines de fichiers.</Li>
+        </Ul>
 
         <Note>
           <strong>Vous ne savez pas dans quelle catégorie tombe votre fichier ?</strong> Déposez-le sur le{' '}
@@ -355,10 +355,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>À lire aussi</H2>
-        <UL>
-          <LI><A href="/fr/comment-un-ats-lit-un-cv">Comment un ATS lit un CV</A></LI>
-          <LI><A href="/fr/checklist-cv-compatible-ats">La checklist du CV compatible ATS</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/fr/comment-un-ats-lit-un-cv">Comment un ATS lit un CV</A></Li>
+          <Li><A href="/fr/checklist-cv-compatible-ats">La checklist du CV compatible ATS</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -472,11 +472,11 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         <P><strong>Échoue quand :</strong> le vocabulaire de votre CV et celui de l’offre n’ont aucun point commun.</P>
 
         <H2>Ce que cela implique</H2>
-        <UL>
-          <LI>Les conseils de mise en forme ne relèvent pas de la superstition : chaque règle correspond à une étape ci-dessus.</LI>
-          <LI>Les conseils sur les mots-clés portent sur le recoupement de vocabulaire, pas sur la densité. Ne revendiquez jamais une compétence que vous n’avez pas.</LI>
-          <LI>Rien dans cette chaîne ne vous évalue. Elle vous met sous une forme consultable, ou n’y parvient pas.</LI>
-        </UL>
+        <Ul>
+          <Li>Les conseils de mise en forme ne relèvent pas de la superstition : chaque règle correspond à une étape ci-dessus.</Li>
+          <Li>Les conseils sur les mots-clés portent sur le recoupement de vocabulaire, pas sur la densité. Ne revendiquez jamais une compétence que vous n’avez pas.</Li>
+          <Li>Rien dans cette chaîne ne vous évalue. Elle vous met sous une forme consultable, ou n’y parvient pas.</Li>
+        </Ul>
 
         <Note>
           <strong>Voyez les choses du côté de l’analyseur.</strong> Le{' '}
@@ -487,10 +487,10 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         </Note>
 
         <H2>À lire aussi</H2>
-        <UL>
-          <LI><A href="/fr/score-ats-cv-cest-quoi">Ce que mesure vraiment un score ATS</A></LI>
-          <LI><A href="/fr/verificateur-cv-ats-sans-envoyer-son-cv">Vérificateurs de CV qui n’envoient pas votre CV</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/fr/score-ats-cv-cest-quoi">Ce que mesure vraiment un score ATS</A></Li>
+          <Li><A href="/fr/verificateur-cv-ats-sans-envoyer-son-cv">Vérificateurs de CV qui n’envoient pas votre CV</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -524,31 +524,31 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         </P>
 
         <H2>Critique — si vous les négligez, la candidature risque de ne pas arriver</H2>
-        <UL>
-          <LI><strong>Le texte est sélectionnable.</strong> Ouvrez le fichier et essayez de surligner une ligne. Si vous n’y arrivez pas, l’analyseur voit une page vide.</LI>
-          <LI><strong>Votre adresse e-mail est en texte brut dans le corps.</strong> Pas dans l’en-tête, pas seulement derrière une icône de courrier, pas seulement sous forme de lien.</LI>
-          <LI><strong>Une seule colonne.</strong> Les colonnes latérales sont la cause la plus fréquente d’extraction brouillée.</LI>
-          <LI><strong>Des titres de rubriques standard.</strong> Expérience, Formation, Compétences, Profil. Ici, le banal l’emporte.</LI>
-          <LI><strong>Chaque poste porte des dates.</strong> Mois et année, dans un format cohérent, sur la même ligne que le poste.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Le texte est sélectionnable.</strong> Ouvrez le fichier et essayez de surligner une ligne. Si vous n’y arrivez pas, l’analyseur voit une page vide.</Li>
+          <Li><strong>Votre adresse e-mail est en texte brut dans le corps.</strong> Pas dans l’en-tête, pas seulement derrière une icône de courrier, pas seulement sous forme de lien.</Li>
+          <Li><strong>Une seule colonne.</strong> Les colonnes latérales sont la cause la plus fréquente d’extraction brouillée.</Li>
+          <Li><strong>Des titres de rubriques standard.</strong> Expérience, Formation, Compétences, Profil. Ici, le banal l’emporte.</Li>
+          <Li><strong>Chaque poste porte des dates.</strong> Mois et année, dans un format cohérent, sur la même ligne que le poste.</Li>
+        </Ul>
 
         <H2>Important — elles décident si vous apparaissez dans une recherche</H2>
-        <UL>
-          <LI><strong>Les intitulés de poste sont reconnaissables.</strong> Si votre titre interne est « Ninja du déploiement », ajoutez à côté l’intitulé courant dans votre métier.</LI>
-          <LI><strong>Le vocabulaire de l’offre apparaît</strong> — mais seulement là où vous l’avez honnêtement mérité.</LI>
-          <LI><strong>Une rubrique de compétences existe,</strong> en texte simple séparé par des virgules plutôt qu’en graphique de jauges.</LI>
-          <LI><strong>Vos liens sont écrits</strong> en texte visible : <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/vous</code>. Un analyseur lit du texte, pas la cible d’un lien.</LI>
-          <LI><strong>Aucun texte ne se trouve dans une image ou une zone de texte.</strong></LI>
-        </UL>
+        <Ul>
+          <Li><strong>Les intitulés de poste sont reconnaissables.</strong> Si votre titre interne est « Ninja du déploiement », ajoutez à côté l’intitulé courant dans votre métier.</Li>
+          <Li><strong>Le vocabulaire de l’offre apparaît</strong> — mais seulement là où vous l’avez honnêtement mérité.</Li>
+          <Li><strong>Une rubrique de compétences existe,</strong> en texte simple séparé par des virgules plutôt qu’en graphique de jauges.</Li>
+          <Li><strong>Vos liens sont écrits</strong> en texte visible : <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/vous</code>. Un analyseur lit du texte, pas la cible d’un lien.</Li>
+          <Li><strong>Aucun texte ne se trouve dans une image ou une zone de texte.</strong></Li>
+        </Ul>
 
         <H2>À faire — c’est ce que lit l’humain</H2>
-        <UL>
-          <LI><strong>Les puces commencent par un verbe.</strong> Dirigé, livré, réduit, reconstruit, piloté.</LI>
-          <LI><strong>L’impact est chiffré.</strong> « Fiabilité améliorée » est une affirmation ; « sessions sans crash passées de 96% à 99,5% » est une preuve.</LI>
-          <LI><strong>Pas de formules toutes faites.</strong> « Professionnel dynamique et motivé, fort d’une solide expérience » n’apprend rien à un lecteur.</LI>
-          <LI><strong>La longueur correspond à votre parcours.</strong> Une page en début de carrière, deux sont normales après une dizaine d’années. Trois demandent une raison.</LI>
-          <LI><strong>Le nom du fichier est un nom</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>, pas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_VRAI.pdf</code>.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Les puces commencent par un verbe.</strong> Dirigé, livré, réduit, reconstruit, piloté.</Li>
+          <Li><strong>L’impact est chiffré.</strong> « Fiabilité améliorée » est une affirmation ; « sessions sans crash passées de 96% à 99,5% » est une preuve.</Li>
+          <Li><strong>Pas de formules toutes faites.</strong> « Professionnel dynamique et motivé, fort d’une solide expérience » n’apprend rien à un lecteur.</Li>
+          <Li><strong>La longueur correspond à votre parcours.</strong> Une page en début de carrière, deux sont normales après une dizaine d’années. Trois demandent une raison.</Li>
+          <Li><strong>Le nom du fichier est un nom</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>, pas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_VRAI.pdf</code>.</Li>
+        </Ul>
 
         <H2>Ce qu’un vérificateur peut contrôler à votre place</H2>
         <P>
@@ -556,22 +556,22 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
           relève du jugement, donc non. Voici la répartition pour le vérificateur de ce site :
         </P>
         <H3>Contrôlé automatiquement</H3>
-        <UL>
-          <LI>Le texte sélectionnable et un encodage des caractères propre</LI>
-          <LI>L’adresse e-mail, le téléphone et un lien de profil visible en texte — il signale aussi un lien qui n’existe que sous forme d’hyperlien caché</LI>
-          <LI>Les titres standard pour Expérience, Formation, Compétences et Profil, ainsi que Réalisations, Projets et Certifications</LI>
-          <LI>Les dates, la structure en puces et le nombre de pages</LI>
-          <LI>Les chiffres dans vos puces, et les puces qui commencent par un verbe</LI>
-          <LI>Les formules toutes faites et les affirmations vagues, dans l’onglet distinct « Style rédactionnel »</LI>
-          <LI>Le vocabulaire de l’offre, si vous la collez dans l’onglet « Correspondance avec l’offre »</LI>
-        </UL>
+        <Ul>
+          <Li>Le texte sélectionnable et un encodage des caractères propre</Li>
+          <Li>L’adresse e-mail, le téléphone et un lien de profil visible en texte — il signale aussi un lien qui n’existe que sous forme d’hyperlien caché</Li>
+          <Li>Les titres standard pour Expérience, Formation, Compétences et Profil, ainsi que Réalisations, Projets et Certifications</Li>
+          <Li>Les dates, la structure en puces et le nombre de pages</Li>
+          <Li>Les chiffres dans vos puces, et les puces qui commencent par un verbe</Li>
+          <Li>Les formules toutes faites et les affirmations vagues, dans l’onglet distinct « Style rédactionnel »</Li>
+          <Li>Le vocabulaire de l’offre, si vous la collez dans l’onglet « Correspondance avec l’offre »</Li>
+        </Ul>
         <H3>Reste à votre charge</H3>
-        <UL>
-          <LI>Savoir si une colonne latérale ou une seconde colonne brouille l’ordre de lecture — utilisez le test copier-coller</LI>
-          <LI>Savoir si vos intitulés de poste sont ceux qu’un recruteur chercherait</LI>
-          <LI>Savoir si chaque mot-clé ajouté est un mot-clé que vous avez mérité</LI>
-          <LI>Le nom du fichier</LI>
-        </UL>
+        <Ul>
+          <Li>Savoir si une colonne latérale ou une seconde colonne brouille l’ordre de lecture — utilisez le test copier-coller</Li>
+          <Li>Savoir si vos intitulés de poste sont ceux qu’un recruteur chercherait</Li>
+          <Li>Savoir si chaque mot-clé ajouté est un mot-clé que vous avez mérité</Li>
+          <Li>Le nom du fichier</Li>
+        </Ul>
 
         <Note>
           <strong>La majeure partie de cette liste se contrôle automatiquement.</strong> Le{' '}
@@ -583,10 +583,10 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         </Note>
 
         <H2>À lire aussi</H2>
-        <UL>
-          <LI><A href="/fr/comment-un-ats-lit-un-cv">Comment un ATS lit un CV</A></LI>
-          <LI><A href="/fr/cv-pdf-ou-word-pour-ats">CV en PDF ou en Word : lequel envoyer ?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/fr/comment-un-ats-lit-un-cv">Comment un ATS lit un CV</A></Li>
+          <Li><A href="/fr/cv-pdf-ou-word-pour-ats">CV en PDF ou en Word : lequel envoyer ?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -622,26 +622,26 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         </P>
 
         <H2>Vérifier le score de son CV en quatre étapes</H2>
-        <OL>
-          <LI>
+        <Ol>
+          <Li>
             Ouvrez le <A href="/fr/">vérificateur de CV ATS gratuit</A> et choisissez{' '}
             <em>Analyser mon CV</em>.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Déposez votre CV en PDF ou en DOCX. Le fichier est lu dans votre navigateur et n’est
             envoyé nulle part : vous pouvez donc l’utiliser sans crainte sur le CV que vous destinez
             à un concurrent de votre employeur actuel.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Lisez le score et la liste des vérifications échouées. Les échecs sont classés selon le
             nombre de points que coûte chacun : le premier élément est donc la correction qui
             rapporte le plus.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Corrigez les deux ou trois premiers éléments, exportez de nouveau et déposez le nouveau
             fichier. Recommencez jusqu’à ce qu’il ne reste plus rien de coûteux.
-          </LI>
-        </OL>
+          </Li>
+        </Ol>
 
         <H2>Ce qu’est un bon score de CV</H2>
         <P>
@@ -654,12 +654,12 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         </P>
 
         <H2>Que corriger d’abord</H2>
-        <UL>
-          <LI>Vérifiez que le texte est sélectionnable. Un PDF scanné ou composé d’images obtient un score proche de zéro.</LI>
-          <LI>Placez votre adresse e-mail et votre téléphone dans le corps de la page, pas dans un en-tête ni dans une image.</LI>
-          <LI>Utilisez des titres standard : Expérience, Formation, Compétences, Profil.</LI>
-          <LI>Datez chaque poste, et utilisez de vraies puces.</LI>
-        </UL>
+        <Ul>
+          <Li>Vérifiez que le texte est sélectionnable. Un PDF scanné ou composé d’images obtient un score proche de zéro.</Li>
+          <Li>Placez votre adresse e-mail et votre téléphone dans le corps de la page, pas dans un en-tête ni dans une image.</Li>
+          <Li>Utilisez des titres standard : Expérience, Formation, Compétences, Profil.</Li>
+          <Li>Datez chaque poste, et utilisez de vraies puces.</Li>
+        </Ul>
 
         <H2>Ce que le score ne vous dit pas</H2>
         <P>
@@ -676,11 +676,11 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         </Note>
 
         <H2>À lire aussi</H2>
-        <UL>
-          <LI><A href="/fr/score-ats-cv-cest-quoi">Ce que mesure vraiment un score ATS</A></LI>
-          <LI><A href="/fr/checklist-cv-compatible-ats">La checklist du CV compatible ATS</A></LI>
-          <LI><A href="/fr/verificateur-cv-ats-sans-envoyer-son-cv">Vérificateurs de CV ATS qui n’envoient pas votre CV</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/fr/score-ats-cv-cest-quoi">Ce que mesure vraiment un score ATS</A></Li>
+          <Li><A href="/fr/checklist-cv-compatible-ats">La checklist du CV compatible ATS</A></Li>
+          <Li><A href="/fr/verificateur-cv-ats-sans-envoyer-son-cv">Vérificateurs de CV ATS qui n’envoient pas votre CV</A></Li>
+        </Ul>
       </>
     ),
     faq: [

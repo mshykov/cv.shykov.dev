@@ -4,7 +4,7 @@
 //
 // Vivem em src/ para que o Tailwind veja estas classes e gere o mesmo CSS que a
 // aplicação usa. Não os mova para fora de src/ ou ficam sem estilo.
-import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from '../prose.tsx'
+import { A, Code, H2, H3, Li, Note, Ol, P, Pre, Table, Ul } from '../prose.tsx'
 import { rubricRows, sectionRows } from '../tables.ts'
 import { GUIDES } from './guides.ts'
 import type { Article, Guide } from '../types.ts'
@@ -62,13 +62,13 @@ export const ARTICLES: Article[] = [
           verificações. Neste site, a grelha tem 100 pontos fixos e é pública, para que veja
           exatamente de onde vem cada ponto. Em cinco grupos:
         </P>
-        <UL>
-          <LI><strong>Legibilidade (25)</strong> — há texto real e selecionável, ou a página é uma imagem?</LI>
-          <LI><strong>Contactos (15)</strong> — email, telefone e uma ligação escrita como texto visível.</LI>
-          <LI><strong>Secções (35)</strong> — títulos que um leitor reconhece: Experiência, Formação, Competências, Resumo.</LI>
-          <LI><strong>Formato (15)</strong> — número de páginas, funções com datas, estrutura real de marcadores.</LI>
-          <LI><strong>Conteúdo (10)</strong> — resultados quantificados e marcadores que começam por um verbo.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Legibilidade (25)</strong> — há texto real e selecionável, ou a página é uma imagem?</Li>
+          <Li><strong>Contactos (15)</strong> — email, telefone e uma ligação escrita como texto visível.</Li>
+          <Li><strong>Secções (35)</strong> — títulos que um leitor reconhece: Experiência, Formação, Competências, Resumo.</Li>
+          <Li><strong>Formato (15)</strong> — número de páginas, funções com datas, estrutura real de marcadores.</Li>
+          <Li><strong>Conteúdo (10)</strong> — resultados quantificados e marcadores que começam por um verbo.</Li>
+        </Ul>
         <P>E, verificação a verificação — esta tabela é a que o verificador executa, não um resumo dela:</P>
         <Table
           caption="Grelha de pontuação do ATS Resume Toolkit, verificação a verificação"
@@ -88,11 +88,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>O que nenhuma pontuação consegue medir</H2>
-        <UL>
-          <LI>Se a sua experiência corresponde à função. Isso é juízo do recrutador.</LI>
-          <LI>Que ATS em concreto a empresa usa. Cada fornecedor lê de forma diferente e nenhum publica as suas regras.</LI>
-          <LI>Se a sua escrita é persuasiva. Um CV perfeitamente legível pode ainda assim ser enfadonho.</LI>
-        </UL>
+        <Ul>
+          <Li>Se a sua experiência corresponde à função. Isso é juízo do recrutador.</Li>
+          <Li>Que ATS em concreto a empresa usa. Cada fornecedor lê de forma diferente e nenhum publica as suas regras.</Li>
+          <Li>Se a sua escrita é persuasiva. Um CV perfeitamente legível pode ainda assim ser enfadonho.</Li>
+        </Ul>
         <P>
           Encare uma pontuação acima de cerca de 85 como “nada daqui se vai perder no caminho” e passe
           ao conteúdo. Perseguir os últimos pontos é quase sempre esforço desperdiçado.
@@ -115,10 +115,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Relacionado</H2>
-        <UL>
-          <LI><A href="/pt-pt/como-funciona-a-leitura-de-cv-ats">Como funciona realmente a leitura de CV por um ATS</A></LI>
-          <LI><A href="/pt-pt/checklist-cv-ats">A checklist do CV para ATS</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-pt/como-funciona-a-leitura-de-cv-ats">Como funciona realmente a leitura de CV por um ATS</A></Li>
+          <Li><A href="/pt-pt/checklist-cv-ats">A checklist do CV para ATS</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -166,12 +166,12 @@ export const ARTICLES: Article[] = [
           um servidor. A partir daí, é normal — e muitas vezes está nos termos — acontecer alguma
           combinação do seguinte:
         </P>
-        <UL>
-          <LI>O ficheiro é guardado, por vezes indefinidamente, e associado à conta que criou.</LI>
-          <LI>O texto é enviado a um modelo de linguagem de terceiros para pontuar ou reescrever.</LI>
-          <LI>O email com que se registou entra numa sequência de marketing.</LI>
-          <LI>Dados agregados alimentam um produto de recrutamento vendido a empresas.</LI>
-        </UL>
+        <Ul>
+          <Li>O ficheiro é guardado, por vezes indefinidamente, e associado à conta que criou.</Li>
+          <Li>O texto é enviado a um modelo de linguagem de terceiros para pontuar ou reescrever.</Li>
+          <Li>O email com que se registou entra numa sequência de marketing.</Li>
+          <Li>Dados agregados alimentam um produto de recrutamento vendido a empresas.</Li>
+        </Ul>
         <P>
           Nada disto é necessariamente malicioso. É simplesmente o modelo de negócio: a verificação é
           grátis porque o produto são você e o seu documento. Mas convém saber antes de clicar, e não
@@ -179,13 +179,13 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>As perguntas a fazer a qualquer verificador</H2>
-        <UL>
-          <LI><strong>O ficheiro sai do dispositivo?</strong> Se não há envio, a maioria das outras perguntas deixa de importar.</LI>
-          <LI><strong>É preciso criar conta?</strong> Um muro de email serve para recolher o email, não para melhorar a pontuação.</LI>
-          <LI><strong>A pontuação é determinística ou gerada?</strong> Se um modelo escreve o feedback, o seu CV foi enviado a esse modelo.</LI>
-          <LI><strong>Pode ler as regras?</strong> Uma grelha pública pode ser contestada. Uma escondida não.</LI>
-          <LI><strong>Como se apaga o ficheiro?</strong> Se a resposta é um email para o apoio ao cliente, assuma que o ficheiro fica.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>O ficheiro sai do dispositivo?</strong> Se não há envio, a maioria das outras perguntas deixa de importar.</Li>
+          <Li><strong>É preciso criar conta?</strong> Um muro de email serve para recolher o email, não para melhorar a pontuação.</Li>
+          <Li><strong>A pontuação é determinística ou gerada?</strong> Se um modelo escreve o feedback, o seu CV foi enviado a esse modelo.</Li>
+          <Li><strong>Pode ler as regras?</strong> Uma grelha pública pode ser contestada. Uma escondida não.</Li>
+          <Li><strong>Como se apaga o ficheiro?</strong> Se a resposta é um email para o apoio ao cliente, assuma que o ficheiro fica.</Li>
+        </Ul>
 
         <H2>Como funciona uma verificação só local</H2>
         <P>
@@ -206,7 +206,7 @@ export const ARTICLES: Article[] = [
           “Nunca guardamos o seu ficheiro” é uma promessa. Se o ficheiro chega sequer a sair do seu
           computador é algo que pode ver acontecer — ou não — em qualquer navegador de secretária:
         </P>
-        <OL>
+        <Ol>
           <li>Abra o verificador e, a seguir, as ferramentas de programador do navegador: <Code>F12</Code> no Windows e no Linux, <Code>⌥ ⌘ I</Code> num Mac.</li>
           <li>Passe ao separador <strong>Rede</strong> (<em>Network</em>) e limpe-o, para que só apareçam pedidos novos.</li>
           <li>Largue o seu CV no verificador e espere pelo resultado.</li>
@@ -215,7 +215,7 @@ export const ARTICLES: Article[] = [
             tamanho é aproximadamente o do seu ficheiro. Os scripts e tipos de letra que a página
             carrega para si própria não são envios.
           </li>
-        </OL>
+        </Ol>
         <P>
           Se nenhum pedido leva o ficheiro, o ficheiro não saiu. Isto funciona em qualquer site,
           incluindo este — e é essa a ideia: a afirmação deve poder ser confirmada por si, e não aceite
@@ -238,10 +238,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Relacionado</H2>
-        <UL>
-          <LI><A href="/pt-pt/o-que-e-a-pontuacao-ats">O que mede realmente a pontuação ATS</A></LI>
-          <LI><A href="/pt-pt/pdf-ou-docx-para-ats">PDF ou DOCX: qual deve enviar?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-pt/o-que-e-a-pontuacao-ats">O que mede realmente a pontuação ATS</A></Li>
+          <Li><A href="/pt-pt/pdf-ou-docx-para-ats">PDF ou DOCX: qual deve enviar?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -276,11 +276,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Porque é que o PDF é hoje a opção por defeito</H2>
-        <UL>
-          <LI><strong>Fica igual em todo o lado.</strong> Um DOCX reorganiza-se consoante os tipos de letra e a versão do Word do outro lado. A sua disposição cuidada de duas páginas pode chegar como três páginas desalinhadas.</LI>
-          <LI><strong>Os leitores modernos lidam bem com ele.</strong> A extração de texto de PDF é um problema resolvido; os principais sistemas suportam-no há anos.</LI>
-          <LI><strong>É mais difícil de estragar.</strong> Ninguém edita o seu PDF por acidente entre o envio e a revisão.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Fica igual em todo o lado.</strong> Um DOCX reorganiza-se consoante os tipos de letra e a versão do Word do outro lado. A sua disposição cuidada de duas páginas pode chegar como três páginas desalinhadas.</Li>
+          <Li><strong>Os leitores modernos lidam bem com ele.</strong> A extração de texto de PDF é um problema resolvido; os principais sistemas suportam-no há anos.</Li>
+          <Li><strong>É mais difícil de estragar.</strong> Ninguém edita o seu PDF por acidente entre o envio e a revisão.</Li>
+        </Ul>
 
         <H2>O único PDF que falha sempre</H2>
         <P>
@@ -296,7 +296,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Um teste de 30 segundos para qualquer PDF</H2>
         <P>Selecionar texto prova que o texto existe. Mais dois passos mostram se sai utilizável:</P>
-        <OL>
+        <Ol>
           <li><strong>Selecione uma linha.</strong> Se nada fica realçado, a página é uma imagem. Volte a exportar a partir do documento original.</li>
           <li>
             <strong>Pesquise o seu email</strong> com <Code>Ctrl F</Code> / <Code>⌘ F</Code>. Se o
@@ -309,7 +309,7 @@ export const ARTICLES: Article[] = [
             recebe. Se duas colunas saírem intercaladas linha a linha, ou os cargos aparecerem longe
             das datas, corrija a disposição antes de se preocupar com o resto.
           </li>
-        </OL>
+        </Ol>
         <P>
           Exportar do Word, do Google Docs ou do Pages com a opção normal de <em>exportar</em> ou{' '}
           <em>guardar como PDF</em> produz PDF com texto real. Os caminhos de risco são “imprimir
@@ -318,24 +318,24 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Quando o DOCX é a resposta certa</H2>
-        <UL>
-          <LI><strong>O formulário assim o diz.</strong> Se o campo de envio aceita apenas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto do que o formulário.</LI>
-          <LI><strong>Um recrutador pediu.</strong> As agências costumam passar o seu CV para o modelo delas, o que exige um ficheiro editável.</LI>
-          <LI><strong>A empresa usa um sistema mais antigo.</strong> Raro hoje, mas não custa cumprir.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>O formulário assim o diz.</strong> Se o campo de envio aceita apenas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto do que o formulário.</Li>
+          <Li><strong>Um recrutador pediu.</strong> As agências costumam passar o seu CV para o modelo delas, o que exige um ficheiro editável.</Li>
+          <Li><strong>A empresa usa um sistema mais antigo.</strong> Raro hoje, mas não custa cumprir.</Li>
+        </Ul>
 
         <H2>O que importa mais do que a extensão</H2>
         <P>
           O formato é a decisão mais fácil que vai tomar sobre o CV. Estas são as que realmente
           fazem diferença:
         </P>
-        <UL>
-          <LI><strong>Uma coluna.</strong> As disposições em várias colunas podem ser lidas pela ordem errada, intercalando duas linhas sem relação.</LI>
-          <LI><strong>Sem texto dentro de imagens.</strong> Um logótipo não faz mal; o cargo desenhado como gráfico faz.</LI>
-          <LI><strong>Nenhum dado essencial no cabeçalho ou no rodapé.</strong> Alguns leitores ignoram essas zonas. Ponha o email no corpo.</LI>
-          <LI><strong>Marcadores verdadeiros,</strong> e não traços desenhados à mão dentro de uma célula de tabela.</LI>
-          <LI><strong>Um nome de ficheiro sensato</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Apelido_CV.pdf</code>. Uma pessoa vê-o numa pasta com centenas.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Uma coluna.</strong> As disposições em várias colunas podem ser lidas pela ordem errada, intercalando duas linhas sem relação.</Li>
+          <Li><strong>Sem texto dentro de imagens.</strong> Um logótipo não faz mal; o cargo desenhado como gráfico faz.</Li>
+          <Li><strong>Nenhum dado essencial no cabeçalho ou no rodapé.</strong> Alguns leitores ignoram essas zonas. Ponha o email no corpo.</Li>
+          <Li><strong>Marcadores verdadeiros,</strong> e não traços desenhados à mão dentro de uma célula de tabela.</Li>
+          <Li><strong>Um nome de ficheiro sensato</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Apelido_CV.pdf</code>. Uma pessoa vê-o numa pasta com centenas.</Li>
+        </Ul>
 
         <Note>
           <strong>Não sabe em que categoria cai o seu ficheiro?</strong> Largue-o no{' '}
@@ -345,10 +345,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Relacionado</H2>
-        <UL>
-          <LI><A href="/pt-pt/como-funciona-a-leitura-de-cv-ats">Como funciona realmente a leitura de CV por um ATS</A></LI>
-          <LI><A href="/pt-pt/checklist-cv-ats">A checklist do CV para ATS</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-pt/como-funciona-a-leitura-de-cv-ats">Como funciona realmente a leitura de CV por um ATS</A></Li>
+          <Li><A href="/pt-pt/checklist-cv-ats">A checklist do CV para ATS</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -461,11 +461,11 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         <P><strong>Falha quando:</strong> o vocabulário do CV e o do anúncio não têm qualquer sobreposição.</P>
 
         <H2>O que isto implica</H2>
-        <UL>
-          <LI>Os conselhos de formatação não são superstição — cada regra corresponde a uma das fases acima.</LI>
-          <LI>Os conselhos sobre palavras-chave dizem respeito à sobreposição de vocabulário, não à densidade. Nunca afirme uma competência que não tem.</LI>
-          <LI>Nada neste processo o avalia. Ou o coloca numa forma pesquisável, ou falha.</LI>
-        </UL>
+        <Ul>
+          <Li>Os conselhos de formatação não são superstição — cada regra corresponde a uma das fases acima.</Li>
+          <Li>Os conselhos sobre palavras-chave dizem respeito à sobreposição de vocabulário, não à densidade. Nunca afirme uma competência que não tem.</Li>
+          <Li>Nada neste processo o avalia. Ou o coloca numa forma pesquisável, ou falha.</Li>
+        </Ul>
 
         <Note>
           <strong>Veja-o do lado do leitor.</strong> O{' '}
@@ -475,10 +475,10 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Relacionado</H2>
-        <UL>
-          <LI><A href="/pt-pt/o-que-e-a-pontuacao-ats">O que mede realmente a pontuação ATS</A></LI>
-          <LI><A href="/pt-pt/verificador-cv-ats-sem-carregar-ficheiro">Verificadores que não carregam o seu CV</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-pt/o-que-e-a-pontuacao-ats">O que mede realmente a pontuação ATS</A></Li>
+          <Li><A href="/pt-pt/verificador-cv-ats-sem-carregar-ficheiro">Verificadores que não carregam o seu CV</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -511,31 +511,31 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         </P>
 
         <H2>Crítico — se o ignorar, a candidatura pode não chegar</H2>
-        <UL>
-          <LI><strong>O texto é selecionável.</strong> Abra o ficheiro e tente realçar uma linha. Se não consegue, o leitor vê uma página em branco.</LI>
-          <LI><strong>O email está em texto simples, no corpo.</strong> Não no cabeçalho, não só atrás de um ícone de correio, não só como hiperligação.</LI>
-          <LI><strong>Uma coluna.</strong> As barras laterais são a causa mais comum de extrações baralhadas.</LI>
-          <LI><strong>Títulos de secção padrão.</strong> Experiência, Formação, Competências, Resumo. Aqui ganha o aborrecido.</LI>
-          <LI><strong>Todas as funções têm datas.</strong> Mês e ano, num formato coerente, na mesma linha da função.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>O texto é selecionável.</strong> Abra o ficheiro e tente realçar uma linha. Se não consegue, o leitor vê uma página em branco.</Li>
+          <Li><strong>O email está em texto simples, no corpo.</strong> Não no cabeçalho, não só atrás de um ícone de correio, não só como hiperligação.</Li>
+          <Li><strong>Uma coluna.</strong> As barras laterais são a causa mais comum de extrações baralhadas.</Li>
+          <Li><strong>Títulos de secção padrão.</strong> Experiência, Formação, Competências, Resumo. Aqui ganha o aborrecido.</Li>
+          <Li><strong>Todas as funções têm datas.</strong> Mês e ano, num formato coerente, na mesma linha da função.</Li>
+        </Ul>
 
         <H2>Importante — decidem se aparece numa pesquisa</H2>
-        <UL>
-          <LI><strong>Os cargos são reconhecíveis.</strong> Se o seu cargo interno é “Ninja da Entrega”, ponha ao lado o cargo habitual do setor.</LI>
-          <LI><strong>O vocabulário do anúncio aparece</strong> — mas só onde o conquistou honestamente.</LI>
-          <LI><strong>Existe uma secção de competências,</strong> em texto simples separado por vírgulas e não num gráfico de barras de competências.</LI>
-          <LI><strong>As ligações estão escritas</strong> como texto visível: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/nome</code>. Um leitor lê texto, não o destino da ligação.</LI>
-          <LI><strong>Nenhum texto vive dentro de uma imagem ou de uma caixa de texto.</strong></LI>
-        </UL>
+        <Ul>
+          <Li><strong>Os cargos são reconhecíveis.</strong> Se o seu cargo interno é “Ninja da Entrega”, ponha ao lado o cargo habitual do setor.</Li>
+          <Li><strong>O vocabulário do anúncio aparece</strong> — mas só onde o conquistou honestamente.</Li>
+          <Li><strong>Existe uma secção de competências,</strong> em texto simples separado por vírgulas e não num gráfico de barras de competências.</Li>
+          <Li><strong>As ligações estão escritas</strong> como texto visível: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/nome</code>. Um leitor lê texto, não o destino da ligação.</Li>
+          <Li><strong>Nenhum texto vive dentro de uma imagem ou de uma caixa de texto.</strong></Li>
+        </Ul>
 
         <H2>Vale a pena — são lidos por uma pessoa</H2>
-        <UL>
-          <LI><strong>Os marcadores começam por um verbo.</strong> Liderei, lancei, reduzi, reconstruí, geri.</LI>
-          <LI><strong>O impacto leva um número.</strong> “Melhorei a fiabilidade” é uma afirmação; “sessões sem falhas de 96% para 99,5%” é prova.</LI>
-          <LI><strong>Sem frases feitas.</strong> “Profissional orientado para resultados com historial comprovado” não diz nada a quem lê.</LI>
-          <LI><strong>A extensão corresponde à carreira.</strong> Uma página no início, duas é normal passada uma década. Três pedem uma razão.</LI>
-          <LI><strong>O nome do ficheiro é um nome</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Apelido_CV.pdf</code>, e não <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_MESMO.pdf</code>.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Os marcadores começam por um verbo.</strong> Liderei, lancei, reduzi, reconstruí, geri.</Li>
+          <Li><strong>O impacto leva um número.</strong> “Melhorei a fiabilidade” é uma afirmação; “sessões sem falhas de 96% para 99,5%” é prova.</Li>
+          <Li><strong>Sem frases feitas.</strong> “Profissional orientado para resultados com historial comprovado” não diz nada a quem lê.</Li>
+          <Li><strong>A extensão corresponde à carreira.</strong> Uma página no início, duas é normal passada uma década. Três pedem uma razão.</Li>
+          <Li><strong>O nome do ficheiro é um nome</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Apelido_CV.pdf</code>, e não <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_MESMO.pdf</code>.</Li>
+        </Ul>
 
         <H2>O que um verificador consegue confirmar por si</H2>
         <P>
@@ -543,22 +543,22 @@ jan 2020 – presente Terraform, AWS`}</Pre>
           juízo, por isso não pode. Eis a divisão para o verificador deste site:
         </P>
         <H3>Verificado automaticamente</H3>
-        <UL>
-          <LI>Texto selecionável e codificação de carateres limpa</LI>
-          <LI>Email, telefone e uma ligação de perfil visível como texto — assinala também uma ligação que existe apenas como hiperligação escondida</LI>
-          <LI>Títulos padrão para Experiência, Formação, Competências e Resumo, mais Conquistas, Projetos e Certificações</LI>
-          <LI>Datas, estrutura de marcadores e número de páginas</LI>
-          <LI>Números nos marcadores e marcadores que começam por um verbo</LI>
-          <LI>Frases feitas e afirmações vagas, no separador próprio de estilo de escrita</LI>
-          <LI>O vocabulário do anúncio, se colar o anúncio na comparação com o anúncio de emprego</LI>
-        </UL>
+        <Ul>
+          <Li>Texto selecionável e codificação de carateres limpa</Li>
+          <Li>Email, telefone e uma ligação de perfil visível como texto — assinala também uma ligação que existe apenas como hiperligação escondida</Li>
+          <Li>Títulos padrão para Experiência, Formação, Competências e Resumo, mais Conquistas, Projetos e Certificações</Li>
+          <Li>Datas, estrutura de marcadores e número de páginas</Li>
+          <Li>Números nos marcadores e marcadores que começam por um verbo</Li>
+          <Li>Frases feitas e afirmações vagas, no separador próprio de estilo de escrita</Li>
+          <Li>O vocabulário do anúncio, se colar o anúncio na comparação com o anúncio de emprego</Li>
+        </Ul>
         <H3>Fica por sua conta</H3>
-        <UL>
-          <LI>Se uma barra lateral ou uma segunda coluna baralha a ordem de leitura — use o teste de copiar e colar</LI>
-          <LI>Se os cargos são os que um recrutador pesquisaria</LI>
-          <LI>Se cada palavra-chave que acrescentou é uma que conquistou</LI>
-          <LI>O nome do ficheiro</LI>
-        </UL>
+        <Ul>
+          <Li>Se uma barra lateral ou uma segunda coluna baralha a ordem de leitura — use o teste de copiar e colar</Li>
+          <Li>Se os cargos são os que um recrutador pesquisaria</Li>
+          <Li>Se cada palavra-chave que acrescentou é uma que conquistou</Li>
+          <Li>O nome do ficheiro</Li>
+        </Ul>
 
         <Note>
           <strong>Quase tudo nesta lista se verifica automaticamente.</strong> O{' '}
@@ -569,10 +569,10 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Relacionado</H2>
-        <UL>
-          <LI><A href="/pt-pt/como-funciona-a-leitura-de-cv-ats">Como funciona realmente a leitura de CV por um ATS</A></LI>
-          <LI><A href="/pt-pt/pdf-ou-docx-para-ats">PDF ou DOCX: qual deve enviar?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-pt/como-funciona-a-leitura-de-cv-ats">Como funciona realmente a leitura de CV por um ATS</A></Li>
+          <Li><A href="/pt-pt/pdf-ou-docx-para-ats">PDF ou DOCX: qual deve enviar?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -607,24 +607,24 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         </P>
 
         <H2>Verifique a pontuação do CV em quatro passos</H2>
-        <OL>
-          <LI>
+        <Ol>
+          <Li>
             Abra o <A href="/pt-pt/">verificador de CV ATS gratuito</A> e escolha <em>Verificar o meu CV</em>.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Largue o CV em PDF ou DOCX. O ficheiro é lido dentro do navegador e nunca é enviado para
             lado nenhum, por isso pode usá-lo sem receio com o CV que vai enviar a um concorrente do
             seu empregador atual.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Leia a pontuação e a lista de verificações falhadas. As falhas estão ordenadas pelos
             pontos que cada uma custa, pelo que o primeiro item é a correção mais valiosa.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Corrija os dois ou três primeiros itens, volte a exportar e largue o novo ficheiro.
             Repita até não restar nada caro.
-          </LI>
-        </OL>
+          </Li>
+        </Ol>
 
         <H2>O que é uma boa pontuação de CV</H2>
         <P>
@@ -636,12 +636,12 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         </P>
 
         <H2>O que corrigir primeiro</H2>
-        <UL>
-          <LI>Garanta que o texto é selecionável. Um PDF digitalizado ou só com imagens pontua perto de zero.</LI>
-          <LI>Ponha o email e o telefone no corpo da página, não num cabeçalho nem numa imagem.</LI>
-          <LI>Use títulos padrão: Experiência, Formação, Competências, Resumo.</LI>
-          <LI>Dê datas a todas as funções e use marcadores verdadeiros.</LI>
-        </UL>
+        <Ul>
+          <Li>Garanta que o texto é selecionável. Um PDF digitalizado ou só com imagens pontua perto de zero.</Li>
+          <Li>Ponha o email e o telefone no corpo da página, não num cabeçalho nem numa imagem.</Li>
+          <Li>Use títulos padrão: Experiência, Formação, Competências, Resumo.</Li>
+          <Li>Dê datas a todas as funções e use marcadores verdadeiros.</Li>
+        </Ul>
 
         <H2>O que a pontuação não lhe diz</H2>
         <P>
@@ -657,11 +657,11 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Relacionado</H2>
-        <UL>
-          <LI><A href="/pt-pt/o-que-e-a-pontuacao-ats">O que mede realmente a pontuação ATS</A></LI>
-          <LI><A href="/pt-pt/checklist-cv-ats">A checklist do CV para ATS</A></LI>
-          <LI><A href="/pt-pt/verificador-cv-ats-sem-carregar-ficheiro">Verificadores de CV ATS que não carregam o seu ficheiro</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/pt-pt/o-que-e-a-pontuacao-ats">O que mede realmente a pontuação ATS</A></Li>
+          <Li><A href="/pt-pt/checklist-cv-ats">A checklist do CV para ATS</A></Li>
+          <Li><A href="/pt-pt/verificador-cv-ats-sem-carregar-ficheiro">Verificadores de CV ATS que não carregam o seu ficheiro</A></Li>
+        </Ul>
       </>
     ),
     faq: [

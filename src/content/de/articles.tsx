@@ -3,7 +3,7 @@
 //
 // Sie liegen in src/, damit der Tailwind-Scanner diese Klassennamen sieht. Nicht
 // aus src/ verschieben, sonst erscheinen die Ratgeber ohne Styling.
-import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from '../prose.tsx'
+import { A, Code, H2, H3, Li, Note, Ol, P, Pre, Table, Ul } from '../prose.tsx'
 import { rubricRows, sectionRows } from '../tables.ts'
 import { GUIDES } from './guides.ts'
 import type { Article, Guide } from '../types.ts'
@@ -65,13 +65,13 @@ export const ARTICLES: Article[] = [
           Bewertungsschema fest auf 100 Punkte angelegt und veröffentlicht, sodass Sie genau sehen,
           woher jeder Punkt kommt. In fünf Gruppen:
         </P>
-        <UL>
-          <LI><strong>Lesbarkeit (25)</strong> – gibt es echten, auswählbaren Text, oder ist die Seite ein Bild?</LI>
-          <LI><strong>Kontakt (15)</strong> – E-Mail, Telefon und ein Link, der als sichtbarer Text ausgeschrieben ist.</LI>
-          <LI><strong>Abschnitte (35)</strong> – Überschriften, die ein Parser erkennt: Berufserfahrung, Ausbildung, Kenntnisse, Profil.</LI>
-          <LI><strong>Format (15)</strong> – Seitenzahl, datierte Stationen, echte Aufzählungsstruktur.</LI>
-          <LI><strong>Inhalt (10)</strong> – messbare Ergebnisse und Aufzählungspunkte, die mit einem Verb beginnen.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Lesbarkeit (25)</strong> – gibt es echten, auswählbaren Text, oder ist die Seite ein Bild?</Li>
+          <Li><strong>Kontakt (15)</strong> – E-Mail, Telefon und ein Link, der als sichtbarer Text ausgeschrieben ist.</Li>
+          <Li><strong>Abschnitte (35)</strong> – Überschriften, die ein Parser erkennt: Berufserfahrung, Ausbildung, Kenntnisse, Profil.</Li>
+          <Li><strong>Format (15)</strong> – Seitenzahl, datierte Stationen, echte Aufzählungsstruktur.</Li>
+          <Li><strong>Inhalt (10)</strong> – messbare Ergebnisse und Aufzählungspunkte, die mit einem Verb beginnen.</Li>
+        </Ul>
         <P>Und Prüfung für Prüfung – diese Tabelle ist genau die, die der Checker ausführt, keine Zusammenfassung davon:</P>
         <Table
           caption="Bewertungsschema des ATS Resume Toolkit, Prüfung für Prüfung"
@@ -91,11 +91,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Was kein Score messen kann</H2>
-        <UL>
-          <LI>Ob Ihre Erfahrung zur Stelle passt. Das ist das Urteil des Recruiters.</LI>
-          <LI>Welches ATS der Arbeitgeber einsetzt. Die Anbieter lesen unterschiedlich, und keiner veröffentlicht seine Regeln.</LI>
-          <LI>Ob Ihr Text überzeugt. Ein perfekt lesbarer Lebenslauf kann trotzdem langweilig sein.</LI>
-        </UL>
+        <Ul>
+          <Li>Ob Ihre Erfahrung zur Stelle passt. Das ist das Urteil des Recruiters.</Li>
+          <Li>Welches ATS der Arbeitgeber einsetzt. Die Anbieter lesen unterschiedlich, und keiner veröffentlicht seine Regeln.</Li>
+          <Li>Ob Ihr Text überzeugt. Ein perfekt lesbarer Lebenslauf kann trotzdem langweilig sein.</Li>
+        </Ul>
         <P>
           Verstehen Sie einen Score ab etwa 85 als „auf dem Weg geht nichts verloren“ und kümmern Sie
           sich dann um den Inhalt. Den letzten paar Punkten hinterherzujagen, ist fast immer vertane Mühe.
@@ -119,10 +119,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Weiterlesen</H2>
-        <UL>
-          <LI><A href={to('how-ats-parsing-works')}>So funktioniert das Parsing von Lebensläufen im ATS</A></LI>
-          <LI><A href={to('ats-resume-checklist')}>Die ATS-Checkliste für Ihren Lebenslauf</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href={to('how-ats-parsing-works')}>So funktioniert das Parsing von Lebensläufen im ATS</A></Li>
+          <Li><A href={to('ats-resume-checklist')}>Die ATS-Checkliste für Ihren Lebenslauf</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -171,12 +171,12 @@ export const ARTICLES: Article[] = [
           einem Server. Danach ist je nach Anbieter einiges davon üblich und steht oft in den
           Nutzungsbedingungen:
         </P>
-        <UL>
-          <LI>Die Datei wird gespeichert, mitunter unbefristet, und mit dem von Ihnen angelegten Konto verknüpft.</LI>
-          <LI>Der Text geht zur Bewertung oder Umformulierung an ein externes Sprachmodell.</LI>
-          <LI>Die registrierte E-Mail-Adresse landet in einer Marketing-Strecke.</LI>
-          <LI>Aggregierte Daten fließen in ein Recruiting-Produkt, das an Arbeitgeber verkauft wird.</LI>
-        </UL>
+        <Ul>
+          <Li>Die Datei wird gespeichert, mitunter unbefristet, und mit dem von Ihnen angelegten Konto verknüpft.</Li>
+          <Li>Der Text geht zur Bewertung oder Umformulierung an ein externes Sprachmodell.</Li>
+          <Li>Die registrierte E-Mail-Adresse landet in einer Marketing-Strecke.</Li>
+          <Li>Aggregierte Daten fließen in ein Recruiting-Produkt, das an Arbeitgeber verkauft wird.</Li>
+        </Ul>
         <P>
           Nichts davon ist zwangsläufig böswillig. Es ist schlicht das Geschäftsmodell: Die Prüfung
           ist kostenlos, weil Sie und Ihr Dokument das Produkt sind. Man sollte es aber wissen, bevor
@@ -184,13 +184,13 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Die Fragen, die Sie jedem Checker stellen sollten</H2>
-        <UL>
-          <LI><strong>Verlässt die Datei das Gerät?</strong> Gibt es keinen Upload, erledigen sich die meisten anderen Fragen.</LI>
-          <LI><strong>Ist ein Konto nötig?</strong> Eine E-Mail-Hürde dient dazu, die Adresse einzusammeln, nicht dazu, den Score zu verbessern.</LI>
-          <LI><strong>Ist die Bewertung deterministisch oder generiert?</strong> Schreibt ein Modell das Feedback, wurde Ihr Lebenslauf an dieses Modell gesendet.</LI>
-          <LI><strong>Können Sie die Regeln lesen?</strong> Ein veröffentlichtes Bewertungsschema lässt sich hinterfragen. Ein verborgenes nicht.</LI>
-          <LI><strong>Wie sieht der Löschweg aus?</strong> Lautet die Antwort „E-Mail an den Support“, gehen Sie davon aus, dass die Datei bleibt.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Verlässt die Datei das Gerät?</strong> Gibt es keinen Upload, erledigen sich die meisten anderen Fragen.</Li>
+          <Li><strong>Ist ein Konto nötig?</strong> Eine E-Mail-Hürde dient dazu, die Adresse einzusammeln, nicht dazu, den Score zu verbessern.</Li>
+          <Li><strong>Ist die Bewertung deterministisch oder generiert?</strong> Schreibt ein Modell das Feedback, wurde Ihr Lebenslauf an dieses Modell gesendet.</Li>
+          <Li><strong>Können Sie die Regeln lesen?</strong> Ein veröffentlichtes Bewertungsschema lässt sich hinterfragen. Ein verborgenes nicht.</Li>
+          <Li><strong>Wie sieht der Löschweg aus?</strong> Lautet die Antwort „E-Mail an den Support“, gehen Sie davon aus, dass die Datei bleibt.</Li>
+        </Ul>
 
         <H2>Wie eine rein lokale Prüfung funktioniert</H2>
         <P>
@@ -211,7 +211,7 @@ export const ARTICLES: Article[] = [
           „Wir speichern Ihre Datei nie“ ist ein Versprechen. Ob die Datei Ihren Rechner überhaupt
           verlässt, können Sie in jedem Desktop-Browser beobachten – oder eben nicht:
         </P>
-        <OL>
+        <Ol>
           <li>Öffnen Sie den Checker und dann die Entwicklertools des Browsers: <Code>F12</Code> unter Windows und Linux, <Code>⌥ ⌘ I</Code> auf dem Mac.</li>
           <li>Wechseln Sie auf den Reiter <strong>Netzwerk</strong> (englisch „Network“) und leeren Sie die Liste, damit nur neue Anfragen erscheinen.</li>
           <li>Ziehen Sie Ihren Lebenslauf in den Checker und warten Sie auf das Ergebnis.</li>
@@ -220,7 +220,7 @@ export const ARTICLES: Article[] = [
             <Code>PUT</Code>-Anfrage, deren Größe ungefähr der Ihrer Datei entspricht. Skripte und
             Schriften, die die Seite für sich selbst lädt, sind keine Uploads.
           </li>
-        </OL>
+        </Ol>
         <P>
           Trägt keine Anfrage die Datei, hat die Datei das Gerät nicht verlassen. Das funktioniert auf
           jeder Seite, auch auf dieser – und genau das ist der Punkt: Die Aussage soll für Sie
@@ -247,10 +247,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Weiterlesen</H2>
-        <UL>
-          <LI><A href={to('what-is-an-ats-score')}>Was ein ATS-Score wirklich misst</A></LI>
-          <LI><A href={to('pdf-or-docx-for-ats')}>PDF oder DOCX: Was sollten Sie senden?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href={to('what-is-an-ats-score')}>Was ein ATS-Score wirklich misst</A></Li>
+          <Li><A href={to('pdf-or-docx-for-ats')}>PDF oder DOCX: Was sollten Sie senden?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -284,11 +284,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Warum PDF heute die Voreinstellung ist</H2>
-        <UL>
-          <LI><strong>Es sieht überall gleich aus.</strong> Ein DOCX bricht je nach Schriften und Word-Version beim Empfänger um. Aus Ihrem sorgfältigen Zwei-Seiten-Layout werden leicht drei ausgefranste Seiten.</LI>
-          <LI><strong>Moderne Parser kommen damit zurecht.</strong> Textextraktion aus PDF ist ein gelöstes Problem; die großen Systeme unterstützen sie seit Jahren.</LI>
-          <LI><strong>Es lässt sich schwerer verfälschen.</strong> Niemand bearbeitet Ihr PDF versehentlich zwischen Hochladen und Sichtung.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Es sieht überall gleich aus.</strong> Ein DOCX bricht je nach Schriften und Word-Version beim Empfänger um. Aus Ihrem sorgfältigen Zwei-Seiten-Layout werden leicht drei ausgefranste Seiten.</Li>
+          <Li><strong>Moderne Parser kommen damit zurecht.</strong> Textextraktion aus PDF ist ein gelöstes Problem; die großen Systeme unterstützen sie seit Jahren.</Li>
+          <Li><strong>Es lässt sich schwerer verfälschen.</strong> Niemand bearbeitet Ihr PDF versehentlich zwischen Hochladen und Sichtung.</Li>
+        </Ul>
 
         <H2>Das eine PDF, an dem jedes System scheitert</H2>
         <P>
@@ -304,7 +304,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Ein 30-Sekunden-Test für jedes PDF</H2>
         <P>Dass sich Text markieren lässt, beweist, dass er existiert. Zwei weitere Schritte zeigen, ob er brauchbar herauskommt:</P>
-        <OL>
+        <Ol>
           <li><strong>Eine Zeile markieren.</strong> Wird nichts hervorgehoben, ist die Seite ein Bild. Exportieren Sie erneut aus dem Originaldokument.</li>
           <li>
             <strong>Nach Ihrer E-Mail-Adresse suchen</strong> mit <Code>Strg F</Code> bzw.{' '}
@@ -318,7 +318,7 @@ export const ARTICLES: Article[] = [
             Positionen weit von ihren Zeiträumen entfernt, beheben Sie das Layout, bevor Sie sich um
             irgendetwas anderes kümmern.
           </li>
-        </OL>
+        </Ol>
         <P>
           Wenn Sie aus Word, Google Docs oder Pages mit der normalen Funktion <em>Als PDF speichern</em>{' '}
           bzw. <em>Als PDF exportieren</em> exportieren, entstehen textbasierte PDFs. Riskant sind „als
@@ -326,24 +326,24 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Wann DOCX die richtige Antwort ist</H2>
-        <UL>
-          <LI><strong>Das Formular verlangt es.</strong> Nennt das Upload-Feld nur <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, ist das die Antwort. Überlisten Sie das Formular nicht.</LI>
-          <LI><strong>Ein Recruiter hat darum gebeten.</strong> Personalagenturen übertragen Ihren Lebenslauf oft auf die eigene Vorlage, wofür eine bearbeitbare Datei nötig ist.</LI>
-          <LI><strong>Der Arbeitgeber nutzt ein älteres System.</strong> Heute selten, aber unschädlich, dem zu folgen.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Das Formular verlangt es.</strong> Nennt das Upload-Feld nur <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, ist das die Antwort. Überlisten Sie das Formular nicht.</Li>
+          <Li><strong>Ein Recruiter hat darum gebeten.</strong> Personalagenturen übertragen Ihren Lebenslauf oft auf die eigene Vorlage, wofür eine bearbeitbare Datei nötig ist.</Li>
+          <Li><strong>Der Arbeitgeber nutzt ein älteres System.</strong> Heute selten, aber unschädlich, dem zu folgen.</Li>
+        </Ul>
 
         <H2>Was wichtiger ist als die Dateiendung</H2>
         <P>
           Das Format ist die einfachste Entscheidung, die Sie bei Ihrem Lebenslauf treffen. Diese
           Punkte bewirken tatsächlich etwas:
         </P>
-        <UL>
-          <LI><strong>Eine Spalte.</strong> Mehrspaltige Layouts können in falscher Reihenfolge gelesen werden und zwei unzusammenhängende Zeilen vermischen.</LI>
-          <LI><strong>Kein Text in Bildern.</strong> Ein Logo ist in Ordnung; Ihre Position als Grafik nicht.</LI>
-          <LI><strong>Keine wichtigen Angaben in Kopf- oder Fußzeile.</strong> Manche Parser überspringen diese Bereiche. Setzen Sie Ihre E-Mail-Adresse in den Haupttext.</LI>
-          <LI><strong>Echte Aufzählungszeichen</strong> statt von Hand gesetzter Striche in einer Tabellenzelle.</LI>
-          <LI><strong>Ein sinnvoller Dateiname</strong> – <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Vorname_Nachname_Lebenslauf.pdf</code>. Ein Mensch sieht ihn in einem Ordner mit Hunderten Dateien.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Eine Spalte.</strong> Mehrspaltige Layouts können in falscher Reihenfolge gelesen werden und zwei unzusammenhängende Zeilen vermischen.</Li>
+          <Li><strong>Kein Text in Bildern.</strong> Ein Logo ist in Ordnung; Ihre Position als Grafik nicht.</Li>
+          <Li><strong>Keine wichtigen Angaben in Kopf- oder Fußzeile.</strong> Manche Parser überspringen diese Bereiche. Setzen Sie Ihre E-Mail-Adresse in den Haupttext.</Li>
+          <Li><strong>Echte Aufzählungszeichen</strong> statt von Hand gesetzter Striche in einer Tabellenzelle.</Li>
+          <Li><strong>Ein sinnvoller Dateiname</strong> – <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Vorname_Nachname_Lebenslauf.pdf</code>. Ein Mensch sieht ihn in einem Ordner mit Hunderten Dateien.</Li>
+        </Ul>
 
         <Note>
           <strong>Unsicher, in welche Kategorie Ihre Datei fällt?</strong> Ziehen Sie sie in den{' '}
@@ -353,10 +353,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Weiterlesen</H2>
-        <UL>
-          <LI><A href={to('how-ats-parsing-works')}>So funktioniert das Parsing von Lebensläufen im ATS</A></LI>
-          <LI><A href={to('ats-resume-checklist')}>Die ATS-Checkliste für Ihren Lebenslauf</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href={to('how-ats-parsing-works')}>So funktioniert das Parsing von Lebensläufen im ATS</A></Li>
+          <Li><A href={to('ats-resume-checklist')}>Die ATS-Checkliste für Ihren Lebenslauf</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -468,11 +468,11 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         <P><strong>Scheitert, wenn:</strong> der Wortschatz Ihres Lebenslaufs und der Wortschatz der Stellenanzeige sich nicht überschneiden.</P>
 
         <H2>Was daraus folgt</H2>
-        <UL>
-          <LI>Formatierungsrat ist kein Aberglaube – jede Regel lässt sich einer der Stufen oben zuordnen.</LI>
-          <LI>Beim Thema Keywords geht es um gemeinsamen Wortschatz, nicht um Dichte. Behaupten Sie nie eine Kenntnis, die Sie nicht haben.</LI>
-          <LI>Nichts in dieser Kette bewertet Sie. Sie bringt Sie in eine durchsuchbare Form – oder eben nicht.</LI>
-        </UL>
+        <Ul>
+          <Li>Formatierungsrat ist kein Aberglaube – jede Regel lässt sich einer der Stufen oben zuordnen.</Li>
+          <Li>Beim Thema Keywords geht es um gemeinsamen Wortschatz, nicht um Dichte. Behaupten Sie nie eine Kenntnis, die Sie nicht haben.</Li>
+          <Li>Nichts in dieser Kette bewertet Sie. Sie bringt Sie in eine durchsuchbare Form – oder eben nicht.</Li>
+        </Ul>
 
         <Note>
           <strong>Sehen Sie es aus Sicht des Parsers.</strong> Der{' '}
@@ -482,10 +482,10 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Weiterlesen</H2>
-        <UL>
-          <LI><A href={to('what-is-an-ats-score')}>Was ein ATS-Score wirklich misst</A></LI>
-          <LI><A href={to('ats-checker-without-upload')}>ATS-Lebenslauf-Check ohne Upload</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href={to('what-is-an-ats-score')}>Was ein ATS-Score wirklich misst</A></Li>
+          <Li><A href={to('ats-checker-without-upload')}>ATS-Lebenslauf-Check ohne Upload</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -519,31 +519,31 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         </P>
 
         <H2>Kritisch – ohne diese Punkte kommt die Bewerbung womöglich nicht an</H2>
-        <UL>
-          <LI><strong>Der Text ist auswählbar.</strong> Öffnen Sie die Datei und versuchen Sie, eine Zeile zu markieren. Geht das nicht, sieht der Parser eine leere Seite.</LI>
-          <LI><strong>Ihre E-Mail-Adresse steht als normaler Text im Haupttext.</strong> Nicht in der Kopfzeile, nicht nur hinter einem Mail-Symbol, nicht nur als Hyperlink.</LI>
-          <LI><strong>Eine Spalte.</strong> Seitenleisten sind die häufigste Ursache für durcheinandergeratene Extraktion.</LI>
-          <LI><strong>Standardüberschriften.</strong> Berufserfahrung, Ausbildung, Kenntnisse, Profil. Langweilig gewinnt hier.</LI>
-          <LI><strong>Jede Station hat Datumsangaben.</strong> Monat und Jahr, einheitlich formatiert, in derselben Zeile wie die Station.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Der Text ist auswählbar.</strong> Öffnen Sie die Datei und versuchen Sie, eine Zeile zu markieren. Geht das nicht, sieht der Parser eine leere Seite.</Li>
+          <Li><strong>Ihre E-Mail-Adresse steht als normaler Text im Haupttext.</strong> Nicht in der Kopfzeile, nicht nur hinter einem Mail-Symbol, nicht nur als Hyperlink.</Li>
+          <Li><strong>Eine Spalte.</strong> Seitenleisten sind die häufigste Ursache für durcheinandergeratene Extraktion.</Li>
+          <Li><strong>Standardüberschriften.</strong> Berufserfahrung, Ausbildung, Kenntnisse, Profil. Langweilig gewinnt hier.</Li>
+          <Li><strong>Jede Station hat Datumsangaben.</strong> Monat und Jahr, einheitlich formatiert, in derselben Zeile wie die Station.</Li>
+        </Ul>
 
         <H2>Wichtig – sie entscheiden, ob Sie in einer Suche auftauchen</H2>
-        <UL>
-          <LI><strong>Positionsbezeichnungen sind erkennbar.</strong> Lautet Ihr interner Titel „Delivery Ninja“, nennen Sie daneben die branchenübliche Bezeichnung.</LI>
-          <LI><strong>Der Wortschatz der Stellenanzeige kommt vor</strong> – aber nur dort, wo Sie ihn sich ehrlich verdient haben.</LI>
-          <LI><strong>Es gibt einen Kenntnisse-Abschnitt</strong> als schlichter, kommagetrennter Text statt einer Grafik mit Skill-Balken.</LI>
-          <LI><strong>Ihre Links sind ausgeschrieben</strong> als sichtbarer Text: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/ihrname</code>. Ein Parser liest Text, keine Linkziele.</LI>
-          <LI><strong>Kein Text steckt in einem Bild oder Textfeld.</strong></LI>
-        </UL>
+        <Ul>
+          <Li><strong>Positionsbezeichnungen sind erkennbar.</strong> Lautet Ihr interner Titel „Delivery Ninja“, nennen Sie daneben die branchenübliche Bezeichnung.</Li>
+          <Li><strong>Der Wortschatz der Stellenanzeige kommt vor</strong> – aber nur dort, wo Sie ihn sich ehrlich verdient haben.</Li>
+          <Li><strong>Es gibt einen Kenntnisse-Abschnitt</strong> als schlichter, kommagetrennter Text statt einer Grafik mit Skill-Balken.</Li>
+          <Li><strong>Ihre Links sind ausgeschrieben</strong> als sichtbarer Text: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/ihrname</code>. Ein Parser liest Text, keine Linkziele.</Li>
+          <Li><strong>Kein Text steckt in einem Bild oder Textfeld.</strong></Li>
+        </Ul>
 
         <H2>Lohnend – das liest der Mensch</H2>
-        <UL>
-          <LI><strong>Aufzählungspunkte beginnen mit einem Verb.</strong> Leitete, lieferte, senkte, baute um, verantwortete.</LI>
-          <LI><strong>Wirkung trägt eine Zahl.</strong> „Zuverlässigkeit verbessert“ ist eine Behauptung; „absturzfreie Sitzungen von 96% auf 99,5% gesteigert“ ist ein Beleg.</LI>
-          <LI><strong>Keine Floskeln.</strong> „Ergebnisorientierter Profi mit nachweislichem Erfolg“ sagt einem Leser nichts.</LI>
-          <LI><strong>Die Länge passt zur Laufbahn.</strong> Eine Seite am Anfang, zwei sind nach einem Jahrzehnt normal. Drei brauchen einen Grund.</LI>
-          <LI><strong>Der Dateiname ist ein Name</strong> – <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Vorname_Nachname_Lebenslauf.pdf</code>, nicht <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">lebenslauf_final_v3_NEU.pdf</code>.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Aufzählungspunkte beginnen mit einem Verb.</strong> Leitete, lieferte, senkte, baute um, verantwortete.</Li>
+          <Li><strong>Wirkung trägt eine Zahl.</strong> „Zuverlässigkeit verbessert“ ist eine Behauptung; „absturzfreie Sitzungen von 96% auf 99,5% gesteigert“ ist ein Beleg.</Li>
+          <Li><strong>Keine Floskeln.</strong> „Ergebnisorientierter Profi mit nachweislichem Erfolg“ sagt einem Leser nichts.</Li>
+          <Li><strong>Die Länge passt zur Laufbahn.</strong> Eine Seite am Anfang, zwei sind nach einem Jahrzehnt normal. Drei brauchen einen Grund.</Li>
+          <Li><strong>Der Dateiname ist ein Name</strong> – <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Vorname_Nachname_Lebenslauf.pdf</code>, nicht <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">lebenslauf_final_v3_NEU.pdf</code>.</Li>
+        </Ul>
 
         <H2>Was ein Checker davon für Sie prüfen kann</H2>
         <P>
@@ -551,22 +551,22 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
           das kann sie nicht. So ist die Aufteilung beim Checker dieser Seite:
         </P>
         <H3>Automatisch geprüft</H3>
-        <UL>
-          <LI>Auswählbarer Text und saubere Zeichenkodierung</LI>
-          <LI>E-Mail, Telefon und ein Profil-Link als sichtbarer Text – er meldet auch einen Link, der nur als verborgener Hyperlink existiert</LI>
-          <LI>Standardüberschriften für Berufserfahrung, Ausbildung, Kenntnisse und Profil sowie Erfolge, Projekte und Zertifikate</LI>
-          <LI>Datumsangaben, Aufzählungsstruktur und Seitenzahl</LI>
-          <LI>Zahlen in Ihren Aufzählungspunkten und Punkte, die mit einem Verb beginnen</LI>
-          <LI>Floskeln und vage Behauptungen, im separaten Reiter {de.analyzer.tabs.style}</LI>
-          <LI>Der Wortschatz der Stellenanzeige, wenn Sie die Anzeige in den {de.analyzer.tabs.jd} einfügen</LI>
-        </UL>
+        <Ul>
+          <Li>Auswählbarer Text und saubere Zeichenkodierung</Li>
+          <Li>E-Mail, Telefon und ein Profil-Link als sichtbarer Text – er meldet auch einen Link, der nur als verborgener Hyperlink existiert</Li>
+          <Li>Standardüberschriften für Berufserfahrung, Ausbildung, Kenntnisse und Profil sowie Erfolge, Projekte und Zertifikate</Li>
+          <Li>Datumsangaben, Aufzählungsstruktur und Seitenzahl</Li>
+          <Li>Zahlen in Ihren Aufzählungspunkten und Punkte, die mit einem Verb beginnen</Li>
+          <Li>Floskeln und vage Behauptungen, im separaten Reiter {de.analyzer.tabs.style}</Li>
+          <Li>Der Wortschatz der Stellenanzeige, wenn Sie die Anzeige in den {de.analyzer.tabs.jd} einfügen</Li>
+        </Ul>
         <H3>Bleibt Ihre Aufgabe</H3>
-        <UL>
-          <LI>Ob eine Seitenleiste oder zweite Spalte die Lesereihenfolge durcheinanderbringt – nutzen Sie den Kopieren-und-Einfügen-Test</LI>
-          <LI>Ob Ihre Positionsbezeichnungen solche sind, nach denen ein Recruiter sucht</LI>
-          <LI>Ob jedes ergänzte Keyword eines ist, das Sie sich verdient haben</LI>
-          <LI>Der Dateiname</LI>
-        </UL>
+        <Ul>
+          <Li>Ob eine Seitenleiste oder zweite Spalte die Lesereihenfolge durcheinanderbringt – nutzen Sie den Kopieren-und-Einfügen-Test</Li>
+          <Li>Ob Ihre Positionsbezeichnungen solche sind, nach denen ein Recruiter sucht</Li>
+          <Li>Ob jedes ergänzte Keyword eines ist, das Sie sich verdient haben</Li>
+          <Li>Der Dateiname</Li>
+        </Ul>
 
         <Note>
           <strong>Das meiste dieser Liste lässt sich automatisch prüfen.</strong> Der{' '}
@@ -577,10 +577,10 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Weiterlesen</H2>
-        <UL>
-          <LI><A href={to('how-ats-parsing-works')}>So funktioniert das Parsing von Lebensläufen im ATS</A></LI>
-          <LI><A href={to('pdf-or-docx-for-ats')}>Lebenslauf als PDF oder DOCX: Was sollten Sie senden?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href={to('how-ats-parsing-works')}>So funktioniert das Parsing von Lebensläufen im ATS</A></Li>
+          <Li><A href={to('pdf-or-docx-for-ats')}>Lebenslauf als PDF oder DOCX: Was sollten Sie senden?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -615,25 +615,25 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         </P>
 
         <H2>CV-Score in vier Schritten prüfen</H2>
-        <OL>
-          <LI>
+        <Ol>
+          <Li>
             Öffnen Sie den <A href="/de/">kostenlosen Lebenslauf ATS Check</A> und wählen Sie{' '}
             <em>{de.home.hero.check}</em>.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Ziehen Sie Ihren Lebenslauf als PDF oder DOCX hinein. Die Datei wird in Ihrem Browser
             gelesen und nirgendwohin gesendet – Sie können das also auch mit dem Lebenslauf tun, den
             Sie an einen Wettbewerber Ihres aktuellen Arbeitgebers schicken.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Lesen Sie den Score und die Liste der durchgefallenen Prüfungen. Die Fehler sind danach
             geordnet, wie viele Punkte jeder kostet, der erste Eintrag ist also die wertvollste Korrektur.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Beheben Sie die obersten zwei oder drei Punkte, exportieren Sie erneut und ziehen Sie die
             neue Datei hinein. Wiederholen Sie das, bis nichts Teures mehr übrig ist.
-          </LI>
-        </OL>
+          </Li>
+        </Ol>
 
         <H2>Was ein guter CV-Score ist</H2>
         <P>
@@ -645,12 +645,12 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         </P>
 
         <H2>Was Sie zuerst beheben sollten</H2>
-        <UL>
-          <LI>Sorgen Sie dafür, dass der Text auswählbar ist. Ein gescanntes oder reines Bild-PDF erreicht fast null Punkte.</LI>
-          <LI>Setzen Sie E-Mail und Telefon in den Haupttext der Seite, nicht in eine Kopfzeile oder ein Bild.</LI>
-          <LI>Verwenden Sie Standardüberschriften: Berufserfahrung, Ausbildung, Kenntnisse, Profil.</LI>
-          <LI>Versehen Sie jede Station mit Datumsangaben und nutzen Sie echte Aufzählungspunkte.</LI>
-        </UL>
+        <Ul>
+          <Li>Sorgen Sie dafür, dass der Text auswählbar ist. Ein gescanntes oder reines Bild-PDF erreicht fast null Punkte.</Li>
+          <Li>Setzen Sie E-Mail und Telefon in den Haupttext der Seite, nicht in eine Kopfzeile oder ein Bild.</Li>
+          <Li>Verwenden Sie Standardüberschriften: Berufserfahrung, Ausbildung, Kenntnisse, Profil.</Li>
+          <Li>Versehen Sie jede Station mit Datumsangaben und nutzen Sie echte Aufzählungspunkte.</Li>
+        </Ul>
 
         <H2>Was der Score Ihnen nicht sagt</H2>
         <P>
@@ -667,11 +667,11 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Weiterlesen</H2>
-        <UL>
-          <LI><A href={to('what-is-an-ats-score')}>Was ein ATS-Score wirklich misst</A></LI>
-          <LI><A href={to('ats-resume-checklist')}>Die ATS-Checkliste für Ihren Lebenslauf</A></LI>
-          <LI><A href={to('ats-checker-without-upload')}>ATS-Lebenslauf-Check ohne Upload</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href={to('what-is-an-ats-score')}>Was ein ATS-Score wirklich misst</A></Li>
+          <Li><A href={to('ats-resume-checklist')}>Die ATS-Checkliste für Ihren Lebenslauf</A></Li>
+          <Li><A href={to('ats-checker-without-upload')}>ATS-Lebenslauf-Check ohne Upload</A></Li>
+        </Ul>
       </>
     ),
     faq: [
