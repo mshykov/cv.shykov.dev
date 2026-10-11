@@ -109,7 +109,7 @@ export const ptPT: Messages = {
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de CV ATS',
       items: [
-        { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por máquinas, contactos, secções, datas, marcadores e resultados mensuráveis.' },
+        { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por máquinas, contactos, secções, datas, listas com marcadores e resultados mensuráveis.' },
         { q: 'O meu CV é carregado para algum servidor?', a: 'Não. Os ficheiros PDF e DOCX são processados localmente no seu navegador e não são enviados para nenhum servidor.' },
         { q: 'Isto usa IA?', a: 'Não. A pontuação é determinística e não usa LLM, chamadas a modelos, contas nem chaves de API.' },
         { q: 'PDF ou DOCX?', a: 'Ambos funcionam. Os PDF com texto real dão o sinal mais claro sobre o número de páginas e a legibilidade.' },

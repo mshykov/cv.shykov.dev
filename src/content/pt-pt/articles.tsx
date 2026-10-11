@@ -146,7 +146,7 @@ export const ARTICLES: Article[] = [
     published: '2026-08-31',
     updated: '2026-10-10',
     summary:
-      'Um navegador consegue ler e pontuar um PDF ou DOCX sem o enviar para lado nenhum, pelo que carregar o ficheiro é uma opção de desenho, não uma necessidade técnica. Pode confirmar um verificador em menos de um minuto: abra o painel Rede (Network) do navegador, escolha o CV no verificador e procure um pedido que leve o ficheiro.',
+      'Um navegador consegue ler e pontuar um PDF ou DOCX sem o enviar para lado nenhum, pelo que carregar o ficheiro é uma opção de desenho, não uma necessidade técnica. Pode confirmar um verificador em menos de um minuto: abra o painel Rede (Network) do navegador, adicione o seu CV ao verificador e procure um pedido que leve o ficheiro.',
     body: (
       <>
         <P>
@@ -502,7 +502,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
     published: '2026-08-31',
     updated: '2026-10-10',
     summary:
-      'Corrija primeiro cinco coisas: texto selecionável, o email no corpo, uma única coluna, títulos de secção padrão e uma data em cada função. Decidem se a candidatura chega intacta. Tudo o resto decide se é encontrado numa pesquisa e, depois, se uma pessoa gosta de o ler.',
+      'Corrija primeiro cinco coisas: texto selecionável, o email no corpo do documento, uma única coluna, títulos de secção padrão e uma data em cada cargo. Decidem se a candidatura chega intacta. Tudo o resto decide se é encontrado numa pesquisa e, depois, se uma pessoa gosta de o ler.',
     body: (
       <>
         <P>
@@ -596,7 +596,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
     published: '2026-10-10',
     updated: '2026-10-10',
     summary:
-      'Escolha o PDF ou DOCX num verificador de pontuação do CV, leia a pontuação e as verificações falhadas, corrija primeiro as mais pesadas e volte a verificar. Aqui tudo corre no navegador: sem carregar o ficheiro, sem conta, sem IA. Uma pontuação de 85 ou mais significa que nada de importante se perde.',
+      'Adicione o PDF ou DOCX a um verificador de pontuação do CV, leia a pontuação e as verificações falhadas, corrija primeiro as mais pesadas e volte a verificar. Aqui tudo corre no navegador: sem carregar o ficheiro, sem conta, sem IA. Uma pontuação de 85 ou mais significa que nada de importante se perde.',
     body: (
       <>
         <P>
