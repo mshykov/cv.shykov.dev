@@ -30,7 +30,7 @@ export const GUIDES: Guide[] = [
     slug: 'comment-un-ats-lit-un-cv',
     title: 'Comment un ATS lit un CV : l’analyse du CV, étape par étape',
     description:
-      'Ce qui se passe entre l’envoi d’un CV et son affichage chez le recruteur : extraction du texte, découpage en rubriques, extraction des données et indexation, et où chaque étape peut échouer.',
+      'Ce qui se passe entre l’envoi d’un CV et le moment où le recruteur le voit : extraction du texte, découpage en rubriques, extraction des données et indexation, et où chaque étape peut échouer.',
   },
   {
     id: 'ats-resume-checklist',

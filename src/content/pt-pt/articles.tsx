@@ -144,7 +144,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Um navegador consegue ler e pontuar um PDF ou DOCX sem o enviar para lado nenhum, pelo que carregar o ficheiro é uma opção de desenho, não uma necessidade técnica. Pode confirmar um verificador em menos de um minuto: abra o painel Rede (Network) do navegador, adicione o seu CV ao verificador e procure um pedido que leve o ficheiro.',
     body: (
@@ -370,7 +370,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('how-ats-parsing-works'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Um ATS lê um CV em quatro fases mecânicas: extrai o texto, divide-o em secções pelos títulos, retira entidades como o email, as datas e os cargos e indexa o resultado para os recrutadores pesquisarem. Quase todos os conselhos de formatação existem porque uma destas fases falha.',
     body: (
@@ -500,7 +500,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Corrija primeiro cinco coisas: texto selecionável, o email no corpo do documento, uma única coluna, títulos de secção padrão e uma data em cada cargo. Decidem se a candidatura chega intacta. Tudo o resto decide se é encontrado numa pesquisa e, depois, se uma pessoa gosta de o ler.',
     body: (
@@ -594,7 +594,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
   {
     ...guide('how-to-check-your-cv-score'),
     published: '2026-10-10',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Adicione o PDF ou DOCX a um verificador de pontuação do CV, leia a pontuação e as verificações falhadas, corrija primeiro as mais pesadas e volte a verificar. Aqui tudo corre no navegador: sem carregar o ficheiro, sem conta, sem IA. Uma pontuação de 85 ou mais significa que nada de importante se perde.',
     body: (

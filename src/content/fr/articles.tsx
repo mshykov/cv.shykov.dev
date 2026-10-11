@@ -24,7 +24,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('what-is-an-ats-score'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un score ATS estime avec quelle netteté un logiciel de suivi des candidatures extrait le texte, les coordonnées, les rubriques et les dates de votre CV. Il ne dit rien de votre adéquation au poste. Au-dessus de 85 environ, rien d’important ne se perd : consacrez plutôt votre temps au contenu.',
     body: (
@@ -45,7 +45,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Le mythe à oublier d’abord</H2>
         <P>
-          Vous avez sans doute lu que <em>« 75% des CV sont rejetés par un ATS avant qu’un humain ne
+          Vous avez sans doute lu que <em>« 75&#8239;% des CV sont rejetés par un ATS avant qu’un humain ne
           les voie »</em>. Ce chiffre circule depuis plus de dix ans et ne s’appuie sur aucune source
           crédible. Les ATS sont des outils de stockage et de recherche. Ils classent et filtrent
           selon des critères fixés par un recruteur ; ils ne jettent pas, de leur propre initiative,
@@ -141,7 +141,7 @@ export const ARTICLES: Article[] = [
         a: 'Parce qu’il n’existe pas de standard. Chaque vérificateur définit ses propres contrôles et leur poids. Comparez les vérifications qui ont échoué plutôt que les chiffres affichés.',
       },
       {
-        q: 'Est-il vrai que 75% des CV sont rejetés par un ATS ?',
+        q: 'Est-il vrai que 75 % des CV sont rejetés par un ATS ?',
         a: 'Ce chiffre circule depuis plus de dix ans sans source crédible. Les ATS stockent et recherchent des candidatures ; ce sont les recruteurs qui fixent les filtres. Le vrai risque est un CV mal lu par l’analyseur, qui n’apparaît alors pas dans la recherche d’un recruteur.',
       },
     ],
@@ -150,7 +150,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un navigateur peut lire et noter un PDF ou un DOCX sans l’envoyer nulle part : l’envoi est un choix de conception, pas une nécessité technique. Vous pouvez vérifier un outil vous-même en moins d’une minute : ouvrez le panneau Réseau du navigateur, déposez votre CV et cherchez une requête qui transporte le fichier.',
     body: (
@@ -273,7 +273,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('pdf-or-docx-for-ats'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Envoyez un PDF avec du vrai texte, sauf si la candidature demande un autre format : envoyez alors exactement ce qui est demandé. Le seul PDF qui échoue de façon fiable est celui qui ne contient pas de vrai texte, comme un scan ou un export aux polices vectorisées, et cela se teste en quelques secondes.',
     body: (
@@ -380,7 +380,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('how-ats-parsing-works'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Un ATS analyse un CV en quatre étapes mécaniques : il extrait le texte, le découpe en rubriques d’après leurs titres, en tire des données comme l’adresse e-mail, les dates et les intitulés de poste, puis indexe le résultat pour que les recruteurs puissent le rechercher. Presque tous les conseils de mise en forme existent parce qu’une de ces étapes échoue.',
     body: (
@@ -512,7 +512,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Corrigez d’abord cinq points : du texte sélectionnable, votre adresse e-mail dans le corps, une seule colonne, des titres de rubriques standard et une date sur chaque poste. Ils décident si la candidature arrive intacte. Tout le reste décide si elle est trouvée dans une recherche, puis si un humain prend plaisir à la lire.',
     body: (
@@ -544,7 +544,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
         <H2>À faire — c’est ce que lit l’humain</H2>
         <Ul>
           <Li><strong>Les puces commencent par un verbe.</strong> Dirigé, livré, réduit, reconstruit, piloté.</Li>
-          <Li><strong>L’impact est chiffré.</strong> « Fiabilité améliorée » est une affirmation ; « sessions sans crash passées de 96% à 99,5% » est une preuve.</Li>
+          <Li><strong>L’impact est chiffré.</strong> « Fiabilité améliorée » est une affirmation ; « sessions sans crash passées de 96&#8239;% à 99,5&#8239;% » est une preuve.</Li>
           <Li><strong>Pas de formules toutes faites.</strong> « Professionnel dynamique et motivé, fort d’une solide expérience » n’apprend rien à un lecteur.</Li>
           <Li><strong>La longueur correspond à votre parcours.</strong> Une page en début de carrière, deux sont normales après une dizaine d’années. Trois demandent une raison.</Li>
           <Li><strong>Le nom du fichier est un nom</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>, pas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_VRAI.pdf</code>.</Li>

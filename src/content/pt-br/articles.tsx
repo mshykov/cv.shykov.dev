@@ -144,7 +144,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Um navegador consegue ler e pontuar um PDF ou DOCX sem enviá-lo a lugar nenhum, então o envio do arquivo é uma escolha de projeto, não uma necessidade técnica. Você mesmo confere um verificador em menos de um minuto: abra o painel Rede (Network) do navegador, solte seu currículo e procure uma requisição que leve o arquivo.',
     body: (
@@ -187,7 +187,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>Como se apaga o arquivo?</strong> Se a resposta é um e-mail de suporte, suponha que ele fica.</Li>
         </Ul>
 
-        <H2>Como funciona uma verificação 100% local</H2>
+        <H2>Como funciona uma verificação feita só no navegador</H2>
         <P>
           Os navegadores modernos conseguem ler um PDF ou DOCX sem nenhum servidor envolvido. O
           arquivo é aberto na memória, o texto é extraído por uma biblioteca JavaScript, as
@@ -501,7 +501,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Corrija primeiro cinco coisas: texto selecionável, e-mail no corpo da página, coluna única, títulos de seção padrão e uma data em cada cargo. Elas decidem se a candidatura chega inteira. O restante decide se ela é encontrada em uma busca e, depois, se uma pessoa gosta de lê-la.',
     body: (
@@ -595,7 +595,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
   {
     ...guide('how-to-check-your-cv-score'),
     published: '2026-10-10',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Arraste e solte seu PDF ou DOCX em um verificador de pontuação, leia a nota e as verificações que falharam, corrija primeiro as mais caras e confira de novo. Aqui tudo roda no seu navegador: sem envio, sem cadastro, sem IA. Uma pontuação de 85 ou mais significa que nada importante está se perdendo.',
     body: (

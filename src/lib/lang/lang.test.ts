@@ -177,3 +177,12 @@ test('the parser files a specific heading under the right section', () => {
   assert.equal(resume.education.length, 1, 'the course is not an education entry')
   assert.deepEqual(resume.skills, ['Kotlin', 'Swift'])
 })
+
+test('quantified results count in every typography: 40%, 40 %, 40 % (no-break space), 2,5×', () => {
+  const quant = (line: string) => score(['EXPÉRIENCE', line]).checks.find((c) => c.id === 'quant')?.points ?? 0
+  for (const line of ['Réduit le délai de 40%', 'Réduit le délai de 40 %', 'Réduit le délai de 40\u202f%', 'Réduit le délai de 40\u00a0%', 'Délai divisé par 2,5×', 'Verkürzte die Release-Zeit um 40 %']) {
+    assert.ok(quant(line) >= 3, `${line} → ${quant(line)}`)
+  }
+  assert.equal(quant('Managed 12 people and a 5 year plan'), 3)
+  assert.equal(quant('Rate went from 1 to 2 over the year'), 0)
+})

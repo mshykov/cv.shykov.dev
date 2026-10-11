@@ -25,7 +25,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('what-is-an-ats-score'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Ein ATS-Score schätzt, wie sauber Bewerbermanagement-Software Text, Kontaktdaten, Abschnitte und Datumsangaben aus Ihrem Lebenslauf herauslesen kann. Er sagt nichts darüber, ob Sie zur Stelle passen. Ab etwa 85 geht nichts Wichtiges verloren – investieren Sie die Zeit dann in den Inhalt.',
     body: (
@@ -148,7 +148,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Ein Browser kann eine PDF- oder DOCX-Datei lesen und bewerten, ohne sie irgendwohin zu senden – ein Upload ist also eine Designentscheidung, keine technische Notwendigkeit. Einen Checker können Sie in unter einer Minute selbst prüfen: Netzwerk-Ansicht der Browser-Entwicklertools öffnen, Lebenslauf hineinziehen und nach einer Anfrage suchen, die die Datei enthält.',
     body: (
@@ -272,7 +272,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('pdf-or-docx-for-ats'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Senden Sie ein textbasiertes PDF, es sei denn, die Bewerbung verlangt ein anderes Format – dann senden Sie genau das Verlangte. Das einzige PDF, das zuverlässig scheitert, enthält keinen echten Text, etwa ein Scan oder ein Export mit in Pfade umgewandelten Schriften; das lässt sich in Sekunden testen.',
     body: (
@@ -378,7 +378,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('how-ats-parsing-works'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Ein ATS liest einen Lebenslauf in vier mechanischen Stufen: Es extrahiert den Text, teilt ihn anhand der Überschriften in Abschnitte, zieht Angaben wie E-Mail, Datumsangaben und Positionen heraus und indexiert das Ergebnis für die Suche der Recruiter. Fast jeder Formatierungsrat existiert, weil eine dieser Stufen scheitert.',
     body: (
@@ -507,9 +507,9 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
-      'Beheben Sie zuerst fünf Dinge: auswählbaren Text, Ihre E-Mail-Adresse im Haupttext, eine einzige Spalte, Standardüberschriften und ein Datum bei jeder Station. Sie entscheiden, ob die Bewerbung unversehrt ankommt. Alles Weitere entscheidet, ob sie in einer Suche gefunden wird und ob ein Mensch sie gern liest.',
+      'Beheben Sie zuerst fünf Dinge: auswählbaren Text, Ihre E-Mail-Adresse im Haupttext, eine einzige Spalte, Standardüberschriften und ein Datum bei jeder Station. Diese fünf Punkte entscheiden, ob die Bewerbung unversehrt ankommt. Alles Weitere entscheidet, ob sie in einer Suche gefunden wird und ob ein Mensch sie gern liest.',
     body: (
       <>
         <P>
@@ -602,7 +602,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
   {
     ...guide('how-to-check-your-cv-score'),
     published: '2026-10-10',
-    updated: '2026-10-10',
+    updated: '2026-10-11',
     summary:
       'Ziehen Sie Ihr PDF oder DOCX in einen CV-Score-Checker, lesen Sie Score und durchgefallene Prüfungen, beheben Sie die teuersten zuerst und prüfen Sie erneut. Hier läuft alles in Ihrem Browser: kein Upload, kein Konto, keine KI. Ein Score ab 85 bedeutet, dass nichts Wichtiges verloren geht.',
     body: (
