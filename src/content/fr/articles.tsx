@@ -225,7 +225,7 @@ export const ARTICLES: Article[] = [
           </li>
         </Ol>
         <P>
-          Si aucune requête ne transporte le fichier, le fichier n’est pas sorti. Cela fonctionne sur
+          Si aucune requête ne transporte le fichier, le fichier n’a pas quitté votre appareil. Cela fonctionne sur
           n’importe quel site, y compris celui-ci — et c’est le but : l’affirmation doit pouvoir être
           vérifiée par vous, pas crue sur parole.
         </P>
@@ -331,7 +331,7 @@ export const ARTICLES: Article[] = [
         <Ul>
           <Li><strong>Le formulaire l’exige.</strong> Si le champ d’envoi n’accepte que <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, c’est la réponse. Inutile de faire plus malin que le formulaire.</Li>
           <Li><strong>Un recruteur l’a demandé.</strong> Les cabinets remettent souvent votre CV dans leur propre modèle, ce qui suppose un fichier modifiable.</Li>
-          <Li><strong>L’employeur utilise un système plus ancien.</strong> Rare aujourd’hui, mais sans inconvénient à respecter.</Li>
+          <Li><strong>L’employeur utilise un système plus ancien.</strong> Rare aujourd’hui, mais respecter ces règles ne coûte rien.</Li>
         </Ul>
 
         <H2>Ce qui compte plus que l’extension</H2>
@@ -406,10 +406,10 @@ export const ARTICLES: Article[] = [
         </P>
         <Pre label="Ce que voit le lecteur">{`EXPÉRIENCE                        COMPÉTENCES
 Engineering Manager, Acme         Kubernetes, Go
-janv. 2020 – présent              Terraform, AWS`}</Pre>
+janv. 2020 – aujourd’hui              Terraform, AWS`}</Pre>
         <Pre label="Ce que reçoit l’analyseur">{`EXPÉRIENCE COMPÉTENCES
 Engineering Manager, Acme Kubernetes, Go
-janv. 2020 – présent Terraform, AWS`}</Pre>
+janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
         <P>
           Chaque ligne est désormais un hybride. Le titre Expérience partage sa ligne avec
           Compétences, votre intitulé de poste a deux compétences collées derrière lui, et la plage
@@ -421,7 +421,7 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         <H2>Étape 2 — Découpage en rubriques</H2>
         <P>
           Le texte est découpé en zones en cherchant des titres. C’est pourquoi le titre banal bat le
-          titre original : un analyseur qui compare à une liste de mots connus trouve{' '}
+          titre original : un analyseur qui compare les titres à une liste de mots connus trouve{' '}
           <em>Expérience</em>, <em>Expérience professionnelle</em> et <em>Parcours professionnel</em>. Il ne
           trouve pas <em>Là où j’ai laissé mon empreinte</em>.
         </P>
@@ -451,7 +451,7 @@ janv. 2020 – présent Terraform, AWS`}</Pre>
         <P>
           C’est pourquoi <strong>les dates comptent plus qu’on ne le croit</strong>. Une ligne datée
           est l’ancre qui indique à l’analyseur « un nouveau poste commence ici ». Les postes sans date
-          s’effondrent dans ce qui les précède, et vos trois années quelque part se retrouvent dans la
+          se fondent dans ce qui les précède, et vos trois années quelque part se retrouvent dans la
           fiche de l’employeur précédent.
         </P>
         <P><strong>Échoue quand :</strong> les dates manquent, sont écrites seulement « 2 ans », ou dessinées sous forme de frise.</P>

@@ -231,7 +231,7 @@ export const ARTICLES: Article[] = [
         </P>
 
         <Note>
-          <strong>Este sitio es de los locales.</strong> El{' '}
+          <strong>Este sitio funciona en tu navegador.</strong> El{' '}
           <A href="/es/">comprobador de CV gratuito</A> analiza tu PDF o DOCX en el navegador con{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> y{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
@@ -456,7 +456,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
         <P>
           Eso replantea la cuestión de las palabras clave. El objetivo no es rellenar el texto de
           términos para complacer a un algoritmo, sino asegurarte de que las palabras que un
-          reclutador escribiría con verosimilitud aparezcan en algún lugar donde de verdad te las
+          reclutador escribiría probablemente aparezcan en algún lugar donde de verdad te las
           hayas ganado. Si lideraste migraciones a Kubernetes y nunca escribiste la palabra
           «Kubernetes», no estarás en ese conjunto de resultados.
         </P>
@@ -466,7 +466,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
         <Ul>
           <Li>Los consejos de formato no son superstición: cada regla corresponde a una de las fases anteriores.</Li>
           <Li>Los consejos sobre palabras clave tratan de coincidencia de vocabulario, no de densidad. Nunca declares una habilidad que no tengas.</Li>
-          <Li>Nada de este proceso te evalúa. O te coloca en una forma que se puede buscar, o no lo consigue.</Li>
+          <Li>Nada de este proceso te evalúa. O te deja en un formato que permite encontrarte en una búsqueda, o no lo consigue.</Li>
         </Ul>
 
         <Note>
@@ -534,7 +534,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
         <H2>Merece la pena: esto lo lee una persona</H2>
         <Ul>
           <Li><strong>Las viñetas empiezan con un verbo.</strong> Lideré, lancé, reduje, reconstruí, asumí.</Li>
-          <Li><strong>El impacto lleva una cifra.</strong> «Mejoré la fiabilidad» es una afirmación; «sesiones sin fallos del 96% al 99,5%» es una prueba.</Li>
+          <Li><strong>El impacto lleva una cifra.</strong> «Mejoré la fiabilidad» es una afirmación; «las sesiones sin fallos pasaron del 96 % al 99,5 %» es una prueba.</Li>
           <Li><strong>Nada de frases hechas.</strong> «Profesional orientado a resultados con una trayectoria demostrada» no le dice nada a quien lo lee.</Li>
           <Li><strong>La extensión se ajusta a tu trayectoria.</strong> Una página al principio; dos es lo normal tras una década. Tres necesitan una razón.</Li>
           <Li><strong>El nombre del archivo es un nombre:</strong> <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nombre_Apellidos_CV.pdf</code>, no <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_DEFINITIVO.pdf</code>.</Li>
@@ -542,8 +542,8 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
 
         <H2>Cuáles de estos puntos puede verificar un comprobador por ti</H2>
         <P>
-          La mayor parte de la lista es mecánica, así que un software puede comprobarla. Otra parte es
-          criterio, y eso no puede. Este es el reparto en el comprobador de este sitio:
+          La mayor parte de la lista es mecánica, así que un software puede comprobarla. Otra parte requiere
+          criterio, y un software no puede comprobarla. Este es el reparto en el comprobador de este sitio:
         </P>
         <H3>Se comprueba automáticamente</H3>
         <Ul>

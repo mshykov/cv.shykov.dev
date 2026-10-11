@@ -39,9 +39,9 @@ export const de: Messages = {
     badge: '100 % Lebenslauf-Analyse im Browser',
     headline: ['Lebenslauf ATS Check.', 'Privat im Browser.'],
     sub: ['PDF/DOCX in Sekunden prüfen.', 'Kein Upload, kein Konto, keine KI.'],
-    chips: ['Läuft im Browser', 'Kein Upload', 'Keine KI'],
+    chips: ['Läuft im Browser', 'Kein Upload', 'Kein LLM'],
     cardLabel: 'Im Browser',
-    cardChips: ['Kein Upload', 'Keine KI', 'PDF/DOCX'],
+    cardChips: ['Kein Upload', 'Kein LLM', 'PDF/DOCX'],
   },
 
   languages: {
@@ -65,14 +65,14 @@ export const de: Messages = {
       build: 'ATS-tauglichen Lebenslauf erstellen',
       runsInBrowser: 'Läuft in Ihrem Browser',
       noUploads: 'Kein Upload',
-      noLlm: 'Keine KI',
+      noLlm: 'Kein LLM',
       pdfDocx: 'PDF & DOCX',
       openSource: 'Open Source',
     },
     heroCard: {
       localParse: 'im Browser',
       noUpload: 'Kein Upload',
-      noLlm: 'Keine KI',
+      noLlm: 'Kein LLM',
       pdfDocx: 'PDF/DOCX',
     },
     heroMini: {
@@ -289,14 +289,14 @@ export const de: Messages = {
     verbs: {
       pass: (n: number) => `${n} Aufzählungspunkte beginnen mit einem Aktionsverb.`,
       warn: 'Wenige Aufzählungspunkte beginnen mit einem Aktionsverb.',
-      fix: 'Beginnen Sie Punkte mit einem Verb: Leitete, Lieferte, Senkte, Baute auf, Verantwortete … (oder knapp nominal: Leitung, Aufbau, Reduzierung).',
+      fix: 'Beginnen Sie Punkte mit einem Verb: leitete, lieferte, senkte, baute auf, verantwortete … (oder knapp nominal: Leitung, Aufbau, Reduzierung).',
     },
   },
 
   report: {
     title: (fileName: string) => `Lebenslauf-ATS-Bericht – ${fileName}`,
     score: (score: number, band: string) => `Score: ${score}/100 – ${band}`,
-    stats: (pages: string, words: string, chars: string) => `${pages} Seiten · ${words} Wörter · ${chars} lesbare Zeichen`,
+    stats: (pages: string, words: string, chars: string) => `${pages} · ${words} Wörter · ${chars} lesbare Zeichen`,
     fix: 'Korrektur:',
     jdTitle: (coverage: number) => `Abgleich mit der Stellenanzeige – ${coverage} % Abdeckung`,
     jdMatched: (matched: number, total: number) => `${matched}/${total} der hervorgehobenen Keywords gefunden.`,

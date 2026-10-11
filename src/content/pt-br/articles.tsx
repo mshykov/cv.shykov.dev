@@ -583,7 +583,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
       },
       {
         q: 'Tabelas e caixas de texto são seguras em um currículo para ATS?',
-        a: 'Evite-as para qualquer coisa importante. O texto dentro de caixas de texto pode ser ignorado ou extraído fora de ordem, e tabelas usadas como layout criam os mesmos problemas de ordem de leitura que as colunas. Parágrafos simples e listas com marcadores são o mais seguro.',
+        a: 'Evite-as para qualquer coisa importante. O texto dentro de caixas de texto pode ser ignorado ou extraído fora de ordem, e tabelas usadas como layout criam os mesmos problemas de ordem de leitura que as colunas. Parágrafos simples e listas com marcadores são as opções mais seguras.',
       },
       {
         q: 'O que devo corrigir primeiro no meu currículo para ATS?',
@@ -597,7 +597,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
     published: '2026-10-10',
     updated: '2026-10-10',
     summary:
-      'Solte seu PDF ou DOCX em um verificador de pontuação, leia a nota e as verificações que falharam, corrija primeiro as mais caras e confira de novo. Aqui tudo roda no seu navegador: sem envio, sem cadastro, sem IA. Uma pontuação de 85 ou mais significa que nada importante está se perdendo.',
+      'Arraste e solte seu PDF ou DOCX em um verificador de pontuação, leia a nota e as verificações que falharam, corrija primeiro as mais caras e confira de novo. Aqui tudo roda no seu navegador: sem envio, sem cadastro, sem IA. Uma pontuação de 85 ou mais significa que nada importante está se perdendo.',
     body: (
       <>
         <P>

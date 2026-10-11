@@ -103,7 +103,7 @@ export const ARTICLES: Article[] = [
           There is no standard ATS score. Each checker invents its own rubric, weights it however it
           likes, and — usually — does not tell you what it is. A 62 on one site and an 81 on another
           are not a contradiction; they are two different tests. The useful question is never
-          “which number is right” but “which specific check failed, and do I agree it matters?”.
+          “which number is right” but “which specific check failed, and do I agree it matters?”
           That is only answerable when the rules are published.
         </P>
 
@@ -253,7 +253,7 @@ export const ARTICLES: Article[] = [
       },
       {
         q: 'How do I know a resume checker is not uploading my file?',
-        a: 'Open the browser’s developer tools, go to the Network tab, clear it, then drop your CV in. An upload shows up as a POST or PUT request roughly the size of your file. If there is none, the file stayed on your device.',
+        a: 'Open the browser’s developer tools, go to the Network tab, clear it, then drop your CV in. An upload typically shows up as a POST or PUT request roughly the size of your file. If there is none, the file stayed on your device.',
       },
     ],
   },
@@ -388,7 +388,7 @@ export const ARTICLES: Article[] = [
         </P>
         <P>
           Here is what that looks like. A two-column CV, as a reader sees it, and the text a
-          line-by-line extractor — this site’s included — actually gets back:
+          line-by-line extractor — this site’s checker included — actually gets back:
         </P>
         <Pre label="What the reader sees">{`EXPERIENCE                        SKILLS
 Engineering Manager, Acme         Kubernetes, Go
@@ -398,7 +398,7 @@ Engineering Manager, Acme Kubernetes, Go
 Jan 2020 – now Terraform, AWS`}</Pre>
         <P>
           Every line is now a hybrid. The Experience heading shares a line with Skills, your job title
-          has two skills glued to it, and the date range is followed by cloud providers. Nothing was
+          has two skills glued to it, and the date range is followed by cloud-related skills. Nothing was
           lost — it was just put back together in the wrong order, which for a parser is the same thing.
         </P>
         <P><strong>Fails when:</strong> the page is an image, the text is outlined, or the layout is multi-column.</P>
@@ -539,9 +539,9 @@ Jan 2020 – now Terraform, AWS`}</Pre>
           <Li>Selectable text, and clean character encoding</Li>
           <Li>Email, phone, and a profile link visible as text — it also flags a link that exists only as a hidden hyperlink</Li>
           <Li>Standard headings for Experience, Education, Skills and Summary, plus Achievements, Projects and Certifications</Li>
-          <Li>Dates, bullet structure and page count</Li>
+          <Li>Dates, bullet structure and page count (page count for PDFs)</Li>
           <Li>Numbers in your bullets, and bullets that open with a verb</Li>
-          <Li>Stock phrasing and vague claims, in the separate writing-style tab</Li>
+          <Li>Stock phrasing and vague claims, in the separate writing-style tab (English text only)</Li>
           <Li>The job ad’s vocabulary, if you paste the ad into the job-description match</Li>
         </Ul>
         <H3>Still on you</H3>
@@ -557,7 +557,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
           <A href="/">free CV score checker</A> runs the parseability, contact, section, format and
           content checks in your browser and orders the failures by how many points each one costs —
           so you fix the expensive things first. The writing-style tab covers the stock-phrasing and
-          unquantified-claim items.
+          unquantified-claim items, for CVs written in English.
         </Note>
 
         <H2>Related</H2>

@@ -39,7 +39,7 @@ export const en = {
   notFound: {
     title: 'Page not found',
     heading: 'This page does not exist',
-    body: 'The link may be out of date, or the address mistyped.',
+    body: 'The link may be out of date, or the address may be mistyped.',
     cta: 'Go to the ATS Resume Toolkit',
   },
 
@@ -158,7 +158,7 @@ export const en = {
   },
 
   analyzer: {
-    srHeading: 'Upload a resume for a fast ATS score',
+    srHeading: 'Add a resume for a fast ATS score',
     analyzed: 'Analyzed',
     analyzeAnother: 'Analyze another CV',
     dropBusy: 'Scoring your CV…',
@@ -274,7 +274,7 @@ export const en = {
       names: { achievements: 'Achievements', projects: 'Projects', certifications: 'Certifications' },
       found: (list: string) => `Found: ${list}.`,
       none: 'None of these supporting sections were found.',
-      fix: 'Add the missing sections (Key Achievements is highest-value — recruiters scan it first).',
+      fix: 'Add the missing sections (Key Achievements is the highest-value section — recruiters scan it first).',
     },
     pages: {
       docx: 'Page count is not determinable from a DOCX — export to PDF to verify length (aim for 1–2).',
@@ -296,7 +296,7 @@ export const en = {
     },
     quant: {
       many: (n: number) => `${n} quantified results found (%, ×, counts).`,
-      few: (n: number) => `Only ${n} quantified result(s).`,
+      few: (n: number) => `Only ${n} quantified ${n === 1 ? 'result' : 'results'}.`,
       none: 'No numbers/metrics detected.',
       fix: 'Quantify impact: “cut release time 2.5×”, “grew the team to 14”, “−30% bugs”.',
     },
@@ -311,7 +311,7 @@ export const en = {
   report: {
     title: (fileName: string) => `CV ATS Report — ${fileName}`, // rendered as a # heading
     score: (score: number, band: string) => `Score: ${score}/100 — ${band}`, // rendered bold
-    stats: (pages: string, words: string, chars: string) => `${pages} pages · ${words} words · ${chars} readable characters`,
+    stats: (pages: string, words: string, chars: string) => `${pages} · ${words} words · ${chars} readable characters`,
     fix: 'Fix:', // rendered italic
     jdTitle: (coverage: number) => `Job-description match — ${coverage}% coverage`, // ## heading
     jdMatched: (matched: number, total: number) => `Matched ${matched}/${total} emphasized keywords.`,
