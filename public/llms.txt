@@ -43,6 +43,13 @@
 
 <!--GUIDES-->
 
+## Other languages
+
+The toolkit and the guides are also published in other languages. Each language has its own
+URL, its own guide slugs and hreflang links between them:
+
+<!--LOCALES-->
+
 ## Links
 
 - [Toolkit](https://cv.shykov.dev/): the app itself.

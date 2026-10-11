@@ -1,0 +1,55 @@
+import type { LangData } from './types.ts'
+
+export const es: LangData = {
+  code: 'es',
+  scorerSections: {
+    experience: ['experiencia', 'experiencia laboral', 'experiencia profesional', 'historial laboral', 'trayectoria profesional', 'experiencia de trabajo', 'trayectoria laboral', 'historial profesional', 'carrera profesional'],
+    education: ['educación', 'formación', 'formación académica', 'estudios', 'educación y formación', 'trayectoria académica', 'estudios realizados', 'formación y estudios', 'titulación', 'titulaciones'],
+    skills: ['habilidades', 'competencias', 'competencias clave', 'habilidades técnicas', 'conocimientos', 'aptitudes', 'competencias técnicas', 'conocimientos técnicos', 'habilidades y competencias', 'tecnologías'],
+    summary: ['resumen', 'perfil', 'perfil profesional', 'objetivo', 'objetivo profesional', 'sobre mí', 'resumen profesional', 'perfil personal', 'acerca de mí', 'resumen ejecutivo'],
+    achievements: ['logros', 'logros clave', 'logros destacados', 'reconocimientos', 'aspectos destacados', 'logros profesionales', 'principales logros'],
+    projects: ['proyectos', 'proyectos destacados', 'proyectos personales', 'proyectos relevantes', 'proyectos profesionales'],
+    certifications: ['certificaciones', 'certificados', 'cursos', 'licencias', 'formación complementaria', 'cursos y certificaciones', 'certificaciones y cursos', 'cursos y formación', 'acreditaciones'],
+  },
+  parserSections: {
+    summary: ['resumen', 'perfil', 'perfil profesional', 'objetivo', 'objetivo profesional', 'sobre mí', 'resumen profesional', 'perfil personal', 'acerca de mí', 'resumen ejecutivo'],
+    experience: ['experiencia', 'experiencia laboral', 'experiencia profesional', 'historial laboral', 'trayectoria profesional', 'experiencia de trabajo', 'trayectoria laboral', 'historial profesional', 'carrera profesional', 'empleo', 'empleos'],
+    education: ['educación', 'formación', 'formación académica', 'estudios', 'educación y formación', 'trayectoria académica', 'estudios realizados', 'formación y estudios', 'titulación', 'titulaciones'],
+    skills: ['habilidades', 'competencias', 'competencias clave', 'habilidades técnicas', 'conocimientos', 'aptitudes', 'tecnologías', 'competencias técnicas', 'conocimientos técnicos', 'habilidades y competencias'],
+    projects: ['proyectos', 'proyectos destacados', 'proyectos personales', 'proyectos relevantes', 'proyectos profesionales'],
+    certifications: ['certificaciones', 'certificados', 'cursos', 'licencias', 'formación complementaria', 'cursos y certificaciones', 'certificaciones y cursos', 'cursos y formación', 'acreditaciones'],
+    languages: ['idiomas', 'lenguas', 'idiomas y niveles'],
+    interests: ['intereses', 'aficiones', 'hobbies', 'intereses y aficiones', 'otros intereses'],
+    awards: ['premios', 'reconocimientos', 'logros', 'logros clave', 'premios y reconocimientos', 'logros profesionales', 'principales logros'],
+    other: ['publicaciones', 'voluntariado', 'referencias', 'contacto', 'datos personales', 'datos de contacto', 'otros datos de interés', 'información adicional', 'información de interés'],
+  },
+  actionVerbs: [
+    'lideré', 'gestioné', 'desarrollé', 'implementé', 'diseñé', 'creé', 'lancé', 'mejoré', 'reduje', 'aumenté', 'dirigí',
+    'coordiné', 'optimicé', 'automaticé', 'migré', 'negocié', 'contraté', 'formé', 'analicé', 'construí', 'entregué',
+    'escalé', 'establecí', 'impulsé', 'supervisé', 'logré', 'incrementé', 'definí', 'planifiqué', 'ejecuté', 'fundé',
+    'organicé', 'redacté', 'participé', 'colaboré', 'asumí', 'reestructuré', 'rediseñé', 'simplifiqué', 'mentoricé', 'introduje', 'conseguí',
+    'alcancé', 'ahorré', 'generé', 'capté', 'cerré', 'vendí', 'resolví', 'solucioné', 'detecté', 'corregí', 'documenté', 'administré', 'configuré',
+    'integré', 'desplegué', 'validé', 'revisé', 'audité', 'aceleré', 'inicié', 'promoví', 'renové', 'modernicé', 'estandaricé', 'capacité',
+    'incorporé', 'seleccioné', 'evalué', 'elaboré', 'presenté', 'asesoré', 'impartí', 'puse', 'cree', 'atendí', 'acompañé', 'sustituí', 'mantuve',
+    'organizar', 'redactar', 'participar', 'colaborar', 'asumir', 'conseguir', 'alcanzar', 'generar', 'resolver', 'documentar', 'configurar',
+    'integrar', 'desplegar', 'revisar', 'auditar', 'simplificar', 'acelerar', 'iniciar', 'promover', 'capacitar', 'incorporar', 'seleccionar',
+    'evaluar', 'elaborar', 'presentar', 'asesorar', 'impartir', 'administrar', 'mantener', 'definir', 'establecer', 'fundar', 'incrementar',
+    'organiza', 'participa', 'colabora', 'asume', 'consigue', 'genera', 'resuelve', 'documenta', 'configura', 'integra', 'despliega', 'revisa',
+    'liderar', 'gestionar', 'desarrollar', 'implementar', 'diseñar', 'crear', 'lanzar', 'mejorar', 'reducir', 'aumentar',
+    'dirigir', 'coordinar', 'optimizar', 'automatizar', 'migrar', 'negociar', 'contratar', 'formar', 'analizar',
+    'construir', 'entregar', 'escalar', 'impulsar', 'supervisar', 'lograr', 'planificar', 'ejecutar',
+    'lidera', 'gestiona', 'desarrolla', 'implementa', 'diseña', 'crea', 'lanza', 'mejora', 'reduce', 'aumenta', 'dirige',
+    'coordina', 'optimiza', 'automatiza', 'analiza', 'construye', 'entrega', 'impulsa', 'supervisa',
+  ],
+  impactUnits: ['usuarios', 'personas', 'ingenieros', 'desarrolladores', 'analistas', 'empleados', 'miembros', 'clientes', 'proyectos', 'equipos', 'países', 'tiendas', 'horas', 'minutos', 'segundos', 'días', 'semanas', 'veces', 'millones', 'mil', 'miles', 'euros', 'pedidos', 'incidencias', 'transacciones', 'descargas', 'visitas'],
+  months: [
+    'ene', 'enero', 'feb', 'febrero', 'mar', 'marzo', 'abr', 'abril', 'may', 'mayo', 'jun', 'junio', 'jul', 'julio',
+    'ago', 'agosto', 'sep', 'sept', 'set', 'septiembre', 'setiembre', 'oct', 'octubre', 'nov', 'noviembre', 'dic', 'diciembre',
+  ],
+  ongoing: ['actualidad', 'actualmente', 'presente', 'actual', 'hoy'],
+  degreeWords: ['licenciatura', 'licenciado', 'grado', 'máster', 'master', 'doctorado', 'ingeniería', 'ingeniero', 'diplomatura', 'bachillerato', 'formación profesional', 'ciclo formativo', 'posgrado', 'grado superior', 'grado medio', 'diplomado', 'ingeniero técnico', 'licenciada'],
+  stopwords: (
+    'el la los las un una unos unas y o pero si entonces para por de del en con sin sobre entre desde hasta como es son ser sido será serán puede pueden debe deben tiene tienen has hemos nuestro nuestra nuestros nuestras vuestro vuestra su sus tu tus este esta estos estas ese esa esos esas eso esto lo le les se que quien cual cuando donde porque cómo también además más muy mucho mucha otros otras otro otra tal incluyendo etc rol equipo trabajo trabajar trabajando experiencia años capacidad fuerte excelente buena bueno gran ayudar construir usando uso usado dentro buscamos buscando unirte ofrecemos incorporamos incorporar valorará valoraremos conocimiento conocimientos habilidades requerimos requerido requeridos requerida imprescindible jornada contrato incorporación inmediata responsabilidades requisitos cualificaciones sobre empresa candidato candidatos ideal valorable semana día días mes meses año beneficios salario solicitar puesto oportunidad entorno cultura personas nuevo nueva como bien hacer hecho'
+  ).split(/\s+/),
+  detectWords: ['el', 'la', 'los', 'las', 'de', 'del', 'en', 'con', 'para', 'por', 'una', 'que', 'y', 'se', 'su', 'experiencia'],
+}

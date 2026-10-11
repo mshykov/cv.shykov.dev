@@ -1,9 +1,9 @@
 import { lazy, Suspense, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 import { GitHubMark, REPO_URL } from './components/GitHubMark'
-// Data only, no components: this keeps the guide list on the homepage in step
-// with the pages the build generates, instead of a hand-kept copy that rots.
-import { GUIDES } from './content/guides.ts'
+import { LanguageFooter, LanguageSwitcher, type LanguageLink } from './components/LanguageSwitcher'
+import { LocaleProvider, useLocale, useMessages, type LocaleBundle } from './i18n/context.ts'
+import { LOCALES, guidePath, homePath } from './i18n/locales.ts'
 
 // Keep the app shell tiny; load the active workflow UI after first paint.
 const Analyzer = lazy(() => import('./Analyzer'))
@@ -13,6 +13,9 @@ const Builder = lazy(() => import('./builder/Builder'))
 type Mode = 'analyze' | 'build'
 type ModeSwitchProps = Readonly<{ mode: Mode; onSwitch: (next: Mode) => void }>
 type SiteHeaderProps = Readonly<{ mode: Mode; onSwitch: (next: Mode) => void }>
+
+// The homepage of every language, for the switcher and the footer.
+const HOME_LINKS: LanguageLink[] = LOCALES.map((l) => ({ locale: l.code, href: homePath(l.code) }))
 
 function ShieldIcon() {
   return (
@@ -24,24 +27,26 @@ function ShieldIcon() {
 }
 
 function LogoMark() {
+  const { brand } = useMessages()
   return (
     <div className="flex min-w-0 items-center gap-3">
       <img src="/logo.png" alt="" className="h-10 w-10 shrink-0 rounded-2xl shadow-sm ring-1 ring-black/5 sm:h-11 sm:w-11" />
       <div className="min-w-0">
         <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700 sm:text-sm">cv.shykov.dev</div>
-        <div className="truncate text-base font-semibold tracking-tight text-stone-950 sm:text-lg">ATS Resume Toolkit</div>
+        <div className="truncate text-base font-semibold tracking-tight text-stone-950 sm:text-lg">{brand}</div>
       </div>
     </div>
   )
 }
 
 function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
+  const { home: { header } } = useMessages()
   return (
     <nav
       className="flex min-w-0 flex-1 gap-1 rounded-xl bg-white/85 p-1 text-sm font-medium shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur sm:flex-none"
-      aria-label="Primary app mode"
+      aria-label={header.primaryMode}
     >
-      {([['analyze', 'Analyze'], ['build', 'Build']] as [Mode, string][]).map(([id, label]) => (
+      {([['analyze', header.analyze], ['build', header.build]] as [Mode, string][]).map(([id, label]) => (
         <button
           key={id}
           type="button"
@@ -49,7 +54,7 @@ function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
           aria-pressed={mode === id}
           className={`min-h-10 flex-1 rounded-lg px-3 py-2 transition sm:flex-none sm:px-4 ${mode === id ? 'bg-stone-950 text-white shadow-sm' : 'text-stone-500 hover:bg-white hover:text-stone-800'}`}
         >
-          {id === 'analyze' ? 'Fast ATS Score' : label}
+          {label}
         </button>
       ))}
     </nav>
@@ -57,21 +62,23 @@ function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
 }
 
 function SiteHeader({ mode, onSwitch }: SiteHeaderProps) {
+  const { locale, messages: { home: { header }, languages } } = useLocale()
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200/80 bg-white/85 backdrop-blur-xl">
       <div className="mx-auto flex min-h-30 max-w-7xl flex-col justify-center gap-3 px-5 py-3 sm:h-20 sm:min-h-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
         <LogoMark />
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <ModeSwitch mode={mode} onSwitch={onSwitch} />
+          <LanguageSwitcher current={locale} links={HOME_LINKS} label={languages.label} />
           <a
             href={REPO_URL}
             rel="noreferrer"
             target="_blank"
-            aria-label="Open source on GitHub"
+            aria-label={header.githubAria}
             className="inline-flex min-h-12 shrink-0 items-center gap-2 rounded-xl bg-white/85 px-3.5 text-sm font-medium text-stone-700 shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur transition hover:bg-white hover:text-stone-950"
           >
             <GitHubMark className="h-5 w-5" />
-            <span className="hidden md:inline">GitHub</span>
+            <span className="hidden md:inline">{header.github}</span>
           </a>
         </div>
       </div>
@@ -80,6 +87,7 @@ function SiteHeader({ mode, onSwitch }: SiteHeaderProps) {
 }
 
 function HeroMedia() {
+  const { home: { heroCard } } = useMessages()
   return (
     <div className="pointer-events-none absolute inset-y-0 right-5 hidden w-[48%] min-w-[32rem] overflow-hidden lg:block" aria-hidden>
       <div className="absolute inset-y-0 right-0 w-full">
@@ -116,7 +124,7 @@ function HeroMedia() {
 
         <div className="hero-scan absolute right-[11.5rem] top-[9.5rem] h-[16.75rem] w-[14rem] -rotate-6 rounded-xl border border-indigo-200/80 bg-indigo-50/90 p-4 shadow-xl shadow-indigo-950/10 backdrop-blur">
           <div className="mb-4 flex items-center justify-between">
-            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">local parse</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">{heroCard.localParse}</div>
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
           </div>
           <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-indigo-100">
@@ -136,9 +144,9 @@ function HeroMedia() {
             </div>
           </div>
           <div className="mt-3 flex justify-center gap-1.5 text-center text-[9px] font-semibold uppercase tracking-wide text-stone-500">
-            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No upload</span>
-            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">No LLM</span>
-            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">PDF/DOCX</span>
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">{heroCard.noUpload}</span>
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">{heroCard.noLlm}</span>
+            <span className="whitespace-nowrap rounded-full bg-white px-2 py-1 ring-1 ring-stone-200">{heroCard.pdfDocx}</span>
           </div>
         </div>
       </div>
@@ -147,19 +155,20 @@ function HeroMedia() {
 }
 
 function HeroMiniMedia() {
+  const { home: { heroMini } } = useMessages()
   return (
-    <div className="hero-scan relative mt-8 overflow-hidden rounded-2xl border border-indigo-100 bg-white/85 p-4 shadow-lg shadow-indigo-950/5 ring-1 ring-white/70 backdrop-blur lg:hidden" aria-label="Preview of local ATS scoring">
+    <div className="hero-scan relative mt-8 overflow-hidden rounded-2xl border border-indigo-100 bg-white/85 p-4 shadow-lg shadow-indigo-950/5 ring-1 ring-white/70 backdrop-blur lg:hidden" aria-label={heroMini.aria}>
       <div className="flex items-center justify-between gap-4">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">Local parse</div>
-          <div className="mt-1 text-sm font-medium text-stone-700">Score, top fixes, keyword signals</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">{heroMini.localParse}</div>
+          <div className="mt-1 text-sm font-medium text-stone-700">{heroMini.caption}</div>
         </div>
         <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-emerald-50 text-2xl font-bold tabular-nums text-emerald-700 ring-4 ring-emerald-200">
           83
         </div>
       </div>
       <div className="mt-4 grid gap-2 sm:grid-cols-3">
-        {['Parseability', 'Sections', 'Content'].map((label) => (
+        {heroMini.categories.map((label) => (
           <div key={label} className="rounded-xl bg-stone-50 p-3 ring-1 ring-stone-200">
             <div className="text-xs font-medium text-stone-500">{label}</div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-stone-200">
@@ -173,16 +182,12 @@ function HeroMiniMedia() {
 }
 
 function HowItWorks() {
-  const steps = [
-    ['Choose PDF/DOCX', 'Pick a resume file from your device.'],
-    ['Parse locally', 'Text extraction and scoring run in this browser.'],
-    ['Fix the top issues', 'See score, breakdown, keywords, and exportable notes.'],
-  ]
+  const { home: { how } } = useMessages()
 
   return (
-    <section className="-mt-8 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm lg:-mt-10" aria-label="How the local ATS resume checker works">
+    <section className="-mt-8 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm lg:-mt-10" aria-label={how.aria}>
       <div className="grid gap-3 md:grid-cols-3">
-        {steps.map(([title, body], index) => (
+        {how.steps.map(({ title, body }, index) => (
           <div key={title} className="flex gap-3 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
             <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-indigo-600 text-sm font-semibold text-white">{index + 1}</div>
             <div>
@@ -193,36 +198,33 @@ function HowItWorks() {
         ))}
       </div>
       <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium text-stone-600">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 ring-1 ring-emerald-200"><ShieldIcon />No server upload</span>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200">Deterministic checks, no LLM calls</span>
-        <a className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200 transition hover:bg-stone-200" href={REPO_URL} rel="noreferrer" target="_blank"><GitHubMark />Open source, MIT license</a>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 ring-1 ring-emerald-200"><ShieldIcon />{how.noServerUpload}</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200">{how.deterministic}</span>
+        <a className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 ring-1 ring-stone-200 transition hover:bg-stone-200" href={REPO_URL} rel="noreferrer" target="_blank"><GitHubMark />{how.openSourceMit}</a>
       </div>
     </section>
   )
 }
 
 function TrustNotes() {
+  const { home: { trust } } = useMessages()
   return (
-    <section className="mt-16 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm" aria-label="Privacy and trust notes">
+    <section className="mt-16 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm" aria-label={trust.aria}>
       <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-stone-900">Privacy claims you can inspect.</h2>
-          <p className="mt-2 text-sm leading-6 text-stone-500">
-            The code is open source under the MIT license, and the product promise stays narrow: local document parsing, deterministic scoring, no account wall, and no AI model call hidden behind the interface.
-          </p>
+          <h2 className="text-lg font-semibold tracking-tight text-stone-900">{trust.heading}</h2>
+          <p className="mt-2 text-sm leading-6 text-stone-500">{trust.body}</p>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
-            <div className="text-sm font-semibold text-stone-900">Local parser</div>
-            <p className="mt-1 text-sm text-stone-500">PDF and DOCX text is extracted in the browser with client-side libraries.</p>
-          </div>
-          <div className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
-            <div className="text-sm font-semibold text-stone-900">No LLM scoring</div>
-            <p className="mt-1 text-sm text-stone-500">Scores come from repeatable checks for parseability, sections, format, and content signals.</p>
-          </div>
+          {trust.cards.map((card) => (
+            <div key={card.title} className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
+              <div className="text-sm font-semibold text-stone-900">{card.title}</div>
+              <p className="mt-1 text-sm text-stone-500">{card.body}</p>
+            </div>
+          ))}
           <a className="rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200 transition hover:bg-stone-100" href={REPO_URL} rel="noreferrer" target="_blank">
-            <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-900"><GitHubMark />Open source on GitHub</div>
-            <p className="mt-1 text-sm text-stone-500">MIT-licensed. Read the scoring checks, parser, and export flow, open an issue, or send a pull request.</p>
+            <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-900"><GitHubMark />{trust.repoTitle}</div>
+            <p className="mt-1 text-sm text-stone-500">{trust.repoBody}</p>
           </a>
         </div>
       </div>
@@ -230,7 +232,9 @@ function TrustNotes() {
   )
 }
 
-export default function App() {
+function AppBody() {
+  const { locale, messages: m, guides } = useLocale()
+  const { hero } = m.home
   const [mode, setMode] = useState<Mode>('analyze')
   const [buildLoaded, setBuildLoaded] = useState(false)
 
@@ -261,36 +265,34 @@ export default function App() {
           <div className="max-w-2xl py-10 sm:py-14 lg:py-16">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-medium text-stone-700 shadow-sm ring-1 ring-stone-200 backdrop-blur">
               <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
-              <span>100% local resume analysis</span>
+              <span>{hero.badge}</span>
             </div>
             <h1 className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl lg:text-6xl">
-              Free CV ATS score checker. Private by default.
+              {hero.h1}
             </h1>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-stone-600">
-              Get your CV ATS score from a PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.
-            </p>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-stone-600">{hero.lead}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={focusAnalyze}
                 className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Check my resume
+                {hero.check}
               </button>
               <button
                 type="button"
                 onClick={() => switchModeAndFocusTool('build')}
                 className="rounded-xl border border-stone-300 bg-white/80 px-5 py-3 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-400 hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Build ATS-clean CV
+                {hero.build}
               </button>
             </div>
             <div className="mt-8 flex flex-wrap gap-2 text-sm">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 font-medium text-emerald-700 ring-1 ring-emerald-200"><ShieldIcon />Runs in your browser</span>
-              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No uploads</span>
-              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">No LLM</span>
-              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">PDF & DOCX</span>
-              <a className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200 transition hover:bg-white hover:text-stone-900" href={REPO_URL} rel="noreferrer" target="_blank"><GitHubMark />Open source</a>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 font-medium text-emerald-700 ring-1 ring-emerald-200"><ShieldIcon />{hero.runsInBrowser}</span>
+              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">{hero.noUploads}</span>
+              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">{hero.noLlm}</span>
+              <span className="rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200">{hero.pdfDocx}</span>
+              <a className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 font-medium text-stone-600 ring-1 ring-stone-200 transition hover:bg-white hover:text-stone-900" href={REPO_URL} rel="noreferrer" target="_blank"><GitHubMark />{hero.openSource}</a>
             </div>
             <HeroMiniMedia />
           </div>
@@ -300,14 +302,14 @@ export default function App() {
       <div className="mx-auto flex max-w-7xl flex-col px-5 py-10 sm:py-14">
         <HowItWorks />
         <main id="fast-ats-score" className="mt-8 flex-1 scroll-mt-32 sm:scroll-mt-24">
-          <ErrorBoundary>
-            <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading fast ATS score…</p>}>
+          <ErrorBoundary labels={m.home.errorBoundary}>
+            <Suspense fallback={<p className="py-20 text-center text-stone-400">{m.home.loading.score}</p>}>
               <div className={mode === 'analyze' ? 'block' : 'hidden'}>
                 <Analyzer />
               </div>
             </Suspense>
             {(mode === 'build' || buildLoaded) && (
-              <Suspense fallback={<p className="py-20 text-center text-stone-400">Loading builder…</p>}>
+              <Suspense fallback={<p className="py-20 text-center text-stone-400">{m.home.loading.builder}</p>}>
                 <div className={mode === 'build' ? 'block' : 'hidden'}>
                   <Builder />
                 </div>
@@ -318,31 +320,21 @@ export default function App() {
 
       <TrustNotes />
 
-      <section className="mt-16 grid gap-6 border-t border-stone-200 pt-8 text-sm text-stone-500 sm:grid-cols-2 lg:grid-cols-4" aria-label="ATS resume checker FAQ">
-        <div>
-          <h2 className="font-semibold text-stone-800">What is an ATS score?</h2>
-          <p className="mt-2">A fast heuristic check for parser-friendly text, contact details, sections, dates, bullets, and measurable impact.</p>
-        </div>
-        <div>
-          <h2 className="font-semibold text-stone-800">Is my CV uploaded?</h2>
-          <p className="mt-2">No. PDF and DOCX files are processed locally in your browser and are not sent to a server.</p>
-        </div>
-        <div>
-          <h2 className="font-semibold text-stone-800">Does this use AI?</h2>
-          <p className="mt-2">No. The score is deterministic and does not use LLMs, model calls, accounts, or API keys.</p>
-        </div>
-        <div>
-          <h2 className="font-semibold text-stone-800">PDF or DOCX?</h2>
-          <p className="mt-2">Both work. Text-based PDFs give the clearest page-count and parseability signal.</p>
-        </div>
+      <section className="mt-16 grid gap-6 border-t border-stone-200 pt-8 text-sm text-stone-500 sm:grid-cols-2 lg:grid-cols-4" aria-label={m.home.faq.aria}>
+        {m.home.faq.items.map(({ q, a }) => (
+          <div key={q}>
+            <h2 className="font-semibold text-stone-800">{q}</h2>
+            <p className="mt-2">{a}</p>
+          </div>
+        ))}
       </section>
 
-      <section id="guides" className="mt-14 border-t border-stone-200 pt-8" aria-label="Guides">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-stone-500">Guides</h2>
+      <section id="guides" className="mt-14 border-t border-stone-200 pt-8" aria-label={m.home.guides.aria}>
+        <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-stone-500">{m.home.guides.heading}</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {GUIDES.map((a) => (
+          {guides.map((a) => (
             <li key={a.slug}>
-              <a href={`/${a.slug}`} className="group block rounded-xl border border-stone-200 bg-white p-4 shadow-sm transition hover:border-indigo-200 hover:shadow">
+              <a href={guidePath(locale, a.slug)} className="group block rounded-xl border border-stone-200 bg-white p-4 shadow-sm transition hover:border-indigo-200 hover:shadow">
                 <span className="block text-sm font-semibold text-stone-900 group-hover:text-indigo-700">{a.title}</span>
                 <span className="mt-1 block text-sm leading-6 text-stone-500">{a.description}</span>
               </a>
@@ -351,11 +343,22 @@ export default function App() {
         </ul>
       </section>
 
-      <footer className="mt-8 border-t border-stone-200 pt-5 text-xs text-stone-600 sm:flex sm:items-center sm:justify-between sm:gap-4">
-        <p>Heuristic guidance, not a guarantee. Built by <a href="https://shykov.dev/" className="font-medium text-stone-600 underline-offset-2 hover:underline">Maksym Shykov</a></p>
-        <p className="mt-1 sm:mt-0">No tracking, no uploads, no accounts. <a href={REPO_URL} rel="noreferrer" target="_blank" className="font-medium text-stone-600 underline-offset-2 hover:underline">Open source on GitHub</a>.</p>
+      <footer className="mt-8 border-t border-stone-200 pt-5 text-xs text-stone-600">
+        <div className="sm:flex sm:items-center sm:justify-between sm:gap-4">
+          <p>{m.home.footer.disclaimer} <a href="https://shykov.dev/" className="font-medium text-stone-600 underline-offset-2 hover:underline">{m.home.footer.author}</a></p>
+          <p className="mt-1 sm:mt-0">{m.home.footer.noTracking} <a href={REPO_URL} rel="noreferrer" target="_blank" className="font-medium text-stone-600 underline-offset-2 hover:underline">{m.home.footer.openSource}</a>.</p>
+        </div>
+        <LanguageFooter current={locale} links={HOME_LINKS} label={m.languages.footerLabel} />
       </footer>
       </div>
     </div>
+  )
+}
+
+export default function App({ bundle }: Readonly<{ bundle: LocaleBundle }>) {
+  return (
+    <LocaleProvider value={bundle}>
+      <AppBody />
+    </LocaleProvider>
   )
 }

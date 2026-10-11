@@ -11,11 +11,11 @@ export function P({ children }: { children: ReactNode }) {
   return <p className="mt-4 text-[15px] leading-7 text-stone-700">{children}</p>
 }
 
-export function UL({ children }: { children: ReactNode }) {
+export function Ul({ children }: { children: ReactNode }) {
   return <ul className="mt-4 space-y-2 text-[15px] leading-7 text-stone-700">{children}</ul>
 }
 
-export function LI({ children }: { children: ReactNode }) {
+export function Li({ children }: { children: ReactNode }) {
   return (
     <li className="flex gap-3">
       <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-500" />
@@ -40,7 +40,7 @@ export function H3({ children }: { children: ReactNode }) {
   return <h3 className="mt-6 text-base font-semibold text-stone-900">{children}</h3>
 }
 
-export function OL({ children }: { children: ReactNode }) {
+export function Ol({ children }: { children: ReactNode }) {
   return <ol className="mt-4 list-decimal space-y-2 pl-5 text-[15px] leading-7 text-stone-700 marker:font-semibold marker:text-indigo-600">{children}</ol>
 }
 

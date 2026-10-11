@@ -3,10 +3,28 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { loadLocale } from './i18n/load.ts'
+import { DEFAULT_LOCALE, isLocale, localeFromHtmlLang, localeFromPath } from './i18n/locales.ts'
+
+// The URL names the language (/es/ → Spanish) and the build writes the matching
+// <html lang> into each page. The path comes first because the dev server serves
+// every route from the one index.html, whose lang is always "en".
+//
+// In development the dev server answers /es/ with a 404 (the Worker's 404-page
+// handling), so there the language comes from ?lang=es instead.
+const fromQuery = import.meta.env.DEV ? new URLSearchParams(location.search).get('lang') : null
+const fromPath = localeFromPath(location.pathname)
+function pickLocale() {
+  if (fromQuery && isLocale(fromQuery)) return fromQuery
+  if (fromPath !== DEFAULT_LOCALE) return fromPath
+  return localeFromHtmlLang(document.documentElement.lang) ?? DEFAULT_LOCALE
+}
+const locale = pickLocale()
+const bundle = await loadLocale(locale)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <App bundle={bundle} />
   </StrictMode>,
 )
 

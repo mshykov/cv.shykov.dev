@@ -6,6 +6,8 @@ Privacy-first **CV Toolkit** (https://cv.shykov.dev). Two modes:
 - **Build** — form → live preview + live ATS score → export an ATS-clean PDF.
 
 Everything runs **100% in the browser**; nothing is uploaded. Open-source (MIT).
+Published in six language versions — English at `/`, then `/es/`, `/pt-br/`,
+`/pt-pt/`, `/fr/`, `/de/` — see `docs/localization.md` before touching any text.
 
 ## Stack & deploy
 Vite 8 · React 19 · TypeScript · Tailwind v4. `pdf.js` (read PDF), `mammoth`
@@ -36,6 +38,8 @@ npm run build    # tsc + vite build (CI gate runs lint + test + build)
 npm run build:debug # same build with production source maps for stack traces
 npx vite preview --port 4319   # serves the prod build WITH the production CSP
 npm run indexnow -- --dry-run  # IndexNow payload; without --dry-run it SUBMITS (external write — owner approval)
+npm run og-images              # redraw public/og/<locale>.png from messages.og (needs Google Chrome)
+npm run smoke:build            # after build: every built page in every language (lang, hreflang, canonical, JSON-LD, dead links)
 ```
 
 ## Structure
@@ -43,12 +47,20 @@ npm run indexnow -- --dry-run  # IndexNow payload; without --dry-run it SUBMITS 
   text), `parse.ts` (structured résumé), `analyze.ts` (ATS score), `jdmatch.ts`
   (JD keyword match), `report.ts`, `download.ts`.
 - `src/components/` — shared UI (`ScoreRing`, `tone`).
-- `src/content/` — the six guide pages (`articles.tsx`: body, short answer, FAQ),
-  prerendered to static HTML with Article/Breadcrumb/FAQPage JSON-LD.
-  `rubric.ts` is the published scoring table — `rubric.test.ts` fails if it
-  drifts from `analyze.ts`. Heading lists come from `src/lib/sections.ts`, which
-  the scorer imports too. Bump an article's `updated` only for real content changes
-  (it drives the sitemap lastmod).
+- `src/content/<locale>/` — the six guide pages per language (`articles.tsx`: body,
+  short answer, FAQ; `guides.ts`: id, slug, title, description), prerendered to
+  static HTML with Article/Breadcrumb/FAQPage JSON-LD. `rubric.ts` is the published
+  scoring table — `rubric.test.ts` fails if it drifts from `analyze.ts`; `tables.ts`
+  builds the rubric and heading tables for every language from the scorer's own
+  data. Bump an article's `updated` only for real content changes (it drives the
+  sitemap lastmod).
+- `src/i18n/` — locale registry (`locales.ts`), every UI/scorer/report/builder string
+  (`messages/<locale>.ts`, typed against `messages/en.ts`), per-language bundles and
+  loader, `<head>`/hreflang/JSON-LD builders (`seo.ts`, `head.ts`). **English strings
+  are edited in `messages/en.ts`; every other language must follow** (the compiler
+  and `locales.test.ts` say what is missing).
+- `src/lib/lang/` — what the scorer knows about each *CV language* (headings,
+  action verbs, months, units, stop words). Merged: any CV is read in any language.
 - `src/builder/` — Build mode: `Builder.tsx`, `ResumeDoc.tsx` (the react-pdf
   template), `model.ts`.
 - `src/` — `App.tsx` (Analyze/Build shell), `Analyzer.tsx`, `ErrorBoundary.tsx`,
@@ -102,5 +114,7 @@ self-merge via squash. Never commit straight to `main` (check your branch first)
 - `docs/retrospective.md` — what went well / wrong + lessons.
 - `docs/sonar.md` — reusable Sonar/code-quality checklist.
 - `docs/project-quality.md` — CV toolkit-specific quality rules.
+- `docs/localization.md` — **how the six languages work and how to add a seventh**
+  (URL scheme, SEO/hreflang rules, translation voice and glossary, validation).
 - `docs/ai-visibility.md` — AI/search visibility baseline (2026-09-26) + re-run protocol.
 - `docs/session_2026-06-24_history.md` — last session's work + **current backlog**.

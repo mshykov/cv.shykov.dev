@@ -5,41 +5,20 @@
 // They live in src/ so Tailwind's scanner sees these class names and emits the
 // same stylesheet the app uses. Do not move them outside src/ or the guides
 // will render unstyled.
-import type { ReactNode } from 'react'
-import { A, Code, H2, H3, LI, Note, OL, P, Pre, Table, UL } from './prose.tsx'
-import { RUBRIC } from './rubric.ts'
-import { GUIDES, type Guide } from './guides.ts'
-import { BONUS_SECTION_KEYWORDS, SECTION_KEYWORDS } from '../lib/sections.ts'
+import { A, Code, H2, H3, Li, Note, Ol, P, Pre, Table, Ul } from '../prose.tsx'
+import { rubricRows, sectionRows } from '../tables.ts'
+import { GUIDES } from './guides.ts'
+import type { Article, Guide } from '../types.ts'
+import { en } from '../../i18n/messages/en.ts'
 
-export interface Article extends Guide {
-  /** First publication; Article JSON-LD `datePublished`. */
-  published: string
-  /** Last substantive content change; `dateModified` and the sitemap lastmod. */
-  updated: string
-  /** Two or three plain sentences that answer the title outright. */
-  summary: string
-  body: ReactNode
-  /** Plain-text answers: they are also emitted verbatim as FAQPage JSON-LD. */
-  faq: { q: string; a: string }[]
-}
-
-function guide(slug: string): Guide {
-  const meta = GUIDES.find((g) => g.slug === slug)
-  if (!meta) throw new Error(`articles: no entry for "${slug}" in guides.ts`)
+function guide(id: Guide['id']): Guide {
+  const meta = GUIDES.find((g) => g.id === id)
+  if (!meta) throw new Error(`articles: no entry for "${id}" in guides.ts`)
   return meta
 }
 
-const quoted = (words: string[]) => words.map((w) => `“${w}”`).join(', ')
-
-const SECTION_ROWS = [
-  ['Experience', quoted(SECTION_KEYWORDS.experience), '8'],
-  ['Education', quoted(SECTION_KEYWORDS.education), '6'],
-  ['Skills', quoted(SECTION_KEYWORDS.skills), '6'],
-  ['Summary', quoted(SECTION_KEYWORDS.summary), '5'],
-  ['Achievements', quoted(BONUS_SECTION_KEYWORDS.achievements), '4 (bonus)'],
-  ['Projects', quoted(BONUS_SECTION_KEYWORDS.projects), '3 (bonus)'],
-  ['Certifications', quoted(BONUS_SECTION_KEYWORDS.certifications), '3 (bonus)'],
-]
+const RUBRIC_ROWS = rubricRows(en)
+const SECTION_ROWS = sectionRows('en', en)
 
 export const ARTICLES: Article[] = [
   {
@@ -83,18 +62,18 @@ export const ARTICLES: Article[] = [
           rubric is fixed at 100 points and published, so you can see exactly where each point comes
           from. In five groups:
         </P>
-        <UL>
-          <LI><strong>Parseability (25)</strong> — is there real, selectable text, or is the page an image?</LI>
-          <LI><strong>Contact details (15)</strong> — email, phone, and a link written out as visible text.</LI>
-          <LI><strong>Sections (35)</strong> — headings a parser recognises: Experience, Education, Skills, Summary.</LI>
-          <LI><strong>Format (15)</strong> — page count, dated roles, real bullet structure.</LI>
-          <LI><strong>Content (10)</strong> — quantified impact and verb-led bullets.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Parseability (25)</strong> — is there real, selectable text, or is the page an image?</Li>
+          <Li><strong>Contact details (15)</strong> — email, phone, and a link written out as visible text.</Li>
+          <Li><strong>Sections (35)</strong> — headings a parser recognises: Experience, Education, Skills, Summary.</Li>
+          <Li><strong>Format (15)</strong> — page count, dated roles, real bullet structure.</Li>
+          <Li><strong>Content (10)</strong> — quantified impact and verb-led bullets.</Li>
+        </Ul>
         <P>And check by check — this table is the one the scorer runs, not a summary of it:</P>
         <Table
           caption="ATS Resume Toolkit scoring rubric, check by check"
           head={['Check', 'Group', 'Points']}
-          rows={RUBRIC.map((r) => [r.label, r.category, String(r.max)])}
+          rows={RUBRIC_ROWS}
         />
         <P>
           Two details are easy to miss. A missing phone number or summary only costs its own points —
@@ -109,11 +88,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>What no score can measure</H2>
-        <UL>
-          <LI>Whether your experience matches the role. That is the recruiter's judgement.</LI>
-          <LI>Which specific ATS the employer runs. Vendors parse differently, and none publish their rules.</LI>
-          <LI>Whether your writing is persuasive. A perfectly parseable CV can still be dull.</LI>
-        </UL>
+        <Ul>
+          <Li>Whether your experience matches the role. That is the recruiter's judgement.</Li>
+          <Li>Which specific ATS the employer runs. Vendors parse differently, and none publish their rules.</Li>
+          <Li>Whether your writing is persuasive. A perfectly parseable CV can still be dull.</Li>
+        </Ul>
         <P>
           Treat a score above roughly 85 as “nothing here will get lost in transit” and move on to
           the content. Chasing the last few points is almost always wasted effort.
@@ -136,10 +115,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Related</H2>
-        <UL>
-          <LI><A href="/how-ats-parsing-works">How ATS resume parsing actually works</A></LI>
-          <LI><A href="/ats-resume-checklist">The ATS resume checklist</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/how-ats-parsing-works">How ATS resume parsing actually works</A></Li>
+          <Li><A href="/ats-resume-checklist">The ATS resume checklist</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -186,12 +165,12 @@ export const ARTICLES: Article[] = [
           When a tool asks you to upload, the file leaves your device and lands on a server. From
           there, some combination of the following is normal and often disclosed in the terms:
         </P>
-        <UL>
-          <LI>The file is stored, sometimes indefinitely, and tied to the account you created.</LI>
-          <LI>The text is sent to a third-party language model for scoring or rewriting.</LI>
-          <LI>The email you registered with enters a marketing sequence.</LI>
-          <LI>Aggregate data feeds a recruiting product sold to employers.</LI>
-        </UL>
+        <Ul>
+          <Li>The file is stored, sometimes indefinitely, and tied to the account you created.</Li>
+          <Li>The text is sent to a third-party language model for scoring or rewriting.</Li>
+          <Li>The email you registered with enters a marketing sequence.</Li>
+          <Li>Aggregate data feeds a recruiting product sold to employers.</Li>
+        </Ul>
         <P>
           None of that is necessarily malicious. It is simply the business model: the check is free
           because you and your document are the product. But it is worth knowing before you click,
@@ -199,13 +178,13 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>The questions worth asking of any checker</H2>
-        <UL>
-          <LI><strong>Does the file leave the device?</strong> If there is no upload, most other questions stop mattering.</LI>
-          <LI><strong>Is an account required?</strong> An email wall exists to capture the email, not to improve the score.</LI>
-          <LI><strong>Is scoring deterministic or generated?</strong> If a model writes the feedback, your CV was sent to that model.</LI>
-          <LI><strong>Can you read the rules?</strong> A published rubric can be argued with. A hidden one cannot.</LI>
-          <LI><strong>What is the deletion path?</strong> If the answer is a support email, assume the file stays.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Does the file leave the device?</strong> If there is no upload, most other questions stop mattering.</Li>
+          <Li><strong>Is an account required?</strong> An email wall exists to capture the email, not to improve the score.</Li>
+          <Li><strong>Is scoring deterministic or generated?</strong> If a model writes the feedback, your CV was sent to that model.</Li>
+          <Li><strong>Can you read the rules?</strong> A published rubric can be argued with. A hidden one cannot.</Li>
+          <Li><strong>What is the deletion path?</strong> If the answer is a support email, assume the file stays.</Li>
+        </Ul>
 
         <H2>How a local-only check works</H2>
         <P>
@@ -226,7 +205,7 @@ export const ARTICLES: Article[] = [
           “We never store your file” is a promise. Whether the file leaves your machine at all is
           something you can watch happen — or not happen — in any desktop browser:
         </P>
-        <OL>
+        <Ol>
           <li>Open the checker, then open the browser’s developer tools: <Code>F12</Code> on Windows and Linux, <Code>⌥ ⌘ I</Code> on a Mac.</li>
           <li>Switch to the <strong>Network</strong> tab and clear it, so only new requests show.</li>
           <li>Drop your CV into the checker and wait for the result.</li>
@@ -235,7 +214,7 @@ export const ARTICLES: Article[] = [
             request size is roughly the size of your file. Scripts and fonts the page loads for itself
             are not uploads.
           </li>
-        </OL>
+        </Ol>
         <P>
           If no request carries the file, the file did not leave. This works on any site, including
           this one — which is the point: the claim should be checkable by you, not taken on trust.
@@ -257,10 +236,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Related</H2>
-        <UL>
-          <LI><A href="/what-is-an-ats-score">What an ATS score actually measures</A></LI>
-          <LI><A href="/pdf-or-docx-for-ats">PDF or DOCX: which should you send?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/what-is-an-ats-score">What an ATS score actually measures</A></Li>
+          <Li><A href="/pdf-or-docx-for-ats">PDF or DOCX: which should you send?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -295,11 +274,11 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>Why PDF is the default now</H2>
-        <UL>
-          <LI><strong>It looks the same everywhere.</strong> A DOCX re-flows depending on the fonts and Word version at the other end. Your careful two-page layout can arrive as three ragged pages.</LI>
-          <LI><strong>Modern parsers handle it.</strong> PDF text extraction is a solved problem; the major systems have supported it for years.</LI>
-          <LI><strong>It is harder to mangle.</strong> Nobody accidentally edits your PDF between upload and review.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>It looks the same everywhere.</strong> A DOCX re-flows depending on the fonts and Word version at the other end. Your careful two-page layout can arrive as three ragged pages.</Li>
+          <Li><strong>Modern parsers handle it.</strong> PDF text extraction is a solved problem; the major systems have supported it for years.</Li>
+          <Li><strong>It is harder to mangle.</strong> Nobody accidentally edits your PDF between upload and review.</Li>
+        </Ul>
 
         <H2>The one PDF that fails every time</H2>
         <P>
@@ -315,7 +294,7 @@ export const ARTICLES: Article[] = [
 
         <H2>A 30-second test for any PDF</H2>
         <P>Selecting text proves the text exists. Two more steps show whether it comes out usable:</P>
-        <OL>
+        <Ol>
           <li><strong>Select a line.</strong> If nothing highlights, the page is an image. Re-export from the original document.</li>
           <li>
             <strong>Search for your email</strong> with <Code>Ctrl F</Code> / <Code>⌘ F</Code>. If
@@ -328,7 +307,7 @@ export const ARTICLES: Article[] = [
             out interleaved line by line, or your job titles appear far from their dates, fix the layout
             before you worry about anything else.
           </li>
-        </OL>
+        </Ol>
         <P>
           Exporting from Word, Google Docs or Pages with their normal <em>Download as PDF</em> or{' '}
           <em>Export to PDF</em> produces text-based PDFs. The risky routes are “print to image”,
@@ -336,24 +315,24 @@ export const ARTICLES: Article[] = [
         </P>
 
         <H2>When DOCX is the right answer</H2>
-        <UL>
-          <LI><strong>The form says so.</strong> If the upload field lists <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code> only, that is the answer. Do not out-clever the form.</LI>
-          <LI><strong>A recruiter asked for it.</strong> Agencies often re-brand your CV onto their template, which needs an editable file.</LI>
-          <LI><strong>The employer runs an older system.</strong> Rare now, but harmless to comply with.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>The form says so.</strong> If the upload field lists <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code> only, that is the answer. Do not out-clever the form.</Li>
+          <Li><strong>A recruiter asked for it.</strong> Agencies often re-brand your CV onto their template, which needs an editable file.</Li>
+          <Li><strong>The employer runs an older system.</strong> Rare now, but harmless to comply with.</Li>
+        </Ul>
 
         <H2>Things that matter more than the extension</H2>
         <P>
           Format is the easiest decision you will make about your CV. These are the ones that
           actually move the needle:
         </P>
-        <UL>
-          <LI><strong>One column.</strong> Multi-column layouts can be read in the wrong order, interleaving two unrelated lines.</LI>
-          <LI><strong>No text inside images.</strong> A logo is fine; your job title rendered as a graphic is not.</LI>
-          <LI><strong>No critical detail in the header or footer.</strong> Some parsers skip those regions. Put your email in the body.</LI>
-          <LI><strong>Real bullet characters,</strong> not manually drawn dashes inside a table cell.</LI>
-          <LI><strong>A sensible filename</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>. A human sees it in a folder of hundreds.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>One column.</strong> Multi-column layouts can be read in the wrong order, interleaving two unrelated lines.</Li>
+          <Li><strong>No text inside images.</strong> A logo is fine; your job title rendered as a graphic is not.</Li>
+          <Li><strong>No critical detail in the header or footer.</strong> Some parsers skip those regions. Put your email in the body.</Li>
+          <Li><strong>Real bullet characters,</strong> not manually drawn dashes inside a table cell.</Li>
+          <Li><strong>A sensible filename</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>. A human sees it in a folder of hundreds.</Li>
+        </Ul>
 
         <Note>
           <strong>Not sure which category your file falls into?</strong> Drop it on the{' '}
@@ -363,10 +342,10 @@ export const ARTICLES: Article[] = [
         </Note>
 
         <H2>Related</H2>
-        <UL>
-          <LI><A href="/how-ats-parsing-works">How ATS resume parsing actually works</A></LI>
-          <LI><A href="/ats-resume-checklist">The ATS resume checklist</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/how-ats-parsing-works">How ATS resume parsing actually works</A></Li>
+          <Li><A href="/ats-resume-checklist">The ATS resume checklist</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -474,11 +453,11 @@ Jan 2020 – now Terraform, AWS`}</Pre>
         <P><strong>Fails when:</strong> the vocabulary of your CV and the vocabulary of the job ad have no overlap.</P>
 
         <H2>What this implies</H2>
-        <UL>
-          <LI>Formatting advice is not superstition — each rule maps to a stage above.</LI>
-          <LI>Keyword advice is about vocabulary overlap, not density. Never claim a skill you lack.</LI>
-          <LI>Nothing in this pipeline evaluates you. It moves you into a searchable shape, or fails to.</LI>
-        </UL>
+        <Ul>
+          <Li>Formatting advice is not superstition — each rule maps to a stage above.</Li>
+          <Li>Keyword advice is about vocabulary overlap, not density. Never claim a skill you lack.</Li>
+          <Li>Nothing in this pipeline evaluates you. It moves you into a searchable shape, or fails to.</Li>
+        </Ul>
 
         <Note>
           <strong>See it from the parser's side.</strong> The{' '}
@@ -488,10 +467,10 @@ Jan 2020 – now Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Related</H2>
-        <UL>
-          <LI><A href="/what-is-an-ats-score">What an ATS score actually measures</A></LI>
-          <LI><A href="/ats-checker-without-upload">Checkers that do not upload your CV</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/what-is-an-ats-score">What an ATS score actually measures</A></Li>
+          <Li><A href="/ats-checker-without-upload">Checkers that do not upload your CV</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -524,31 +503,31 @@ Jan 2020 – now Terraform, AWS`}</Pre>
         </P>
 
         <H2>Critical — skip these and the application may not arrive</H2>
-        <UL>
-          <LI><strong>The text is selectable.</strong> Open the file and try to highlight a line. If you cannot, the parser sees a blank page.</LI>
-          <LI><strong>Your email is plain text in the body.</strong> Not in the header, not only behind a mail icon, not only as a hyperlink.</LI>
-          <LI><strong>One column.</strong> Sidebars are the single most common cause of scrambled extraction.</LI>
-          <LI><strong>Standard section headings.</strong> Experience, Education, Skills, Summary. Boring wins here.</LI>
-          <LI><strong>Every role carries dates.</strong> Month and year, in a consistent format, on the same line as the role.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>The text is selectable.</strong> Open the file and try to highlight a line. If you cannot, the parser sees a blank page.</Li>
+          <Li><strong>Your email is plain text in the body.</strong> Not in the header, not only behind a mail icon, not only as a hyperlink.</Li>
+          <Li><strong>One column.</strong> Sidebars are the single most common cause of scrambled extraction.</Li>
+          <Li><strong>Standard section headings.</strong> Experience, Education, Skills, Summary. Boring wins here.</Li>
+          <Li><strong>Every role carries dates.</strong> Month and year, in a consistent format, on the same line as the role.</Li>
+        </Ul>
 
         <H2>Important — these decide whether you show up in a search</H2>
-        <UL>
-          <LI><strong>Job titles are recognisable.</strong> If your internal title is “Delivery Ninja”, put the industry-standard title alongside it.</LI>
-          <LI><strong>The vocabulary of the job ad appears</strong> — but only where you have honestly earned it.</LI>
-          <LI><strong>A skills section exists,</strong> as plain comma-separated text rather than a chart of skill bars.</LI>
-          <LI><strong>Your links are written out</strong> as visible text: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/you</code>. A parser reads text, not link targets.</LI>
-          <LI><strong>No text lives inside an image or a text box.</strong></LI>
-        </UL>
+        <Ul>
+          <Li><strong>Job titles are recognisable.</strong> If your internal title is “Delivery Ninja”, put the industry-standard title alongside it.</Li>
+          <Li><strong>The vocabulary of the job ad appears</strong> — but only where you have honestly earned it.</Li>
+          <Li><strong>A skills section exists,</strong> as plain comma-separated text rather than a chart of skill bars.</Li>
+          <Li><strong>Your links are written out</strong> as visible text: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/you</code>. A parser reads text, not link targets.</Li>
+          <Li><strong>No text lives inside an image or a text box.</strong></Li>
+        </Ul>
 
         <H2>Worth doing — these are read by the human</H2>
-        <UL>
-          <LI><strong>Bullets start with a verb.</strong> Led, shipped, cut, rebuilt, owned.</LI>
-          <LI><strong>Impact carries a number.</strong> “Improved reliability” is a claim; “crash-free sessions from 96% to 99.5%” is evidence.</LI>
-          <LI><strong>No stock phrasing.</strong> “Results-driven professional with a proven track record” tells a reader nothing.</LI>
-          <LI><strong>Length matches your career.</strong> One page early on, two is normal after a decade. Three needs a reason.</LI>
-          <LI><strong>The filename is a name</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>, not <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_REAL.pdf</code>.</LI>
-        </UL>
+        <Ul>
+          <Li><strong>Bullets start with a verb.</strong> Led, shipped, cut, rebuilt, owned.</Li>
+          <Li><strong>Impact carries a number.</strong> “Improved reliability” is a claim; “crash-free sessions from 96% to 99.5%” is evidence.</Li>
+          <Li><strong>No stock phrasing.</strong> “Results-driven professional with a proven track record” tells a reader nothing.</Li>
+          <Li><strong>Length matches your career.</strong> One page early on, two is normal after a decade. Three needs a reason.</Li>
+          <Li><strong>The filename is a name</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>, not <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_REAL.pdf</code>.</Li>
+        </Ul>
 
         <H2>Which of these a checker can verify for you</H2>
         <P>
@@ -556,22 +535,22 @@ Jan 2020 – now Terraform, AWS`}</Pre>
           cannot. Here is the split for this site’s checker:
         </P>
         <H3>Checked automatically</H3>
-        <UL>
-          <LI>Selectable text, and clean character encoding</LI>
-          <LI>Email, phone, and a profile link visible as text — it also flags a link that exists only as a hidden hyperlink</LI>
-          <LI>Standard headings for Experience, Education, Skills and Summary, plus Achievements, Projects and Certifications</LI>
-          <LI>Dates, bullet structure and page count</LI>
-          <LI>Numbers in your bullets, and bullets that open with a verb</LI>
-          <LI>Stock phrasing and vague claims, in the separate writing-style tab</LI>
-          <LI>The job ad’s vocabulary, if you paste the ad into the job-description match</LI>
-        </UL>
+        <Ul>
+          <Li>Selectable text, and clean character encoding</Li>
+          <Li>Email, phone, and a profile link visible as text — it also flags a link that exists only as a hidden hyperlink</Li>
+          <Li>Standard headings for Experience, Education, Skills and Summary, plus Achievements, Projects and Certifications</Li>
+          <Li>Dates, bullet structure and page count</Li>
+          <Li>Numbers in your bullets, and bullets that open with a verb</Li>
+          <Li>Stock phrasing and vague claims, in the separate writing-style tab</Li>
+          <Li>The job ad’s vocabulary, if you paste the ad into the job-description match</Li>
+        </Ul>
         <H3>Still on you</H3>
-        <UL>
-          <LI>Whether a sidebar or second column scrambles the reading order — use the copy-and-paste test</LI>
-          <LI>Whether your job titles are ones a recruiter would search for</LI>
-          <LI>Whether every keyword you added is one you have earned</LI>
-          <LI>The filename</LI>
-        </UL>
+        <Ul>
+          <Li>Whether a sidebar or second column scrambles the reading order — use the copy-and-paste test</Li>
+          <Li>Whether your job titles are ones a recruiter would search for</Li>
+          <Li>Whether every keyword you added is one you have earned</Li>
+          <Li>The filename</Li>
+        </Ul>
 
         <Note>
           <strong>Most of this list is checkable automatically.</strong> The{' '}
@@ -582,10 +561,10 @@ Jan 2020 – now Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Related</H2>
-        <UL>
-          <LI><A href="/how-ats-parsing-works">How ATS resume parsing actually works</A></LI>
-          <LI><A href="/pdf-or-docx-for-ats">PDF or DOCX: which should you send?</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/how-ats-parsing-works">How ATS resume parsing actually works</A></Li>
+          <Li><A href="/pdf-or-docx-for-ats">PDF or DOCX: which should you send?</A></Li>
+        </Ul>
       </>
     ),
     faq: [
@@ -620,24 +599,24 @@ Jan 2020 – now Terraform, AWS`}</Pre>
         </P>
 
         <H2>Check your CV score in four steps</H2>
-        <OL>
-          <LI>
+        <Ol>
+          <Li>
             Open the <A href="/">free CV score checker</A> and choose <em>Check my resume</em>.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Drop in your CV as a PDF or DOCX. The file is read inside your browser and never sent
             anywhere, so it is safe to use on the CV you are sending to a current employer's
             competitor.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Read the score and the list of failed checks. Failures are ordered by how many points
             each one costs, so the first item is the most valuable fix.
-          </LI>
-          <LI>
+          </Li>
+          <Li>
             Fix the top two or three items, export again, and drop the new file in. Repeat until
             nothing expensive is left.
-          </LI>
-        </OL>
+          </Li>
+        </Ol>
 
         <H2>What a good CV score is</H2>
         <P>
@@ -649,12 +628,12 @@ Jan 2020 – now Terraform, AWS`}</Pre>
         </P>
 
         <H2>What to fix first</H2>
-        <UL>
-          <LI>Make sure the text is selectable. A scanned or image-only PDF scores near zero.</LI>
-          <LI>Put your email and phone in the body of the page, not in a header or an image.</LI>
-          <LI>Use standard headings: Experience, Education, Skills, Summary.</LI>
-          <LI>Give every role dates, and use real bullets.</LI>
-        </UL>
+        <Ul>
+          <Li>Make sure the text is selectable. A scanned or image-only PDF scores near zero.</Li>
+          <Li>Put your email and phone in the body of the page, not in a header or an image.</Li>
+          <Li>Use standard headings: Experience, Education, Skills, Summary.</Li>
+          <Li>Give every role dates, and use real bullets.</Li>
+        </Ul>
 
         <H2>What the score does not tell you</H2>
         <P>
@@ -670,11 +649,11 @@ Jan 2020 – now Terraform, AWS`}</Pre>
         </Note>
 
         <H2>Related</H2>
-        <UL>
-          <LI><A href="/what-is-an-ats-score">What an ATS score actually measures</A></LI>
-          <LI><A href="/ats-resume-checklist">The ATS resume checklist</A></LI>
-          <LI><A href="/ats-checker-without-upload">ATS resume checkers that do not upload your CV</A></LI>
-        </UL>
+        <Ul>
+          <Li><A href="/what-is-an-ats-score">What an ATS score actually measures</A></Li>
+          <Li><A href="/ats-resume-checklist">The ATS resume checklist</A></Li>
+          <Li><A href="/ats-checker-without-upload">ATS resume checkers that do not upload your CV</A></Li>
+        </Ul>
       </>
     ),
     faq: [

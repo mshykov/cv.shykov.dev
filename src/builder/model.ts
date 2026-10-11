@@ -3,6 +3,7 @@
 // a *live* ATS score as the user edits.
 import type { Resume } from '../lib/parse'
 import type { Extracted } from '../lib/pdf'
+import type { Messages } from '../i18n/messages/en.ts'
 
 export type Spacing = 'compact' | 'standard' | 'relaxed'
 export type Template = 'classic' | 'modern'
@@ -17,13 +18,8 @@ export interface BuilderState extends Resume {
   settings: Settings
 }
 
-export const BUILDER_SECTION_TITLES = {
-  summary: 'Summary',
-  experience: 'Experience',
-  skills: 'Skills',
-  projects: 'Projects',
-  education: 'Education',
-} as const
+/** Headings of the exported CV, in the CV's language (messages.builder.docSections). */
+export type SectionTitles = Messages['builder']['docSections']
 
 export const DEFAULT_SETTINGS: Settings = {
   accent: '#4f46e5',
@@ -42,48 +38,39 @@ export const EMPTY: BuilderState = {
   settings: DEFAULT_SETTINGS,
 }
 
-export const SAMPLE: BuilderState = {
-  profile: {
-    name: 'Alex Morgan',
-    email: 'alex.morgan@email.com',
-    phone: '+1 555 0100',
-    location: 'Berlin, Germany',
-    links: ['linkedin.com/in/alexmorgan', 'github.com/alexmorgan'],
-    summary:
-      'Engineering Manager with 10+ years building and leading product teams. Shipped platforms at scale with a focus on delivery, quality, and engineering culture.',
-  },
-  experience: [
-    {
-      title: 'Engineering Manager',
-      company: 'Acme Corp',
-      date: 'Jan 2022 – now',
-      bullets: [
-        'Led a cross-functional team of 9 engineers across web and mobile',
-        'Cut release cycle time by 40% by streamlining CI/CD and review flow',
-        'Hired and onboarded 6 engineers; ran growth and promotion process',
-      ],
+/** The example CV the builder opens with, in the page's language. */
+export function sampleState(sample: Messages['builder']['sample']): BuilderState {
+  return {
+    profile: {
+      name: sample.name,
+      email: sample.email,
+      phone: sample.phone,
+      location: sample.location,
+      links: [...sample.links],
+      summary: sample.summary,
     },
-  ],
-  education: [{ school: 'Technical University', degree: "Bachelor's in Computer Science", date: '2010 – 2014' }],
-  skills: ['Engineering Leadership', 'People Management', 'Agile', 'CI/CD', 'Hiring', 'Stakeholder Management'],
-  projects: [],
-  settings: DEFAULT_SETTINGS,
+    experience: sample.experience.map((e) => ({ ...e, bullets: [...e.bullets] })),
+    education: sample.education.map((e) => ({ ...e })),
+    skills: [...sample.skills],
+    projects: [],
+    settings: DEFAULT_SETTINGS,
+  }
 }
 
-function addProfileLines(lines: string[], state: BuilderState) {
+function addProfileLines(lines: string[], state: BuilderState, titles: SectionTitles) {
   const { profile } = state
   if (profile.name) lines.push(profile.name)
 
   const contact = [profile.email, profile.phone, ...profile.links].filter(Boolean).join(' · ')
   if (contact) lines.push(contact)
   if (profile.location) lines.push(profile.location)
-  if (profile.summary) lines.push(BUILDER_SECTION_TITLES.summary.toUpperCase(), profile.summary)
+  if (profile.summary) lines.push(titles.summary.toUpperCase(), profile.summary)
 }
 
-function addExperienceLines(lines: string[], state: BuilderState) {
+function addExperienceLines(lines: string[], state: BuilderState, titles: SectionTitles) {
   if (!state.experience.length) return
 
-  lines.push(BUILDER_SECTION_TITLES.experience.toUpperCase())
+  lines.push(titles.experience.toUpperCase())
   for (const entry of state.experience) {
     lines.push(`${entry.title}${entry.company ? ' — ' + entry.company : ''} ${entry.date}`.trim())
     for (const bullet of entry.bullets) {
@@ -93,23 +80,23 @@ function addExperienceLines(lines: string[], state: BuilderState) {
   }
 }
 
-function addSkillsLines(lines: string[], state: BuilderState) {
-  if (state.skills.length) lines.push(BUILDER_SECTION_TITLES.skills.toUpperCase(), state.skills.join(', '))
+function addSkillsLines(lines: string[], state: BuilderState, titles: SectionTitles) {
+  if (state.skills.length) lines.push(titles.skills.toUpperCase(), state.skills.join(', '))
 }
 
-function addProjectLines(lines: string[], state: BuilderState) {
+function addProjectLines(lines: string[], state: BuilderState, titles: SectionTitles) {
   if (!state.projects.length) return
 
-  lines.push(BUILDER_SECTION_TITLES.projects.toUpperCase())
+  lines.push(titles.projects.toUpperCase())
   for (const project of state.projects) {
     lines.push(`• ${project.name}${project.description ? ' — ' + project.description : ''}`)
   }
 }
 
-function addEducationLines(lines: string[], state: BuilderState) {
+function addEducationLines(lines: string[], state: BuilderState, titles: SectionTitles) {
   if (!state.education.length) return
 
-  lines.push(BUILDER_SECTION_TITLES.education.toUpperCase())
+  lines.push(titles.education.toUpperCase())
   for (const education of state.education) {
     const school = education.school && education.degree ? ' — ' + education.school : ''
     lines.push(`• ${education.degree || education.school}${school}, ${education.date}`)
@@ -118,13 +105,13 @@ function addEducationLines(lines: string[], state: BuilderState) {
 
 /** Render the builder state into an analyzer-ready document (UPPERCASE headers
  *  + bullets) so the live ATS score reflects the same heuristics. */
-export function synthExtracted(s: BuilderState): Extracted {
+export function synthExtracted(s: BuilderState, titles: SectionTitles): Extracted {
   const lines: string[] = []
-  addProfileLines(lines, s)
-  addExperienceLines(lines, s)
-  addSkillsLines(lines, s)
-  addProjectLines(lines, s)
-  addEducationLines(lines, s)
+  addProfileLines(lines, s, titles)
+  addExperienceLines(lines, s, titles)
+  addSkillsLines(lines, s, titles)
+  addProjectLines(lines, s, titles)
+  addEducationLines(lines, s, titles)
 
   const text = lines.join('\n')
   // Rough page estimate from content volume (single-column ~ 48 lines/page).

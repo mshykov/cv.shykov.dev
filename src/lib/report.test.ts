@@ -1,9 +1,12 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { toMarkdown } from './report.ts'
+import { toMarkdown as toMarkdownWith } from './report.ts'
+import { en } from '../i18n/messages/en.ts'
 import type { Report } from './analyze.ts'
 import type { Resume } from './parse.ts'
 import type { JDMatch } from './jdmatch.ts'
+
+const toMarkdown = (fileName: string, r: Report, res: Resume, jd?: JDMatch) => toMarkdownWith(fileName, r, res, en, jd)
 
 const report: Report = {
   score: 83,
