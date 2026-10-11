@@ -120,6 +120,7 @@ export const es: Messages = {
       author: 'Maksym Shykov',
       noTracking: 'Sin rastreo, sin subidas, sin cuentas.',
       openSource: 'Código abierto en GitHub',
+      moreFrom: 'Más del autor',
     },
     errorBoundary: {
       title: 'Algo ha salido mal',

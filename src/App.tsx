@@ -4,6 +4,7 @@ import { GitHubMark, REPO_URL } from './components/GitHubMark'
 import { LanguageFooter, LanguageSwitcher, type LanguageLink } from './components/LanguageSwitcher'
 import { LocaleProvider, useLocale, useMessages, type LocaleBundle } from './i18n/context.ts'
 import { LOCALES, guidePath, homePath } from './i18n/locales.ts'
+import { SIBLINGS } from './components/siblings.ts'
 
 // Keep the app shell tiny; load the active workflow UI after first paint.
 const Analyzer = lazy(() => import('./Analyzer'))
@@ -348,6 +349,12 @@ function AppBody() {
           <p>{m.home.footer.disclaimer} <a href="https://shykov.dev/" className="font-medium text-stone-600 underline-offset-2 hover:underline">{m.home.footer.author}</a></p>
           <p className="mt-1 sm:mt-0">{m.home.footer.noTracking} <a href={REPO_URL} rel="noreferrer" target="_blank" className="font-medium text-stone-600 underline-offset-2 hover:underline">{m.home.footer.openSource}</a>.</p>
         </div>
+        <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>{m.home.footer.moreFrom}:</span>
+          {SIBLINGS.map((s) => (
+            <a key={s.name} href={s.href} className="font-medium text-stone-600 underline-offset-2 hover:underline">{s.name}</a>
+          ))}
+        </nav>
         <LanguageFooter current={locale} links={HOME_LINKS} label={m.languages.footerLabel} />
       </footer>
       </div>

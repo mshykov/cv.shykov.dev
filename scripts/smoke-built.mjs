@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { LOCALES, SITE, guidePath, homePath } from '../src/i18n/locales.ts'
 import { GUIDE_IDS } from '../src/content/types.ts'
+import { SIBLINGS } from '../src/components/siblings.ts'
 
 const root = new URL('..', import.meta.url)
 const dist = new URL('dist/', root)
@@ -49,6 +50,7 @@ for (const loc of LOCALES) {
   assert.match(home, new RegExp(`<link rel="canonical" href="${SITE}${homeUrl}" />`), `${label} homepage canonical should be its own URL`)
   assert.equal(home.match(/<title>/g)?.length, 1, `${label} homepage should have exactly one <title>`)
   assert.ok(!home.includes('<!--seo:start-->'), `${label} homepage should have had its seo block replaced`)
+  for (const sibling of SIBLINGS) assert.ok(home.includes(`href="${sibling.href}"`), `${label} homepage footer should link ${sibling.name}`)
   assert.match(home, new RegExp(`<meta property="og:locale" content="${loc.ogLocale}" />`), `${label} homepage should set og:locale`)
 
   // hreflang: every language, itself included, plus x-default → English.
@@ -103,6 +105,7 @@ for (const loc of LOCALES) {
       assert.ok(decode(guide).includes(`>${name}</dt>`), `${label} ${href}: FAQ question "${name}" is marked up but not visible`)
     }
     assert.ok(guide.includes('id="short-answer"'), `${label} ${href} should open with a short answer`)
+    for (const sibling of SIBLINGS) assert.ok(guide.includes(`href="${sibling.href}"`), `${label} ${href} footer should link ${sibling.name}`)
 
     // Every guide names the same page in every other language (and x-default).
     const galts = Object.fromEntries(hreflangs(guide))

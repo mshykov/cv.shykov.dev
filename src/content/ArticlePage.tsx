@@ -5,6 +5,7 @@ import { REPO_URL } from '../components/GitHubMark'
 import { LanguageFooter, LanguageSwitcher, type LanguageLink } from '../components/LanguageSwitcher'
 import { LocaleProvider, useLocale, type LocaleBundle } from '../i18n/context.ts'
 import { guidePath, homePath } from '../i18n/locales.ts'
+import { SIBLINGS } from '../components/siblings.ts'
 
 type PageProps = Readonly<{ article: Article; bundle: LocaleBundle; links: LanguageLink[] }>
 
@@ -137,6 +138,12 @@ function Page({ article, links }: Readonly<{ article: Article; links: LanguageLi
               <a href={REPO_URL} className="font-medium text-stone-700 underline underline-offset-2">{m.article.openSource}</a>.
             </p>
           </div>
+          <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span>{m.home.footer.moreFrom}:</span>
+            {SIBLINGS.map((s) => (
+              <a key={s.name} href={s.href} className="font-medium text-stone-700 underline underline-offset-2">{s.name}</a>
+            ))}
+          </nav>
           <LanguageFooter current={locale} links={links} label={m.languages.footerLabel} />
         </div>
       </footer>

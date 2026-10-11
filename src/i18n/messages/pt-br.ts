@@ -119,6 +119,7 @@ export const ptBR: Messages = {
       author: 'Maksym Shykov',
       noTracking: 'Sem rastreamento, sem envio de arquivo, sem cadastro.',
       openSource: 'Código aberto no GitHub',
+      moreFrom: 'Mais do autor',
     },
     errorBoundary: {
       title: 'Algo deu errado',

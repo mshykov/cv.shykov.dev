@@ -122,6 +122,7 @@ export const de: Messages = {
       author: 'Maksym Shykov',
       noTracking: 'Kein Tracking, kein Upload, keine Konten.',
       openSource: 'Open Source auf GitHub',
+      moreFrom: 'Vom selben Autor',
     },
     errorBoundary: {
       title: 'Etwas ist schiefgelaufen',
