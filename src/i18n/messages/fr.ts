@@ -1,7 +1,7 @@
 // French (France, fr-FR). A translation of en.ts, held to the same shape by the
 // compiler. Address: vous. Typography: a plain space before : ; ? ! and « » for
-// quotes. Percentages are written without a space ("30 %") because the scorer
-// credits "30 %" as a measured result and does not read "30 %".
+// quotes. Percentages are written without a space ("30 %") because the scorer
+// credits "30 %" as a measured result and does not read "30 %".
 import type { Messages } from './en.ts'
 
 const number = (n: number) => n.toLocaleString('fr-FR')

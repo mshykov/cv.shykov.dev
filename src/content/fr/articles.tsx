@@ -45,7 +45,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Le mythe à oublier d’abord</H2>
         <P>
-          Vous avez sans doute lu que <em>« 75 % des CV sont rejetés par un ATS avant qu’un humain ne
+          Vous avez sans doute lu que <em>« 75&#8239;% des CV sont rejetés par un ATS avant qu’un humain ne
           les voie »</em>. Ce chiffre circule depuis plus de dix ans et ne s’appuie sur aucune source
           crédible. Les ATS sont des outils de stockage et de recherche. Ils classent et filtrent
           selon des critères fixés par un recruteur ; ils ne jettent pas, de leur propre initiative,
@@ -544,7 +544,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
         <H2>À faire — c’est ce que lit l’humain</H2>
         <Ul>
           <Li><strong>Les puces commencent par un verbe.</strong> Dirigé, livré, réduit, reconstruit, piloté.</Li>
-          <Li><strong>L’impact est chiffré.</strong> « Fiabilité améliorée » est une affirmation ; « sessions sans crash passées de 96 % à 99,5 % » est une preuve.</Li>
+          <Li><strong>L’impact est chiffré.</strong> « Fiabilité améliorée » est une affirmation ; « sessions sans crash passées de 96&#8239;% à 99,5&#8239;% » est une preuve.</Li>
           <Li><strong>Pas de formules toutes faites.</strong> « Professionnel dynamique et motivé, fort d’une solide expérience » n’apprend rien à un lecteur.</Li>
           <Li><strong>La longueur correspond à votre parcours.</strong> Une page en début de carrière, deux sont normales après une dizaine d’années. Trois demandent une raison.</Li>
           <Li><strong>Le nom du fichier est un nom</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>, pas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_VRAI.pdf</code>.</Li>
