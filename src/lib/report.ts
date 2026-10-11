@@ -64,7 +64,7 @@ export function toMarkdown(fileName: string, report: Report, resume: Resume, m: 
     '',
     `**${m.report.score(report.score, report.band.label)}**`,
     '',
-    m.report.stats(String(report.meta.numPages || '—'), fmt(report.meta.words), fmt(report.meta.charCount)),
+    m.report.stats(report.meta.numPages ? m.analyzer.pages(report.meta.numPages) : '—', fmt(report.meta.words), fmt(report.meta.charCount)),
     '',
     ...categorySections(m, report),
     ...jdSection(m.report, jd),

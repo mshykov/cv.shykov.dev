@@ -145,7 +145,7 @@ export const es: Messages = {
   },
 
   analyzer: {
-    srHeading: 'Sube un CV para obtener su puntuación ATS',
+    srHeading: 'Elige un CV para obtener su puntuación ATS rápida',
     analyzed: 'Analizado',
     analyzeAnother: 'Analizar otro CV',
     dropBusy: 'Puntuando tu CV…',
@@ -280,7 +280,7 @@ export const es: Messages = {
     },
     quant: {
       many: (n: number) => `${n} resultados cuantificados (%, ×, cifras).`,
-      few: (n: number) => `Solo ${n} resultado(s) cuantificado(s).`,
+      few: (n: number) => `Solo ${n} ${n === 1 ? 'resultado cuantificado' : 'resultados cuantificados'}.`,
       none: 'No se han detectado cifras ni métricas.',
       fix: 'Cuantifica el impacto: «reduje el tiempo de entrega 2×», «amplié el equipo a 14 personas», «−30% de errores».',
     },
@@ -294,7 +294,7 @@ export const es: Messages = {
   report: {
     title: (fileName: string) => `Informe ATS del CV — ${fileName}`,
     score: (score: number, band: string) => `Puntuación: ${score}/100 — ${band}`,
-    stats: (pages: string, words: string, chars: string) => `${pages} páginas · ${words} palabras · ${chars} caracteres legibles`,
+    stats: (pages: string, words: string, chars: string) => `${pages} · ${words} palabras · ${chars} caracteres legibles`,
     fix: 'Solución:',
     jdTitle: (coverage: number) => `Coincidencia con la oferta — ${coverage}% de cobertura`,
     jdMatched: (matched: number, total: number) => `Coinciden ${matched}/${total} palabras clave destacadas.`,

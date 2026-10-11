@@ -146,7 +146,7 @@ export const ptPT: Messages = {
   },
 
   analyzer: {
-    srHeading: 'Carregue um CV para obter uma pontuação ATS rápida',
+    srHeading: 'Escolha um CV para obter uma pontuação ATS rápida',
     analyzed: 'Analisado',
     analyzeAnother: 'Analisar outro CV',
     dropBusy: 'A pontuar o seu CV…',
@@ -281,7 +281,7 @@ export const ptPT: Messages = {
     },
     quant: {
       many: (n: number) => `${n} resultados quantificados encontrados (%, ×, quantidades).`,
-      few: (n: number) => `Apenas ${n} resultado(s) quantificado(s).`,
+      few: (n: number) => `Apenas ${n} ${n === 1 ? 'resultado quantificado' : 'resultados quantificados'}.`,
       none: 'Não foram detetados números nem métricas.',
       fix: 'Quantifique o impacto: “reduzi o ciclo de lançamento 2,5×”, “fiz crescer a equipa para 14 pessoas”, “−30% de erros”.',
     },
@@ -295,7 +295,7 @@ export const ptPT: Messages = {
   report: {
     title: (fileName: string) => `Relatório ATS do CV — ${fileName}`,
     score: (score: number, band: string) => `Pontuação: ${score}/100 — ${band}`,
-    stats: (pages: string, words: string, chars: string) => `${pages} páginas · ${words} palavras · ${chars} carateres legíveis`,
+    stats: (pages: string, words: string, chars: string) => `${pages} · ${words} palavras · ${chars} carateres legíveis`,
     fix: 'Correção:',
     jdTitle: (coverage: number) => `Correspondência com o anúncio — ${coverage}% de cobertura`,
     jdMatched: (matched: number, total: number) => `${matched}/${total} palavras-chave em destaque encontradas.`,

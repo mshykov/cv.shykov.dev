@@ -82,7 +82,7 @@ test('renders an em dash for every profile field the parser could not fill', () 
 // DOCX carries no page count, and 0 must not print as "0 pages".
 test('an unknown page count prints as an em dash', () => {
   const docx: Report = { ...report, meta: { ...report.meta, numPages: 0 } }
-  assert.match(toMarkdown('cv.docx', docx, resume), /^— pages · /m)
+  assert.match(toMarkdown('cv.docx', docx, resume), /^— · /m)
 })
 
 test('closes with the local-generation notice', () => {

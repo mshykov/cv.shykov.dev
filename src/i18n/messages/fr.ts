@@ -38,9 +38,9 @@ export const fr: Messages = {
     badge: 'Analyse du CV 100% dans le navigateur',
     headline: ['Score ATS en secondes.', 'Votre CV reste privé.'],
     sub: ['Analysez vos PDF/DOCX en secondes.', 'Sans envoi, sans compte, sans IA.'],
-    chips: ['Dans le navigateur', 'Sans envoi', 'Sans IA'],
+    chips: ['Dans le navigateur', 'Sans envoi', 'Sans LLM'],
     cardLabel: 'Dans le navigateur',
-    cardChips: ['Sans envoi', 'Sans IA', 'PDF/DOCX'],
+    cardChips: ['Sans envoi', 'Sans LLM', 'PDF/DOCX'],
   },
 
   languages: {
@@ -64,14 +64,14 @@ export const fr: Messages = {
       build: 'Créer un CV compatible ATS',
       runsInBrowser: 'Dans votre navigateur',
       noUploads: 'Aucun envoi',
-      noLlm: 'Sans IA',
+      noLlm: 'Sans LLM',
       pdfDocx: 'PDF et DOCX',
       openSource: 'Code source ouvert',
     },
     heroCard: {
       localParse: 'dans le navigateur',
       noUpload: 'Sans envoi',
-      noLlm: 'Sans IA',
+      noLlm: 'Sans LLM',
       pdfDocx: 'PDF/DOCX',
     },
     heroMini: {
@@ -146,7 +146,7 @@ export const fr: Messages = {
   },
 
   analyzer: {
-    srHeading: 'Importez un CV pour obtenir un score ATS rapide',
+    srHeading: 'Choisissez un CV pour obtenir un score ATS rapide',
     analyzed: 'Analysé',
     analyzeAnother: 'Analyser un autre CV',
     dropBusy: 'Analyse de votre CV…',
@@ -278,7 +278,7 @@ export const fr: Messages = {
     dates: {
       found: 'Dates détectées : la chronologie est lisible.',
       missing: 'Aucune date claire trouvée.',
-      fix: 'Ajoutez des dates de début et de fin (par exemple « févr. 2023 – présent ») à chaque poste.',
+      fix: 'Ajoutez des dates de début et de fin (par exemple « févr. 2023 – aujourd’hui ») à chaque poste.',
     },
     bullets: {
       found: (n: number) => `${n} lignes à puces détectées.`,
@@ -287,7 +287,7 @@ export const fr: Messages = {
     },
     quant: {
       many: (n: number) => `${n} résultats chiffrés trouvés (%, ×, effectifs).`,
-      few: (n: number) => `Seulement ${n} résultat(s) chiffré(s).`,
+      few: (n: number) => `Seulement ${n} ${n === 1 ? 'résultat chiffré' : 'résultats chiffrés'}.`,
       none: 'Aucun chiffre ni indicateur détecté.',
       fix: 'Chiffrez vos résultats : « délai de livraison divisé par 2 », « équipe passée à 14 personnes », « 30% de bugs en moins ».',
     },
@@ -301,7 +301,7 @@ export const fr: Messages = {
   report: {
     title: (fileName: string) => `Rapport ATS du CV — ${fileName}`,
     score: (score: number, band: string) => `Score : ${score}/100 — ${band}`,
-    stats: (pages: string, words: string, chars: string) => `${pages} pages · ${words} mots · ${chars} caractères lisibles`,
+    stats: (pages: string, words: string, chars: string) => `${pages} · ${words} mots · ${chars} caractères lisibles`,
     fix: 'Correction :',
     jdTitle: (coverage: number) => `Correspondance avec l’offre — ${coverage}% de couverture`,
     jdMatched: (matched: number, total: number) => `${matched}/${total} mots-clés mis en avant trouvés.`,
@@ -348,7 +348,7 @@ export const fr: Messages = {
       jobTitle: 'Intitulé du poste',
       company: 'Entreprise',
       dates: 'Dates',
-      datesPlaceholder: 'janv. 2022 – présent',
+      datesPlaceholder: 'janv. 2022 – aujourd’hui',
       bullets: 'Puces (une par ligne)',
       bulletsPlaceholder: 'Dirigé une équipe de…\nRéduit X de 30%…',
       empty: 'Aucun poste pour l’instant : ajoutez-en un.',
@@ -404,7 +404,7 @@ export const fr: Messages = {
         {
           title: 'Engineering Manager',
           company: 'Acme SAS',
-          date: 'janv. 2022 – présent',
+          date: 'janv. 2022 – aujourd’hui',
           bullets: [
             'Dirigé une équipe pluridisciplinaire de 9 ingénieurs, sur le web et le mobile',
             'Réduit le délai de mise en production de 40% en simplifiant le CI/CD et la revue de code',

@@ -146,7 +146,7 @@ export const ARTICLES: Article[] = [
     published: '2026-08-31',
     updated: '2026-10-10',
     summary:
-      'Um navegador consegue ler e pontuar um PDF ou DOCX sem o enviar para lado nenhum, pelo que carregar o ficheiro é uma opção de desenho, não uma necessidade técnica. Pode confirmar um verificador em menos de um minuto: abra o painel Rede (Network) do navegador, largue lá o CV e procure um pedido que leve o ficheiro.',
+      'Um navegador consegue ler e pontuar um PDF ou DOCX sem o enviar para lado nenhum, pelo que carregar o ficheiro é uma opção de desenho, não uma necessidade técnica. Pode confirmar um verificador em menos de um minuto: abra o painel Rede (Network) do navegador, escolha o CV no verificador e procure um pedido que leve o ficheiro.',
     body: (
       <>
         <P>
@@ -174,14 +174,14 @@ export const ARTICLES: Article[] = [
         </Ul>
         <P>
           Nada disto é necessariamente malicioso. É simplesmente o modelo de negócio: a verificação é
-          grátis porque o produto são você e o seu documento. Mas convém saber antes de clicar, e não
+          grátis porque o produto são a pessoa candidata e o respetivo documento. Mas convém saber antes de clicar, e não
           depois.
         </P>
 
         <H2>As perguntas a fazer a qualquer verificador</H2>
         <Ul>
           <Li><strong>O ficheiro sai do dispositivo?</strong> Se não há envio, a maioria das outras perguntas deixa de importar.</Li>
-          <Li><strong>É preciso criar conta?</strong> Um muro de email serve para recolher o email, não para melhorar a pontuação.</Li>
+          <Li><strong>É preciso criar conta?</strong> A exigência de um endereço de email serve para recolher esse endereço, não para melhorar a pontuação.</Li>
           <Li><strong>A pontuação é determinística ou gerada?</strong> Se um modelo escreve o feedback, o seu CV foi enviado a esse modelo.</Li>
           <Li><strong>Pode ler as regras?</strong> Uma grelha pública pode ser contestada. Uma escondida não.</Li>
           <Li><strong>Como se apaga o ficheiro?</strong> Se a resposta é um email para o apoio ao cliente, assuma que o ficheiro fica.</Li>
@@ -255,7 +255,7 @@ export const ARTICLES: Article[] = [
       },
       {
         q: 'Como sei que um verificador de CV não está a carregar o meu ficheiro?',
-        a: 'Abra as ferramentas de programador do navegador, vá ao separador Rede, limpe-o e depois largue lá o CV. Um envio aparece como um pedido POST ou PUT com aproximadamente o tamanho do ficheiro. Se não houver nenhum, o ficheiro ficou no seu dispositivo.',
+        a: 'Abra as ferramentas de programador do navegador, vá ao separador Rede, limpe-o e depois escolha o CV no verificador. Um envio costuma aparecer como um pedido POST ou PUT com aproximadamente o tamanho do ficheiro. Se não houver nenhum, o ficheiro ficou no seu dispositivo.',
       },
     ],
   },
@@ -455,7 +455,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         <P>
           O que muda a questão das palavras-chave. O objetivo não é encher o texto de termos para
           agradar a um algoritmo. É garantir que as palavras que um recrutador escreveria
-          plausivelmente aparecem em algum lado onde as conquistou honestamente. Se liderou migrações
+          plausivelmente aparecem em algum lado onde as possui de facto. Se liderou migrações
           para Kubernetes e nunca escreveu a palavra “Kubernetes”, não vai estar nesses resultados.
         </P>
         <P><strong>Falha quando:</strong> o vocabulário do CV e o do anúncio não têm qualquer sobreposição.</P>
@@ -492,7 +492,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
       },
       {
         q: 'Esconder palavras-chave a branco ajuda?',
-        a: 'Não. O texto branco continua a ser texto: é extraído para o perfil que o recrutador lê, onde parece uma tentativa de manipular a pesquisa. Use o vocabulário do anúncio apenas onde o conquistou de facto.',
+        a: 'Não. O texto branco continua a ser texto: é extraído para o perfil que o recrutador lê, onde parece uma tentativa de manipular a pesquisa. Use o vocabulário do anúncio apenas onde o aplicou de facto.',
       },
     ],
   },
@@ -522,7 +522,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         <H2>Importante — decidem se aparece numa pesquisa</H2>
         <Ul>
           <Li><strong>Os cargos são reconhecíveis.</strong> Se o seu cargo interno é “Ninja da Entrega”, ponha ao lado o cargo habitual do setor.</Li>
-          <Li><strong>O vocabulário do anúncio aparece</strong> — mas só onde o conquistou honestamente.</Li>
+          <Li><strong>O vocabulário do anúncio aparece</strong> — mas só onde o aplicou de facto.</Li>
           <Li><strong>Existe uma secção de competências,</strong> em texto simples separado por vírgulas e não num gráfico de barras de competências.</Li>
           <Li><strong>As ligações estão escritas</strong> como texto visível: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/nome</code>. Um leitor lê texto, não o destino da ligação.</Li>
           <Li><strong>Nenhum texto vive dentro de uma imagem ou de uma caixa de texto.</strong></Li>
@@ -556,7 +556,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
         <Ul>
           <Li>Se uma barra lateral ou uma segunda coluna baralha a ordem de leitura — use o teste de copiar e colar</Li>
           <Li>Se os cargos são os que um recrutador pesquisaria</Li>
-          <Li>Se cada palavra-chave que acrescentou é uma que conquistou</Li>
+          <Li>Se cada palavra-chave que acrescentou é uma que realmente possui</Li>
           <Li>O nome do ficheiro</Li>
         </Ul>
 
@@ -577,12 +577,12 @@ jan 2020 – presente Terraform, AWS`}</Pre>
     ),
     faq: [
       {
-        q: 'Que extensão deve ter um CV compatível com ATS?',
+        q: 'Que comprimento deve ter um CV compatível com ATS?',
         a: 'Uma página no início da carreira; duas páginas é normal passada cerca de uma década. A extensão não impede um leitor de ler o ficheiro, mas as páginas além da segunda muitas vezes não são lidas pelo recrutador.',
       },
       {
         q: 'As tabelas e as caixas de texto são seguras num CV para ATS?',
-        a: 'Evite-as para tudo o que seja importante. O texto dentro de caixas de texto pode ser ignorado ou extraído fora de ordem, e as tabelas usadas para disposição criam os mesmos problemas de ordem de leitura que as colunas. Parágrafos simples e listas com marcadores são o mais seguro.',
+        a: 'Evite-as para tudo o que seja importante. O texto dentro de caixas de texto pode ser ignorado ou extraído fora de ordem, e as tabelas usadas para disposição criam os mesmos problemas de ordem de leitura que as colunas. Parágrafos simples e listas com marcadores são as opções mais seguras.',
       },
       {
         q: 'O que devo corrigir primeiro no meu CV para ATS?',
@@ -596,7 +596,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
     published: '2026-10-10',
     updated: '2026-10-10',
     summary:
-      'Largue o PDF ou DOCX num verificador de pontuação do CV, leia a pontuação e as verificações falhadas, corrija primeiro as mais pesadas e volte a verificar. Aqui tudo corre no navegador: sem carregar o ficheiro, sem conta, sem IA. Uma pontuação de 85 ou mais significa que nada de importante se perde.',
+      'Escolha o PDF ou DOCX num verificador de pontuação do CV, leia a pontuação e as verificações falhadas, corrija primeiro as mais pesadas e volte a verificar. Aqui tudo corre no navegador: sem carregar o ficheiro, sem conta, sem IA. Uma pontuação de 85 ou mais significa que nada de importante se perde.',
     body: (
       <>
         <P>
@@ -621,7 +621,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
             pontos que cada uma custa, pelo que o primeiro item é a correção mais valiosa.
           </Li>
           <Li>
-            Corrija os dois ou três primeiros itens, volte a exportar e largue o novo ficheiro.
+            Corrija os dois ou três primeiros itens, volte a exportar e carregue o novo ficheiro no verificador.
             Repita até não restar nada caro.
           </Li>
         </Ol>
@@ -667,7 +667,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
     faq: [
       {
         q: 'Como verifico a pontuação do meu CV grátis?',
-        a: 'Abra um verificador de pontuação do CV que não exija registo, largue lá o PDF ou DOCX e leia a pontuação e as verificações falhadas. Neste site o ficheiro é processado no navegador e nunca é carregado para um servidor.',
+        a: 'Abra um verificador de pontuação do CV que não exija registo, escolha o PDF ou DOCX e leia a pontuação e as verificações falhadas. Neste site o ficheiro é processado no navegador e nunca é carregado para um servidor.',
       },
       {
         q: 'O que é uma boa pontuação de CV?',

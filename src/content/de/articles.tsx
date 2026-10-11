@@ -113,7 +113,7 @@ export const ARTICLES: Article[] = [
 
         <Note>
           <strong>Prüfen Sie Ihren Lebenslauf in wenigen Sekunden.</strong> Der{' '}
-          <A href="/de/">kostenlose Lebenslauf ATS Check</A> bewertet ein PDF oder DOCX vollständig in
+          <A href="/de/">kostenlose ATS-Check für Ihren Lebenslauf</A> bewertet ein PDF oder DOCX vollständig in
           Ihrem Browser – die Datei wird nicht hochgeladen, es gibt kein Konto, und es ist kein
           Sprachmodell beteiligt. Die genauen Bewertungsregeln können Sie im öffentlichen Quellcode nachlesen.
         </Note>
@@ -195,7 +195,7 @@ export const ARTICLES: Article[] = [
         <H2>Wie eine rein lokale Prüfung funktioniert</H2>
         <P>
           Moderne Browser können eine PDF- oder DOCX-Datei ohne jeden Server lesen. Die Datei wird in
-          den Arbeitsspeicher geöffnet, eine JavaScript-Bibliothek extrahiert den Text, die Prüfungen
+          den Arbeitsspeicher geladen, eine JavaScript-Bibliothek extrahiert den Text, die Prüfungen
           laufen über diesen Text, und das Ergebnis wird angezeigt – alles in dem Tab, den Sie ohnehin
           geöffnet haben. Schließen Sie den Tab, ist das Dokument weg.
         </P>
@@ -236,11 +236,11 @@ export const ARTICLES: Article[] = [
 
         <Note>
           <strong>Diese Seite ist von der lokalen Sorte.</strong> Der{' '}
-          <A href="/de/">kostenlose Lebenslauf ATS Check</A> liest Ihr PDF oder DOCX im Browser mit{' '}
+          <A href="/de/">kostenlose ATS-Check für Ihren Lebenslauf</A> liest Ihr PDF oder DOCX im Browser mit{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> und{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
           bewertet es nach festen Regeln und hat kein Backend, das eine Datei empfangen könnte. Der
-          Code steht unter der MIT-Lizenz, die Aussage ist also nachprüfbar statt nur versprochen.
+          Code steht unter der MIT-Lizenz; die Aussage ist also nachprüfbar statt nur versprochen.
           Für Leser, denen der Datenschutz wichtig ist, gilt damit sachlich: Die Verarbeitung läuft in
           Ihrem Browser, es wird nichts gesendet. Das ist eine technische Eigenschaft, die Sie wie
           oben beschrieben selbst prüfen können, keine rechtliche Bewertung.
@@ -347,7 +347,7 @@ export const ARTICLES: Article[] = [
 
         <Note>
           <strong>Unsicher, in welche Kategorie Ihre Datei fällt?</strong> Ziehen Sie sie in den{' '}
-          <A href="/de/">kostenlosen Lebenslauf ATS Check</A> – er liest PDF und DOCX in Ihrem Browser
+          <A href="/de/">kostenlosen ATS-Check für Ihren Lebenslauf</A> – er liest PDF und DOCX in Ihrem Browser
           und sagt Ihnen sofort, ob es extrahierbaren Text gibt, wie viele Seiten ein Parser sieht und
           welche Abschnitte er erkennen konnte.
         </Note>
@@ -476,7 +476,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
 
         <Note>
           <strong>Sehen Sie es aus Sicht des Parsers.</strong> Der{' '}
-          <A href="/de/">kostenlose Lebenslauf ATS Check</A> hat einen Reiter <em>{de.analyzer.tabs.data}</em>,
+          <A href="/de/">kostenlose ATS-Check für Ihren Lebenslauf</A> hat einen Reiter <em>{de.analyzer.tabs.data}</em>,
           der genau zeigt, was aus Ihrer Datei herauskam – Name, Kontaktdaten, Links und jede Station,
           die erkannt wurde. Fehlt dort etwas, fehlt es auch beim Arbeitgeber.
         </Note>
@@ -538,7 +538,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
 
         <H2>Lohnend – das liest der Mensch</H2>
         <Ul>
-          <Li><strong>Aufzählungspunkte beginnen mit einem Verb.</strong> Leitete, lieferte, senkte, baute um, verantwortete.</Li>
+          <Li><strong>Aufzählungspunkte beginnen mit einem Verb.</strong> leitete, lieferte, senkte, baute um, verantwortete.</Li>
           <Li><strong>Wirkung trägt eine Zahl.</strong> „Zuverlässigkeit verbessert“ ist eine Behauptung; „absturzfreie Sitzungen von 96% auf 99,5% gesteigert“ ist ein Beleg.</Li>
           <Li><strong>Keine Floskeln.</strong> „Ergebnisorientierter Profi mit nachweislichem Erfolg“ sagt einem Leser nichts.</Li>
           <Li><strong>Die Länge passt zur Laufbahn.</strong> Eine Seite am Anfang, zwei sind nach einem Jahrzehnt normal. Drei brauchen einen Grund.</Li>
@@ -557,7 +557,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
           <Li>Standardüberschriften für Berufserfahrung, Ausbildung, Kenntnisse und Profil sowie Erfolge, Projekte und Zertifikate</Li>
           <Li>Datumsangaben, Aufzählungsstruktur und Seitenzahl</Li>
           <Li>Zahlen in Ihren Aufzählungspunkten und Punkte, die mit einem Verb beginnen</Li>
-          <Li>Floskeln und vage Behauptungen, im separaten Reiter {de.analyzer.tabs.style}</Li>
+          <Li>Floskeln und vage Behauptungen, im separaten Reiter {de.analyzer.tabs.style} (nur bei englischsprachigen Lebensläufen)</Li>
           <Li>Der Wortschatz der Stellenanzeige, wenn Sie die Anzeige in den {de.analyzer.tabs.jd} einfügen</Li>
         </Ul>
         <H3>Bleibt Ihre Aufgabe</H3>
@@ -570,7 +570,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
 
         <Note>
           <strong>Das meiste dieser Liste lässt sich automatisch prüfen.</strong> Der{' '}
-          <A href="/de/">kostenlose Lebenslauf ATS Check</A> führt die Prüfungen zu Lesbarkeit,
+          <A href="/de/">kostenlose ATS-Check für Ihren Lebenslauf</A> führt die Prüfungen zu Lesbarkeit,
           Kontakt, Abschnitten, Format und Inhalt in Ihrem Browser aus und ordnet die Fehler danach,
           wie viele Punkte jeder kostet – so beheben Sie zuerst die teuren Dinge. Der Reiter{' '}
           {de.analyzer.tabs.style} deckt die Punkte zu Floskeln und nicht belegten Behauptungen ab.
@@ -617,7 +617,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
         <H2>CV-Score in vier Schritten prüfen</H2>
         <Ol>
           <Li>
-            Öffnen Sie den <A href="/de/">kostenlosen Lebenslauf ATS Check</A> und wählen Sie{' '}
+            Öffnen Sie den <A href="/de/">kostenlosen ATS-Check für Ihren Lebenslauf</A> und wählen Sie{' '}
             <em>{de.home.hero.check}</em>.
           </Li>
           <Li>
@@ -662,7 +662,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
 
         <Note>
           <strong>Probieren Sie es mit Ihrer eigenen Datei.</strong> Der{' '}
-          <A href="/de/">kostenlose Lebenslauf ATS Check</A> ist Open Source, läuft in Ihrem Browser
+          <A href="/de/">kostenlose ATS-Check für Ihren Lebenslauf</A> ist Open Source, läuft in Ihrem Browser
           und verlangt keine E-Mail-Adresse.
         </Note>
 
