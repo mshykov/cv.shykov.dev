@@ -34,11 +34,11 @@ export const es: Messages = {
   },
 
   og: {
-    badge: 'Análisis de CV 100% local',
+    badge: 'Análisis de CV 100% en tu navegador',
     headline: ['Puntuación ATS rápida.', 'Privado por defecto.'],
     sub: ['Puntúa archivos PDF/DOCX en segundos.', 'Sin subidas, cuentas ni llamadas a LLM.'],
     chips: ['En tu navegador', 'Sin subidas', 'Sin LLM'],
-    cardLabel: 'Análisis local',
+    cardLabel: 'En tu navegador',
     cardChips: ['Sin subida', 'Sin LLM', 'PDF/DOCX'],
   },
 
@@ -56,7 +56,7 @@ export const es: Messages = {
       githubAria: 'Código abierto en GitHub',
     },
     hero: {
-      badge: 'Análisis de CV 100% local',
+      badge: 'Análisis de CV 100% en tu navegador',
       h1: 'Revisar CV ATS gratis: comprueba tu puntuación ATS con total privacidad',
       lead: 'Consigue la puntuación ATS de tu CV a partir de un PDF o DOCX en segundos, ve primero las correcciones de mayor impacto, compara palabras clave y crea un CV compatible con ATS sin subir archivos, sin cuentas y sin llamadas a un LLM.',
       check: 'Revisar mi CV',
@@ -68,14 +68,14 @@ export const es: Messages = {
       openSource: 'Código abierto',
     },
     heroCard: {
-      localParse: 'análisis local',
+      localParse: 'en tu navegador',
       noUpload: 'Sin subida',
       noLlm: 'Sin LLM',
       pdfDocx: 'PDF/DOCX',
     },
     heroMini: {
       aria: 'Vista previa de la puntuación ATS local',
-      localParse: 'Análisis local',
+      localParse: 'En tu navegador',
       caption: 'Puntuación, correcciones principales y palabras clave',
       categories: ['Legibilidad', 'Secciones', 'Contenido'],
     },
@@ -83,7 +83,7 @@ export const es: Messages = {
       aria: 'Cómo funciona el comprobador de CV ATS local',
       steps: [
         { title: 'Elige un PDF/DOCX', body: 'Selecciona el archivo de tu CV en tu dispositivo.' },
-        { title: 'Análisis en local', body: 'La extracción del texto y la puntuación se ejecutan en este navegador.' },
+        { title: 'Análisis en tu navegador', body: 'La extracción del texto y la puntuación se ejecutan en este navegador.' },
         { title: 'Corrige lo principal', body: 'Verás la puntuación, el desglose, las palabras clave y notas que puedes exportar.' },
       ],
       noServerUpload: 'Sin subida a ningún servidor',
@@ -99,7 +99,7 @@ export const es: Messages = {
       heading: 'Privacidad que puedes comprobar.',
       body: 'El código es abierto con licencia MIT y la promesa del producto es acotada: lectura local de documentos, puntuación determinista, sin obligación de crear una cuenta y sin ningún modelo de IA escondido tras la interfaz.',
       cards: [
-        { title: 'Lectura local', body: 'El texto de los PDF y DOCX se extrae en el navegador con librerías que se ejecutan en tu dispositivo.' },
+        { title: 'Lectura en tu navegador', body: 'El texto de los PDF y DOCX se extrae en el navegador con librerías que se ejecutan en tu dispositivo.' },
         { title: 'Sin puntuación por LLM', body: 'La puntuación sale de comprobaciones repetibles de legibilidad, secciones, formato y contenido.' },
       ],
       repoTitle: 'Código abierto en GitHub',
