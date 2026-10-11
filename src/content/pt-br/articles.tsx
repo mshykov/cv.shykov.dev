@@ -187,7 +187,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>Como se apaga o arquivo?</strong> Se a resposta é um e-mail de suporte, suponha que ele fica.</Li>
         </Ul>
 
-        <H2>Como funciona uma verificação 100% local</H2>
+        <H2>Como funciona uma verificação feita só no navegador</H2>
         <P>
           Os navegadores modernos conseguem ler um PDF ou DOCX sem nenhum servidor envolvido. O
           arquivo é aberto na memória, o texto é extraído por uma biblioteca JavaScript, as

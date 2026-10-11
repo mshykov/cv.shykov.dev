@@ -23,7 +23,7 @@ export const GUIDES: Guide[] = [
     slug: 'lebenslauf-pdf-oder-docx-ats',
     title: 'Lebenslauf als PDF oder DOCX: Was liest ein ATS besser?',
     description:
-      'Senden Sie ein PDF, es sei denn, das Bewerbungsformular verlangt etwas anderes. Die Begründung, das eine PDF, an dem jedes ATS scheitert, und was gilt, wenn der Arbeitgeber ein Format vorgibt.',
+      'Senden Sie ein PDF, es sei denn, das Bewerbungsformular verlangt etwas anderes. Die Begründung, die eine Art von PDF, an der jedes ATS scheitert, und was gilt, wenn der Arbeitgeber ein Format vorgibt.',
   },
   {
     id: 'how-ats-parsing-works',

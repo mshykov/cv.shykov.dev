@@ -107,7 +107,7 @@ export const ptBR: Messages = {
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de currículo ATS',
       items: [
-        { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por sistemas, dados de contato, seções, datas, marcadores e resultados mensuráveis.' },
+        { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por sistemas, dados de contato, seções, datas, listas com marcadores e resultados mensuráveis.' },
         { q: 'Meu currículo é enviado para algum servidor?', a: 'Não. Os arquivos PDF e DOCX são processados localmente no seu navegador e não são enviados a nenhum servidor.' },
         { q: 'Isso usa IA?', a: 'Não. A pontuação é determinística e não usa LLMs, chamadas a modelos, contas nem chaves de API.' },
         { q: 'PDF ou DOCX?', a: 'Os dois funcionam. PDFs com texto selecionável dão o sinal mais claro de número de páginas e legibilidade.' },

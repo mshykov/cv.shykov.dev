@@ -509,7 +509,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
     published: '2026-08-31',
     updated: '2026-10-10',
     summary:
-      'Beheben Sie zuerst fünf Dinge: auswählbaren Text, Ihre E-Mail-Adresse im Haupttext, eine einzige Spalte, Standardüberschriften und ein Datum bei jeder Station. Sie entscheiden, ob die Bewerbung unversehrt ankommt. Alles Weitere entscheidet, ob sie in einer Suche gefunden wird und ob ein Mensch sie gern liest.',
+      'Beheben Sie zuerst fünf Dinge: auswählbaren Text, Ihre E-Mail-Adresse im Haupttext, eine einzige Spalte, Standardüberschriften und ein Datum bei jeder Station. Diese fünf Punkte entscheiden, ob die Bewerbung unversehrt ankommt. Alles Weitere entscheidet, ob sie in einer Suche gefunden wird und ob ein Mensch sie gern liest.',
     body: (
       <>
         <P>

@@ -15,7 +15,7 @@ export const GUIDES: Guide[] = [
     slug: 'verificador-de-curriculo-ats-sem-enviar-arquivo',
     title: 'Verificador de currículo ATS que não pede para enviar seu arquivo',
     description:
-      'A maioria dos verificadores de currículo exige o envio do arquivo e um e-mail. Veja o que acontece com ele, por que isso importa se você ainda está empregado e como funciona uma verificação 100% local.',
+      'A maioria dos verificadores de currículo exige o envio do arquivo e um e-mail. Veja o que acontece com ele, por que isso importa se você ainda está empregado e como funciona uma verificação feita só no navegador.',
   },
   {
     id: 'pdf-or-docx-for-ats',

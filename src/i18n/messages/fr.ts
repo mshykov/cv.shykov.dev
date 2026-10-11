@@ -1,7 +1,7 @@
 // French (France, fr-FR). A translation of en.ts, held to the same shape by the
 // compiler. Address: vous. Typography: a plain space before : ; ? ! and « » for
-// quotes. Percentages are written without a space ("30%") because the scorer
-// credits "30%" as a measured result and does not read "30 %".
+// quotes. Percentages are written without a space ("30 %") because the scorer
+// credits "30 %" as a measured result and does not read "30 %".
 import type { Messages } from './en.ts'
 
 const number = (n: number) => n.toLocaleString('fr-FR')
@@ -11,7 +11,7 @@ export const fr: Messages = {
 
   meta: {
     title: 'Vérificateur de CV ATS gratuit | Score ATS sans envoi du CV',
-    description: 'Vérificateur de CV ATS gratuit : obtenez le score ATS de votre CV en quelques secondes, depuis un PDF ou un DOCX. 100% dans votre navigateur, sans envoi ni IA.',
+    description: 'Vérificateur de CV ATS gratuit : obtenez le score ATS de votre CV en quelques secondes, depuis un PDF ou un DOCX. 100 % dans votre navigateur, sans envoi ni IA.',
     ogTitle: 'Vérificateur de CV ATS gratuit',
     ogDescription: 'Vérificateur de CV ATS gratuit : score ATS instantané pour PDF et DOCX. Dans le navigateur, sans envoi de fichier, sans IA.',
     twitterDescription: 'Score ATS instantané pour votre CV en PDF ou DOCX. Tout se passe dans votre navigateur : aucun envoi, aucune IA.',
@@ -35,7 +35,7 @@ export const fr: Messages = {
   },
 
   og: {
-    badge: 'Analyse du CV 100% dans le navigateur',
+    badge: 'Analyse du CV 100 % dans le navigateur',
     headline: ['Score ATS en secondes.', 'Votre CV reste privé.'],
     sub: ['Analysez vos PDF/DOCX en secondes.', 'Sans envoi, sans compte, sans IA.'],
     chips: ['Dans le navigateur', 'Sans envoi', 'Sans LLM'],
@@ -57,7 +57,7 @@ export const fr: Messages = {
       githubAria: 'Code source ouvert sur GitHub',
     },
     hero: {
-      badge: 'Analyse du CV 100% dans le navigateur',
+      badge: 'Analyse du CV 100 % dans le navigateur',
       h1: 'Vérificateur de CV ATS gratuit : votre score, sans envoi du fichier',
       lead: 'Obtenez le score ATS de votre CV à partir d’un PDF ou d’un DOCX en quelques secondes, voyez d’abord les corrections les plus utiles, comparez les mots-clés d’une offre et créez un CV compatible ATS, sans envoi de fichier, sans compte et sans appel à une IA.',
       check: 'Analyser mon CV',
@@ -290,7 +290,7 @@ export const fr: Messages = {
       many: (n: number) => `${n} résultats chiffrés trouvés (%, ×, effectifs).`,
       few: (n: number) => `Seulement ${n} ${n === 1 ? 'résultat chiffré' : 'résultats chiffrés'}.`,
       none: 'Aucun chiffre ni indicateur détecté.',
-      fix: 'Chiffrez vos résultats : « délai de livraison divisé par 2 », « équipe passée à 14 personnes », « 30% de bugs en moins ».',
+      fix: 'Chiffrez vos résultats : « délai de livraison divisé par 2 », « équipe passée à 14 personnes », « 30 % de bugs en moins ».',
     },
     verbs: {
       pass: (n: number) => `${n} puces commencent par un verbe d’action.`,
@@ -351,7 +351,7 @@ export const fr: Messages = {
       dates: 'Dates',
       datesPlaceholder: 'janv. 2022 – aujourd’hui',
       bullets: 'Puces (une par ligne)',
-      bulletsPlaceholder: 'Dirigé une équipe de…\nRéduit X de 30%…',
+      bulletsPlaceholder: 'Dirigé une équipe de…\nRéduit X de 30 %…',
       empty: 'Aucun poste pour l’instant : ajoutez-en un.',
     },
     skills: {
@@ -408,7 +408,7 @@ export const fr: Messages = {
           date: 'janv. 2022 – aujourd’hui',
           bullets: [
             'Dirigé une équipe pluridisciplinaire de 9 ingénieurs, sur le web et le mobile',
-            'Réduit le délai de mise en production de 40% en simplifiant le CI/CD et la revue de code',
+            'Réduit le délai de mise en production de 40 % en simplifiant le CI/CD et la revue de code',
             'Recruté et intégré 6 ingénieurs, puis piloté les parcours d’évolution et de promotion',
           ],
         },

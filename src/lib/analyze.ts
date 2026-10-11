@@ -263,7 +263,9 @@ function countQuantifiedImpact(text: string): number {
     if (!token) continue
 
     const next = tokens[index + 1] ?? ''
-    if (percentMetric(token) || currencyMetric(token, next) || unitMetric(token, next)) count += 1
+    // "30 %" with a space (French, German and Spanish typography) is two tokens.
+    const spacedPercent = token === '%' && isNumericToken(tokens[index - 1] ?? '')
+    if (percentMetric(token) || spacedPercent || currencyMetric(token, next) || unitMetric(token, next)) count += 1
   }
 
   return count

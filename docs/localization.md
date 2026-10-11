@@ -266,8 +266,8 @@ not delete or move an English URL.
 * The job-description keyword extractor has an English tech-skill lexicon
   (`SKILL_LEXICON`); in other languages it relies on word frequency, which is
   weaker. Its stop words are merged across languages.
-* Numbers written with a decimal comma (`2,5×`) are not recognised as quantified
-  impact; `30 %` with a space is not either.
+* Quantified impact accepts `40%`, `40 %` (also with a no-break space) and decimal
+  commas (`2,5×` counts through its `5×`); a bare number with no unit never counts.
 * Guide bodies are translated, not independently researched per country. Local
   conventions that differ materially from the English text are noted per guide
   only where well established.
