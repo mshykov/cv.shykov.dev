@@ -35,11 +35,11 @@ export const fr: Messages = {
   },
 
   og: {
-    badge: 'Analyse du CV 100% locale',
+    badge: 'Analyse du CV 100% dans le navigateur',
     headline: ['Score ATS en secondes.', 'Votre CV reste privé.'],
     sub: ['Analysez vos PDF/DOCX en secondes.', 'Sans envoi, sans compte, sans IA.'],
     chips: ['Dans le navigateur', 'Sans envoi', 'Sans IA'],
-    cardLabel: 'Analyse locale',
+    cardLabel: 'Dans le navigateur',
     cardChips: ['Sans envoi', 'Sans IA', 'PDF/DOCX'],
   },
 
@@ -57,7 +57,7 @@ export const fr: Messages = {
       githubAria: 'Code source ouvert sur GitHub',
     },
     hero: {
-      badge: 'Analyse du CV 100% locale',
+      badge: 'Analyse du CV 100% dans le navigateur',
       h1: 'Vérificateur de CV ATS gratuit : votre score, sans envoi du fichier',
       lead: 'Obtenez le score ATS de votre CV à partir d’un PDF ou d’un DOCX en quelques secondes, voyez d’abord les corrections les plus utiles, comparez les mots-clés d’une offre et créez un CV compatible ATS, sans envoi de fichier, sans compte et sans appel à une IA.',
       check: 'Analyser mon CV',
@@ -69,14 +69,14 @@ export const fr: Messages = {
       openSource: 'Code source ouvert',
     },
     heroCard: {
-      localParse: 'analyse locale',
+      localParse: 'dans le navigateur',
       noUpload: 'Sans envoi',
       noLlm: 'Sans IA',
       pdfDocx: 'PDF/DOCX',
     },
     heroMini: {
       aria: 'Aperçu du score ATS calculé en local',
-      localParse: 'Analyse locale',
+      localParse: 'Dans le navigateur',
       caption: 'Score, corrections prioritaires, mots-clés',
       categories: ['Lisibilité', 'Rubriques', 'Contenu'],
     },
@@ -84,7 +84,7 @@ export const fr: Messages = {
       aria: 'Comment fonctionne ce vérificateur de CV ATS local',
       steps: [
         { title: 'Choisissez un PDF/DOCX', body: 'Sélectionnez le fichier de votre CV sur votre appareil.' },
-        { title: 'Analyse en local', body: 'L’extraction du texte et le calcul du score se font dans ce navigateur.' },
+        { title: 'Analyse dans le navigateur', body: 'L’extraction du texte et le calcul du score se font dans ce navigateur.' },
         { title: 'Corrigez l’essentiel', body: 'Consultez le score, le détail, les mots-clés et des notes exportables.' },
       ],
       noServerUpload: 'Aucun envoi à un serveur',
@@ -100,7 +100,7 @@ export const fr: Messages = {
       heading: 'Des engagements de confidentialité que vous pouvez vérifier.',
       body: 'Le code est ouvert, sous licence MIT, et la promesse reste volontairement étroite : lecture des documents en local, score déterministe, aucun compte obligatoire, aucun modèle d’IA caché derrière l’interface.',
       cards: [
-        { title: 'Lecture en local', body: 'Le texte des PDF et DOCX est extrait dans le navigateur, avec des bibliothèques côté client.' },
+        { title: 'Lecture dans le navigateur', body: 'Le texte des PDF et DOCX est extrait dans le navigateur, avec des bibliothèques côté client.' },
         { title: 'Aucun score par IA', body: 'Les scores viennent de vérifications reproductibles : lisibilité, rubriques, format et contenu.' },
       ],
       repoTitle: 'Code source ouvert sur GitHub',

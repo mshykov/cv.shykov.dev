@@ -45,11 +45,11 @@ export const en = {
 
   // Text drawn on the social-card image (scripts/og-images.mjs).
   og: {
-    badge: '100% local resume analysis',
+    badge: '100% in-browser resume analysis',
     headline: ['Fast ATS score.', 'Private by default.'],
     sub: ['Score PDF/DOCX files in seconds.', 'No uploads, accounts, or LLM calls.'],
     chips: ['Runs in browser', 'No uploads', 'No LLM'],
-    cardLabel: 'Local parse',
+    cardLabel: 'In your browser',
     cardChips: ['No upload', 'No LLM', 'PDF/DOCX'],
   },
 
@@ -68,7 +68,7 @@ export const en = {
       githubAria: 'Open source on GitHub',
     },
     hero: {
-      badge: '100% local resume analysis',
+      badge: '100% in-browser resume analysis',
       h1: 'Free CV ATS score checker. Private by default.',
       lead: 'Get your CV ATS score from a PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.',
       check: 'Check my resume',
@@ -80,14 +80,14 @@ export const en = {
       openSource: 'Open source',
     },
     heroCard: {
-      localParse: 'local parse',
+      localParse: 'in your browser',
       noUpload: 'No upload',
       noLlm: 'No LLM',
       pdfDocx: 'PDF/DOCX',
     },
     heroMini: {
       aria: 'Preview of local ATS scoring',
-      localParse: 'Local parse',
+      localParse: 'In your browser',
       caption: 'Score, top fixes, keyword signals',
       categories: ['Parseability', 'Sections', 'Content'],
     },
@@ -95,7 +95,7 @@ export const en = {
       aria: 'How the local ATS resume checker works',
       steps: [
         { title: 'Choose PDF/DOCX', body: 'Pick a resume file from your device.' },
-        { title: 'Parse locally', body: 'Text extraction and scoring run in this browser.' },
+        { title: 'Parse in your browser', body: 'Text extraction and scoring run in this browser.' },
         { title: 'Fix the top issues', body: 'See score, breakdown, keywords, and exportable notes.' },
       ],
       noServerUpload: 'No server upload',
@@ -111,7 +111,7 @@ export const en = {
       heading: 'Privacy claims you can inspect.',
       body: 'The code is open source under the MIT license, and the product promise stays narrow: local document parsing, deterministic scoring, no account wall, and no AI model call hidden behind the interface.',
       cards: [
-        { title: 'Local parser', body: 'PDF and DOCX text is extracted in the browser with client-side libraries.' },
+        { title: 'Browser-side parser', body: 'PDF and DOCX text is extracted in the browser with client-side libraries.' },
         { title: 'No LLM scoring', body: 'Scores come from repeatable checks for parseability, sections, format, and content signals.' },
       ],
       repoTitle: 'Open source on GitHub',

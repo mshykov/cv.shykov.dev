@@ -36,11 +36,11 @@ export const de: Messages = {
   },
 
   og: {
-    badge: '100 % lokale Lebenslauf-Analyse',
+    badge: '100 % Lebenslauf-Analyse im Browser',
     headline: ['Lebenslauf ATS Check.', 'Privat im Browser.'],
     sub: ['PDF/DOCX in Sekunden prüfen.', 'Kein Upload, kein Konto, keine KI.'],
     chips: ['Läuft im Browser', 'Kein Upload', 'Keine KI'],
-    cardLabel: 'Lokale Analyse',
+    cardLabel: 'Im Browser',
     cardChips: ['Kein Upload', 'Keine KI', 'PDF/DOCX'],
   },
 
@@ -58,7 +58,7 @@ export const de: Messages = {
       githubAria: 'Open Source auf GitHub',
     },
     hero: {
-      badge: '100 % lokale Lebenslauf-Analyse',
+      badge: '100 % Lebenslauf-Analyse im Browser',
       h1: 'Lebenslauf ATS Check kostenlos. Privat im Browser.',
       lead: 'ATS Lebenslauf prüfen: Sie erhalten den ATS-Score Ihres Lebenslaufs aus einer PDF- oder DOCX-Datei in Sekunden, sehen die wirksamsten Korrekturen zuerst, gleichen Keywords ab und erstellen einen ATS-tauglichen Lebenslauf – ohne Upload, Konto oder LLM-Aufrufe.',
       check: 'Lebenslauf prüfen',
@@ -70,14 +70,14 @@ export const de: Messages = {
       openSource: 'Open Source',
     },
     heroCard: {
-      localParse: 'lokale Analyse',
+      localParse: 'im Browser',
       noUpload: 'Kein Upload',
       noLlm: 'Keine KI',
       pdfDocx: 'PDF/DOCX',
     },
     heroMini: {
       aria: 'Vorschau der lokalen ATS-Bewertung',
-      localParse: 'Lokale Analyse',
+      localParse: 'Im Browser',
       caption: 'Score, wichtigste Korrekturen, Keyword-Signale',
       categories: ['Lesbarkeit', 'Abschnitte', 'Inhalt'],
     },
@@ -85,7 +85,7 @@ export const de: Messages = {
       aria: 'So funktioniert der lokale ATS-Check für den Lebenslauf',
       steps: [
         { title: 'PDF/DOCX auswählen', body: 'Wählen Sie eine Lebenslaufdatei von Ihrem Gerät aus.' },
-        { title: 'Lokal auslesen', body: 'Textextraktion und Bewertung laufen in diesem Browser.' },
+        { title: 'Im Browser auslesen', body: 'Textextraktion und Bewertung laufen in diesem Browser.' },
         { title: 'Wichtigste Probleme beheben', body: 'Sehen Sie Score, Aufschlüsselung, Keywords und exportierbare Hinweise.' },
       ],
       noServerUpload: 'Kein Upload auf einen Server',
@@ -101,7 +101,7 @@ export const de: Messages = {
       heading: 'Datenschutzversprechen zum Nachprüfen.',
       body: 'Der Code ist Open Source unter der MIT-Lizenz, und das Produktversprechen bleibt eng gefasst: lokale Verarbeitung der Dokumente, deterministische Bewertung, kein Kontozwang und kein KI-Modell, das sich hinter der Oberfläche versteckt.',
       cards: [
-        { title: 'Lokaler Parser', body: 'Der Text aus PDF und DOCX wird im Browser mit clientseitigen Bibliotheken extrahiert.' },
+        { title: 'Parser im Browser', body: 'Der Text aus PDF und DOCX wird im Browser mit clientseitigen Bibliotheken extrahiert.' },
         { title: 'Keine LLM-Bewertung', body: 'Der Score entsteht aus wiederholbaren Prüfungen zu Lesbarkeit, Abschnitten, Format und Inhaltssignalen.' },
       ],
       repoTitle: 'Open Source auf GitHub',
