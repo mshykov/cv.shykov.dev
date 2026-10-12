@@ -144,7 +144,7 @@ export const ARTICLES: Article[] = [
   {
     ...guide('ats-checker-without-upload'),
     published: '2026-08-31',
-    updated: '2026-10-11',
+    updated: '2026-10-12',
     summary:
       'A browser can read and score a PDF or DOCX without sending it anywhere, so an upload is a design choice, not a technical necessity. You can verify a checker yourself in under a minute: open the browser’s Network panel, drop your CV in, and look for a request that carries the file.',
     body: (
@@ -227,7 +227,7 @@ export const ARTICLES: Article[] = [
         </P>
 
         <Note>
-          <strong>This site is the local kind.</strong>{' '}
+          <strong>This site never receives the file.</strong> The{' '}
           <A href="/">free CV score checker</A> parses your PDF or DOCX in the browser with{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> and{' '}
           <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
