@@ -114,6 +114,8 @@ self-merge via squash. Never commit straight to `main` (check your branch first)
 - `docs/retrospective.md` — what went well / wrong + lessons.
 - `docs/sonar.md` — reusable Sonar/code-quality checklist.
 - `docs/project-quality.md` — CV toolkit-specific quality rules.
+- `TONE.md` — voice and the privacy/scoring claims the site may make (read before
+  writing any rendered text, guide or post).
 - `docs/localization.md` — **how the six languages work and how to add a seventh**
   (URL scheme, SEO/hreflang rules, translation voice and glossary, validation).
 - `docs/ai-visibility.md` — AI/search visibility baseline (2026-09-26) + re-run protocol.
