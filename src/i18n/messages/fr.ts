@@ -193,7 +193,7 @@ export const fr: Messages = {
       profile: 'Profil',
       fields: { name: 'Nom', email: 'E-mail', phone: 'Téléphone', location: 'Localisation', links: 'Liens' },
       notDetected: 'non détecté',
-      profileNote: 'Voici ce que tire de votre CV un analyseur de type ATS. Un champ vide en rouge signale en général un problème de mise en forme.',
+      profileNote: 'Voici ce que tire de votre CV un analyseur de type ATS. Un champ vide surligné signale en général un problème de mise en forme.',
       experience: 'Expérience',
       parsed: (n: number) => `(${n} ${n > 1 ? 'identifiées' : 'identifiée'})`,
       bullets: (n: number) => `${n} ${n > 1 ? 'puces' : 'puce'}`,

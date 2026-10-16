@@ -186,7 +186,7 @@ export const ptPT: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nome', email: 'Email', phone: 'Telefone', location: 'Localidade', links: 'Ligações' },
       notDetected: 'não detetado',
-      profileNote: 'É isto que um leitor do tipo ATS extrai. Os campos vazios a vermelho costumam indicar um problema de formatação.',
+      profileNote: 'É isto que um leitor do tipo ATS extrai. Os campos vazios destacados costumam indicar um problema de formatação.',
       experience: 'Experiência',
       parsed: (n: number) => `(${n} lidas)`,
       bullets: (n: number) => `${n} ${n === 1 ? 'marcador' : 'marcadores'}`,

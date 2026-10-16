@@ -199,7 +199,7 @@ export const en = {
       profile: 'Profile',
       fields: { name: 'Name', email: 'Email', phone: 'Phone', location: 'Location', links: 'Links' },
       notDetected: 'not detected',
-      profileNote: 'This is what an ATS-style parser pulls out. Blank fields in red usually mean a formatting issue.',
+      profileNote: 'This is what an ATS-style parser pulls out. Highlighted blank fields usually mean a formatting issue.',
       experience: 'Experience',
       parsed: (n: number) => `(${n} parsed)`,
       bullets: (n: number) => `${n} bullet${n === 1 ? '' : 's'}`,

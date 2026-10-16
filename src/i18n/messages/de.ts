@@ -187,7 +187,7 @@ export const de: Messages = {
       profile: 'Profil',
       fields: { name: 'Name', email: 'E-Mail', phone: 'Telefon', location: 'Ort', links: 'Links' },
       notDetected: 'nicht erkannt',
-      profileNote: 'Das zieht ein Parser nach Art eines ATS aus Ihrem Dokument. Rot markierte leere Felder deuten meist auf ein Formatierungsproblem hin.',
+      profileNote: 'Das zieht ein Parser nach Art eines ATS aus Ihrem Dokument. Hervorgehobene leere Felder deuten meist auf ein Formatierungsproblem hin.',
       experience: 'Berufserfahrung',
       parsed: (n: number) => `(${n} erkannt)`,
       bullets: (n: number) => `${n} ${n === 1 ? 'Aufzählungspunkt' : 'Aufzählungspunkte'}`,

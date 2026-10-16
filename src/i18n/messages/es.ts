@@ -185,7 +185,7 @@ export const es: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nombre', email: 'Correo electrónico', phone: 'Teléfono', location: 'Ubicación', links: 'Enlaces' },
       notDetected: 'no detectado',
-      profileNote: 'Esto es lo que extrae un analizador de tipo ATS. Los campos vacíos en rojo suelen indicar un problema de formato.',
+      profileNote: 'Esto es lo que extrae un analizador de tipo ATS. Los campos vacíos resaltados suelen indicar un problema de formato.',
       experience: 'Experiencia',
       parsed: (n: number) => `(${n} detectadas)`,
       bullets: (n: number) => `${n} viñeta${n === 1 ? '' : 's'}`,

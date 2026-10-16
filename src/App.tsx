@@ -186,7 +186,8 @@ function AppBody() {
   }
 
   const scrollToTool = () => {
-    globalThis.requestAnimationFrame(() => document.getElementById('fast-ats-score')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    const calm = globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches
+    globalThis.requestAnimationFrame(() => document.getElementById('fast-ats-score')?.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' }))
   }
 
   const switchModeAndFocusTool = (next: Mode) => {

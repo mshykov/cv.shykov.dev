@@ -158,8 +158,10 @@ body {
     animation: none;
   }
 
-  * {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+  /* Unlayered, so it beats the Tailwind utilities without !important. */
+  *,
+  ::before,
+  ::after {
+    transition: none;
   }
 }

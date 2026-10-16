@@ -149,7 +149,7 @@ function StyleRow({ s }: StyleRowProps) {
         {s.examples && s.examples.length > 0 && (
           <ul className="mt-2 space-y-1">
             {s.examples.map((ex) => (
-              <li key={ex} className="truncate bg-panel px-2 py-1 font-mono text-xs text-ink-2">{ex}</li>
+              <li key={ex} className="break-words bg-panel px-2 py-1 font-mono text-xs text-ink-2">{ex}</li>
             ))}
           </ul>
         )}

@@ -184,7 +184,7 @@ export const ptBR: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nome', email: 'E-mail', phone: 'Telefone', location: 'Localização', links: 'Links' },
       notDetected: 'não detectado',
-      profileNote: 'É isto que um analisador semelhante ao de um ATS extrai. Campos vazios em vermelho geralmente indicam um problema de formatação.',
+      profileNote: 'É isto que um analisador semelhante ao de um ATS extrai. Campos vazios destacados geralmente indicam um problema de formatação.',
       experience: 'Experiência',
       parsed: (n: number) => `(${n} ${n === 1 ? 'lida' : 'lidas'})`,
       bullets: (n: number) => `${n} ${n === 1 ? 'marcador' : 'marcadores'}`,
