@@ -237,8 +237,8 @@ export const ARTICLES: Article[] = [
         <Note>
           <strong>Diese Seite ist von der lokalen Sorte.</strong> Der{' '}
           <A href="/de/">kostenlose ATS-Check für Ihren Lebenslauf</A> liest Ihr PDF oder DOCX im Browser mit{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> und{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">pdf.js</code> und{' '}
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">mammoth</code>,
           bewertet es nach festen Regeln und hat kein Backend, das eine Datei empfangen könnte. Der
           Code steht unter der MIT-Lizenz; die Aussage ist also nachprüfbar statt nur versprochen.
           Für Leser, denen der Datenschutz wichtig ist, gilt damit sachlich: Die Verarbeitung läuft in
@@ -327,7 +327,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Wann DOCX die richtige Antwort ist</H2>
         <Ul>
-          <Li><strong>Das Formular verlangt es.</strong> Nennt das Upload-Feld nur <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, ist das die Antwort. Überlisten Sie das Formular nicht.</Li>
+          <Li><strong>Das Formular verlangt es.</strong> Nennt das Upload-Feld nur <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">.doc/.docx</code>, ist das die Antwort. Überlisten Sie das Formular nicht.</Li>
           <Li><strong>Ein Recruiter hat darum gebeten.</strong> Personalagenturen übertragen Ihren Lebenslauf oft auf die eigene Vorlage, wofür eine bearbeitbare Datei nötig ist.</Li>
           <Li><strong>Der Arbeitgeber nutzt ein älteres System.</strong> Heute selten, aber unschädlich, dem zu folgen.</Li>
         </Ul>
@@ -342,7 +342,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>Kein Text in Bildern.</strong> Ein Logo ist in Ordnung; Ihre Position als Grafik nicht.</Li>
           <Li><strong>Keine wichtigen Angaben in Kopf- oder Fußzeile.</strong> Manche Parser überspringen diese Bereiche. Setzen Sie Ihre E-Mail-Adresse in den Haupttext.</Li>
           <Li><strong>Echte Aufzählungszeichen</strong> statt von Hand gesetzter Striche in einer Tabellenzelle.</Li>
-          <Li><strong>Ein sinnvoller Dateiname</strong> – <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Vorname_Nachname_Lebenslauf.pdf</code>. Ein Mensch sieht ihn in einem Ordner mit Hunderten Dateien.</Li>
+          <Li><strong>Ein sinnvoller Dateiname</strong> – <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Vorname_Nachname_Lebenslauf.pdf</code>. Ein Mensch sieht ihn in einem Ordner mit Hunderten Dateien.</Li>
         </Ul>
 
         <Note>
@@ -532,7 +532,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
           <Li><strong>Positionsbezeichnungen sind erkennbar.</strong> Lautet Ihr interner Titel „Delivery Ninja“, nennen Sie daneben die branchenübliche Bezeichnung.</Li>
           <Li><strong>Der Wortschatz der Stellenanzeige kommt vor</strong> – aber nur dort, wo Sie ihn sich ehrlich verdient haben.</Li>
           <Li><strong>Es gibt einen Kenntnisse-Abschnitt</strong> als schlichter, kommagetrennter Text statt einer Grafik mit Skill-Balken.</Li>
-          <Li><strong>Ihre Links sind ausgeschrieben</strong> als sichtbarer Text: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/ihrname</code>. Ein Parser liest Text, keine Linkziele.</Li>
+          <Li><strong>Ihre Links sind ausgeschrieben</strong> als sichtbarer Text: <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">linkedin.com/in/ihrname</code>. Ein Parser liest Text, keine Linkziele.</Li>
           <Li><strong>Kein Text steckt in einem Bild oder Textfeld.</strong></Li>
         </Ul>
 
@@ -542,7 +542,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
           <Li><strong>Wirkung trägt eine Zahl.</strong> „Zuverlässigkeit verbessert“ ist eine Behauptung; „absturzfreie Sitzungen von 96% auf 99,5% gesteigert“ ist ein Beleg.</Li>
           <Li><strong>Keine Floskeln.</strong> „Ergebnisorientierter Profi mit nachweislichem Erfolg“ sagt einem Leser nichts.</Li>
           <Li><strong>Die Länge passt zur Laufbahn.</strong> Eine Seite am Anfang, zwei sind nach einem Jahrzehnt normal. Drei brauchen einen Grund.</Li>
-          <Li><strong>Der Dateiname ist ein Name</strong> – <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Vorname_Nachname_Lebenslauf.pdf</code>, nicht <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">lebenslauf_final_v3_NEU.pdf</code>.</Li>
+          <Li><strong>Der Dateiname ist ein Name</strong> – <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Vorname_Nachname_Lebenslauf.pdf</code>, nicht <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">lebenslauf_final_v3_NEU.pdf</code>.</Li>
         </Ul>
 
         <H2>Was ein Checker davon für Sie prüfen kann</H2>

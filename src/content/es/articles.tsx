@@ -233,8 +233,8 @@ export const ARTICLES: Article[] = [
         <Note>
           <strong>Este sitio funciona en tu navegador.</strong> El{' '}
           <A href="/es/">comprobador de CV gratuito</A> analiza tu PDF o DOCX en el navegador con{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> y{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">pdf.js</code> y{' '}
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">mammoth</code>,
           lo puntúa con reglas fijas y no tiene ningún servidor que pueda recibir un archivo. Tiene
           licencia MIT, de modo que la afirmación se puede comprobar en lugar de prometerse.
         </Note>
@@ -321,7 +321,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Cuándo es mejor un DOCX</H2>
         <Ul>
-          <Li><strong>El formulario lo pide.</strong> Si el campo de subida admite solo <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, esa es la respuesta. No intentes ser más listo que el formulario.</Li>
+          <Li><strong>El formulario lo pide.</strong> Si el campo de subida admite solo <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">.doc/.docx</code>, esa es la respuesta. No intentes ser más listo que el formulario.</Li>
           <Li><strong>Un reclutador te lo ha pedido.</strong> Las consultoras de selección suelen pasar tu CV a su propia plantilla, y para eso necesitan un archivo editable.</Li>
           <Li><strong>La empresa usa un sistema antiguo.</strong> Hoy es raro, pero no cuesta nada cumplir.</Li>
         </Ul>
@@ -336,7 +336,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>Nada de texto dentro de imágenes.</strong> Un logotipo no pasa nada; tu puesto convertido en gráfico, sí.</Li>
           <Li><strong>Ningún dato esencial en la cabecera o el pie.</strong> Algunos analizadores se saltan esas zonas. Pon tu correo en el cuerpo.</Li>
           <Li><strong>Viñetas reales,</strong> no guiones dibujados a mano dentro de la celda de una tabla.</Li>
-          <Li><strong>Un nombre de archivo sensato:</strong> <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nombre_Apellidos_CV.pdf</code>. Una persona lo verá en una carpeta con cientos de archivos.</Li>
+          <Li><strong>Un nombre de archivo sensato:</strong> <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nombre_Apellidos_CV.pdf</code>. Una persona lo verá en una carpeta con cientos de archivos.</Li>
         </Ul>
 
         <Note>
@@ -527,7 +527,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
           <Li><strong>Los cargos son reconocibles.</strong> Si tu cargo interno es «Ninja de proyectos», pon al lado el cargo estándar del sector.</Li>
           <Li><strong>Aparece el vocabulario de la oferta</strong>, pero solo donde te lo hayas ganado de verdad.</Li>
           <Li><strong>Existe una sección de habilidades,</strong> en texto normal separado por comas y no en un gráfico de barras de nivel.</Li>
-          <Li><strong>Tus enlaces están escritos</strong> como texto visible: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/tu-nombre</code>. Un analizador lee texto, no destinos de enlaces.</Li>
+          <Li><strong>Tus enlaces están escritos</strong> como texto visible: <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">linkedin.com/in/tu-nombre</code>. Un analizador lee texto, no destinos de enlaces.</Li>
           <Li><strong>No hay texto dentro de una imagen ni de un cuadro de texto.</strong></Li>
         </Ul>
 
@@ -537,7 +537,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
           <Li><strong>El impacto lleva una cifra.</strong> «Mejoré la fiabilidad» es una afirmación; «las sesiones sin fallos pasaron del 96 % al 99,5 %» es una prueba.</Li>
           <Li><strong>Nada de frases hechas.</strong> «Profesional orientado a resultados con una trayectoria demostrada» no le dice nada a quien lo lee.</Li>
           <Li><strong>La extensión se ajusta a tu trayectoria.</strong> Una página al principio; dos es lo normal tras una década. Tres necesitan una razón.</Li>
-          <Li><strong>El nombre del archivo es un nombre:</strong> <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nombre_Apellidos_CV.pdf</code>, no <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_DEFINITIVO.pdf</code>.</Li>
+          <Li><strong>El nombre del archivo es un nombre:</strong> <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nombre_Apellidos_CV.pdf</code>, no <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">cv_final_v3_DEFINITIVO.pdf</code>.</Li>
         </Ul>
 
         <H2>Cuáles de estos puntos puede verificar un comprobador por ti</H2>

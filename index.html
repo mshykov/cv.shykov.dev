@@ -12,9 +12,11 @@
     <link rel="apple-touch-icon" href="/logo.png" />
     <meta name="apple-mobile-web-app-title" content="ATS Resume Toolkit" />
     <!-- Mobile address-bar tint -->
-    <meta name="theme-color" content="#4f46e5" />
+    <meta name="theme-color" content="#f4f4ef" />
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.json" />
+    <!-- The headline font, fetched with the HTML so the first paint is already in it. -->
+    <link rel="preload" href="/src/fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
 
     <!--
       Everything between the seo markers is REPLACED at build time, once per

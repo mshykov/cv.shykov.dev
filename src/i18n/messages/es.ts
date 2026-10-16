@@ -56,28 +56,21 @@ export const es: Messages = {
       githubAria: 'Código abierto en GitHub',
     },
     hero: {
-      badge: 'Análisis de CV 100% en tu navegador',
       h1: 'Revisar CV ATS gratis: comprueba tu puntuación ATS con total privacidad',
       lead: 'Consigue la puntuación ATS de tu CV a partir de un PDF o DOCX en segundos, ve primero las correcciones de mayor impacto, compara palabras clave y crea un CV compatible con ATS sin subir archivos, sin cuentas y sin llamadas a un LLM.',
       check: 'Revisar mi CV',
       build: 'Crear un CV compatible con ATS',
-      runsInBrowser: 'Funciona en tu navegador',
-      noUploads: 'Sin subidas',
-      noLlm: 'Sin LLM',
-      pdfDocx: 'PDF y DOCX',
-      openSource: 'Código abierto',
-    },
-    heroCard: {
-      localParse: 'en tu navegador',
-      noUpload: 'Sin subida',
-      noLlm: 'Sin LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Vista previa de la puntuación ATS local',
-      localParse: 'En tu navegador',
-      caption: 'Puntuación, correcciones principales y palabras clave',
-      categories: ['Legibilidad', 'Secciones', 'Contenido'],
+      privacy: {
+        aria: 'Qué sale de tu navegador',
+        zero: 'bytes de tu CV enviados a un servidor',
+        rows: [
+          { label: 'Subida de archivos', value: 'Ninguna' },
+          { label: 'Cuenta', value: 'Ninguna' },
+          { label: 'Llamadas a un LLM', value: 'Ninguna' },
+        ],
+        source: 'Código fuente',
+        sourceValue: 'Abierto, MIT',
+      },
     },
     how: {
       aria: 'Cómo funciona el comprobador de CV ATS local',
@@ -86,9 +79,6 @@ export const es: Messages = {
         { title: 'Análisis en tu navegador', body: 'La extracción del texto y la puntuación se ejecutan en este navegador.' },
         { title: 'Corrige lo principal', body: 'Verás la puntuación, el desglose, las palabras clave y notas que puedes exportar.' },
       ],
-      noServerUpload: 'Sin subida a ningún servidor',
-      deterministic: 'Comprobaciones deterministas, sin llamadas a un LLM',
-      openSourceMit: 'Código abierto, licencia MIT',
     },
     loading: {
       score: 'Cargando la puntuación ATS…',
@@ -107,6 +97,7 @@ export const es: Messages = {
     },
     faq: {
       aria: 'Preguntas frecuentes sobre el comprobador de CV ATS',
+      heading: 'Preguntas frecuentes',
       items: [
         { q: '¿Qué es la puntuación ATS?', a: 'Una comprobación heurística rápida de si el CV tiene texto legible para un analizador, datos de contacto, secciones, fechas, viñetas y resultados medibles.' },
         { q: '¿Se sube mi CV a algún servidor?', a: 'No. Los archivos PDF y DOCX se procesan en local, en tu navegador, y no se envían a ningún servidor.' },
@@ -194,7 +185,7 @@ export const es: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nombre', email: 'Correo electrónico', phone: 'Teléfono', location: 'Ubicación', links: 'Enlaces' },
       notDetected: 'no detectado',
-      profileNote: 'Esto es lo que extrae un analizador de tipo ATS. Los campos vacíos en rojo suelen indicar un problema de formato.',
+      profileNote: 'Esto es lo que extrae un analizador de tipo ATS. Los campos vacíos resaltados suelen indicar un problema de formato.',
       experience: 'Experiencia',
       parsed: (n: number) => `(${n} detectadas)`,
       bullets: (n: number) => `${n} viñeta${n === 1 ? '' : 's'}`,

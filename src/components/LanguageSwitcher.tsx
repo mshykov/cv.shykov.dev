@@ -11,28 +11,21 @@ type Props = Readonly<{ current: Locale; links: LanguageLink[]; label: string }>
 
 const nameOf = (code: Locale) => LOCALES.find((l) => l.code === code)
 
-function GlobeIcon() {
-  return (
-    <svg className="h-4 w-4" aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <circle cx="12" cy="12" r="9" />
-      <path strokeLinecap="round" d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9Z" />
-    </svg>
-  )
-}
-
 export function LanguageSwitcher({ current, links, label }: Props) {
   const here = nameOf(current)
   return (
     <details className="group relative">
       <summary
         aria-label={label}
-        className="inline-flex min-h-12 cursor-pointer list-none items-center gap-2 rounded-xl bg-white/85 px-3.5 text-sm font-medium text-stone-700 shadow-lg shadow-stone-950/10 ring-1 ring-stone-200 backdrop-blur transition hover:bg-white hover:text-stone-950 [&::-webkit-details-marker]:hidden"
+        title={here?.nativeName}
+        className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 px-3 font-mono text-sm font-medium uppercase text-ink-2 transition-colors hover:text-ink group-open:text-ink [&::-webkit-details-marker]:hidden"
       >
-        <GlobeIcon />
-        <span className="hidden md:inline">{here?.nativeName}</span>
-        <span className="md:hidden">{current.toUpperCase()}</span>
+        {current}
+        <svg className="h-3 w-3 transition-transform group-open:rotate-180" aria-hidden viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M2 4.5l4 4 4-4" />
+        </svg>
       </summary>
-      <ul className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-stone-200 bg-white py-1 text-sm shadow-xl shadow-stone-950/10">
+      <ul className="absolute right-0 z-50 mt-1 w-52 border border-ink bg-paper py-1 text-base">
         {links.map(({ locale, href }) => {
           const info = nameOf(locale)
           const active = locale === current
@@ -43,9 +36,10 @@ export function LanguageSwitcher({ current, links, label }: Props) {
                 hrefLang={info?.htmlLang}
                 lang={info?.htmlLang}
                 aria-current={active ? 'true' : undefined}
-                className={`block px-4 py-2 transition hover:bg-stone-50 ${active ? 'font-semibold text-indigo-700' : 'text-stone-700'}`}
+                className={`flex min-h-11 items-center justify-between px-4 transition-colors hover:bg-neon hover:text-on-neon ${active ? 'font-semibold text-ink' : 'text-ink-2'}`}
               >
                 {info?.nativeName}
+                {active && <span aria-hidden className="size-2 bg-ink" />}
               </a>
             </li>
           )
@@ -61,12 +55,12 @@ type FooterProps = Readonly<{ current: Locale; links: LanguageLink[]; label: str
 export function LanguageFooter({ current, links, label }: FooterProps) {
   const others = links.filter((l) => l.locale !== current)
   return (
-    <nav aria-label={label} className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+    <nav aria-label={label} className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
       <span>{label}:</span>
       {others.map(({ locale, href }) => {
         const info = nameOf(locale)
         return (
-          <a key={locale} href={href} hrefLang={info?.htmlLang} lang={info?.htmlLang} className="font-medium text-stone-600 underline-offset-2 hover:underline">
+          <a key={locale} href={href} hrefLang={info?.htmlLang} lang={info?.htmlLang} className="font-medium underline underline-offset-4 decoration-rule-2 hover:decoration-ink">
             {info?.nativeName}
           </a>
         )

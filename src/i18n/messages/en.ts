@@ -68,28 +68,21 @@ export const en = {
       githubAria: 'Open source on GitHub',
     },
     hero: {
-      badge: '100% in-browser resume analysis',
       h1: 'Free CV ATS score checker. Private by default.',
       lead: 'Get your CV ATS score from a PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.',
       check: 'Check my resume',
       build: 'Build ATS-clean CV',
-      runsInBrowser: 'Runs in your browser',
-      noUploads: 'No uploads',
-      noLlm: 'No LLM',
-      pdfDocx: 'PDF & DOCX',
-      openSource: 'Open source',
-    },
-    heroCard: {
-      localParse: 'in your browser',
-      noUpload: 'No upload',
-      noLlm: 'No LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Preview of local ATS scoring',
-      localParse: 'In your browser',
-      caption: 'Score, top fixes, keyword signals',
-      categories: ['Parseability', 'Sections', 'Content'],
+      privacy: {
+        aria: 'What leaves your browser',
+        zero: 'bytes of your CV sent to a server',
+        rows: [
+          { label: 'File upload', value: 'None' },
+          { label: 'Account', value: 'None' },
+          { label: 'LLM calls', value: 'None' },
+        ],
+        source: 'Source code',
+        sourceValue: 'Open, MIT',
+      },
     },
     how: {
       aria: 'How the local ATS resume checker works',
@@ -98,9 +91,6 @@ export const en = {
         { title: 'Parse in your browser', body: 'Text extraction and scoring run in this browser.' },
         { title: 'Fix the top issues', body: 'See score, breakdown, keywords, and exportable notes.' },
       ],
-      noServerUpload: 'No server upload',
-      deterministic: 'Deterministic checks, no LLM calls',
-      openSourceMit: 'Open source, MIT license',
     },
     loading: {
       score: 'Loading fast ATS score…',
@@ -119,6 +109,7 @@ export const en = {
     },
     faq: {
       aria: 'ATS resume checker FAQ',
+      heading: 'FAQ',
       items: [
         { q: 'What is an ATS score?', a: 'A fast heuristic check for parser-friendly text, contact details, sections, dates, bullets, and measurable impact.' },
         { q: 'Is my CV uploaded?', a: 'No. PDF and DOCX files are processed locally in your browser and are not sent to a server.' },
@@ -208,7 +199,7 @@ export const en = {
       profile: 'Profile',
       fields: { name: 'Name', email: 'Email', phone: 'Phone', location: 'Location', links: 'Links' },
       notDetected: 'not detected',
-      profileNote: 'This is what an ATS-style parser pulls out. Blank fields in red usually mean a formatting issue.',
+      profileNote: 'This is what an ATS-style parser pulls out. Highlighted blank fields usually mean a formatting issue.',
       experience: 'Experience',
       parsed: (n: number) => `(${n} parsed)`,
       bullets: (n: number) => `${n} bullet${n === 1 ? '' : 's'}`,

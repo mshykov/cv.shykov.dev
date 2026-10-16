@@ -1,57 +1,167 @@
 @import 'tailwindcss';
 
+/*
+  One self-hosted family (CSP: font-src 'self'): Schibsted Grotesk, SIL OFL 1.1
+  (licence next to the files). The latin file is subset to Basic Latin + Latin-1 +
+  the punctuation we use and limited to wght 400-700; latin-ext covers the rest of
+  the accents. Labels and numbers use the system mono, so there is no second font
+  to download. How the subset was cut: docs/design.md.
+*/
+/* Same width as the web font, so the swap does not move the layout (or the LCP element). */
+@font-face {
+  font-family: 'Schibsted Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Liberation Sans');
+  size-adjust: 103%;
+  ascent-override: 95%;
+  descent-override: 25%;
+}
+
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('./fonts/schibsted-grotesk-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('./fonts/schibsted-grotesk-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+  Design tokens (docs/design.md). The default Tailwind palette, radii and shadows
+  are switched off on purpose: a colour, corner or shadow that is not a token below
+  generates no CSS, so it cannot drift back in. Black on paper, one neon, hairlines.
+*/
+@theme {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-paper: #f4f4ef;
+  --color-panel: #eaeae3;
+  --color-ink: #0a0a0a;
+  --color-ink-2: #4d4d47;
+  --color-mute: #6a6a63;
+  --color-rule: rgb(10 10 10 / 0.16);
+  --color-rule-2: rgb(10 10 10 / 0.5);
+  --color-page: #ffffff;
+  --color-page-ink: #1c1c1a;
+  --color-page-mute: #6a6a63;
+  --color-neon: #ccff00;
+  --color-on-neon: #0a0a0a;
+
+  --font-sans: 'Schibsted Grotesk', 'Schibsted Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --blur-*: initial;
+}
+
 html,
 body,
 #root {
   height: 100%;
 }
 
+html {
+  background: var(--color-paper);
+}
+
 body {
-  @apply bg-stone-50 text-stone-900 antialiased;
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
+  @apply bg-paper font-sans text-ink antialiased;
 }
 
-.hero-scan::after {
-  content: '';
-  position: absolute;
-  inset: 3rem 1.25rem auto;
-  z-index: 0;
-  height: 2px;
-  border-radius: 999px;
-  background: #4f46e5;
-  box-shadow: 0 0 18px rgba(79, 70, 229, 0.45);
-  animation: hero-scan-line 4.8s ease-in-out infinite;
-  pointer-events: none;
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 3px;
 }
 
-.hero-scan > * {
-  position: relative;
-  z-index: 1;
+::selection {
+  background: var(--color-neon);
+  color: var(--color-on-neon);
 }
 
-@keyframes hero-scan-line {
-  0%,
-  100% {
-    transform: translateY(0);
+@layer components {
+  /* Mono label: metadata, units, column heads. */
+  .lab {
+    @apply font-mono text-xs font-medium uppercase tracking-[0.04em] text-ink-2;
+  }
+
+  /* One primary button per view: ink fill, neon on hover. */
+  .btn {
+    @apply inline-flex min-h-14 items-center justify-center gap-2 bg-ink px-7 text-base font-semibold text-paper transition-colors duration-150 hover:bg-neon hover:text-on-neon;
+  }
+
+  .btn-sm {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap border border-rule-2 px-4 text-sm font-semibold text-ink transition-colors duration-150 hover:border-ink hover:bg-ink hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-rule-2 disabled:hover:bg-transparent disabled:hover:text-ink;
+  }
+
+  /* Text link used as the secondary action. */
+  .alt {
+    @apply inline-flex min-h-11 items-center text-base font-semibold underline decoration-2 underline-offset-[6px] decoration-rule-2 transition-colors duration-150 hover:decoration-ink;
+  }
+
+  .field {
+    @apply w-full border border-rule-2 bg-transparent px-3 py-2.5 text-base text-ink placeholder:text-mute hover:border-ink;
+  }
+
+  /* The neon block: the single loud surface, reserved for a number that matters. */
+  .neon-block {
+    @apply bg-neon text-on-neon;
+  }
+
+  /* Highlighter sweep behind the key phrase of the H1. CSS only. */
+  .hl {
+    background: linear-gradient(var(--color-neon), var(--color-neon)) 0 0 / 100% 100% no-repeat;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    color: var(--color-on-neon);
+    padding: 0 0.1em;
+    margin: 0 -0.1em;
+    animation: hl-sweep 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s backwards;
+  }
+
+  .rise {
+    animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  .rise-2 {
+    animation-delay: 0.1s;
+  }
+}
+
+@keyframes hl-sweep {
+  from {
+    background-size: 0% 100%;
+  }
+}
+
+@keyframes rise {
+  from {
     opacity: 0;
-  }
-
-  12%,
-  82% {
-    opacity: 0.9;
-  }
-
-  50% {
-    transform: translateY(10.75rem);
-    opacity: 0.9;
+    transform: translateY(10px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-scan::after {
+  .hl,
+  .rise {
     animation: none;
-    opacity: 0.35;
+  }
+
+  /* Unlayered, so it beats the Tailwind utilities without !important. */
+  *,
+  ::before,
+  ::after {
+    transition: none;
   }
 }

@@ -58,28 +58,21 @@ export const de: Messages = {
       githubAria: 'Open Source auf GitHub',
     },
     hero: {
-      badge: '100 % Lebenslauf-Analyse im Browser',
       h1: 'Lebenslauf ATS Check kostenlos. Privat im Browser.',
       lead: 'ATS Lebenslauf prüfen: Sie erhalten den ATS-Score Ihres Lebenslaufs aus einer PDF- oder DOCX-Datei in Sekunden, sehen die wirksamsten Korrekturen zuerst, gleichen Keywords ab und erstellen einen ATS-tauglichen Lebenslauf – ohne Upload, Konto oder LLM-Aufrufe.',
       check: 'Lebenslauf prüfen',
       build: 'ATS-tauglichen Lebenslauf erstellen',
-      runsInBrowser: 'Läuft in Ihrem Browser',
-      noUploads: 'Kein Upload',
-      noLlm: 'Kein LLM',
-      pdfDocx: 'PDF & DOCX',
-      openSource: 'Open Source',
-    },
-    heroCard: {
-      localParse: 'im Browser',
-      noUpload: 'Kein Upload',
-      noLlm: 'Kein LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Vorschau der lokalen ATS-Bewertung',
-      localParse: 'Im Browser',
-      caption: 'Score, wichtigste Korrekturen, Keyword-Signale',
-      categories: ['Lesbarkeit', 'Abschnitte', 'Inhalt'],
+      privacy: {
+        aria: 'Was Ihren Browser verlässt',
+        zero: 'Byte Ihres Lebenslaufs an einen Server gesendet',
+        rows: [
+          { label: 'Datei-Upload', value: 'Keiner' },
+          { label: 'Konto', value: 'Keines' },
+          { label: 'LLM-Aufrufe', value: 'Keine' },
+        ],
+        source: 'Quellcode',
+        sourceValue: 'Offen, MIT',
+      },
     },
     how: {
       aria: 'So funktioniert der lokale ATS-Check für den Lebenslauf',
@@ -88,9 +81,6 @@ export const de: Messages = {
         { title: 'Im Browser auslesen', body: 'Textextraktion und Bewertung laufen in diesem Browser.' },
         { title: 'Wichtigste Probleme beheben', body: 'Sehen Sie Score, Aufschlüsselung, Keywords und exportierbare Hinweise.' },
       ],
-      noServerUpload: 'Kein Upload auf einen Server',
-      deterministic: 'Deterministische Prüfungen, keine LLM-Aufrufe',
-      openSourceMit: 'Open Source, MIT-Lizenz',
     },
     loading: {
       score: 'Schneller ATS-Score wird geladen …',
@@ -109,6 +99,7 @@ export const de: Messages = {
     },
     faq: {
       aria: 'Häufige Fragen zum ATS-Check für den Lebenslauf',
+      heading: 'Häufige Fragen',
       items: [
         { q: 'Was ist ein ATS-Score?', a: 'Eine schnelle heuristische Prüfung auf parserfreundlichen Text, Kontaktdaten, Abschnitte, Datumsangaben, Aufzählungen und messbare Ergebnisse.' },
         { q: 'Wird mein Lebenslauf hochgeladen?', a: 'Nein. PDF- und DOCX-Dateien werden lokal in Ihrem Browser verarbeitet und nicht an einen Server gesendet.' },
@@ -196,7 +187,7 @@ export const de: Messages = {
       profile: 'Profil',
       fields: { name: 'Name', email: 'E-Mail', phone: 'Telefon', location: 'Ort', links: 'Links' },
       notDetected: 'nicht erkannt',
-      profileNote: 'Das zieht ein Parser nach Art eines ATS aus Ihrem Dokument. Rot markierte leere Felder deuten meist auf ein Formatierungsproblem hin.',
+      profileNote: 'Das zieht ein Parser nach Art eines ATS aus Ihrem Dokument. Hervorgehobene leere Felder deuten meist auf ein Formatierungsproblem hin.',
       experience: 'Berufserfahrung',
       parsed: (n: number) => `(${n} erkannt)`,
       bullets: (n: number) => `${n} ${n === 1 ? 'Aufzählungspunkt' : 'Aufzählungspunkte'}`,

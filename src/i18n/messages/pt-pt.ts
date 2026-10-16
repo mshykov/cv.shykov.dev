@@ -57,28 +57,21 @@ export const ptPT: Messages = {
       githubAria: 'Código aberto no GitHub',
     },
     hero: {
-      badge: 'Análise de CV 100% no navegador',
       h1: 'Verificador de CV ATS gratuito. Privado por defeito.',
       lead: 'Obtenha a pontuação ATS do seu CV a partir de um PDF ou DOCX em segundos, veja primeiro as correções de maior impacto, compare palavras-chave e crie um CV compatível com ATS, sem carregar ficheiros, sem contas e sem chamadas a LLM.',
       check: 'Verificar o meu CV',
       build: 'Criar CV compatível com ATS',
-      runsInBrowser: 'Funciona no navegador',
-      noUploads: 'Sem carregar ficheiros',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF e DOCX',
-      openSource: 'Código aberto',
-    },
-    heroCard: {
-      localParse: 'no navegador',
-      noUpload: 'Sem carregar',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Pré-visualização da pontuação ATS local',
-      localParse: 'No navegador',
-      caption: 'Pontuação, principais correções, palavras-chave',
-      categories: ['Legibilidade', 'Secções', 'Conteúdo'],
+      privacy: {
+        aria: 'O que sai do seu navegador',
+        zero: 'bytes do seu CV enviados para um servidor',
+        rows: [
+          { label: 'Envio de ficheiros', value: 'Nenhum' },
+          { label: 'Conta', value: 'Nenhuma' },
+          { label: 'Chamadas a LLM', value: 'Nenhuma' },
+        ],
+        source: 'Código-fonte',
+        sourceValue: 'Aberto, MIT',
+      },
     },
     how: {
       aria: 'Como funciona o verificador de CV ATS local',
@@ -87,9 +80,6 @@ export const ptPT: Messages = {
         { title: 'Leitura no navegador', body: 'A extração do texto e a pontuação correm neste navegador.' },
         { title: 'Corrija o mais importante', body: 'Veja a pontuação, o detalhe, as palavras-chave e notas exportáveis.' },
       ],
-      noServerUpload: 'Sem envio para servidores',
-      deterministic: 'Verificações determinísticas, sem chamadas a LLM',
-      openSourceMit: 'Código aberto, licença MIT',
     },
     loading: {
       score: 'A carregar a pontuação ATS rápida…',
@@ -108,6 +98,7 @@ export const ptPT: Messages = {
     },
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de CV ATS',
+      heading: 'Perguntas frequentes',
       items: [
         { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por máquinas, contactos, secções, datas, listas com marcadores e resultados mensuráveis.' },
         { q: 'O meu CV é carregado para algum servidor?', a: 'Não. Os ficheiros PDF e DOCX são processados localmente no seu navegador e não são enviados para nenhum servidor.' },
@@ -195,7 +186,7 @@ export const ptPT: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nome', email: 'Email', phone: 'Telefone', location: 'Localidade', links: 'Ligações' },
       notDetected: 'não detetado',
-      profileNote: 'É isto que um leitor do tipo ATS extrai. Os campos vazios a vermelho costumam indicar um problema de formatação.',
+      profileNote: 'É isto que um leitor do tipo ATS extrai. Os campos vazios destacados costumam indicar um problema de formatação.',
       experience: 'Experiência',
       parsed: (n: number) => `(${n} lidas)`,
       bullets: (n: number) => `${n} ${n === 1 ? 'marcador' : 'marcadores'}`,
