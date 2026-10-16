@@ -111,6 +111,8 @@ export const ptBR: Messages = {
         { q: 'Meu currículo é enviado para algum servidor?', a: 'Não. Os arquivos PDF e DOCX são processados localmente no seu navegador e não são enviados a nenhum servidor.' },
         { q: 'Isso usa IA?', a: 'Não. A pontuação é determinística e não usa LLMs, chamadas a modelos, contas nem chaves de API.' },
         { q: 'PDF ou DOCX?', a: 'Os dois funcionam. PDFs com texto selecionável dão o sinal mais claro de número de páginas e legibilidade.' },
+        { q: 'Quão precisa é a pontuação?', a: 'Ela estima o quanto um analisador consegue ler o seu documento. É uma heurística, não uma previsão da decisão de um recrutador nem do sistema de qualquer empresa, e não foi validada com resultados de contratação. Outros verificadores dão números diferentes para o mesmo arquivo porque cada um mede uma coisa distinta.' },
+        { q: 'A pontuação pode ter viés?', a: 'Não há modelo nem dados de treinamento, então não existe um conjunto de dados que possa ter viés. As regras, porém, carregam suposições, como os títulos de seção e as convenções de currículo que aceitam, e a revisão de estilo cobre apenas currículos em inglês e pode marcar textos bem escritos. Não é um detector de IA. Nada é decidido sobre você: cada ponto mostra a regra por trás dele e você decide o que mudar.' },
       ],
     },
     guides: { aria: 'Guias', heading: 'Guias' },

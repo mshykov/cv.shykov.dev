@@ -112,6 +112,8 @@ export const es: Messages = {
         { q: '¿Se sube mi CV a algún servidor?', a: 'No. Los archivos PDF y DOCX se procesan en local, en tu navegador, y no se envían a ningún servidor.' },
         { q: '¿Usa IA?', a: 'No. La puntuación es determinista y no usa LLM, ni llamadas a modelos, ni cuentas, ni claves de API.' },
         { q: '¿PDF o DOCX?', a: 'Valen los dos. Un PDF con texto real da la señal más clara sobre el número de páginas y la legibilidad.' },
+        { q: '¿Qué fiabilidad tiene la puntuación?', a: 'Estima lo bien que un analizador leerá tu documento. Es una heurística, no una predicción de la decisión de un reclutador ni del sistema de ninguna empresa, y no se ha validado con resultados de contratación. Otros verificadores dan números distintos al mismo archivo porque cada uno mide algo diferente.' },
+        { q: '¿Puede la puntuación tener sesgos?', a: 'No hay ningún modelo ni datos de entrenamiento, así que no existe un conjunto de datos que pueda estar sesgado. Aun así, las reglas contienen supuestos, como los encabezados de sección y las convenciones de CV que aceptan, y la revisión de estilo solo cubre CV en inglés y puede marcar textos bien escritos. No es un detector de IA. Nada se decide sobre ti: cada punto muestra la regla que lo origina y tú decides qué cambiar.' },
       ],
     },
     guides: { aria: 'Guías', heading: 'Guías' },
