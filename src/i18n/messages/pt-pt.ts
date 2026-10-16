@@ -113,6 +113,8 @@ export const ptPT: Messages = {
         { q: 'O meu CV é carregado para algum servidor?', a: 'Não. Os ficheiros PDF e DOCX são processados localmente no seu navegador e não são enviados para nenhum servidor.' },
         { q: 'Isto usa IA?', a: 'Não. A pontuação é determinística e não usa LLM, chamadas a modelos, contas nem chaves de API.' },
         { q: 'PDF ou DOCX?', a: 'Ambos funcionam. Os PDF com texto real dão o sinal mais claro sobre o número de páginas e a legibilidade.' },
+        { q: 'Qual é a fiabilidade da pontuação?', a: 'Estima até que ponto um analisador consegue ler o seu documento. É uma heurística, não uma previsão da decisão de um recrutador nem do sistema de qualquer empresa, e não foi validada com resultados de contratação. Outros verificadores atribuem números diferentes ao mesmo ficheiro porque cada um mede algo distinto.' },
+        { q: 'A pontuação pode ser enviesada?', a: 'Não existe modelo nem dados de treino, pelo que não há um conjunto de dados que possa ser enviesado. Ainda assim, as regras assentam em pressupostos, como os títulos de secção e as convenções de CV que aceitam, e a verificação de estilo cobre apenas CV em inglês e pode assinalar textos bem escritos. Não é um detetor de IA. Nada é decidido a seu respeito: cada ponto mostra a regra que o origina, e é a própria pessoa que decide o que alterar.' },
       ],
     },
     guides: { aria: 'Guias', heading: 'Guias' },

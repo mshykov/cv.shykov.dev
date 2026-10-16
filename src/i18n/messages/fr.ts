@@ -114,6 +114,8 @@ export const fr: Messages = {
         { q: 'Mon CV est-il envoyé quelque part ?', a: 'Non. Les fichiers PDF et DOCX sont traités localement dans votre navigateur et ne sont envoyés à aucun serveur.' },
         { q: 'Est-ce que cela utilise l’IA ?', a: 'Non. Le score est déterministe : aucun LLM, aucun appel à un modèle, ni compte ni clé d’API.' },
         { q: 'PDF ou DOCX ?', a: 'Les deux fonctionnent. Un PDF avec du vrai texte donne le signal le plus net sur le nombre de pages et la lisibilité.' },
+        { q: 'Quelle est la fiabilité du score ?', a: 'Il estime dans quelle mesure un analyseur lira votre document. C’est une heuristique, pas une prédiction de la décision d’un recruteur ni du système d’une entreprise, et il n’a pas été validé à partir de résultats d’embauche. D’autres outils donnent des notes différentes pour un même fichier, car chacun mesure autre chose.' },
+        { q: 'Le score peut-il être biaisé ?', a: 'Il n’y a ni modèle ni données d’entraînement, donc aucun jeu de données susceptible d’être biaisé. Les règles reposent toutefois sur des hypothèses, comme les intitulés de rubrique et les conventions de CV qu’elles acceptent, et la vérification du style ne couvre que les CV en anglais et peut signaler un texte bien écrit. Ce n’est pas un détecteur d’IA. Rien n’est décidé à votre sujet : chaque point montre la règle qui le produit, et c’est vous qui décidez quoi modifier.' },
       ],
     },
     guides: { aria: 'Guides', heading: 'Guides' },

@@ -124,6 +124,8 @@ export const en = {
         { q: 'Is my CV uploaded?', a: 'No. PDF and DOCX files are processed locally in your browser and are not sent to a server.' },
         { q: 'Does this use AI?', a: 'No. The score is deterministic and does not use LLMs, model calls, accounts, or API keys.' },
         { q: 'PDF or DOCX?', a: 'Both work. Text-based PDFs give the clearest page-count and parseability signal.' },
+        { q: 'How accurate is the score?', a: 'It estimates how well a parser will read your document. It is a heuristic, not a prediction of a recruiter’s decision or of any employer’s system, and it has not been validated against hiring outcomes. Other checkers give the same file different numbers because each one measures something different.' },
+        { q: 'Can the score be biased?', a: 'There is no model and no training data, so there is no dataset to be biased. The rules still carry assumptions, such as the section headings and CV conventions they accept, and the writing-style check covers English CVs only and can flag good writing. It is not an AI detector. Nothing is decided about you: each point shows the rule behind it, and you decide what to change.' },
       ],
     },
     guides: { aria: 'Guides', heading: 'Guides' },

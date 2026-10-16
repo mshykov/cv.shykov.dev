@@ -114,6 +114,8 @@ export const de: Messages = {
         { q: 'Wird mein Lebenslauf hochgeladen?', a: 'Nein. PDF- und DOCX-Dateien werden lokal in Ihrem Browser verarbeitet und nicht an einen Server gesendet.' },
         { q: 'Wird dabei KI eingesetzt?', a: 'Nein. Der Score ist deterministisch und nutzt weder LLMs noch Modellaufrufe, Konten oder API-Schlüssel.' },
         { q: 'PDF oder DOCX?', a: 'Beides funktioniert. Textbasierte PDFs liefern den klarsten Hinweis auf Seitenzahl und Lesbarkeit.' },
+        { q: 'Wie zuverlässig ist der Score?', a: 'Er schätzt, wie gut ein Parser Ihr Dokument lesen kann. Er ist eine Heuristik, keine Vorhersage der Entscheidung eines Recruiters oder des Systems eines bestimmten Arbeitgebers, und er wurde nicht an Einstellungsergebnissen validiert. Andere Checker geben für dieselbe Datei andere Zahlen aus, weil jeder etwas anderes misst.' },
+        { q: 'Kann der Score voreingenommen sein?', a: 'Es gibt weder ein Modell noch Trainingsdaten, also auch keinen Datensatz, der verzerrt sein könnte. Die Regeln enthalten dennoch Annahmen, etwa die akzeptierten Abschnittsüberschriften und Lebenslauf-Konventionen, und die Stilprüfung gilt nur für englische Lebensläufe und kann gut geschriebene Texte markieren. Sie ist kein KI-Detektor. Über Sie wird nichts entschieden: Jeder Punkt zeigt die Regel dahinter, und Sie entscheiden, was Sie ändern.' },
       ],
     },
     guides: { aria: 'Ratgeber', heading: 'Ratgeber' },
