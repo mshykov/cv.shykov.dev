@@ -139,7 +139,9 @@ Read this before you trust a number.
   outscore a scan with no extractable text; and natural wording must outscore
   boilerplate on the style score. It checks that the order is sensible. It does
   not show that the score predicts anything outside this tool.
-- Comparisons with other checkers on a single CV are anecdotes, not a study.
+- A cross-check of one CV against five other free checkers is recorded in
+  [docs/comparison-2026-10-16.md](docs/comparison-2026-10-16.md). It is an anecdote, not
+  a study, and it shows this tool scoring more leniently than the others.
 
 If the score is wrong for your CV, or you can break the order above, open a
 [Wrong score](https://github.com/mshykov/cv.shykov.dev/issues/new?template=wrong-score.md)

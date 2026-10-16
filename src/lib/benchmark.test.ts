@@ -110,3 +110,34 @@ test('the writing-style score separates natural wording from boilerplate', () =>
   const boilerplate = analyzeStyle(BOILERPLATE.join('\n'), BOILERPLATE)
   assert.ok(natural.score > boilerplate.score, `natural ${natural.score} vs boilerplate ${boilerplate.score}`)
 })
+
+// Expected behaviour that other checkers have and this one does not yet. Each is
+// a `todo` test: it runs and reports, but a failure does not fail the suite.
+// When the rule ships, delete `todo` so the test guards it from then on.
+// Found in the 2026-10-16 cross-check, see docs/comparison-2026-10-16.md.
+
+const flagged = (report: ReturnType<typeof analyze>, pattern: RegExp) =>
+  report.checks.some((c) => pattern.test(`${c.id} ${c.label}`) && c.status !== 'pass')
+
+test('flags a graduation year more than 15 years old (#106)', { todo: 'issue #106' }, () => {
+  const old = ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, 'EDUCATION', '• BSc Computer Science — Example University, 1998'])
+  const recent = ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, 'EDUCATION', '• BSc Computer Science — Example University, 2022'])
+  assert.ok(flagged(analyze(old), /graduat|education year/i), 'an old graduation year should be flagged')
+  assert.ok(!flagged(analyze(recent), /graduat|education year/i), 'a recent graduation year should not be')
+})
+
+test('flags a resume over ~1,000 words (#107)', { todo: 'issue #107' }, () => {
+  const filler = Array.from({ length: 140 }, (_, i) => `• Delivered project ${i + 1} with a team of ${(i % 7) + 3} engineers, cutting cycle time by ${(i % 40) + 5}% across two quarters and three regions`)
+  const long = ex([...CONTACT, ...SUMMARY, 'EXPERIENCE', 'Engineering Manager — Acme Jan 2020 – now', ...filler, ...SKILLS, ...EDUCATION])
+  assert.ok(flagged(analyze(long), /word|length/i), 'a very long CV should get a length warning')
+})
+
+test('flags a role that has a single bullet (#108)', { todo: 'issue #108' }, () => {
+  const thin = ex([
+    ...CONTACT, ...SUMMARY, 'EXPERIENCE',
+    'Engineering Manager — Acme Jan 2020 – now', '• Led a team of 8 engineers and cut costs by 30%',
+    'Senior Engineer — Beta Corp Jan 2016 – Dec 2019', '• Built things',
+    ...SKILLS, ...EDUCATION,
+  ])
+  assert.ok(flagged(analyze(thin), /single bullet|bullet balance|thin/i), 'a one-bullet role should be flagged')
+})
