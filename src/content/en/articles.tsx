@@ -229,8 +229,8 @@ export const ARTICLES: Article[] = [
         <Note>
           <strong>This site never receives the file.</strong> The{' '}
           <A href="/">free CV score checker</A> parses your PDF or DOCX in the browser with{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> and{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">pdf.js</code> and{' '}
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">mammoth</code>,
           scores it with fixed rules, and has no backend that could receive a file. It is MIT
           licensed, so the claim is checkable rather than promised.
         </Note>
@@ -316,7 +316,7 @@ export const ARTICLES: Article[] = [
 
         <H2>When DOCX is the right answer</H2>
         <Ul>
-          <Li><strong>The form says so.</strong> If the upload field lists <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code> only, that is the answer. Do not out-clever the form.</Li>
+          <Li><strong>The form says so.</strong> If the upload field lists <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">.doc/.docx</code> only, that is the answer. Do not out-clever the form.</Li>
           <Li><strong>A recruiter asked for it.</strong> Agencies often re-brand your CV onto their template, which needs an editable file.</Li>
           <Li><strong>The employer runs an older system.</strong> Rare now, but harmless to comply with.</Li>
         </Ul>
@@ -331,7 +331,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>No text inside images.</strong> A logo is fine; your job title rendered as a graphic is not.</Li>
           <Li><strong>No critical detail in the header or footer.</strong> Some parsers skip those regions. Put your email in the body.</Li>
           <Li><strong>Real bullet characters,</strong> not manually drawn dashes inside a table cell.</Li>
-          <Li><strong>A sensible filename</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>. A human sees it in a folder of hundreds.</Li>
+          <Li><strong>A sensible filename</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Firstname_Lastname_CV.pdf</code>. A human sees it in a folder of hundreds.</Li>
         </Ul>
 
         <Note>
@@ -516,7 +516,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
           <Li><strong>Job titles are recognisable.</strong> If your internal title is “Delivery Ninja”, put the industry-standard title alongside it.</Li>
           <Li><strong>The vocabulary of the job ad appears</strong> — but only where you have honestly earned it.</Li>
           <Li><strong>A skills section exists,</strong> as plain comma-separated text rather than a chart of skill bars.</Li>
-          <Li><strong>Your links are written out</strong> as visible text: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/you</code>. A parser reads text, not link targets.</Li>
+          <Li><strong>Your links are written out</strong> as visible text: <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">linkedin.com/in/you</code>. A parser reads text, not link targets.</Li>
           <Li><strong>No text lives inside an image or a text box.</strong></Li>
         </Ul>
 
@@ -526,7 +526,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
           <Li><strong>Impact carries a number.</strong> “Improved reliability” is a claim; “crash-free sessions from 96% to 99.5%” is evidence.</Li>
           <Li><strong>No stock phrasing.</strong> “Results-driven professional with a proven track record” tells a reader nothing.</Li>
           <Li><strong>Length matches your career.</strong> One page early on, two is normal after a decade. Three needs a reason.</Li>
-          <Li><strong>The filename is a name</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>, not <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_REAL.pdf</code>.</Li>
+          <Li><strong>The filename is a name</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Firstname_Lastname_CV.pdf</code>, not <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">cv_final_v3_REAL.pdf</code>.</Li>
         </Ul>
 
         <H2>Which of these a checker can verify for you</H2>

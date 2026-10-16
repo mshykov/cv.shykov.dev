@@ -55,28 +55,21 @@ export const ptBR: Messages = {
       githubAria: 'Código aberto no GitHub',
     },
     hero: {
-      badge: 'Análise de currículo 100% no navegador',
       h1: 'Verificador de currículo ATS grátis. Privado por padrão.',
       lead: 'Veja a pontuação ATS do seu currículo a partir de um PDF ou DOCX em segundos, comece pelas correções de maior impacto, compare palavras-chave e crie um currículo compatível com ATS, sem enviar arquivo, sem cadastro e sem chamadas a LLM.',
       check: 'Verificar meu currículo',
       build: 'Criar currículo para ATS',
-      runsInBrowser: 'Roda no seu navegador',
-      noUploads: 'Sem envio de arquivo',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF e DOCX',
-      openSource: 'Código aberto',
-    },
-    heroCard: {
-      localParse: 'no navegador',
-      noUpload: 'Sem envio',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Prévia da pontuação ATS local',
-      localParse: 'No navegador',
-      caption: 'Pontuação, principais correções, palavras-chave',
-      categories: ['Legibilidade', 'Seções', 'Conteúdo'],
+      privacy: {
+        aria: 'O que sai do seu navegador',
+        zero: 'bytes do seu currículo enviados a um servidor',
+        rows: [
+          { label: 'Envio de arquivo', value: 'Nenhum' },
+          { label: 'Conta', value: 'Nenhuma' },
+          { label: 'Chamadas a LLM', value: 'Nenhuma' },
+        ],
+        source: 'Código-fonte',
+        sourceValue: 'Aberto, MIT',
+      },
     },
     how: {
       aria: 'Como funciona o verificador de currículo ATS local',
@@ -85,9 +78,6 @@ export const ptBR: Messages = {
         { title: 'Leitura no navegador', body: 'A extração do texto e a pontuação rodam neste navegador.' },
         { title: 'Corrija os principais problemas', body: 'Veja pontuação, detalhamento, palavras-chave e notas para exportar.' },
       ],
-      noServerUpload: 'Nada é enviado a servidor',
-      deterministic: 'Verificações determinísticas, sem LLM',
-      openSourceMit: 'Código aberto, licença MIT',
     },
     loading: {
       score: 'Carregando a pontuação ATS…',
@@ -106,6 +96,7 @@ export const ptBR: Messages = {
     },
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de currículo ATS',
+      heading: 'Perguntas frequentes',
       items: [
         { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por sistemas, dados de contato, seções, datas, listas com marcadores e resultados mensuráveis.' },
         { q: 'Meu currículo é enviado para algum servidor?', a: 'Não. Os arquivos PDF e DOCX são processados localmente no seu navegador e não são enviados a nenhum servidor.' },

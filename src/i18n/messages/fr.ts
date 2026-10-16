@@ -58,28 +58,21 @@ export const fr: Messages = {
       githubAria: 'Code source ouvert sur GitHub',
     },
     hero: {
-      badge: 'Analyse du CV 100 % dans le navigateur',
       h1: 'Vérificateur de CV ATS gratuit : votre score, sans envoi du fichier',
       lead: 'Obtenez le score ATS de votre CV à partir d’un PDF ou d’un DOCX en quelques secondes, voyez d’abord les corrections les plus utiles, comparez les mots-clés d’une offre et créez un CV compatible ATS, sans envoi de fichier, sans compte et sans appel à une IA.',
       check: 'Analyser mon CV',
       build: 'Créer un CV compatible ATS',
-      runsInBrowser: 'Dans votre navigateur',
-      noUploads: 'Aucun envoi',
-      noLlm: 'Sans LLM',
-      pdfDocx: 'PDF et DOCX',
-      openSource: 'Code source ouvert',
-    },
-    heroCard: {
-      localParse: 'dans le navigateur',
-      noUpload: 'Sans envoi',
-      noLlm: 'Sans LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Aperçu du score ATS calculé en local',
-      localParse: 'Dans le navigateur',
-      caption: 'Score, corrections prioritaires, mots-clés',
-      categories: ['Lisibilité', 'Rubriques', 'Contenu'],
+      privacy: {
+        aria: 'Ce qui quitte votre navigateur',
+        zero: 'octets de votre CV envoyés à un serveur',
+        rows: [
+          { label: 'Envoi du fichier', value: 'Aucun' },
+          { label: 'Compte', value: 'Aucun' },
+          { label: 'Appels à un LLM', value: 'Aucun' },
+        ],
+        source: 'Code source',
+        sourceValue: 'Ouvert, MIT',
+      },
     },
     how: {
       aria: 'Comment fonctionne ce vérificateur de CV ATS local',
@@ -88,9 +81,6 @@ export const fr: Messages = {
         { title: 'Analyse dans le navigateur', body: 'L’extraction du texte et le calcul du score se font dans ce navigateur.' },
         { title: 'Corrigez l’essentiel', body: 'Consultez le score, le détail, les mots-clés et des notes exportables.' },
       ],
-      noServerUpload: 'Aucun envoi à un serveur',
-      deterministic: 'Vérifications déterministes, sans appel à une IA',
-      openSourceMit: 'Code source ouvert, licence MIT',
     },
     loading: {
       score: 'Chargement du score ATS rapide…',
@@ -109,6 +99,7 @@ export const fr: Messages = {
     },
     faq: {
       aria: 'Questions fréquentes sur le vérificateur de CV ATS',
+      heading: 'Questions fréquentes',
       items: [
         { q: 'Qu’est-ce qu’un score ATS ?', a: 'Une vérification heuristique rapide : texte lisible par un analyseur, coordonnées, rubriques, dates, puces et résultats chiffrés.' },
         { q: 'Mon CV est-il envoyé quelque part ?', a: 'Non. Les fichiers PDF et DOCX sont traités localement dans votre navigateur et ne sont envoyés à aucun serveur.' },

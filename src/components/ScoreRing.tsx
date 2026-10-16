@@ -1,25 +1,17 @@
-import { useId } from 'react'
 import type { Status } from '../lib/analyze'
 import { TONE } from './tone'
 import { useMessages } from '../i18n/context.ts'
 
-type ScoreRingProps = Readonly<{ score: number; tone: Status }>
+type ScoreRingProps = Readonly<{ score: number; tone: Status; compact?: boolean; className?: string }>
 
-export function ScoreRing({ score, tone }: ScoreRingProps) {
-  const titleId = useId()
+// Still called ScoreRing for the callers; it is a block now. The fill says the band
+// (neon good, outlined middling, ink low) and the number says the score.
+export function ScoreRing({ score, tone, compact = false, className = '' }: ScoreRingProps) {
   const { scoreRing } = useMessages()
-  const r = 52, c = 2 * Math.PI * r
   return (
-    <div className="relative grid place-items-center">
-      <svg width="132" height="132" viewBox="0 0 132 132" className="-rotate-90" aria-labelledby={titleId}>
-        <title id={titleId}>{scoreRing(score)}</title>
-        <circle cx="66" cy="66" r={r} fill="none" stroke="currentColor" strokeWidth="11" className="text-stone-200" />
-        <circle cx="66" cy="66" r={r} fill="none" stroke="currentColor" strokeWidth="11" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - score / 100)} className={TONE[tone].ring} style={{ transition: 'stroke-dashoffset 700ms ease' }} />
-      </svg>
-      <div className="absolute text-center">
-        <div className="text-4xl font-semibold tabular-nums text-stone-900">{score}</div>
-        <div className="text-xs font-medium tracking-wide text-stone-400">/ 100</div>
-      </div>
+    <div role="img" aria-label={scoreRing(score)} className={`flex items-end gap-1.5 px-5 pb-5 pt-6 ${TONE[tone].block} ${className}`}>
+      <span aria-hidden className={`font-bold leading-[0.78] tracking-[-0.07em] tabular-nums ${compact ? 'text-[4.5rem]' : 'text-[clamp(6rem,26vw,9rem)]'}`}>{score}</span>
+      <span aria-hidden className="pb-1 font-mono text-lg font-medium">/100</span>
     </div>
   )
 }

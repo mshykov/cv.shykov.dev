@@ -78,6 +78,9 @@ const cssHref = template.match(/<link rel="stylesheet"[^>]*href="([^"]+)"/)?.[1]
   ?? template.match(/href="(\/assets\/index-[^"]+\.css)"/)?.[1]
 if (!cssHref) throw new Error('prerender: could not find the built stylesheet in dist/index.html')
 
+// The font the page preloads (index.html), so a guide's first paint is in it too.
+const fontPreload = template.match(/<link rel="preload"[^>]*as="font"[^>]*>/)?.[0] ?? ''
+
 function guidePage(loc, meta, body) {
   const head = guideHead(loc.locale, loc.messages, meta, meta.alternates, meta.jsonLd)
   // No app script: a guide is prose, and the bundle would only slow it down.
@@ -90,7 +93,8 @@ ${head}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/logo.png" />
-    <meta name="theme-color" content="#4f46e5" />
+    <meta name="theme-color" content="#f4f4ef" />
+    ${fontPreload}
     <link rel="stylesheet" href="${cssHref}" />
   </head>
   <body>${body}</body>
@@ -112,17 +116,17 @@ function notFoundPage(loc) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${escapeAttr(nf.title)} | ${escapeAttr(loc.messages.brand)}</title>
     <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#4f46e5" />
+    <meta name="theme-color" content="#f4f4ef" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="${cssHref}" />
   </head>
   <body>
-    <div class="flex min-h-screen items-center justify-center bg-stone-50 px-5">
-      <div class="max-w-md text-center">
-        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-700">404</p>
-        <h1 class="mt-3 text-3xl font-semibold tracking-tight text-stone-950">${escapeAttr(nf.heading)}</h1>
-        <p class="mt-4 text-[15px] leading-7 text-stone-600">${escapeAttr(nf.body)}</p>
-        <a href="${homePath(loc.locale)}" class="mt-6 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">${escapeAttr(nf.cta)}</a>
+    <div class="flex min-h-screen items-center bg-paper px-5">
+      <div class="mx-auto w-full max-w-300 sm:px-3">
+        <p class="lab">404</p>
+        <h1 class="mt-4 max-w-[14em] text-[clamp(2.6rem,9vw,5.25rem)] font-bold leading-[1.04] tracking-[-0.045em]">${escapeAttr(nf.heading)}</h1>
+        <p class="mt-6 max-w-[32em] text-lg leading-relaxed text-ink-2">${escapeAttr(nf.body)}</p>
+        <a href="${homePath(loc.locale)}" class="btn mt-8">${escapeAttr(nf.cta)}</a>
       </div>
     </div>
   </body>
