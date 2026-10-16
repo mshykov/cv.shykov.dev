@@ -106,6 +106,45 @@ guidance, not a guarantee; real ATS platforms differ.
 PDF text extraction uses `pdf.js`. DOCX extraction uses `mammoth`.
 PDF export uses `@react-pdf/renderer`.
 
+## Limitations And Bias
+
+Read this before you trust a number.
+
+- **It estimates how well a parser will read a document.** It does not predict a
+  recruiter's decision, an interview, or what any employer's system does. Nothing
+  here has been validated against hiring outcomes, and no published ATS score is
+  standardized: other checkers give the same file different numbers because they
+  measure different things.
+- **There is no model and no training data**, so there is no dataset to be biased
+  in the machine-learning sense. That does not make the rules neutral. They encode
+  assumptions: the section headings the scorer accepts are a list per language
+  (`src/lib/sections.ts`), and the format checks (page count, dated history,
+  bullets) follow common Western CV conventions that differ in other countries and
+  in academic CVs.
+- **The writing-style score covers English CVs only** and is built from word lists
+  and sentence statistics. It can flag perfectly good writing, and habits that are
+  more common among non-native English writers can lower it. It is not an AI
+  detector and must not be used to judge who or what wrote a text.
+- **Where a human comes in.** The tool scores a file, never a person, and decides
+  nothing about anyone. Every point shows the rule behind it; the person decides
+  what to change. Nothing is sent to an employer.
+
+### What the evidence is, and what it is not
+
+- Every rule has unit tests (`src/lib/*.test.ts`), and the published rubric is
+  checked against the scoring code.
+- [`src/lib/benchmark.test.ts`](src/lib/benchmark.test.ts) is a small public
+  sanity benchmark on invented CVs: a complete CV must outscore the same CV with
+  sections removed, which must outscore one with no contact details, which must
+  outscore a scan with no extractable text; and natural wording must outscore
+  boilerplate on the style score. It checks that the order is sensible. It does
+  not show that the score predicts anything outside this tool.
+- Comparisons with other checkers on a single CV are anecdotes, not a study.
+
+If the score is wrong for your CV, or you can break the order above, open a
+[Wrong score](https://github.com/mshykov/cv.shykov.dev/issues/new?template=wrong-score.md)
+issue (do not attach your CV; paste the line involved).
+
 ## Writing Style Check
 
 A second, separate score for how the CV *reads*. It lives in `src/lib/style.ts`
