@@ -1,0 +1,112 @@
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import { analyze as analyzeWith } from './analyze.ts'
+import { analyzeStyle } from './style.ts'
+import type { Extracted } from './pdf.ts'
+import { en } from '../i18n/messages/en.ts'
+
+// A small, public sanity benchmark. It contains no real person's data: every CV
+// below is invented. It does not prove the score predicts hiring outcomes (it
+// cannot, and nothing here claims to). It checks the weaker property that the
+// score orders CVs the way a parser would experience them: a readable CV with
+// every section beats the same CV with parts removed, which beats one with no
+// extractable text. If a rule change breaks that order, this test fails.
+
+const analyze = (extracted: Extracted) => analyzeWith(extracted, en.analysis)
+
+function ex(lines: string[], over: Partial<Extracted> = {}): Extracted {
+  const text = lines.join('\n')
+  return { pieces: [], lines, text, numPages: 1, charCount: text.replace(/\s/g, '').length, source: 'pdf', ...over }
+}
+
+const CONTACT = [
+  'JANE DOE',
+  'jane@example.com · +1 555 123 4567 · linkedin.com/in/jane-doe',
+  'Berlin, Germany',
+]
+
+const SUMMARY = [
+  'SUMMARY',
+  'Engineering manager with ten years of experience leading cross-functional teams, shipping products at scale and running a steady delivery process across several organizations.',
+]
+
+const EXPERIENCE = [
+  'EXPERIENCE',
+  'Engineering Manager — Acme Jan 2020 – now',
+  '• Led a team of 8 engineers and cut infrastructure costs by 30%',
+  '• Shipped 5 products and grew revenue 2x',
+  '• Reduced API latency from 1s to 0.2s',
+]
+
+const SKILLS = ['SKILLS', 'Leadership, CI/CD, Hiring, Agile']
+const PROJECTS = ['PROJECTS', '• Widget — an internal tool used by 40 people']
+const CERTS = ['CERTIFICATIONS', '• AWS Certified, 2021']
+const EDUCATION = ['EDUCATION', '• BSc Computer Science — Example University, 2014']
+
+const FULL = [...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, ...PROJECTS, ...CERTS, ...EDUCATION]
+
+
+const NO_NUMBERS = [
+  ...CONTACT,
+  ...SUMMARY,
+  'EXPERIENCE',
+  'Engineering Manager — Acme Jan 2020 – now',
+  '• Led a team of engineers and reduced infrastructure costs',
+  '• Shipped several products and improved revenue',
+  '• Reduced API latency noticeably',
+  ...SKILLS,
+  ...PROJECTS,
+  ...CERTS,
+  ...EDUCATION,
+]
+
+const profiles: { name: string; ex: Extracted }[] = [
+  { name: 'complete, quantified CV', ex: ex(FULL) },
+  { name: 'complete CV without numbers in the bullets', ex: ex(NO_NUMBERS) },
+  { name: 'no skills, projects, certifications or education', ex: ex([...CONTACT, ...SUMMARY, ...EXPERIENCE]) },
+  { name: 'no contact details and only experience', ex: ex([...EXPERIENCE]) },
+  { name: 'scanned PDF with no extractable text', ex: ex([''], { charCount: 0 }) },
+]
+
+test('the score orders synthetic CVs from most to least parser-friendly', () => {
+  const scores = profiles.map((p) => ({ name: p.name, score: analyze(p.ex).score }))
+  for (let i = 1; i < scores.length; i++) {
+    assert.ok(
+      scores[i - 1].score > scores[i].score,
+      `expected "${scores[i - 1].name}" (${scores[i - 1].score}) to outscore "${scores[i].name}" (${scores[i].score})`,
+    )
+  }
+})
+
+test('a complete CV passes and a scanned PDF fails', () => {
+  assert.equal(analyze(profiles[0].ex).band.tone, 'pass')
+  assert.notEqual(analyze(profiles[4].ex).band.tone, 'pass')
+})
+
+test('the same CV scores the same on every run', () => {
+  const a = analyze(ex(FULL)).score
+  const b = analyze(ex(FULL)).score
+  assert.equal(a, b)
+})
+
+const NATURAL = [
+  'Led a team of 8 engineers across backend and mobile.',
+  'Cut release time 2.5x. Weekly releases became routine.',
+  'Introduced integration testing and bug count fell about 30%.',
+  'Ran the interview stages behind 7 hires.',
+  'Crash-free sessions rose from 96% to 99.5% over two quarters.',
+]
+
+const BOILERPLATE = [
+  'Results-driven professional with a proven track record of success.',
+  'Passionate about leveraging synergies to deliver best-in-class solutions.',
+  'Responsible for significantly improving various processes.',
+  'Responsible for managing numerous stakeholders and projects.',
+  'Responsible for utilizing cutting-edge tools in a fast-paced environment.',
+]
+
+test('the writing-style score separates natural wording from boilerplate', () => {
+  const natural = analyzeStyle(NATURAL.join('\n'), NATURAL)
+  const boilerplate = analyzeStyle(BOILERPLATE.join('\n'), BOILERPLATE)
+  assert.ok(natural.score > boilerplate.score, `natural ${natural.score} vs boilerplate ${boilerplate.score}`)
+})
