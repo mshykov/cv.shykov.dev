@@ -54,10 +54,10 @@ export const ptBR: Messages = {
       openSource: 'Código aberto',
     },
     hero: {
-      h1: 'Verificador de currículo ATS grátis. Privado por padrão.',
+      h1: 'Verificador de currículo ATS grátis\nPrivado por padrão',
       check: 'Verificar meu currículo',
       // Said right under the headline: where it runs, and three things it does not need.
-      runs: 'Roda no seu navegador.',
+      runs: 'Roda no seu navegador',
       facts: ['Sem cadastro', 'Sem IA', 'Sem envio a servidor'],
     },
     loading: {

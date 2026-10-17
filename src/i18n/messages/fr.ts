@@ -60,7 +60,7 @@ export const fr: Messages = {
       h1: 'Vérificateur de CV ATS gratuit : votre score, sans envoi du fichier',
       check: 'Analyser mon CV',
       // Said right under the headline: where it runs, and three things it does not need.
-      runs: 'Fonctionne dans votre navigateur.',
+      runs: 'Fonctionne dans votre navigateur',
       facts: ['Sans compte', 'Sans IA', 'Aucun envoi à un serveur'],
     },
     loading: {

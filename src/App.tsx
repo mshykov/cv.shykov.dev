@@ -24,11 +24,13 @@ const HOME_LINKS: LanguageLink[] = LOCALES.map((l) => ({ locale: l.code, href: h
 
 const TEXT_LINK = 'font-medium underline underline-offset-4 decoration-rule-2 hover:decoration-ink'
 
-// Headline steps: the shorter the sentence, the bigger it is set.
+// Headline steps: the shorter the sentence, the bigger it is set. On a laptop the size is
+// also capped by the height of the window, so the whole first screen stays in view.
 function headlineSize(h1: string): string {
-  if (h1.length <= 36) return 'text-[clamp(3.4rem,14.2vw,9.5rem)]'
-  if (h1.length <= 56) return 'text-[clamp(2.9rem,11.2vw,7.25rem)]'
-  return 'text-[clamp(2.4rem,8.4vw,5.5rem)]'
+  const length = h1.replaceAll('\n', ' ').length
+  if (length <= 36) return 'text-[clamp(3.4rem,14.2vw,9.5rem)] lg:text-[clamp(3rem,min(8vw,16vh),7rem)]'
+  if (length <= 56) return 'text-[clamp(2.9rem,11.2vw,7.25rem)] lg:text-[clamp(2.75rem,min(6.4vw,14vh),5.5rem)]'
+  return 'text-[clamp(2.4rem,8.4vw,5.5rem)] lg:text-[clamp(2.25rem,min(4.6vw,11vh),4.25rem)]'
 }
 
 function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
@@ -87,7 +89,7 @@ function Hero({ compact, busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
   const { home: { hero }, analyzer } = useMessages()
   return (
     <section
-      className={`flex flex-col justify-center pb-14 pt-8 ${compact ? '' : 'min-h-[calc(100svh-4rem)]'}`}
+      className={`flex flex-col justify-center gap-10 pb-12 pt-6 lg:gap-12 ${compact ? '' : 'min-h-[calc(100svh-4rem)]'}`}
       onDragOver={(e) => { e.preventDefault(); onDrag(true) }}
       onDragLeave={() => onDrag(false)}
       onDrop={(e) => {
@@ -97,24 +99,30 @@ function Hero({ compact, busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
         if (file) onDrop(file)
       }}
     >
-      <h1 className={`max-w-[10.5em] font-semibold sm:text-balance leading-[0.92] tracking-[-0.055em] ${headlineSize(hero.h1)}`}>{hero.h1}</h1>
-      <p className="mt-6 text-[clamp(1.5rem,3.4vw,2.5rem)] font-semibold leading-tight tracking-[-0.03em] sm:mt-10">{hero.runs}</p>
-      <ul className="facts mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[clamp(1.125rem,2.2vw,1.5rem)] font-medium leading-tight text-ink-2">
-        {hero.facts.map((fact) => <li key={fact}>{fact}</li>)}
-      </ul>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-end lg:gap-14">
+        <h1 className={`whitespace-pre-line text-balance font-semibold leading-[0.92] tracking-[-0.055em] ${headlineSize(hero.h1)}`}>{hero.h1}</h1>
+        <div>
+          <p className="text-[clamp(1.5rem,3.4vw,2.25rem)] font-semibold leading-tight tracking-[-0.03em]">{hero.runs}</p>
+          <ul className="facts mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[clamp(1.125rem,2.2vw,1.375rem)] font-medium leading-tight text-ink-2 lg:flex-col lg:gap-y-2">
+            {hero.facts.map((fact) => <li key={fact}>{fact}</li>)}
+          </ul>
+        </div>
+      </div>
       <button
         type="button"
         data-drag={drag}
         onClick={onBrowse}
         onPointerEnter={loadAnalyzer}
         onFocus={loadAnalyzer}
-        className="dropzone mt-10 sm:mt-14"
+        className="dropzone"
       >
-        <svg className="size-10 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" aria-hidden>
-          <path d="M12 16V4M7 9l5-5 5 5M4 15v5h16v-5" />
-        </svg>
-        <span className="text-[clamp(1.375rem,3vw,2rem)] font-semibold leading-tight tracking-[-0.03em]">{busy ? analyzer.dropBusy : analyzer.dropIdle}</span>
-        <span className="mt-1 inline-flex min-h-12 items-center bg-ink px-6 text-base font-semibold text-paper">{analyzer.chooseButton}</span>
+        <span className="flex flex-col items-center gap-3 lg:flex-row lg:gap-5">
+          <svg className="size-10 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" aria-hidden>
+            <path d="M12 16V4M7 9l5-5 5 5M4 15v5h16v-5" />
+          </svg>
+          <span className="dz-label text-[clamp(1.375rem,3vw,2rem)] font-semibold leading-tight tracking-[-0.03em]">{busy ? analyzer.dropBusy : analyzer.dropIdle}</span>
+        </span>
+        <span className="inline-flex min-h-12 shrink-0 items-center bg-ink px-6 text-base font-semibold text-paper">{analyzer.chooseButton}</span>
       </button>
     </section>
   )

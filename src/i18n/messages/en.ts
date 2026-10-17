@@ -67,10 +67,10 @@ export const en = {
       openSource: 'Open source',
     },
     hero: {
-      h1: 'Free CV ATS score checker. Private by default.',
+      h1: 'Free CV ATS score checker\nPrivate by default',
       check: 'Check my resume',
       // Said right under the headline: where it runs, and three things it does not need.
-      runs: 'Runs in your browser.',
+      runs: 'Runs in your browser',
       facts: ['No account', 'No AI', 'No upload to server'],
     },
     loading: {

@@ -57,10 +57,10 @@ export const de: Messages = {
       openSource: 'Open Source',
     },
     hero: {
-      h1: 'Lebenslauf ATS Check kostenlos. Privat im Browser.',
+      h1: 'Lebenslauf ATS Check kostenlos\nPrivat im Browser',
       check: 'Lebenslauf prüfen',
       // Said right under the headline: where it runs, and three things it does not need.
-      runs: 'Läuft in Ihrem Browser.',
+      runs: 'Läuft in Ihrem Browser',
       facts: ['Kein Konto', 'Keine KI', 'Kein Upload auf einen Server'],
     },
     loading: {

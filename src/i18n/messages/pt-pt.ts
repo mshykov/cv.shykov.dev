@@ -56,10 +56,10 @@ export const ptPT: Messages = {
       openSource: 'Código aberto',
     },
     hero: {
-      h1: 'Verificador de CV ATS gratuito. Privado por defeito.',
+      h1: 'Verificador de CV ATS gratuito\nPrivado por defeito',
       check: 'Verificar o meu CV',
       // Said right under the headline: where it runs, and three things it does not need.
-      runs: 'Funciona no navegador.',
+      runs: 'Funciona no navegador',
       facts: ['Sem conta', 'Sem IA', 'Sem envio para servidores'],
     },
     loading: {

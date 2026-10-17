@@ -23,8 +23,8 @@ drift back to the default SaaS template or grow the page again.
 |---|---|---|
 | First screen | wordmark, "Build a CV" link, language | no nav bar, no buttons row |
 | | H1, set huge | the sentence is the design (`messages.home.hero.h1`, unchanged: it carries the local search terms) |
-| | "Runs in your browser." set large, then "No account · No AI · No upload to server" with a neon square before each | the privacy claim, said plainly (a struck-through version was tried and dropped: it had to be decoded) |
-| | **the upload field**: dashed box, upload icon, "Drop a PDF or DOCX here", solid "Choose file" button | looks like every upload field on purpose; no explanatory line. The whole hero accepts a dropped file |
+| | "Runs in your browser" set large, then "No account · No AI · No upload to server" with a neon square before each | the privacy claim, said plainly (a struck-through version was tried and dropped: it had to be decoded) |
+| | **the upload field**: dashed, rounded box (full width, one row on a laptop), upload icon, "Drop a PDF or DOCX here" underlined in neon (filled on hover/drag), solid "Choose file" button | looks like every upload field on purpose; no explanatory line. The whole hero accepts a dropped file |
 | After a CV is dropped | score (huge), band, file name · pages · words | the report scrolls into view |
 | | top 3 fixes, "↓ Report", "Analyze another CV" | |
 | | **closed** disclosure "Full report and details" | all checks, writing style, job match, extracted data live here |
@@ -45,6 +45,14 @@ stay boxed), the live preview on the right. The section hints and the intro para
 document settings (accent, size, spacing, page, template) are a closed disclosure under the
 preview. The exported PDF template (`ResumeDoc`) is unchanged.
 
+## First screen on a laptop
+
+The first screen (header, H1, the three facts, the upload field) fits one window from 1280×680
+up: the H1 is capped by the window height as well as its width (`headlineSize`, `min(vw, vh)`),
+the facts sit to the right of the headline from 1024 px, and the upload field is a shallow
+single row. Check it in 1440×800 and 1280×680 before changing spacing. Headlines have no full
+stops: the two clauses are two lines (`\n` in the message, `white-space: pre-line`).
+
 ## Rules
 
 - **Tokens only.** `src/index.css` `@theme` turns the default Tailwind palette, radii and
@@ -53,7 +61,8 @@ preview. The exported PDF template (`ResumeDoc`) is unchanged.
 - **One neon** (`neon`, `#ccff00`), used as a *fill behind ink*, never as text: the facts' bullets, lost points ("−10"), "warn" marks, missing keywords, the bar under a good score.
   It means "look here". Everything else is ink on paper.
 - **Hairlines, not cards.** Rows between 1 px rules (`border-rule`), a 2 px ink rule above
-  a list. No card inside a card, no shadows, no radius. Buttons and inputs are square.
+  a list. No card inside a card, no shadows. Square corners everywhere except **one**: the
+  upload field (`--radius-field`, 1.25 rem), because it has to read as a drop target.
 - **Status without hue.** `StatusMark` + `TONE`: pass = outlined ink square with a check, warn =
   neon square with `!`, fail = solid ink square with a cross. No red/amber/green.
 - **One primary action.** The upload field. Secondary actions are underlined text (`.alt`) or

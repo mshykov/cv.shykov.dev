@@ -1,5 +1,6 @@
 // Language switcher. Plain links inside <details>, so it works in the prerendered
 // HTML with no JavaScript and every language stays one crawlable click away.
+import { useEffect, useRef } from 'react'
 import { LOCALES, type Locale } from '../i18n/locales.ts'
 
 export interface LanguageLink {
@@ -13,8 +14,28 @@ const nameOf = (code: Locale) => LOCALES.find((l) => l.code === code)
 
 export function LanguageSwitcher({ current, links, label }: Props) {
   const here = nameOf(current)
+  const menu = useRef<HTMLDetailsElement>(null)
+
+  // A click outside the menu, or Escape, closes it. Where no script runs (the guide pages)
+  // it is still a plain <details> that opens and closes on its own summary.
+  useEffect(() => {
+    const close = (e: Event) => {
+      const el = menu.current
+      if (el?.open && !(e instanceof PointerEvent && el.contains(e.target as Node))) el.open = false
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close(e)
+    }
+    document.addEventListener('pointerdown', close)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', close)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [])
+
   return (
-    <details className="group relative">
+    <details ref={menu} className="group relative">
       <summary
         aria-label={label}
         title={here?.nativeName}
