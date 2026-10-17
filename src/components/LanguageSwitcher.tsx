@@ -18,7 +18,7 @@ export function LanguageSwitcher({ current, links, label }: Props) {
       <summary
         aria-label={label}
         title={here?.nativeName}
-        className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 px-3 font-mono text-sm font-medium uppercase text-ink-2 transition-colors hover:text-ink group-open:text-ink [&::-webkit-details-marker]:hidden"
+        className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 px-2 font-mono sm:px-3 text-sm font-medium uppercase text-ink-2 transition-colors hover:text-ink group-open:text-ink [&::-webkit-details-marker]:hidden"
       >
         {current}
         <svg className="h-3 w-3 transition-transform group-open:rotate-180" aria-hidden viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8">
