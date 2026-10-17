@@ -221,7 +221,7 @@ export default function Builder() {
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(28rem,0.95fr)]">
         {/* FORM */}
         <div className="space-y-5">
-          <fieldset className="border-t border-rule pt-5">
+          <fieldset className="border-t border-rule pt-5 first:border-t-0 first:pt-0">
             <SectionTitle title={b.profile.title} />
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label={b.profile.fullName} value={state.profile.name} onChange={(v) => setProfile('name', v)} />
@@ -233,7 +233,7 @@ export default function Builder() {
             <div className="mt-3"><Field label={b.profile.summary} value={state.profile.summary} onChange={(v) => setProfile('summary', v)} area /></div>
           </fieldset>
 
-          <fieldset className="border-t border-rule pt-5">
+          <fieldset className="border-t border-rule pt-5 first:border-t-0 first:pt-0">
             <SectionTitle title={b.experience.title} action={<AddButton onClick={addExp}>{b.experience.add}</AddButton>} />
             <div className="space-y-4">
               {state.experience.map((e, i) => (
@@ -255,12 +255,12 @@ export default function Builder() {
             </div>
           </fieldset>
 
-          <fieldset className="border-t border-rule pt-5">
+          <fieldset className="border-t border-rule pt-5 first:border-t-0 first:pt-0">
             <SectionTitle title={b.skills.title} />
             <Field label={b.skills.field} value={skillsText} onChange={setSkillsText} area />
           </fieldset>
 
-          <fieldset className="border-t border-rule pt-5">
+          <fieldset className="border-t border-rule pt-5 first:border-t-0 first:pt-0">
             <SectionTitle title={b.projects.title} action={<AddButton onClick={addProj}>{b.projects.add}</AddButton>} />
             <div className="space-y-3">
               {state.projects.map((p, i) => (
@@ -274,7 +274,7 @@ export default function Builder() {
             </div>
           </fieldset>
 
-          <fieldset className="border-t border-rule pt-5">
+          <fieldset className="border-t border-rule pt-5 first:border-t-0 first:pt-0">
             <SectionTitle title={b.education.title} action={<AddButton onClick={addEdu}>{b.education.add}</AddButton>} />
             <div className="space-y-3">
               {state.education.map((e, i) => (
