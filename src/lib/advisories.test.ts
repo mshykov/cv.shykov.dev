@@ -9,11 +9,11 @@ function ex(lines: string[]): Extracted {
   const text = lines.join('\n')
   return { pieces: [], lines, text, numPages: 2, charCount: text.replace(/\s/g, '').length, source: 'pdf' }
 }
-const advise = (lines: string[]) => {
+const advise = (lines: string[], locale = 'en') => {
   const e = ex(lines)
-  return getAdvisories(e, parseResume(e), en.analysis.advisories)
+  return getAdvisories(e, parseResume(e), en.analysis.advisories, { locale, now: 2026 })
 }
-const ids = (lines: string[]) => advise(lines).map((a) => a.id)
+const ids = (lines: string[], locale = 'en') => advise(lines, locale).map((a) => a.id)
 
 const HEAD = ['JANE DOE', 'jane@example.com · +1 555 123 4567', 'SUMMARY', 'Engineering manager with ten years of experience leading teams.']
 const GOOD_ROLES = [
@@ -67,4 +67,33 @@ test('advisories never change the score', async () => {
   const { analyze } = await import('./analyze.ts')
   const e = ex([...HEAD, ...GOOD_ROLES])
   assert.equal(analyze(e, en.analysis).score, analyze(ex([...HEAD, ...GOOD_ROLES]), en.analysis).score)
+})
+
+const withEducation = (...edu: string[]) => [...HEAD, ...GOOD_ROLES, 'EDUCATION', ...edu]
+
+test('an old graduation year is flagged, in English only', () => {
+  const old = withEducation('• BSc Computer Science — Example University, 1998')
+  assert.ok(ids(old).includes('graduation-year'))
+  for (const locale of ['es', 'pt-br', 'pt-pt', 'fr', 'de']) {
+    assert.ok(!ids(old, locale).includes('graduation-year'), `no graduation advice in ${locale}`)
+  }
+})
+
+test('a recent, ongoing or missing graduation year is not flagged', () => {
+  assert.ok(!ids(withEducation('• BSc Computer Science — Example University, 2022')).includes('graduation-year'))
+  assert.ok(!ids(withEducation('MSc Data Science — Example University 2024 – now')).includes('graduation-year'))
+  assert.ok(!ids(withEducation('• BSc Computer Science — Example University')).includes('graduation-year'))
+})
+
+test('the latest year of a range decides, and a date on its own line counts', () => {
+  assert.ok(ids(withEducation('Example University — BSc Computer Science 2004 - 2008')).includes('graduation-year'))
+  assert.ok(ids(withEducation('Master’s in Metrology — Example University', '2008 – 2010')).includes('graduation-year'))
+  assert.ok(!ids(withEducation('Example University — BSc 2004 - 2018')).includes('graduation-year'))
+})
+
+test('a graduation-year advisory never changes the score', async () => {
+  const { analyze } = await import('./analyze.ts')
+  const withOld = analyze(ex(withEducation('• BSc Computer Science — Example University, 1998')), en.analysis).score
+  const withNew = analyze(ex(withEducation('• BSc Computer Science — Example University, 2022')), en.analysis).score
+  assert.equal(withOld, withNew)
 })
