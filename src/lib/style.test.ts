@@ -109,16 +109,27 @@ test('score is bounded and never negative', () => {
   assert.ok(r.score <= 100, `score above 100: ${r.score}`)
 })
 
-test('short input does not produce confident verdicts', () => {
+test('tiny input is reported as insufficient, not scored', () => {
   const r = run(['Engineering manager.'])
+  assert.equal(r.insufficient, true)
+  assert.equal(r.signals.length, 0)
+})
+
+test('short but real input does not produce confident verdicts', () => {
+  const r = run([
+    'Engineering manager with ten years of experience leading product teams.',
+    'Now looking for the next role in Lisbon or working remotely.',
+  ])
+  assert.equal(r.insufficient, false)
   for (const id of ['rhythm', 'passive', 'vocabulary']) {
-    assert.equal(signal(r, id).level, 'ok', `${id} should stay neutral on tiny input`)
+    assert.equal(signal(r, id).level, 'ok', `${id} should stay neutral on short input`)
   }
 })
 
 test('empty input is handled without throwing', () => {
   const r = analyzeStyle('', [])
   assert.equal(r.meta.words, 0)
+  assert.equal(r.insufficient, true, 'empty text must not read as a perfect 100')
   assert.ok(r.score >= 0, `score below 0: ${r.score}`)
   assert.ok(r.score <= 100, `score above 100: ${r.score}`)
 })
@@ -202,4 +213,33 @@ test('em-dash separators in role headings are not counted as writing tics', () =
     'Rebuilt the release process so weekly releases became routine for the team.',
   ])
   assert.equal(signal(r, 'punctuation').level, 'ok')
+})
+
+// A date makes a line a heading only when it is not a bullet and not a sentence.
+// Otherwise adding "in 2025" to a weak line used to take it out of the checks.
+const VAGUE_LINES = Array.from({ length: 5 }, () => 'Responsible for managing various projects.')
+
+test('a date in a sentence does not take it out of the checks', () => {
+  const plain = run(VAGUE_LINES)
+  const dated = run(VAGUE_LINES.map((l) => l.replace('.', ' in 2025.')))
+  assert.equal(signal(dated, 'vague').level, signal(plain, 'vague').level, 'a year is not a figure')
+  assert.equal(signal(dated, 'openers').level, signal(plain, 'openers').level, 'dated sentences still count as openers')
+  assert.ok(dated.score <= plain.score, `adding a date raised the score from ${plain.score} to ${dated.score}`)
+})
+
+test('a dated bullet stays in the checks', () => {
+  const bullets = Array.from({ length: 5 }, () => '• Responsible for managing various projects in 2025')
+  assert.equal(signal(run(bullets), 'openers').level, 'major')
+})
+
+test('a dated role heading is still left out of the checks', () => {
+  const r = run([
+    'QA Engineer — MacPaw Jul 2019 – Mar 2020',
+    'QA Engineer — Acme Apr 2020 – Mar 2021',
+    'QA Engineer — Beta Apr 2021 – Mar 2022',
+    'QA Engineer — Gamma Apr 2022 – now',
+    'Led a team of 8 engineers and cut release time by 30% across two quarters.',
+    'Introduced integration testing and bug count fell about 30%.',
+  ])
+  assert.equal(signal(r, 'openers').level, 'ok', 'role headings must not read as repeated openers')
 })

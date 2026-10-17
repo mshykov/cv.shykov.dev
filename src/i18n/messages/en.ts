@@ -173,6 +173,7 @@ export const en = {
     stages: { loading: 'loading modules', extracting: 'extracting text', analyzing: 'analyzing', parsing: 'parsing', style: 'checking style' },
     copyDetails: 'Copy details',
     scoreHeading: 'Fast ATS score',
+    estimateNote: 'An estimate of how well a parser will read this file, not a prediction of a hiring decision.',
     topFixes: 'Top fixes',
     downloadReport: '↓ Report',
     noPriorityFixes: 'No priority fixes found. The remaining report is mostly confirmation.',
@@ -187,6 +188,7 @@ export const en = {
       all: 'All writing checks →',
     },
     style: {
+      tooShort: 'There is not enough text to judge the writing style.',
       counts: (sentences: number, words: number) => `${sentences} sentences, ${words} words`,
       intro: 'Deterministic writing checks, run on your device.',
       notDetector: 'This is not an AI detector',

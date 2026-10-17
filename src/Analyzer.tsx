@@ -207,6 +207,8 @@ export default function Analyzer() {
   const [style, setStyle] = useState<StyleReport | null>(null)
   // The CV was not written in English, so the English-only style checks stay out of it.
   const [styleSkipped, setStyleSkipped] = useState(false)
+  // The CV has too little text for the style checks to say anything (an empty report would read 100).
+  const [styleTooShort, setStyleTooShort] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   // Nothing blocks a second upload while the first is still parsing - the
   // dropzone stays droppable and `busy` only swaps a caption. Two runs then
@@ -217,7 +219,7 @@ export default function Analyzer() {
 
   const run = useCallback(async (file: File) => {
     const id = (runId.current += 1)
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false)
+    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false); setStyleTooShort(false)
     if (!isSupportedDocument(file)) { setError(analyzer.chooseFile); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
     let stage: Stage = 'loading'
@@ -236,9 +238,11 @@ export default function Analyzer() {
       // passive voice. On a Spanish or German CV they would measure nothing.
       const language = detectLanguage(ex.text)
       const skip = language !== 'en' && language !== 'unknown'
-      const sty = skip ? null : analyzeStyle(ex.text, ex.lines)
+      const analysed = skip ? null : analyzeStyle(ex.text, ex.lines)
+      const tooShort = analysed?.insufficient === true
+      const sty = tooShort ? null : analysed
       if (runId.current !== id) return
-      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip)
+      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort)
     } catch (e) {
       if (runId.current !== id) return
       const err = e instanceof Error ? e : new Error(String(e))
@@ -354,6 +358,7 @@ export default function Analyzer() {
                     </div>
                     <h2 className="mt-3 text-xl font-semibold tracking-tight text-stone-900">{analyzer.scoreHeading}</h2>
                     <p className="mt-1 text-sm text-stone-500">{reportMetaSummary(m, report)}</p>
+                    <p className="mt-1 text-xs text-stone-500">{analyzer.estimateNote}</p>
                   </div>
                 </div>
                 <div className="mt-4"><CategoryBreakdown report={report} /></div>
@@ -399,6 +404,10 @@ export default function Analyzer() {
 
           {tab === 'style' && !style && styleSkipped && (
             <div className="rounded-2xl bg-white p-5 text-sm text-stone-600 shadow-sm ring-1 ring-stone-200">{analyzer.style.englishOnly}</div>
+          )}
+
+          {tab === 'style' && !style && styleTooShort && (
+            <div className="rounded-2xl bg-white p-5 text-sm text-stone-600 shadow-sm ring-1 ring-stone-200">{analyzer.style.tooShort}</div>
           )}
 
           {tab === 'style' && style && (

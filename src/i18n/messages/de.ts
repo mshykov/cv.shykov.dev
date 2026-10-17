@@ -161,6 +161,7 @@ export const de: Messages = {
     stages: { loading: 'beim Laden der Module', extracting: 'beim Extrahieren des Texts', analyzing: 'bei der Analyse', parsing: 'beim Auslesen der Daten', style: 'bei der Stilprüfung' },
     copyDetails: 'Details kopieren',
     scoreHeading: 'Schneller ATS-Score',
+    estimateNote: 'Eine Schätzung, wie gut ein Parser diese Datei lesen kann, keine Vorhersage einer Einstellungsentscheidung.',
     topFixes: 'Wichtigste Korrekturen',
     downloadReport: '↓ Bericht',
     noPriorityFixes: 'Keine vorrangigen Korrekturen gefunden. Der restliche Bericht ist überwiegend Bestätigung.',
@@ -175,6 +176,7 @@ export const de: Messages = {
       all: 'Alle Stilprüfungen →',
     },
     style: {
+      tooShort: 'Es gibt nicht genug Text, um den Schreibstil zu beurteilen.',
       counts: (sentences: number, words: number) => `${sentences} Sätze, ${words} Wörter`,
       intro: 'Deterministische Stilprüfungen, ausgeführt auf Ihrem Gerät.',
       notDetector: 'Das ist kein KI-Detektor',
