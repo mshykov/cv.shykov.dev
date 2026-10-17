@@ -19,7 +19,7 @@ type BuilderUiState = Omit<BuilderState, 'experience' | 'education' | 'projects'
   projects: WithUiId<ProjectEntry>[]
 }
 type FieldProps = Readonly<{ label: string; value: string; onChange: (v: string) => void; area?: boolean; placeholder?: string; type?: string; autoComplete?: string }>
-type SectionTitleProps = Readonly<{ title: string; hint?: string; action?: React.ReactNode }>
+type SectionTitleProps = Readonly<{ title: string; action?: React.ReactNode }>
 type IconButtonProps = Readonly<{ label: string; onClick: () => void; disabled?: boolean; children: React.ReactNode }>
 type AddButtonProps = Readonly<{ onClick: () => void; children: React.ReactNode }>
 type SettingGroupProps = Readonly<{ label: string; children: React.ReactNode }>
@@ -42,26 +42,25 @@ const stripUiIds = (state: BuilderUiState): BuilderState => ({
 })
 
 function Field({ label, value, onChange, area, placeholder, type = 'text', autoComplete }: FieldProps) {
-  const cls = 'field mt-1.5'
+  const cls = area ? 'field mt-1.5 resize-y' : 'field-line mt-1'
   return (
     <label className="block">
-      <span className="text-sm font-semibold text-ink-2">{label}</span>
+      <span className="text-sm text-ink-2">{label}</span>
       {area
-        ? <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} placeholder={placeholder} className={cls + ' resize-y'} />
+        ? <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} placeholder={placeholder} className={cls} />
         : <input type={type} autoComplete={autoComplete} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className={cls} />}
     </label>
   )
 }
 
-function SectionTitle({ title, hint, action }: SectionTitleProps) {
+function SectionTitle({ title, action }: SectionTitleProps) {
   return (
-    <>
-      <legend className="float-left w-full text-xl font-bold tracking-tight">{title}</legend>
-      <div className="clear-both mb-4 mt-1 flex items-start justify-between gap-3">
-        {hint ? <p className="text-ink-2">{hint}</p> : <span />}
+    <legend className="float-left mb-5 w-full">
+      <span className="flex items-center justify-between gap-3">
+        <span className="text-xl font-semibold tracking-[-0.02em]">{title}</span>
         {action}
-      </div>
-    </>
+      </span>
+    </legend>
   )
 }
 
@@ -190,20 +189,20 @@ export default function Builder() {
 
   return (
     <div>
-      <p className="mb-5 max-w-[42em] text-ink-2">{b.intro}</p>
+      <h1 className="max-w-[12em] text-balance text-[clamp(2.25rem,8vw,6rem)] font-semibold leading-[0.95] tracking-[-0.055em]">{b.heading}</h1>
 
       {/* toolbar */}
-      <div className="sticky top-0 z-10 mb-6 flex flex-wrap items-center gap-3 border-y border-ink bg-paper py-3">
+      <div className="sticky top-0 z-10 mb-10 mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-rule bg-paper py-3">
         <div className="flex items-center gap-3">
-          <div className={`grid h-12 min-w-12 place-items-center px-2 text-2xl font-bold tabular-nums ${TONE[score.band.tone].block}`}>{score.score}</div>
+          <div className={`grid h-12 min-w-12 place-items-center px-2 text-2xl font-semibold tabular-nums ${TONE[score.band.tone].block}`}>{score.score}</div>
           <div>
             <div className="lab">{b.liveScore}</div>
             <div className="text-sm font-semibold">{score.band.label}</div>
           </div>
         </div>
-        <div className="ml-auto flex flex-wrap items-center gap-2">
-          <button type="button" onClick={() => importRef.current?.click()} className="btn-sm">{b.importCv}</button>
-          <button type="button" onClick={exportPdf} disabled={busy} className="btn-sm border-ink bg-ink text-paper hover:bg-neon hover:text-on-neon">{busy ? b.working : b.exportPdf}</button>
+        <div className="ml-auto flex flex-wrap items-center gap-x-6 gap-y-2">
+          <button type="button" onClick={() => importRef.current?.click()} className="alt">{b.importCv}</button>
+          <button type="button" onClick={exportPdf} disabled={busy} className="btn !min-h-12 disabled:cursor-not-allowed disabled:opacity-40">{busy ? b.working : b.exportPdf}</button>
           <input
             ref={importRef}
             type="file"
@@ -222,8 +221,8 @@ export default function Builder() {
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(28rem,0.95fr)]">
         {/* FORM */}
         <div className="space-y-5">
-          <fieldset className="border-t-2 border-ink pt-5">
-            <SectionTitle title={b.profile.title} hint={b.profile.hint} />
+          <fieldset className="border-t border-rule pt-5">
+            <SectionTitle title={b.profile.title} />
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label={b.profile.fullName} value={state.profile.name} onChange={(v) => setProfile('name', v)} />
               <Field label={b.profile.email} value={state.profile.email} onChange={(v) => setProfile('email', v)} type="email" autoComplete="email" />
@@ -234,11 +233,11 @@ export default function Builder() {
             <div className="mt-3"><Field label={b.profile.summary} value={state.profile.summary} onChange={(v) => setProfile('summary', v)} area /></div>
           </fieldset>
 
-          <fieldset className="border-t-2 border-ink pt-5">
-            <SectionTitle title={b.experience.title} hint={b.experience.hint} action={<AddButton onClick={addExp}>{b.experience.add}</AddButton>} />
+          <fieldset className="border-t border-rule pt-5">
+            <SectionTitle title={b.experience.title} action={<AddButton onClick={addExp}>{b.experience.add}</AddButton>} />
             <div className="space-y-4">
               {state.experience.map((e, i) => (
-                <div key={e.uiId} className="border border-rule p-4">
+                <div key={e.uiId} className="clear-both border-t border-rule pt-4">
                   <div className="mb-3 flex items-center justify-end gap-2">
                     <IconButton label={b.experience.moveUp} onClick={() => moveExp(i, -1)} disabled={i === 0}>↑</IconButton>
                     <IconButton label={b.experience.moveDown} onClick={() => moveExp(i, 1)} disabled={i === state.experience.length - 1}>↓</IconButton>
@@ -256,16 +255,16 @@ export default function Builder() {
             </div>
           </fieldset>
 
-          <fieldset className="border-t-2 border-ink pt-5">
-            <SectionTitle title={b.skills.title} hint={b.skills.hint} />
+          <fieldset className="border-t border-rule pt-5">
+            <SectionTitle title={b.skills.title} />
             <Field label={b.skills.field} value={skillsText} onChange={setSkillsText} area />
           </fieldset>
 
-          <fieldset className="border-t-2 border-ink pt-5">
-            <SectionTitle title={b.projects.title} hint={b.projects.hint} action={<AddButton onClick={addProj}>{b.projects.add}</AddButton>} />
+          <fieldset className="border-t border-rule pt-5">
+            <SectionTitle title={b.projects.title} action={<AddButton onClick={addProj}>{b.projects.add}</AddButton>} />
             <div className="space-y-3">
               {state.projects.map((p, i) => (
-                <div key={p.uiId} className="border border-rule p-4">
+                <div key={p.uiId} className="clear-both border-t border-rule pt-4">
                   <div className="mb-2 flex justify-end"><IconButton label={b.projects.delete} onClick={() => delProj(i)}>×</IconButton></div>
                   <Field label={b.projects.name} value={p.name} onChange={(v) => setProj(i, { name: v })} />
                   <div className="mt-2"><Field label={b.projects.description} value={p.description} onChange={(v) => setProj(i, { description: v })} /></div>
@@ -275,11 +274,11 @@ export default function Builder() {
             </div>
           </fieldset>
 
-          <fieldset className="border-t-2 border-ink pt-5">
-            <SectionTitle title={b.education.title} hint={b.education.hint} action={<AddButton onClick={addEdu}>{b.education.add}</AddButton>} />
+          <fieldset className="border-t border-rule pt-5">
+            <SectionTitle title={b.education.title} action={<AddButton onClick={addEdu}>{b.education.add}</AddButton>} />
             <div className="space-y-3">
               {state.education.map((e, i) => (
-                <div key={e.uiId} className="border border-rule p-4">
+                <div key={e.uiId} className="clear-both border-t border-rule pt-4">
                   <div className="mb-2 flex justify-end"><IconButton label={b.education.delete} onClick={() => delEdu(i)}>×</IconButton></div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <Field label={b.education.degree} value={e.degree} onChange={(v) => setEdu(i, { degree: v })} />
@@ -295,14 +294,39 @@ export default function Builder() {
 
         {/* LIVE PREVIEW */}
         <div className="xl:sticky xl:top-24 xl:self-start">
-          <div className="mb-4 border-t-2 border-ink pt-5">
-            <div className="mb-5 flex items-center justify-between gap-3">
-              <div>
-                <h2 className="text-xl font-bold tracking-tight">{b.settings.title}</h2>
-                <p className="mt-0.5 text-sm text-ink-2">{b.settings.blurb}</p>
+          <div className="bg-panel p-4">
+            <div
+              className="relative mx-auto overflow-hidden border border-rule-2 bg-page text-page-ink"
+              style={{ aspectRatio: state.settings.pageSize === 'LETTER' ? '8.5 / 11' : '210 / 297', fontSize: previewFontSize, lineHeight: PREVIEW_LINE_HEIGHT[state.settings.spacing] }}
+            >
+              {/* Inset box clips content at the page margin, so the bottom gap matches top and sides. */}
+              <div className="absolute inset-8 overflow-hidden">
+              {eff.profile.name && <div className="font-bold" style={{ fontSize: previewNameSize, color: eff.settings.template === 'modern' ? eff.settings.accent : undefined }}>{eff.profile.name}</div>}
+              <div className="text-page-mute" style={{ fontSize: previewContactSize }}>{[eff.profile.email, eff.profile.phone, ...eff.profile.links].filter(Boolean).join('  •  ')}</div>
+              {eff.profile.location && <div className="text-page-mute" style={{ fontSize: previewContactSize }}>{eff.profile.location}</div>}
+              {eff.profile.summary && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.summary}><p>{eff.profile.summary}</p></PreviewSection>}
+              {state.experience.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.experience}>{state.experience.map((e) => (
+                <div key={e.uiId} style={{ marginBottom: previewEntryGap }}>
+                  <div className="flex justify-between gap-2"><span className="font-semibold">{e.title}{e.company && ` — ${e.company}`}</span><span className="text-xs text-page-mute">{e.date}</span></div>
+                  <ul className="ml-4 list-disc">{e.bullets.filter((b) => b.trim()).map((b) => <li key={b}>{b}</li>)}</ul>
+                </div>
+              ))}</PreviewSection>}
+              {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.skills}><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
+              {state.projects.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.projects}><ul className="ml-4 list-disc">{state.projects.map((p) => <li key={p.uiId}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
+              {state.education.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.education}>{state.education.map((e, i) => <div key={e.uiId} className="flex justify-between gap-2" style={{ marginBottom: i === state.education.length - 1 ? 0 : previewEntryGap }}><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-page-mute">{e.date}</span></div>)}</PreviewSection>}
               </div>
-              <span className="lab shrink-0">{b.settings.pagePreview(state.settings.pageSize === 'A4' ? 'A4' : b.settings.letter)}</span>
             </div>
+          </div>
+          <p className="mt-2 text-xs text-ink-2">{b.previewNote}</p>
+          <details className="group mt-6 border-b border-rule">
+            <summary className="flex min-h-13 cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
+              {b.settings.title}
+              <span className="flex items-center gap-4">
+                <span className="lab">{b.settings.pagePreview(state.settings.pageSize === 'A4' ? 'A4' : b.settings.letter)}</span>
+                <span aria-hidden className="font-mono text-xl text-ink-2 group-open:hidden">+</span>
+                <span aria-hidden className="hidden font-mono text-xl text-ink-2 group-open:inline">−</span>
+              </span>
+            </summary>
             <div className="grid gap-x-5 gap-y-4 text-sm sm:grid-cols-2 2xl:grid-cols-3">
               <SettingGroup label={b.settings.accent}>
                 <div className="flex flex-wrap items-center gap-2">
@@ -362,31 +386,7 @@ export default function Builder() {
                 </div>
               </SettingGroup>
             </div>
-          </div>
-          <div className="bg-panel p-4">
-            <div
-              className="relative mx-auto overflow-hidden border border-rule-2 bg-page text-page-ink"
-              style={{ aspectRatio: state.settings.pageSize === 'LETTER' ? '8.5 / 11' : '210 / 297', fontSize: previewFontSize, lineHeight: PREVIEW_LINE_HEIGHT[state.settings.spacing] }}
-            >
-              {/* Inset box clips content at the page margin, so the bottom gap matches top and sides. */}
-              <div className="absolute inset-8 overflow-hidden">
-              {eff.profile.name && <div className="font-bold" style={{ fontSize: previewNameSize, color: eff.settings.template === 'modern' ? eff.settings.accent : undefined }}>{eff.profile.name}</div>}
-              <div className="text-page-mute" style={{ fontSize: previewContactSize }}>{[eff.profile.email, eff.profile.phone, ...eff.profile.links].filter(Boolean).join('  •  ')}</div>
-              {eff.profile.location && <div className="text-page-mute" style={{ fontSize: previewContactSize }}>{eff.profile.location}</div>}
-              {eff.profile.summary && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.summary}><p>{eff.profile.summary}</p></PreviewSection>}
-              {state.experience.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.experience}>{state.experience.map((e) => (
-                <div key={e.uiId} style={{ marginBottom: previewEntryGap }}>
-                  <div className="flex justify-between gap-2"><span className="font-semibold">{e.title}{e.company && ` — ${e.company}`}</span><span className="text-xs text-page-mute">{e.date}</span></div>
-                  <ul className="ml-4 list-disc">{e.bullets.filter((b) => b.trim()).map((b) => <li key={b}>{b}</li>)}</ul>
-                </div>
-              ))}</PreviewSection>}
-              {eff.skills.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.skills}><p>{eff.skills.join('  •  ')}</p></PreviewSection>}
-              {state.projects.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.projects}><ul className="ml-4 list-disc">{state.projects.map((p) => <li key={p.uiId}><span className="font-semibold">{p.name}</span>{p.description && ` — ${p.description}`}</li>)}</ul></PreviewSection>}
-              {state.education.length > 0 && <PreviewSection accent={eff.settings.accent} gap={previewSectionGap} modern={eff.settings.template === 'modern'} title={b.docSections.education}>{state.education.map((e, i) => <div key={e.uiId} className="flex justify-between gap-2" style={{ marginBottom: i === state.education.length - 1 ? 0 : previewEntryGap }}><span><span className="font-semibold">{e.degree || e.school}</span>{e.degree && e.school && ` — ${e.school}`}</span><span className="text-xs text-page-mute">{e.date}</span></div>)}</PreviewSection>}
-              </div>
-            </div>
-          </div>
-          <p className="mt-2 text-center text-xs text-ink-2">{b.previewNote}</p>
+          </details>
         </div>
       </div>
     </div>

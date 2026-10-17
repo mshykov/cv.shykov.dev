@@ -275,7 +275,7 @@ export const fr: Messages = {
   },
 
   builder: {
-    intro: 'Créez un CV compatible ATS : texte brut, rubriques standard et aperçu en direct. Importez un CV existant, ajustez la mise en page, puis exportez un PDF en une seule colonne, au texte sélectionnable.',
+    heading: 'Créez un CV compatible ATS',
     liveScore: 'Score en direct',
     importCv: 'Importer un CV',
     exportPdf: '↓ Exporter en PDF',
@@ -288,7 +288,6 @@ export const fr: Messages = {
     fileName: (name: string) => `${(name || 'cv').replace(/\s+/g, '_')}_CV.pdf`,
     profile: {
       title: 'Profil',
-      hint: 'Gardez les coordonnées en texte brut pour que les analyseurs puissent les lire.',
       fullName: 'Nom et prénom',
       email: 'E-mail',
       phone: 'Téléphone',
@@ -299,7 +298,6 @@ export const fr: Messages = {
     },
     experience: {
       title: 'Expérience',
-      hint: 'Utilisez des verbes d’action, un impact mesurable et un résultat par puce.',
       add: 'Ajouter',
       moveUp: 'Monter ce poste',
       moveDown: 'Descendre ce poste',
@@ -314,12 +312,10 @@ export const fr: Messages = {
     },
     skills: {
       title: 'Compétences',
-      hint: 'Séparez les compétences par une virgule ou un retour à la ligne, avec des termes que les recruteurs recherchent.',
       field: 'Compétences (séparées par une virgule ou un retour à la ligne)',
     },
     projects: {
       title: 'Projets',
-      hint: 'Facultatif, utile pour montrer une réalisation personnelle ou un travail de portfolio.',
       add: 'Ajouter',
       delete: 'Supprimer ce projet',
       name: 'Nom',
@@ -328,7 +324,6 @@ export const fr: Messages = {
     },
     education: {
       title: 'Formation',
-      hint: 'Gardez des dates et des intitulés de diplôme cohérents avec la rubrique expérience.',
       add: 'Ajouter',
       delete: 'Supprimer cette formation',
       degree: 'Diplôme',
@@ -338,7 +333,6 @@ export const fr: Messages = {
     },
     settings: {
       title: 'Réglages du document',
-      blurb: 'S’applique à l’aperçu et au PDF exporté.',
       pagePreview: (size: string) => `Aperçu ${size}`,
       accent: 'Couleur d’accent',
       useAccent: (color: string) => `Utiliser l’accent ${color}`,

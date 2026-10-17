@@ -215,7 +215,6 @@ function AppBody() {
                 </Suspense>
               )}
             </div>
-            {mode === 'build' && <h1 className="sr-only">{m.home.hero.h1}</h1>}
             {(mode === 'build' || buildLoaded) && (
               <Suspense fallback={<p className="py-20 text-mute">{m.home.loading.builder}</p>}>
                 <div className={mode === 'build' ? 'block' : 'hidden'}>

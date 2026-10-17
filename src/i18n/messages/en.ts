@@ -284,7 +284,7 @@ export const en = {
   },
 
   builder: {
-    intro: 'Build an ATS-clean resume with plain text, standard sections, and a live preview. Import an existing CV, tune the layout, then export a selectable single-column PDF.',
+    heading: 'Build an ATS-clean CV',
     liveScore: 'Live score',
     importCv: 'Import CV',
     exportPdf: '↓ Export PDF',
@@ -298,7 +298,6 @@ export const en = {
     fileName: (name: string) => `${(name || 'resume').replace(/\s+/g, '_')}_CV.pdf`,
     profile: {
       title: 'Profile',
-      hint: 'Keep contact details plain-text so parsers can read them.',
       fullName: 'Full name',
       email: 'Email',
       phone: 'Phone',
@@ -309,7 +308,6 @@ export const en = {
     },
     experience: {
       title: 'Experience',
-      hint: 'Use action verbs, measurable impact, and one result per bullet.',
       add: 'Add',
       moveUp: 'Move role up',
       moveDown: 'Move role down',
@@ -324,12 +322,10 @@ export const en = {
     },
     skills: {
       title: 'Skills',
-      hint: 'Separate skills by comma or line break; keep terms recruiter-friendly.',
       field: 'Skills (comma or new-line separated)',
     },
     projects: {
       title: 'Projects',
-      hint: 'Optional, best for proof of ownership or portfolio-worthy work.',
       add: 'Add',
       delete: 'Delete project',
       name: 'Name',
@@ -338,7 +334,6 @@ export const en = {
     },
     education: {
       title: 'Education',
-      hint: 'Keep dates and degree names consistent with your experience section.',
       add: 'Add',
       delete: 'Delete education',
       degree: 'Degree',
@@ -348,7 +343,6 @@ export const en = {
     },
     settings: {
       title: 'Document settings',
-      blurb: 'Affects preview and exported PDF.',
       pagePreview: (size: string) => `${size} preview`,
       accent: 'Accent',
       useAccent: (color: string) => `Use ${color} accent`,

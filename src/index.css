@@ -114,6 +114,11 @@ body {
     @apply w-full border border-rule-2 bg-transparent px-3 py-2.5 text-base text-ink placeholder:text-mute hover:border-ink;
   }
 
+  /* Single-line inputs of the builder: a line, not a box. */
+  .field-line {
+    @apply w-full border-0 border-b border-rule-2 bg-transparent px-0 py-2 text-base text-ink placeholder:text-mute hover:border-ink focus:border-ink;
+  }
+
   /* The neon block: the single loud surface, reserved for a number that matters. */
   .neon-block {
     @apply bg-neon text-on-neon;
@@ -151,4 +156,9 @@ body {
     background: var(--color-neon);
     outline: 1px solid var(--color-ink);
   }
+}
+
+/* The builder's section titles are floated legends: whatever follows starts below. */
+fieldset > legend + * {
+  clear: both;
 }

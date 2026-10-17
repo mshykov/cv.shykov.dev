@@ -266,7 +266,7 @@ export const ptBR: Messages = {
   },
 
   builder: {
-    intro: 'Crie um currículo compatível com ATS, com texto simples, seções padrão e prévia ao vivo. Importe um currículo existente, ajuste o layout e exporte um PDF de coluna única com texto selecionável.',
+    heading: 'Crie um currículo para ATS',
     liveScore: 'Pontuação ao vivo',
     importCv: 'Importar currículo',
     exportPdf: '↓ Exportar PDF',
@@ -279,7 +279,6 @@ export const ptBR: Messages = {
     fileName: (name: string) => `${(name || 'curriculo').replace(/\s+/g, '_')}_Curriculo.pdf`,
     profile: {
       title: 'Perfil',
-      hint: 'Deixe os dados de contato em texto simples para que os leitores consigam lê-los.',
       fullName: 'Nome completo',
       email: 'E-mail',
       phone: 'Telefone',
@@ -290,7 +289,6 @@ export const ptBR: Messages = {
     },
     experience: {
       title: 'Experiência',
-      hint: 'Use verbos de ação, impacto mensurável e um resultado por marcador.',
       add: 'Adicionar',
       moveUp: 'Mover cargo para cima',
       moveDown: 'Mover cargo para baixo',
@@ -305,12 +303,10 @@ export const ptBR: Messages = {
     },
     skills: {
       title: 'Habilidades',
-      hint: 'Separe as habilidades por vírgula ou quebra de linha; use termos que o recrutador reconheça.',
       field: 'Habilidades (separadas por vírgula ou nova linha)',
     },
     projects: {
       title: 'Projetos',
-      hint: 'Opcional, ideal para mostrar autoria ou trabalhos dignos de portfólio.',
       add: 'Adicionar',
       delete: 'Excluir projeto',
       name: 'Nome',
@@ -319,7 +315,6 @@ export const ptBR: Messages = {
     },
     education: {
       title: 'Educação',
-      hint: 'Mantenha datas e nomes de cursos coerentes com a seção de experiência.',
       add: 'Adicionar',
       delete: 'Excluir formação',
       degree: 'Curso',
@@ -329,7 +324,6 @@ export const ptBR: Messages = {
     },
     settings: {
       title: 'Configurações do documento',
-      blurb: 'Afeta a prévia e o PDF exportado.',
       pagePreview: (size: string) => `Prévia em ${size}`,
       accent: 'Cor de destaque',
       useAccent: (color: string) => `Usar destaque ${color}`,

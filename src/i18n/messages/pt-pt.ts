@@ -268,7 +268,7 @@ export const ptPT: Messages = {
   },
 
   builder: {
-    intro: 'Crie um CV compatível com ATS, com texto simples, secções padrão e pré-visualização em direto. Importe um CV existente, ajuste a disposição e exporte um PDF de coluna única com texto selecionável.',
+    heading: 'Crie um CV compatível com ATS',
     liveScore: 'Pontuação em direto',
     importCv: 'Importar CV',
     exportPdf: '↓ Exportar PDF',
@@ -281,7 +281,6 @@ export const ptPT: Messages = {
     fileName: (name: string) => `${(name || 'cv').replace(/\s+/g, '_')}_CV.pdf`,
     profile: {
       title: 'Perfil',
-      hint: 'Mantenha os contactos em texto simples para que os leitores os consigam ler.',
       fullName: 'Nome completo',
       email: 'Email',
       phone: 'Telefone',
@@ -292,7 +291,6 @@ export const ptPT: Messages = {
     },
     experience: {
       title: 'Experiência',
-      hint: 'Use verbos de ação, impacto mensurável e um resultado por marcador.',
       add: 'Adicionar',
       moveUp: 'Subir função',
       moveDown: 'Descer função',
@@ -307,12 +305,10 @@ export const ptPT: Messages = {
     },
     skills: {
       title: 'Competências',
-      hint: 'Separe as competências por vírgulas ou quebras de linha; use termos que os recrutadores reconheçam.',
       field: 'Competências (separadas por vírgulas ou linhas)',
     },
     projects: {
       title: 'Projetos',
-      hint: 'Opcional; útil para mostrar autoria ou trabalho digno de portefólio.',
       add: 'Adicionar',
       delete: 'Eliminar projeto',
       name: 'Nome',
@@ -321,7 +317,6 @@ export const ptPT: Messages = {
     },
     education: {
       title: 'Formação',
-      hint: 'Mantenha as datas e os nomes dos graus coerentes com a secção de experiência.',
       add: 'Adicionar',
       delete: 'Eliminar formação',
       degree: 'Grau',
@@ -331,7 +326,6 @@ export const ptPT: Messages = {
     },
     settings: {
       title: 'Definições do documento',
-      blurb: 'Afeta a pré-visualização e o PDF exportado.',
       pagePreview: (size: string) => `Pré-visualização ${size}`,
       accent: 'Cor de destaque',
       useAccent: (color: string) => `Usar a cor de destaque ${color}`,

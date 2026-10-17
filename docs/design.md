@@ -36,6 +36,15 @@ inspect" section (the same claims are the strike-through line and the FAQ), the 
 GitHub button in the header, the humanization card next to the score. If something wants back
 in, it goes below the fold or into a closed disclosure, never above the drop line.
 
+## The Build view
+
+Same language, smaller scale: an H1 ("Build an ATS-clean CV", `messages.builder.heading`), one
+toolbar row (live score block, "Import CV" as underlined text, solid "Export PDF"), the form on
+the left as titled sections between hairlines with line-style inputs (`.field-line`; textareas
+stay boxed), the live preview on the right. The section hints and the intro paragraph are gone;
+document settings (accent, size, spacing, page, template) are a closed disclosure under the
+preview. The exported PDF template (`ResumeDoc`) is unchanged.
+
 ## Rules
 
 - **Tokens only.** `src/index.css` `@theme` turns the default Tailwind palette, radii and

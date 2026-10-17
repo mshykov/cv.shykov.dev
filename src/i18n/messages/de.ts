@@ -269,7 +269,7 @@ export const de: Messages = {
   },
 
   builder: {
-    intro: 'Erstellen Sie einen ATS-tauglichen Lebenslauf mit reinem Text, Standardabschnitten und Live-Vorschau. Importieren Sie einen vorhandenen Lebenslauf, passen Sie das Layout an und exportieren Sie ein einspaltiges PDF mit auswählbarem Text.',
+    heading: 'ATS-tauglichen Lebenslauf erstellen',
     liveScore: 'Live-Score',
     importCv: 'Lebenslauf importieren',
     exportPdf: '↓ PDF exportieren',
@@ -282,7 +282,6 @@ export const de: Messages = {
     fileName: (name: string) => (name ? `${name.replace(/\s+/g, '_')}_Lebenslauf.pdf` : 'Lebenslauf.pdf'),
     profile: {
       title: 'Profil',
-      hint: 'Halten Sie Kontaktdaten als reinen Text, damit Parser sie lesen können.',
       fullName: 'Vollständiger Name',
       email: 'E-Mail',
       phone: 'Telefon',
@@ -293,7 +292,6 @@ export const de: Messages = {
     },
     experience: {
       title: 'Berufserfahrung',
-      hint: 'Nutzen Sie Aktionsverben, messbare Ergebnisse und ein Ergebnis pro Aufzählungspunkt.',
       add: 'Hinzufügen',
       moveUp: 'Station nach oben',
       moveDown: 'Station nach unten',
@@ -308,12 +306,10 @@ export const de: Messages = {
     },
     skills: {
       title: 'Kenntnisse',
-      hint: 'Trennen Sie Kenntnisse durch Komma oder Zeilenumbruch; wählen Sie Begriffe, nach denen Recruiter suchen.',
       field: 'Kenntnisse (durch Komma oder Zeilenumbruch getrennt)',
     },
     projects: {
       title: 'Projekte',
-      hint: 'Optional – gut als Nachweis für Eigenverantwortung oder vorzeigbare Arbeiten.',
       add: 'Hinzufügen',
       delete: 'Projekt löschen',
       name: 'Name',
@@ -322,7 +318,6 @@ export const de: Messages = {
     },
     education: {
       title: 'Ausbildung',
-      hint: 'Halten Sie Zeiträume und Abschlüsse im Einklang mit Ihrer Berufserfahrung.',
       add: 'Hinzufügen',
       delete: 'Ausbildung löschen',
       degree: 'Abschluss',
@@ -332,7 +327,6 @@ export const de: Messages = {
     },
     settings: {
       title: 'Dokumenteinstellungen',
-      blurb: 'Wirkt sich auf Vorschau und exportiertes PDF aus.',
       pagePreview: (size: string) => `Vorschau ${size}`,
       accent: 'Akzentfarbe',
       useAccent: (color: string) => `Akzentfarbe ${color} verwenden`,
