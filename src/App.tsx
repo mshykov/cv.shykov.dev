@@ -48,7 +48,7 @@ function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
 }
 
 function SiteHeader({ mode, onSwitch }: ModeSwitchProps) {
-  const { locale, messages: { languages, home: { footer } } } = useLocale()
+  const { locale, messages: { languages, home: { header, footer } } } = useLocale()
   return (
     <header>
       <div className="mx-auto flex min-h-16 max-w-300 items-center justify-between gap-3 px-5 sm:px-8">
@@ -64,7 +64,7 @@ function SiteHeader({ mode, onSwitch }: ModeSwitchProps) {
             className="inline-flex min-h-11 items-center gap-2 px-2 text-base font-medium text-ink-2 transition-colors hover:text-ink sm:px-3"
           >
             <GitHubMark className="size-5" />
-            <span className="hidden md:inline">{footer.openSource}</span>
+            <span className="hidden md:inline">{header.openSource}</span>
           </a>
           <LanguageSwitcher current={locale} links={HOME_LINKS} label={languages.label} />
         </div>

@@ -54,6 +54,7 @@ export const fr: Messages = {
       primaryMode: 'Mode principal de l’application',
       analyze: 'Score ATS rapide',
       build: 'Créer un CV',
+      openSource: 'Open source',
     },
     hero: {
       h1: 'Vérificateur de CV ATS gratuit : votre score, sans envoi du fichier',

@@ -64,6 +64,7 @@ export const en = {
       primaryMode: 'Primary app mode',
       analyze: 'Fast ATS Score',
       build: 'Build a CV',
+      openSource: 'Open source',
     },
     hero: {
       h1: 'Free CV ATS score checker. Private by default.',

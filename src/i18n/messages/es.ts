@@ -52,6 +52,7 @@ export const es: Messages = {
       primaryMode: 'Modo principal de la aplicación',
       analyze: 'Puntuación ATS rápida',
       build: 'Crear un CV',
+      openSource: 'Código abierto',
     },
     hero: {
       h1: 'Revisar CV ATS gratis: comprueba tu puntuación ATS con total privacidad',

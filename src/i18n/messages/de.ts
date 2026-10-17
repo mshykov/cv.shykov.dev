@@ -54,6 +54,7 @@ export const de: Messages = {
       primaryMode: 'Hauptmodus der App',
       analyze: 'Schneller ATS-Score',
       build: 'CV erstellen',
+      openSource: 'Open Source',
     },
     hero: {
       h1: 'Lebenslauf ATS Check kostenlos. Privat im Browser.',

@@ -53,6 +53,7 @@ export const ptPT: Messages = {
       primaryMode: 'Modo principal da aplicação',
       analyze: 'Pontuação ATS rápida',
       build: 'Criar CV',
+      openSource: 'Código aberto',
     },
     hero: {
       h1: 'Verificador de CV ATS gratuito. Privado por defeito.',

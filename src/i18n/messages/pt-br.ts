@@ -51,6 +51,7 @@ export const ptBR: Messages = {
       primaryMode: 'Modo principal do app',
       analyze: 'Pontuação ATS',
       build: 'Criar currículo',
+      openSource: 'Código aberto',
     },
     hero: {
       h1: 'Verificador de currículo ATS grátis. Privado por padrão.',
