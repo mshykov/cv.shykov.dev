@@ -106,6 +106,17 @@ guidance, not a guarantee; real ATS platforms differ.
 A section heading only earns points when text follows it (or it carries its own, as in
 "Skills: Go, Rust"); a bare heading is a label, not a section.
 
+### Advisories (not scored)
+
+Three conventions are shown in a separate "Worth a look" card and never change the score,
+because they vary by country, seniority and sector (`src/lib/advisories.ts`):
+
+| Advisory | Shown when |
+|----------|------------|
+| Length | the CV has more than 1,000 words |
+| Thin role | the CV has at least two roles and one of them has exactly one bullet |
+| Long bullets | a bullet runs past 40 words |
+
 PDF text extraction uses `pdf.js`. DOCX extraction uses `mammoth`.
 PDF export uses `@react-pdf/renderer`.
 

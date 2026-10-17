@@ -209,6 +209,13 @@ export const es: Messages = {
 
   analysis: {
     formatNumber: number,
+    advisories: {
+      heading: 'Conviene revisarlo',
+      note: 'Son convenciones, no reglas, y no forman parte de la puntuación.',
+      length: { detail: (words: number) => `${number(words)} palabras, algo largo para la mayoría de los puestos.`, fix: 'Por debajo de unas 1000 palabras se lee mejor a primera vista. Recorta los puestos más antiguos y las viñetas repetidas. Los CV de dirección, los académicos y los de algunos puestos públicos suelen ser más largos.' },
+      thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'puesto tiene' : 'puestos tienen'} una sola viñeta.`, fix: 'Un puesto con una sola viñeta parece escaso. Añade uno o dos resultados concretos, o resúmelo en una línea de experiencia anterior.' },
+      longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'viñeta supera' : 'viñetas superan'} las 40 palabras.`, fix: 'Divide las viñetas largas en un resultado y en cómo lo conseguiste. Una o dos líneas cada una se leen más rápido.' },
+    },
     categories: { Parseability: 'Legibilidad', Contact: 'Contacto', Sections: 'Secciones', Format: 'Formato', Content: 'Contenido' },
     labels: {
       'machine-text': 'Texto legible por máquina',

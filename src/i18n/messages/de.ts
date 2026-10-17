@@ -211,6 +211,13 @@ export const de: Messages = {
 
   analysis: {
     formatNumber: number,
+    advisories: {
+      heading: 'Einen Blick wert',
+      note: 'Das sind Konventionen, keine Regeln, und sie fließen nicht in den Score ein.',
+      length: { detail: (words: number) => `${number(words)} Wörter, für die meisten Stellen eher lang.`, fix: 'Unter etwa 1.000 Wörtern lässt sich ein Lebenslauf auf den ersten Blick besser lesen. Kürzen Sie die ältesten Stationen und wiederholte Aufzählungspunkte. Lebensläufe für Führungspositionen, aus der Wissenschaft und für manche Behörden sind üblicherweise länger.' },
+      thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'Station hat' : 'Stationen haben'} nur einen Aufzählungspunkt.`, fix: 'Eine Station mit nur einem Punkt wirkt dünn. Ergänzen Sie ein oder zwei konkrete Ergebnisse oder fassen Sie sie in einer Zeile früherer Erfahrung zusammen.' },
+      longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'Aufzählungspunkt umfasst' : 'Aufzählungspunkte umfassen'} mehr als 40 Wörter.`, fix: 'Teilen Sie lange Punkte in ein Ergebnis und den Weg dorthin. Eine bis zwei Zeilen je Punkt lassen sich schneller überfliegen.' },
+    },
     categories: { Parseability: 'Lesbarkeit', Contact: 'Kontakt', Sections: 'Abschnitte', Format: 'Format', Content: 'Inhalt' },
     labels: {
       'machine-text': 'Maschinenlesbarer Text',
