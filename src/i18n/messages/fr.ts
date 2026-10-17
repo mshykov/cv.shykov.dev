@@ -217,6 +217,13 @@ export const fr: Messages = {
 
   analysis: {
     formatNumber: number,
+    advisories: {
+      heading: 'À regarder de près',
+      note: 'Ce sont des conventions, pas des règles, et elles ne comptent pas dans le score.',
+      length: { detail: (words: number) => `${number(words)} mots, ce qui est long pour la plupart des postes.`, fix: 'En dessous d’environ 1 000 mots, le CV se lit mieux au premier coup d’œil. Coupez les postes les plus anciens et les puces répétées. Les CV de direction, les CV universitaires et ceux de certains postes publics sont souvent plus longs.' },
+      thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'poste n’a' : 'postes n’ont'} qu’une seule puce.`, fix: 'Un poste avec une seule puce paraît mince. Ajoutez un ou deux résultats concrets, ou résumez-le en une ligne d’expérience antérieure.' },
+      longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'puce dépasse' : 'puces dépassent'} 40 mots.`, fix: 'Découpez les puces longues en un résultat et la façon de l’obtenir. Une à deux lignes chacune se parcourent plus vite.' },
+    },
     categories: { Parseability: 'Lisibilité', Contact: 'Contact', Sections: 'Rubriques', Format: 'Format', Content: 'Contenu' },
     labels: {
       'machine-text': 'Texte lisible par une machine',

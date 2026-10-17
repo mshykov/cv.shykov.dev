@@ -225,6 +225,13 @@ export const en = {
   // functions: the scorer decides pass/warn/fail and points, these say it.
   analysis: {
     formatNumber: number,
+    advisories: {
+      heading: 'Worth a look',
+      note: 'These are conventions, not rules, and they are not part of the score.',
+      length: { detail: (words: number) => `${number(words)} words, which is long for most roles.`, fix: 'Under about 1,000 words is easier to read at first glance. Cut the oldest roles and repeated bullets. Executive, academic and some public-sector CVs are normally longer.' },
+      thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'role has' : 'roles have'} only one bullet.`, fix: 'A role with a single bullet looks thin. Add one or two concrete results, or fold the role into a one-line earlier-experience entry.' },
+      longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'bullet runs' : 'bullets run'} past 40 words.`, fix: 'Split long bullets into a result and how you got it. One to two lines each is easier to skim.' },
+    },
     categories: { Parseability: 'Parseability', Contact: 'Contact', Sections: 'Sections', Format: 'Format', Content: 'Content' },
     labels: {
       'machine-text': 'Machine-readable text',

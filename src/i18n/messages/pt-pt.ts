@@ -210,6 +210,13 @@ export const ptPT: Messages = {
 
   analysis: {
     formatNumber: number,
+    advisories: {
+      heading: 'Vale a pena rever',
+      note: 'São convenções, não regras, e não contam para a pontuação.',
+      length: { detail: (words: number) => `${number(words)} palavras, o que é longo para a maioria das funções.`, fix: 'Abaixo de cerca de 1000 palavras, o CV lê-se melhor à primeira vista. Corte as experiências mais antigas e os marcadores repetidos. Os CV de direção, os académicos e os de alguns cargos públicos costumam ser mais longos.' },
+      thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'função tem' : 'funções têm'} apenas um marcador.`, fix: 'Uma função com um único marcador parece escassa. Acrescente um ou dois resultados concretos, ou resuma-a numa linha de experiência anterior.' },
+      longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'marcador ultrapassa' : 'marcadores ultrapassam'} as 40 palavras.`, fix: 'Divida os marcadores longos num resultado e na forma como o alcançou. Entre uma e duas linhas cada um lê-se mais depressa.' },
+    },
     categories: { Parseability: 'Legibilidade', Contact: 'Contactos', Sections: 'Secções', Format: 'Formato', Content: 'Conteúdo' },
     labels: {
       'machine-text': 'Texto legível por máquinas',

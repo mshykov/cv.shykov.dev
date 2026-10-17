@@ -6,6 +6,7 @@ import { isSupportedDocument } from './lib/filetype.ts'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
+import type { Advisory } from './lib/advisories'
 import { TONE } from './components/tone'
 import { ScoreRing } from './components/ScoreRing'
 import { useLocale, useMessages } from './i18n/context.ts'
@@ -128,6 +129,28 @@ function TopFixes({ fixes }: TopFixesProps) {
 
 const STYLE_STATUS: Record<StyleLevel, Status> = { ok: 'pass', minor: 'warn', major: 'fail' }
 
+type AdvisoryCardProps = Readonly<{ advisories: Advisory[] }>
+
+// Conventions that are not part of the score: length and bullet balance. Kept in
+// a card of their own so nobody mistakes them for lost points.
+function AdvisoryCard({ advisories }: AdvisoryCardProps) {
+  const { analysis } = useMessages()
+  return (
+    <div className="mt-5 min-w-0 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
+      <h2 className="text-xl font-semibold tracking-tight text-stone-900">{analysis.advisories.heading}</h2>
+      <p className="mt-1 text-sm text-stone-500">{analysis.advisories.note}</p>
+      <ul className="mt-3 space-y-2 text-sm text-stone-700">
+        {advisories.map((a) => (
+          <li key={a.id} className="flex gap-2">
+            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" aria-hidden />
+            <span><span className="font-medium">{a.detail}</span> {a.fix}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 type HumanizationCardProps = Readonly<{ style: StyleReport; onOpen: () => void }>
 
 // Surfaces the writing-style score next to the ATS score so it is not hidden
@@ -209,6 +232,7 @@ export default function Analyzer() {
   const [styleSkipped, setStyleSkipped] = useState(false)
   // The CV has too little text for the style checks to say anything (an empty report would read 100).
   const [styleTooShort, setStyleTooShort] = useState(false)
+  const [advisories, setAdvisories] = useState<Advisory[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   // Nothing blocks a second upload while the first is still parsing - the
   // dropzone stays droppable and `busy` only swaps a caption. Two runs then
@@ -219,13 +243,13 @@ export default function Analyzer() {
 
   const run = useCallback(async (file: File) => {
     const id = (runId.current += 1)
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false); setStyleTooShort(false)
+    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([])
     if (!isSupportedDocument(file)) { setError(analyzer.chooseFile); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
     let stage: Stage = 'loading'
     try {
-      const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }] = await Promise.all([
-        import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'),
+      const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }, { getAdvisories }] = await Promise.all([
+        import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'), import('./lib/advisories'),
       ])
       stage = 'extracting'
       const ex = await extractDocument(file)
@@ -233,6 +257,7 @@ export default function Analyzer() {
       const rep = analyze(ex, m.analysis)
       stage = 'parsing'
       const res = parseResume(ex)
+      const adv = getAdvisories(ex, res, m.analysis.advisories)
       stage = 'style'
       // The writing-style signals look for English stock phrases and English
       // passive voice. On a Spanish or German CV they would measure nothing.
@@ -242,7 +267,7 @@ export default function Analyzer() {
       const tooShort = analysed?.insufficient === true
       const sty = tooShort ? null : analysed
       if (runId.current !== id) return
-      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort)
+      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort); setAdvisories(adv)
     } catch (e) {
       if (runId.current !== id) return
       const err = e instanceof Error ? e : new Error(String(e))
@@ -373,6 +398,8 @@ export default function Analyzer() {
             </div>
 
             {style && <HumanizationCard style={style} onOpen={() => setTab('style')} />}
+
+            {advisories.length > 0 && <AdvisoryCard advisories={advisories} />}
 
             <div className="mt-4 flex sm:justify-end">
               <nav className="grid w-full grid-cols-2 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium sm:flex sm:w-auto sm:shrink-0">
