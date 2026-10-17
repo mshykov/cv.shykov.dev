@@ -167,6 +167,7 @@ export const fr: Messages = {
     },
     copyDetails: 'Copier les détails',
     scoreHeading: 'Score ATS rapide',
+    estimateNote: 'Une estimation de la façon dont un analyseur lira ce fichier, pas une prédiction d’une décision d’embauche.',
     topFixes: 'Corrections prioritaires',
     downloadReport: '↓ Rapport',
     noPriorityFixes: 'Aucune correction prioritaire. Le reste du rapport est surtout une confirmation.',
@@ -181,6 +182,7 @@ export const fr: Messages = {
       all: 'Toutes les vérifications d’écriture →',
     },
     style: {
+      tooShort: 'Il n’y a pas assez de texte pour juger le style d’écriture.',
       counts: (sentences: number, words: number) => `${sentences} phrases, ${words} mots`,
       intro: 'Des vérifications d’écriture déterministes, exécutées sur votre appareil.',
       notDetector: 'Ce n’est pas un détecteur d’IA',

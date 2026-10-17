@@ -57,13 +57,31 @@ const CURRENCY_SYMBOLS = new Set(['$', '€', '£'])
 
 const SCORER_TABLE: KeywordTable = { ...SECTION_KEYWORDS, ...BONUS_SECTION_KEYWORDS }
 
-/** Section categories the CV has a heading for. Headers are short lines. */
+/** Letter-words on a line: what counts as content under a heading. */
+const wordCount = (line: string) => line.match(/\p{L}{2,}/gu)?.length ?? 0
+
+function headingCategoriesOf(line: string): string[] {
+  const t = line.trim()
+  if (!t || t.length > 45) return []
+  return headingCategories(normalizeHeader(t), SCORER_TABLE)
+}
+
+/**
+ * Section categories the CV has a heading for. Headers are short lines. A heading
+ * only counts when something follows it before the next heading (or it carries
+ * its own text, as in "Skills: Go, Rust"): a bare heading is a label, not a
+ * section, and must not earn points.
+ */
 function foundSections(lines: string[]): Set<string> {
   const found = new Set<string>()
-  for (const line of lines) {
-    const t = line.trim()
-    if (!t || t.length > 45) continue
-    for (const category of headingCategories(normalizeHeader(t), SCORER_TABLE)) found.add(category)
+  for (const [i, line] of lines.entries()) {
+    const categories = headingCategoriesOf(line)
+    if (categories.length === 0) continue
+    let content = /:\s*\S/.test(line) ? 2 : 0
+    for (let j = i + 1; j < lines.length && content < 2 && headingCategoriesOf(lines[j]).length === 0; j++) {
+      content += wordCount(lines[j])
+    }
+    if (content >= 2) for (const category of categories) found.add(category)
   }
   return found
 }

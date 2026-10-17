@@ -159,6 +159,7 @@ export const es: Messages = {
     stages: { loading: 'carga de módulos', extracting: 'extracción del texto', analyzing: 'análisis', parsing: 'interpretación', style: 'revisión del estilo' },
     copyDetails: 'Copiar detalles',
     scoreHeading: 'Puntuación ATS rápida',
+    estimateNote: 'Una estimación de lo bien que un analizador leerá este archivo, no una predicción de una decisión de contratación.',
     topFixes: 'Correcciones principales',
     downloadReport: '↓ Informe',
     noPriorityFixes: 'No hay correcciones prioritarias. El resto del informe es sobre todo confirmación.',
@@ -173,6 +174,7 @@ export const es: Messages = {
       all: 'Todas las comprobaciones de redacción →',
     },
     style: {
+      tooShort: 'No hay texto suficiente para evaluar el estilo de redacción.',
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palabras`,
       intro: 'Comprobaciones deterministas de redacción, ejecutadas en tu dispositivo.',
       notDetector: 'Esto no es un detector de IA',

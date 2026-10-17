@@ -158,6 +158,7 @@ export const ptBR: Messages = {
     stages: { loading: 'carregamento dos módulos', extracting: 'extração do texto', analyzing: 'análise', parsing: 'leitura da estrutura', style: 'verificação do estilo' },
     copyDetails: 'Copiar detalhes',
     scoreHeading: 'Pontuação ATS',
+    estimateNote: 'Uma estimativa de quão bem um analisador lê este arquivo, não uma previsão de decisão de contratação.',
     topFixes: 'Principais correções',
     downloadReport: '↓ Relatório',
     noPriorityFixes: 'Nenhuma correção prioritária encontrada. O restante do relatório é, em sua maior parte, confirmação.',
@@ -172,6 +173,7 @@ export const ptBR: Messages = {
       all: 'Todas as verificações de escrita →',
     },
     style: {
+      tooShort: 'Não há texto suficiente para avaliar o estilo de escrita.',
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palavras`,
       intro: 'Verificações de escrita determinísticas, feitas no seu dispositivo.',
       notDetector: 'Isto não é um detector de IA',

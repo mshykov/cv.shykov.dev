@@ -141,3 +141,20 @@ test('flags a role that has a single bullet (#108)', { todo: 'issue #108' }, () 
   ])
   assert.ok(flagged(analyze(thin), /single bullet|bullet balance|thin/i), 'a one-bullet role should be flagged')
 })
+
+// Reported by a reader on 2026-10-17 and fixed since. Kept here so it stays fixed.
+test('empty text is not scored as a perfect writing style', () => {
+  assert.equal(analyzeStyle('', []).insufficient, true)
+})
+
+test('adding bare headings does not raise the ATS score', () => {
+  const without = analyze(ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, ...EDUCATION])).score
+  const withEmpty = analyze(ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, ...EDUCATION, 'ACHIEVEMENTS', 'PROJECTS', 'CERTIFICATIONS'])).score
+  assert.equal(withEmpty, without)
+})
+
+test('adding a year to weak sentences does not raise the writing-style score', () => {
+  const weak = Array.from({ length: 5 }, () => 'Responsible for managing various projects.')
+  const dated = weak.map((l) => l.replace('.', ' in 2025.'))
+  assert.ok(analyzeStyle(dated.join('\n'), dated).score <= analyzeStyle(weak.join('\n'), weak).score)
+})
