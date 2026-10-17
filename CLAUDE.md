@@ -63,7 +63,7 @@ npm run smoke:build            # after build: every built page in every language
   action verbs, months, units, stop words). Merged: any CV is read in any language.
 - `src/builder/` — Build mode: `Builder.tsx`, `ResumeDoc.tsx` (the react-pdf
   template), `model.ts`.
-- `src/` — `App.tsx` (Analyze/Build shell), `Analyzer.tsx`, `ErrorBoundary.tsx`,
+- `src/` — `App.tsx` (shell, the first screen and the file input/drop), `Analyzer.tsx` (report, loaded on the first file, remounted per file), `ErrorBoundary.tsx`,
   `polyfills.ts` (loaded first in `main.tsx`).
 - `public/<32-hex>.txt` — IndexNow ownership key (public by design; `scripts/indexnow.mjs` reads it).
 - `public/_headers` — security headers + **CSP** + cache rules. `docs/` — design

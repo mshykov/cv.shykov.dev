@@ -52,49 +52,18 @@ export const ptPT: Messages = {
     header: {
       primaryMode: 'Modo principal da aplicação',
       analyze: 'Pontuação ATS rápida',
-      build: 'Criar',
-      github: 'GitHub',
-      githubAria: 'Código aberto no GitHub',
+      build: 'Criar CV',
     },
     hero: {
       h1: 'Verificador de CV ATS gratuito. Privado por defeito.',
-      lead: 'Obtenha a pontuação ATS do seu CV a partir de um PDF ou DOCX em segundos, veja primeiro as correções de maior impacto, compare palavras-chave e crie um CV compatível com ATS, sem carregar ficheiros, sem contas e sem chamadas a LLM.',
       check: 'Verificar o meu CV',
-      build: 'Criar CV compatível com ATS',
-      privacy: {
-        aria: 'O que sai do seu navegador',
-        zero: 'bytes do seu CV enviados para um servidor',
-        rows: [
-          { label: 'Envio de ficheiros', value: 'Nenhum' },
-          { label: 'Conta', value: 'Nenhuma' },
-          { label: 'Chamadas a LLM', value: 'Nenhuma' },
-        ],
-        source: 'Código-fonte',
-        sourceValue: 'Aberto, MIT',
-      },
-    },
-    how: {
-      aria: 'Como funciona o verificador de CV ATS local',
-      steps: [
-        { title: 'Escolha o PDF/DOCX', body: 'Selecione o ficheiro do CV no seu dispositivo.' },
-        { title: 'Leitura no navegador', body: 'A extração do texto e a pontuação correm neste navegador.' },
-        { title: 'Corrija o mais importante', body: 'Veja a pontuação, o detalhe, as palavras-chave e notas exportáveis.' },
-      ],
+      // Said right under the headline: where it runs, and three things it does not need.
+      runs: 'Funciona no navegador.',
+      facts: ['Sem conta', 'Sem IA', 'Sem envio para servidores'],
     },
     loading: {
       score: 'A carregar a pontuação ATS rápida…',
       builder: 'A carregar o criador…',
-    },
-    trust: {
-      aria: 'Notas sobre privacidade e confiança',
-      heading: 'Promessas de privacidade que pode verificar.',
-      body: 'O código é aberto, sob licença MIT, e a promessa do produto é curta: leitura local dos documentos, pontuação determinística, sem obrigação de criar conta e sem nenhum modelo de IA escondido por trás da interface.',
-      cards: [
-        { title: 'Leitor no navegador', body: 'O texto de PDF e DOCX é extraído no navegador, com bibliotecas do lado do cliente.' },
-        { title: 'Pontuação sem LLM', body: 'As pontuações vêm de verificações repetíveis de legibilidade, secções, formato e conteúdo.' },
-      ],
-      repoTitle: 'Código aberto no GitHub',
-      repoBody: 'Licença MIT. Leia as verificações de pontuação, o leitor e o processo de exportação, abra uma issue ou envie um pull request.',
     },
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de CV ATS',
@@ -144,8 +113,8 @@ export const ptPT: Messages = {
     analyzed: 'Analisado',
     analyzeAnother: 'Analisar outro CV',
     dropBusy: 'A pontuar o seu CV…',
-    dropIdle: 'Largue aqui o seu CV para obter uma pontuação ATS rápida',
-    dropHint: 'PDF ou DOCX · funciona no navegador · sem carregar · sem LLM',
+    dropIdle: 'Arraste um PDF ou DOCX para aqui',
+    chooseButton: 'Escolher ficheiro',
     chooseFile: 'Escolha um ficheiro PDF ou DOCX.',
     failed: (stage: string) => `A análise falhou na fase de ${stage}. Toque em “Copiar detalhes” e envie-me os detalhes.`,
     stages: { loading: 'carregamento dos módulos', extracting: 'extração do texto', analyzing: 'análise', parsing: 'interpretação', style: 'verificação do estilo' },
@@ -156,14 +125,9 @@ export const ptPT: Messages = {
     noPriorityFixes: 'Não há correções prioritárias. O resto do relatório é sobretudo confirmação.',
     fix: 'Correção:',
     tabs: { analyze: 'Relatório completo', style: 'Estilo de escrita', jd: 'Correspondência com o anúncio', data: 'Dados extraídos' },
+    details: 'Relatório completo e detalhes',
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palavras · ${chars} carateres legíveis.`,
-    humanization: {
-      title: 'Pontuação de naturalidade',
-      blurb: 'Quão natural soa a escrita: ritmo, palavreado vazio, inícios repetidos, voz passiva. Não é um detetor de IA.',
-      none: 'Nenhum hábito de escrita assinalado.',
-      all: 'Todas as verificações de escrita →',
-    },
     style: {
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palavras`,
       intro: 'Verificações de escrita determinísticas, executadas no seu dispositivo.',

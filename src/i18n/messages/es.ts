@@ -51,49 +51,18 @@ export const es: Messages = {
     header: {
       primaryMode: 'Modo principal de la aplicación',
       analyze: 'Puntuación ATS rápida',
-      build: 'Crear',
-      github: 'GitHub',
-      githubAria: 'Código abierto en GitHub',
+      build: 'Crear un CV',
     },
     hero: {
       h1: 'Revisar CV ATS gratis: comprueba tu puntuación ATS con total privacidad',
-      lead: 'Consigue la puntuación ATS de tu CV a partir de un PDF o DOCX en segundos, ve primero las correcciones de mayor impacto, compara palabras clave y crea un CV compatible con ATS sin subir archivos, sin cuentas y sin llamadas a un LLM.',
       check: 'Revisar mi CV',
-      build: 'Crear un CV compatible con ATS',
-      privacy: {
-        aria: 'Qué sale de tu navegador',
-        zero: 'bytes de tu CV enviados a un servidor',
-        rows: [
-          { label: 'Subida de archivos', value: 'Ninguna' },
-          { label: 'Cuenta', value: 'Ninguna' },
-          { label: 'Llamadas a un LLM', value: 'Ninguna' },
-        ],
-        source: 'Código fuente',
-        sourceValue: 'Abierto, MIT',
-      },
-    },
-    how: {
-      aria: 'Cómo funciona el comprobador de CV ATS local',
-      steps: [
-        { title: 'Elige un PDF/DOCX', body: 'Selecciona el archivo de tu CV en tu dispositivo.' },
-        { title: 'Análisis en tu navegador', body: 'La extracción del texto y la puntuación se ejecutan en este navegador.' },
-        { title: 'Corrige lo principal', body: 'Verás la puntuación, el desglose, las palabras clave y notas que puedes exportar.' },
-      ],
+      // Said right under the headline: where it runs, and three things it does not need.
+      runs: 'Funciona en tu navegador.',
+      facts: ['Sin cuenta', 'Sin IA', 'Sin subida a servidores'],
     },
     loading: {
       score: 'Cargando la puntuación ATS…',
       builder: 'Cargando el creador de CV…',
-    },
-    trust: {
-      aria: 'Notas de privacidad y confianza',
-      heading: 'Privacidad que puedes comprobar.',
-      body: 'El código es abierto con licencia MIT y la promesa del producto es acotada: lectura local de documentos, puntuación determinista, sin obligación de crear una cuenta y sin ningún modelo de IA escondido tras la interfaz.',
-      cards: [
-        { title: 'Lectura en tu navegador', body: 'El texto de los PDF y DOCX se extrae en el navegador con librerías que se ejecutan en tu dispositivo.' },
-        { title: 'Sin puntuación por LLM', body: 'La puntuación sale de comprobaciones repetibles de legibilidad, secciones, formato y contenido.' },
-      ],
-      repoTitle: 'Código abierto en GitHub',
-      repoBody: 'Con licencia MIT. Lee las comprobaciones de puntuación, el analizador y la exportación, abre una incidencia o envía una pull request.',
     },
     faq: {
       aria: 'Preguntas frecuentes sobre el comprobador de CV ATS',
@@ -143,8 +112,8 @@ export const es: Messages = {
     analyzed: 'Analizado',
     analyzeAnother: 'Analizar otro CV',
     dropBusy: 'Puntuando tu CV…',
-    dropIdle: 'Suelta aquí tu CV para ver su puntuación ATS',
-    dropHint: 'PDF o DOCX · en tu navegador · sin subida · sin LLM',
+    dropIdle: 'Suelta aquí un PDF o DOCX',
+    chooseButton: 'Elegir archivo',
     chooseFile: 'Elige un archivo PDF o DOCX.',
     failed: (stage: string) => `El análisis falló en la fase de ${stage}. Pulsa «Copiar detalles» y envíamelos.`,
     stages: { loading: 'carga de módulos', extracting: 'extracción del texto', analyzing: 'análisis', parsing: 'interpretación', style: 'revisión del estilo' },
@@ -155,14 +124,9 @@ export const es: Messages = {
     noPriorityFixes: 'No hay correcciones prioritarias. El resto del informe es sobre todo confirmación.',
     fix: 'Solución:',
     tabs: { analyze: 'Informe completo', style: 'Estilo de redacción', jd: 'Coincidencia con la oferta', data: 'Datos extraídos' },
+    details: 'Informe completo y detalles',
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palabras · ${chars} caracteres legibles.`,
-    humanization: {
-      title: 'Puntuación de naturalidad',
-      blurb: 'Lo natural que suena la redacción: ritmo, relleno, inicios repetidos, voz pasiva. No es un detector de IA.',
-      none: 'No se ha marcado ningún hábito de redacción.',
-      all: 'Todas las comprobaciones de redacción →',
-    },
     style: {
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palabras`,
       intro: 'Comprobaciones deterministas de redacción, ejecutadas en tu dispositivo.',

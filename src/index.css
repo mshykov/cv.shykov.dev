@@ -119,49 +119,36 @@ body {
     @apply bg-neon text-on-neon;
   }
 
-  /* Highlighter sweep behind the key phrase of the H1. CSS only. */
-  .hl {
-    background: linear-gradient(var(--color-neon), var(--color-neon)) 0 0 / 100% 100% no-repeat;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    color: var(--color-on-neon);
-    padding: 0 0.1em;
-    margin: 0 -0.1em;
-    animation: hl-sweep 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s backwards;
-  }
-
-  .rise {
-    animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  }
-
-  .rise-2 {
-    animation-delay: 0.1s;
-  }
-}
-
-@keyframes hl-sweep {
-  from {
-    background-size: 0% 100%;
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hl,
-  .rise {
-    animation: none;
-  }
-
   /* Unlayered, so it beats the Tailwind utilities without !important. */
   *,
   ::before,
   ::after {
     transition: none;
+  }
+}
+
+/* The upload field of the first screen: a dashed box that looks like every upload field. */
+@layer components {
+  .dropzone {
+    @apply flex w-full max-w-3xl cursor-pointer flex-col items-center gap-3 border-2 border-dashed border-rule-2 px-6 py-10 text-center transition-colors duration-150 hover:border-ink hover:bg-panel sm:py-12;
+  }
+
+  .dropzone:focus-visible,
+  .dropzone[data-drag='true'] {
+    @apply border-ink bg-neon;
+  }
+
+  /* "No account", "No AI", "No upload to server": a small neon square before each. */
+  .facts li::before {
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-right: 0.5em;
+    background: var(--color-neon);
+    outline: 1px solid var(--color-ink);
   }
 }

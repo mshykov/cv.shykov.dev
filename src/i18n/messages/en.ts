@@ -63,49 +63,18 @@ export const en = {
     header: {
       primaryMode: 'Primary app mode',
       analyze: 'Fast ATS Score',
-      build: 'Build',
-      github: 'GitHub',
-      githubAria: 'Open source on GitHub',
+      build: 'Build a CV',
     },
     hero: {
       h1: 'Free CV ATS score checker. Private by default.',
-      lead: 'Get your CV ATS score from a PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.',
       check: 'Check my resume',
-      build: 'Build ATS-clean CV',
-      privacy: {
-        aria: 'What leaves your browser',
-        zero: 'bytes of your CV sent to a server',
-        rows: [
-          { label: 'File upload', value: 'None' },
-          { label: 'Account', value: 'None' },
-          { label: 'LLM calls', value: 'None' },
-        ],
-        source: 'Source code',
-        sourceValue: 'Open, MIT',
-      },
-    },
-    how: {
-      aria: 'How the local ATS resume checker works',
-      steps: [
-        { title: 'Choose PDF/DOCX', body: 'Pick a resume file from your device.' },
-        { title: 'Parse in your browser', body: 'Text extraction and scoring run in this browser.' },
-        { title: 'Fix the top issues', body: 'See score, breakdown, keywords, and exportable notes.' },
-      ],
+      // Said right under the headline: where it runs, and three things it does not need.
+      runs: 'Runs in your browser.',
+      facts: ['No account', 'No AI', 'No upload to server'],
     },
     loading: {
       score: 'Loading fast ATS score…',
       builder: 'Loading builder…',
-    },
-    trust: {
-      aria: 'Privacy and trust notes',
-      heading: 'Privacy claims you can inspect.',
-      body: 'The code is open source under the MIT license, and the product promise stays narrow: local document parsing, deterministic scoring, no account wall, and no AI model call hidden behind the interface.',
-      cards: [
-        { title: 'Browser-side parser', body: 'PDF and DOCX text is extracted in the browser with client-side libraries.' },
-        { title: 'No LLM scoring', body: 'Scores come from repeatable checks for parseability, sections, format, and content signals.' },
-      ],
-      repoTitle: 'Open source on GitHub',
-      repoBody: 'MIT-licensed. Read the scoring checks, parser, and export flow, open an issue, or send a pull request.',
     },
     faq: {
       aria: 'ATS resume checker FAQ',
@@ -156,8 +125,8 @@ export const en = {
     analyzed: 'Analyzed',
     analyzeAnother: 'Analyze another CV',
     dropBusy: 'Scoring your CV…',
-    dropIdle: 'Drop your CV here for a fast ATS score',
-    dropHint: 'PDF or DOCX · runs in your browser · no upload · no LLM',
+    dropIdle: 'Drop a PDF or DOCX here',
+    chooseButton: 'Choose file',
     chooseFile: 'Please choose a PDF or DOCX file.',
     // `stage` is one of the stage names below.
     failed: (stage: string) => `Analysis failed while ${stage}. Please tap “Copy details” and send them to me.`,
@@ -169,14 +138,9 @@ export const en = {
     noPriorityFixes: 'No priority fixes found. The remaining report is mostly confirmation.',
     fix: 'Fix:',
     tabs: { analyze: 'Full report', style: 'Writing style', jd: 'Job match', data: 'Extracted data' },
+    details: 'Full report and details',
     pages: (n: number) => `${n} ${n === 1 ? 'page' : 'pages'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} words · ${chars} readable characters.`,
-    humanization: {
-      title: 'Humanization score',
-      blurb: 'How natural the writing reads: rhythm, filler, repeated openers, passive voice. Not an AI detector.',
-      none: 'No writing habits flagged.',
-      all: 'All writing checks →',
-    },
     style: {
       counts: (sentences: number, words: number) => `${sentences} sentences, ${words} words`,
       intro: 'Deterministic writing checks, run on your device.',

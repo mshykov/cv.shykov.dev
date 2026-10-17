@@ -50,49 +50,18 @@ export const ptBR: Messages = {
     header: {
       primaryMode: 'Modo principal do app',
       analyze: 'Pontuação ATS',
-      build: 'Criar',
-      github: 'GitHub',
-      githubAria: 'Código aberto no GitHub',
+      build: 'Criar currículo',
     },
     hero: {
       h1: 'Verificador de currículo ATS grátis. Privado por padrão.',
-      lead: 'Veja a pontuação ATS do seu currículo a partir de um PDF ou DOCX em segundos, comece pelas correções de maior impacto, compare palavras-chave e crie um currículo compatível com ATS, sem enviar arquivo, sem cadastro e sem chamadas a LLM.',
       check: 'Verificar meu currículo',
-      build: 'Criar currículo para ATS',
-      privacy: {
-        aria: 'O que sai do seu navegador',
-        zero: 'bytes do seu currículo enviados a um servidor',
-        rows: [
-          { label: 'Envio de arquivo', value: 'Nenhum' },
-          { label: 'Conta', value: 'Nenhuma' },
-          { label: 'Chamadas a LLM', value: 'Nenhuma' },
-        ],
-        source: 'Código-fonte',
-        sourceValue: 'Aberto, MIT',
-      },
-    },
-    how: {
-      aria: 'Como funciona o verificador de currículo ATS local',
-      steps: [
-        { title: 'Escolha o PDF/DOCX', body: 'Selecione um arquivo de currículo no seu dispositivo.' },
-        { title: 'Leitura no navegador', body: 'A extração do texto e a pontuação rodam neste navegador.' },
-        { title: 'Corrija os principais problemas', body: 'Veja pontuação, detalhamento, palavras-chave e notas para exportar.' },
-      ],
+      // Said right under the headline: where it runs, and three things it does not need.
+      runs: 'Roda no seu navegador.',
+      facts: ['Sem cadastro', 'Sem IA', 'Sem envio a servidor'],
     },
     loading: {
       score: 'Carregando a pontuação ATS…',
       builder: 'Carregando o construtor…',
-    },
-    trust: {
-      aria: 'Notas de privacidade e confiança',
-      heading: 'Promessas de privacidade que você pode conferir.',
-      body: 'O código é aberto, sob licença MIT, e a promessa do produto é estreita: leitura local do documento, pontuação determinística, sem cadastro obrigatório e sem nenhum modelo de IA escondido atrás da interface.',
-      cards: [
-        { title: 'Leitor no navegador', body: 'O texto de PDF e DOCX é extraído no navegador, com bibliotecas que rodam no próprio dispositivo.' },
-        { title: 'Pontuação sem LLM', body: 'As notas vêm de verificações repetíveis de legibilidade, seções, formato e conteúdo.' },
-      ],
-      repoTitle: 'Código aberto no GitHub',
-      repoBody: 'Licença MIT. Leia as verificações de pontuação, o leitor e a exportação, abra uma issue ou envie um pull request.',
     },
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de currículo ATS',
@@ -142,8 +111,8 @@ export const ptBR: Messages = {
     analyzed: 'Analisado',
     analyzeAnother: 'Analisar outro currículo',
     dropBusy: 'Pontuando seu currículo…',
-    dropIdle: 'Solte seu currículo aqui para ver a pontuação ATS',
-    dropHint: 'PDF ou DOCX · roda no navegador · sem envio · sem LLM',
+    dropIdle: 'Solte aqui um PDF ou DOCX',
+    chooseButton: 'Escolher arquivo',
     chooseFile: 'Escolha um arquivo PDF ou DOCX.',
     failed: (stage: string) => `A análise falhou na etapa “${stage}”. Toque em “Copiar detalhes” e envie-os para mim.`,
     stages: { loading: 'carregamento dos módulos', extracting: 'extração do texto', analyzing: 'análise', parsing: 'leitura da estrutura', style: 'verificação do estilo' },
@@ -154,14 +123,9 @@ export const ptBR: Messages = {
     noPriorityFixes: 'Nenhuma correção prioritária encontrada. O restante do relatório é, em sua maior parte, confirmação.',
     fix: 'Correção:',
     tabs: { analyze: 'Relatório completo', style: 'Estilo de escrita', jd: 'Compatibilidade com a vaga', data: 'Dados extraídos' },
+    details: 'Relatório completo e detalhes',
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palavras · ${chars} caracteres legíveis.`,
-    humanization: {
-      title: 'Índice de naturalidade',
-      blurb: 'Quão natural a escrita soa: ritmo, enchimento, inícios repetidos, voz passiva. Não é um detector de IA.',
-      none: 'Nenhum vício de escrita encontrado.',
-      all: 'Todas as verificações de escrita →',
-    },
     style: {
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palavras`,
       intro: 'Verificações de escrita determinísticas, feitas no seu dispositivo.',

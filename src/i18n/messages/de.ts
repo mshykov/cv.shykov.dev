@@ -53,49 +53,18 @@ export const de: Messages = {
     header: {
       primaryMode: 'Hauptmodus der App',
       analyze: 'Schneller ATS-Score',
-      build: 'Erstellen',
-      github: 'GitHub',
-      githubAria: 'Open Source auf GitHub',
+      build: 'CV erstellen',
     },
     hero: {
       h1: 'Lebenslauf ATS Check kostenlos. Privat im Browser.',
-      lead: 'ATS Lebenslauf prüfen: Sie erhalten den ATS-Score Ihres Lebenslaufs aus einer PDF- oder DOCX-Datei in Sekunden, sehen die wirksamsten Korrekturen zuerst, gleichen Keywords ab und erstellen einen ATS-tauglichen Lebenslauf – ohne Upload, Konto oder LLM-Aufrufe.',
       check: 'Lebenslauf prüfen',
-      build: 'ATS-tauglichen Lebenslauf erstellen',
-      privacy: {
-        aria: 'Was Ihren Browser verlässt',
-        zero: 'Byte Ihres Lebenslaufs an einen Server gesendet',
-        rows: [
-          { label: 'Datei-Upload', value: 'Keiner' },
-          { label: 'Konto', value: 'Keines' },
-          { label: 'LLM-Aufrufe', value: 'Keine' },
-        ],
-        source: 'Quellcode',
-        sourceValue: 'Offen, MIT',
-      },
-    },
-    how: {
-      aria: 'So funktioniert der lokale ATS-Check für den Lebenslauf',
-      steps: [
-        { title: 'PDF/DOCX auswählen', body: 'Wählen Sie eine Lebenslaufdatei von Ihrem Gerät aus.' },
-        { title: 'Im Browser auslesen', body: 'Textextraktion und Bewertung laufen in diesem Browser.' },
-        { title: 'Wichtigste Probleme beheben', body: 'Sehen Sie Score, Aufschlüsselung, Keywords und exportierbare Hinweise.' },
-      ],
+      // Said right under the headline: where it runs, and three things it does not need.
+      runs: 'Läuft in Ihrem Browser.',
+      facts: ['Kein Konto', 'Keine KI', 'Kein Upload auf einen Server'],
     },
     loading: {
       score: 'Schneller ATS-Score wird geladen …',
       builder: 'Lebenslauf-Editor wird geladen …',
-    },
-    trust: {
-      aria: 'Hinweise zu Datenschutz und Vertrauen',
-      heading: 'Datenschutzversprechen zum Nachprüfen.',
-      body: 'Der Code ist Open Source unter der MIT-Lizenz, und das Produktversprechen bleibt eng gefasst: lokale Verarbeitung der Dokumente, deterministische Bewertung, kein Kontozwang und kein KI-Modell, das sich hinter der Oberfläche versteckt.',
-      cards: [
-        { title: 'Parser im Browser', body: 'Der Text aus PDF und DOCX wird im Browser mit clientseitigen Bibliotheken extrahiert.' },
-        { title: 'Keine LLM-Bewertung', body: 'Der Score entsteht aus wiederholbaren Prüfungen zu Lesbarkeit, Abschnitten, Format und Inhaltssignalen.' },
-      ],
-      repoTitle: 'Open Source auf GitHub',
-      repoBody: 'MIT-lizenziert. Lesen Sie die Prüfregeln, den Parser und den Exportablauf, eröffnen Sie ein Issue oder senden Sie einen Pull Request.',
     },
     faq: {
       aria: 'Häufige Fragen zum ATS-Check für den Lebenslauf',
@@ -145,8 +114,8 @@ export const de: Messages = {
     analyzed: 'Analysiert',
     analyzeAnother: 'Weiteren Lebenslauf analysieren',
     dropBusy: 'Ihr Lebenslauf wird bewertet …',
-    dropIdle: 'Lebenslauf hier ablegen für einen schnellen ATS-Score',
-    dropHint: 'PDF oder DOCX · läuft in Ihrem Browser · kein Upload · keine KI',
+    dropIdle: 'PDF oder DOCX hier ablegen',
+    chooseButton: 'Datei wählen',
     chooseFile: 'Bitte wählen Sie eine PDF- oder DOCX-Datei aus.',
     failed: (stage: string) => `Die Analyse ist ${stage} fehlgeschlagen. Bitte tippen Sie auf „Details kopieren“ und senden Sie mir die Angaben.`,
     stages: { loading: 'beim Laden der Module', extracting: 'beim Extrahieren des Texts', analyzing: 'bei der Analyse', parsing: 'beim Auslesen der Daten', style: 'bei der Stilprüfung' },
@@ -157,14 +126,9 @@ export const de: Messages = {
     noPriorityFixes: 'Keine vorrangigen Korrekturen gefunden. Der restliche Bericht ist überwiegend Bestätigung.',
     fix: 'Korrektur:',
     tabs: { analyze: 'Vollständiger Bericht', style: 'Schreibstil', jd: 'Stellenabgleich', data: 'Extrahierte Daten' },
+    details: 'Vollständiger Bericht und Details',
     pages: (n: number) => `${n} ${n === 1 ? 'Seite' : 'Seiten'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} Wörter · ${chars} lesbare Zeichen.`,
-    humanization: {
-      title: 'Natürlichkeits-Score',
-      blurb: 'Wie natürlich der Text klingt: Rhythmus, Füllwörter, wiederholte Satzanfänge, Passiv. Kein KI-Detektor.',
-      none: 'Keine auffälligen Schreibgewohnheiten.',
-      all: 'Alle Stilprüfungen →',
-    },
     style: {
       counts: (sentences: number, words: number) => `${sentences} Sätze, ${words} Wörter`,
       intro: 'Deterministische Stilprüfungen, ausgeführt auf Ihrem Gerät.',

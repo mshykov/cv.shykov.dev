@@ -1,8 +1,9 @@
-import { useCallback, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Report, Check, Status } from './lib/analyze'
 import { getTopFixes } from './lib/analyze'
 // Dependency-free, so this stays out of the lazily loaded extractor bundle.
 import { isSupportedDocument } from './lib/filetype.ts'
+import type { Job } from './lib/job.ts'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
@@ -59,27 +60,6 @@ function CheckRow({ c }: CheckRowProps) {
   )
 }
 
-// Category totals as a plain list: name left, points right, no bars.
-function CategoryTotals({ report }: Readonly<{ report: Report }>) {
-  const { analysis } = useMessages()
-  const categories = [...new Set(report.checks.map((c) => c.category))]
-  return (
-    <dl>
-      {categories.map((cat) => {
-        const items = report.checks.filter((c) => c.category === cat)
-        const points = items.reduce((s, c) => s + c.points, 0)
-        const max = items.reduce((s, c) => s + c.max, 0)
-        return (
-          <div key={cat} className="flex items-baseline justify-between gap-3 border-b border-rule py-3">
-            <dt className="text-ink-2">{analysis.categories[cat]}</dt>
-            <dd className="font-mono text-sm font-medium tabular-nums">{points}/{max}</dd>
-          </div>
-        )
-      })}
-    </dl>
-  )
-}
-
 function TopFixes({ fixes }: TopFixesProps) {
   const { analyzer } = useMessages()
   if (!fixes.length) {
@@ -100,39 +80,6 @@ function TopFixes({ fixes }: TopFixesProps) {
         </li>
       ))}
     </ol>
-  )
-}
-
-type HumanizationCardProps = Readonly<{ style: StyleReport; onOpen: () => void }>
-
-// Surfaces the writing-style score next to the ATS score so it is not hidden
-// behind a tab. Same honesty as the tab: habits to fix, not an AI-detector verdict.
-function HumanizationCard({ style, onOpen }: HumanizationCardProps) {
-  const { analyzer } = useMessages()
-  const tone = STYLE_STATUS[style.band.tone]
-  const flagged = style.signals.filter((s) => s.level !== 'ok').sort((a, b) => Number(b.level === 'major') - Number(a.level === 'major'))
-  return (
-    <div className="mt-10 min-w-0 border-t-2 border-ink pt-5">
-      <h2 className="text-xl font-bold tracking-tight">{analyzer.humanization.title}</h2>
-      <p className="mt-1 text-ink-2">{analyzer.humanization.blurb}</p>
-      <div className="mt-4 flex items-center gap-3">
-        <ScoreRing score={style.score} tone={tone} compact className="shrink-0" />
-        <p className="flex items-center gap-2 font-semibold"><StatusMark status={tone} />{style.band.label}</p>
-      </div>
-      {flagged.length > 0 ? (
-        <ul className="mt-4 space-y-2">
-          {flagged.slice(0, 3).map((s) => (
-            <li key={s.id} className="flex gap-2.5">
-              <StatusMark status={STYLE_STATUS[s.level]} className="mt-0.5" />
-              <span><span className="font-semibold">{s.label}.</span> {s.fix ?? s.detail}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="mt-4">{analyzer.humanization.none}</p>
-      )}
-      <button type="button" onClick={onOpen} className="btn-sm mt-4">{analyzer.humanization.all}</button>
-    </div>
   )
 }
 
@@ -158,133 +105,109 @@ function StyleRow({ s }: StyleRowProps) {
   )
 }
 
-export default function Analyzer() {
+type AnalyzerProps = Readonly<{
+  /** The CV to score. The parent remounts this component for every new file. */
+  job: Job
+  onBusyChange: (busy: boolean) => void
+  /** Open the file picker again. */
+  onAnother: () => void
+}>
+
+export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps) {
   const { locale, messages: m } = useLocale()
   const { analyzer } = m
+  const fileName = job.file.name
   const [report, setReport] = useState<Report | null>(null)
   const [resume, setResume] = useState<Resume | null>(null)
   const [cvText, setCvText] = useState('')
-  const [fileName, setFileName] = useState('')
-  const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [errDetail, setErrDetail] = useState('')
-  const [drag, setDrag] = useState(false)
   const [tab, setTab] = useState<Tab>('analyze')
   const [jdText, setJdText] = useState('')
   const [jd, setJd] = useState<JDMatch | null>(null)
   const [style, setStyle] = useState<StyleReport | null>(null)
   // The CV was not written in English, so the English-only style checks stay out of it.
   const [styleSkipped, setStyleSkipped] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  // Nothing blocks a second upload while the first is still parsing - the
-  // dropzone stays droppable and `busy` only swaps a caption. Two runs then
-  // race, and the slower one lands last: the header said "Analyzed
-  // sample-cv.pdf" above a 60-page report. Stamp each run and let only the
-  // newest one write state.
-  const runId = useRef(0)
+  const resultRef = useRef<HTMLElement>(null)
+  // The run reads the messages of the moment it starts; a new messages object must not restart it.
+  const messages = useRef(m)
+  useEffect(() => { messages.current = m })
 
-  const run = useCallback(async (file: File) => {
-    const id = (runId.current += 1)
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false)
-    if (!isSupportedDocument(file)) { setError(analyzer.chooseFile); return }
-    setBusy(true); setFileName(file.name); setTab('analyze')
-    let stage: Stage = 'loading'
-    try {
-      const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }] = await Promise.all([
-        import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'),
-      ])
-      stage = 'extracting'
-      const ex = await extractDocument(file)
-      stage = 'analyzing'
-      const rep = analyze(ex, m.analysis)
-      stage = 'parsing'
-      const res = parseResume(ex)
-      stage = 'style'
-      // The writing-style signals look for English stock phrases and English
-      // passive voice. On a Spanish or German CV they would measure nothing.
-      const language = detectLanguage(ex.text)
-      const skip = language !== 'en' && language !== 'unknown'
-      const sty = skip ? null : analyzeStyle(ex.text, ex.lines)
-      if (runId.current !== id) return
-      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip)
-    } catch (e) {
-      if (runId.current !== id) return
-      const err = e instanceof Error ? e : new Error(String(e))
-      const detail = `stage: ${STAGE_DETAIL[stage]}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
-      console.error('[ATS Resume Toolkit] analyze failed —', detail)
-      setError(analyzer.failed(analyzer.stages[stage]))
-      setErrDetail(detail)
-    } finally {
-      // A superseded run must not clear the spinner out from under the new one.
-      if (runId.current === id) setBusy(false)
+  // One run per mounted job. Choosing another file remounts this component, so a slow
+  // earlier run (a 60-page PDF) can never write over the newer result: its `current`
+  // flag is false by then (e2e: "a superseded upload never overwrites the newer result").
+  useEffect(() => {
+    let current = true
+    const settle = () => {
+      if (current) onBusyChange(false)
     }
-  }, [m.analysis, analyzer])
+    const run = async (file: File) => {
+      const { analysis, analyzer } = messages.current
+      if (!isSupportedDocument(file)) {
+        setError(analyzer.chooseFile)
+        settle()
+        return
+      }
+      let stage: Stage = 'loading'
+      try {
+        const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }] = await Promise.all([
+          import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'),
+        ])
+        stage = 'extracting'
+        const ex = await extractDocument(file)
+        stage = 'analyzing'
+        const rep = analyze(ex, analysis)
+        stage = 'parsing'
+        const res = parseResume(ex)
+        stage = 'style'
+        // The writing-style signals look for English stock phrases and English
+        // passive voice. On a Spanish or German CV they would measure nothing.
+        const language = detectLanguage(ex.text)
+        const skip = language !== 'en' && language !== 'unknown'
+        const sty = skip ? null : analyzeStyle(ex.text, ex.lines)
+        if (!current) return
+        setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip)
+      } catch (e) {
+        if (!current) return
+        const err = e instanceof Error ? e : new Error(String(e))
+        const detail = `stage: ${STAGE_DETAIL[stage]}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
+        console.error('[ATS Resume Toolkit] analyze failed —', detail)
+        setError(analyzer.failed(analyzer.stages[stage]))
+        setErrDetail(detail)
+      } finally {
+        settle()
+      }
+    }
+    void run(job.file)
+    return () => { current = false }
+  }, [job.file, onBusyChange])
 
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault(); setDrag(false)
-    const f = e.dataTransfer.files?.[0]; if (f) run(f)
-  }, [run])
+  // The first screen is full height, so bring the report into view once it exists.
+  useEffect(() => {
+    if (!report) return
+    const calm = globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches
+    resultRef.current?.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' })
+  }, [report])
 
-  const runJd = useCallback(async () => {
+  const runJd = async () => {
     if (!resume || !jdText.trim()) return
-    const id = runId.current
     const { matchJD } = await import('./lib/jdmatch')
-    // A new CV may have finished analyzing during that import; its own reset
-    // already cleared `jd`, and this match belongs to the previous document.
-    if (runId.current !== id) return
     setJd(matchJD(cvText, resume.skills, jdText))
-  }, [resume, cvText, jdText])
+  }
 
-  const download = useCallback(async () => {
+  const download = async () => {
     if (!report || !resume) return
     const [{ toMarkdown }, { downloadText }] = await Promise.all([import('./lib/report'), import('./lib/download')])
     downloadText(fileName.replace(/\.[^.]+$/, '') + m.report.fileSuffix, toMarkdown(fileName, report, resume, m, jd ?? undefined))
-  }, [report, resume, jd, fileName, m])
+  }
 
   const categories = report ? [...new Set(report.checks.map((c) => c.category))] : []
   const topFixes = report ? getTopFixes(report, 3) : []
 
   return (
     <div>
-      <h2 className="sr-only">{analyzer.srHeading}</h2>
-
-      {report ? (
-        <div
-          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
-          onDragLeave={() => setDrag(false)}
-          onDrop={onDrop}
-          className={`flex flex-wrap items-center justify-between gap-3 border px-5 py-4 transition-colors ${drag ? 'border-ink bg-neon' : 'border-rule-2'}`}
-        >
-          <p className="text-ink-2">{analyzer.analyzed} <span className="font-semibold text-ink">{fileName}</span></p>
-          <button type="button" onClick={() => inputRef.current?.click()} className="btn-sm">{analyzer.analyzeAnother}</button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
-          onDragLeave={() => setDrag(false)}
-          onDrop={onDrop}
-          className={`flex w-full flex-col gap-2.5 border px-6 py-8 text-left transition-colors sm:px-9 sm:py-10 lg:flex-row lg:items-end lg:justify-between ${drag ? 'border-ink bg-neon' : 'border-rule-2 hover:border-ink'}`}
-        >
-          <span className="text-[clamp(1.5rem,4vw,2.25rem)] font-bold leading-[1.1] tracking-[-0.025em]">{busy ? analyzer.dropBusy : analyzer.dropIdle}</span>
-          <span className="lab lg:max-w-[20em] lg:text-right">{analyzer.dropHint}</span>
-        </button>
-      )}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0]
-          if (f) run(f)
-          e.currentTarget.value = ''
-        }}
-      />
-
       {error && (
-        <div role="alert" className="mt-4 flex gap-3 border-2 border-ink px-5 py-4">
+        <div role="alert" className="flex gap-3 border-2 border-ink px-5 py-4">
           <StatusMark status="fail" className="mt-0.5" />
           <div className="min-w-0">
             <p className="font-semibold">{error}</p>
@@ -301,28 +224,32 @@ export default function Analyzer() {
       )}
 
       {report && resume && (
-        <section className="mt-20" aria-live="polite">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-20">
-            <div className="lg:sticky lg:top-6 lg:self-start">
-              <h2 className="mb-5 text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em]">{analyzer.scoreHeading}</h2>
-              <ScoreRing score={report.score} tone={report.band.tone} className="rise" />
-              <p className="mt-4 flex items-center gap-2.5 text-lg font-semibold">
-                <StatusMark status={report.band.tone} />
-                {report.band.label}
-              </p>
-              <p className="lab mt-2">{reportMetaSummary(m, report)}</p>
-              <div className="mt-6"><CategoryTotals report={report} /></div>
-              {style && <HumanizationCard style={style} onOpen={() => setTab('style')} />}
+        <section ref={resultRef} className="grid scroll-mt-6 gap-12 pt-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-24" aria-live="polite">
+          <div>
+            <h2 className="lab">{analyzer.scoreHeading}</h2>
+            <ScoreRing score={report.score} tone={report.band.tone} className="mt-3" />
+            <p className="mt-5 flex items-center gap-2.5 text-2xl font-semibold tracking-[-0.02em]">
+              <StatusMark status={report.band.tone} />
+              {report.band.label}
+            </p>
+            <p className="lab mt-3 normal-case">{fileName} · {reportMetaSummary(m, report)}</p>
+          </div>
+
+          <div className="min-w-0">
+            <h3 className="sr-only">{analyzer.topFixes}</h3>
+            <TopFixes fixes={topFixes} />
+            <div className="mt-5 flex flex-wrap gap-x-7">
+              <button type="button" onClick={download} className="alt">{analyzer.downloadReport}</button>
+              <button type="button" onClick={onAnother} className="alt">{analyzer.analyzeAnother}</button>
             </div>
 
-            <div className="min-w-0">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <h3 className="text-xl font-bold tracking-tight">{analyzer.topFixes}</h3>
-                <button type="button" onClick={download} className="btn-sm shrink-0">{analyzer.downloadReport}</button>
-              </div>
-              <TopFixes fixes={topFixes} />
-
-              <nav className="mt-16 flex flex-wrap gap-x-1 border-b border-rule" aria-label={analyzer.tabs.analyze}>
+            <details className="group mt-8 border-b border-rule">
+              <summary className="flex min-h-13 cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
+                {analyzer.details}
+                <span aria-hidden className="font-mono text-xl text-ink-2 group-open:hidden">+</span>
+                <span aria-hidden className="hidden font-mono text-xl text-ink-2 group-open:inline">−</span>
+              </summary>
+              <nav className="flex flex-wrap gap-x-1 border-b border-rule" aria-label={analyzer.details}>
                 {([['analyze', analyzer.tabs.analyze], ['style', analyzer.tabs.style], ['jd', analyzer.tabs.jd], ['data', analyzer.tabs.data]] as [Tab, string][]).map(([id, label]) => (
                   <button
                     key={id}
@@ -335,7 +262,7 @@ export default function Analyzer() {
                   </button>
                 ))}
               </nav>
-
+              <div className="pb-10">
               {tab === 'analyze' && (
                 <div>
                   {categories.map((cat) => {
@@ -443,7 +370,8 @@ export default function Analyzer() {
                   </div>
                 </div>
               )}
-            </div>
+              </div>
+            </details>
           </div>
         </section>
       )}
