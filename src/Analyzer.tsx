@@ -257,7 +257,7 @@ export default function Analyzer() {
       const rep = analyze(ex, m.analysis)
       stage = 'parsing'
       const res = parseResume(ex)
-      const adv = getAdvisories(ex, res, m.analysis.advisories)
+      const adv = getAdvisories(ex, res, m.analysis.advisories, { locale })
       stage = 'style'
       // The writing-style signals look for English stock phrases and English
       // passive voice. On a Spanish or German CV they would measure nothing.
@@ -279,7 +279,7 @@ export default function Analyzer() {
       // A superseded run must not clear the spinner out from under the new one.
       if (runId.current === id) setBusy(false)
     }
-  }, [m.analysis, analyzer])
+  }, [m.analysis, analyzer, locale])
 
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault(); setDrag(false)

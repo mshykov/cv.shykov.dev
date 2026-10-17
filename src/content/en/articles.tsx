@@ -492,7 +492,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-11',
+    updated: '2026-10-17',
     summary:
       'Fix five things first: selectable text, your email in the body, a single column, standard section headings, and a date on every role. They decide whether the application arrives intact. Everything else decides whether it is found in a search, and then whether a human enjoys reading it.',
     body: (
@@ -527,6 +527,7 @@ Jan 2020 – now Terraform, AWS`}</Pre>
           <Li><strong>No stock phrasing.</strong> “Results-driven professional with a proven track record” tells a reader nothing.</Li>
           <Li><strong>Length matches your career.</strong> One page early on, two is normal after a decade. Three needs a reason.</Li>
           <Li><strong>The filename is a name</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Firstname_Lastname_CV.pdf</code>, not <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_REAL.pdf</code>.</Li>
+          <Li>Think about graduation years. Some candidates, mostly in the US and UK, leave out a graduation year more than 15 years old to reduce the risk of age bias. In other countries, and in academic CVs, the year is customary. Both are fine; decide on purpose.</Li>
         </Ul>
 
         <H2>Which of these a checker can verify for you</H2>

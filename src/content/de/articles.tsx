@@ -507,7 +507,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-11',
+    updated: '2026-10-17',
     summary:
       'Beheben Sie zuerst fünf Dinge: auswählbaren Text, Ihre E-Mail-Adresse im Haupttext, eine einzige Spalte, Standardüberschriften und ein Datum bei jeder Station. Diese fünf Punkte entscheiden, ob die Bewerbung unversehrt ankommt. Alles Weitere entscheidet, ob sie in einer Suche gefunden wird und ob ein Mensch sie gern liest.',
     body: (
@@ -543,6 +543,7 @@ Jan. 2020 – heute Terraform, AWS`}</Pre>
           <Li><strong>Keine Floskeln.</strong> „Ergebnisorientierter Profi mit nachweislichem Erfolg“ sagt einem Leser nichts.</Li>
           <Li><strong>Die Länge passt zur Laufbahn.</strong> Eine Seite am Anfang, zwei sind nach einem Jahrzehnt normal. Drei brauchen einen Grund.</Li>
           <Li><strong>Der Dateiname ist ein Name</strong> – <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Vorname_Nachname_Lebenslauf.pdf</code>, nicht <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">lebenslauf_final_v3_NEU.pdf</code>.</Li>
+          <Li>Überlegen Sie, ob Abschlussjahre sinnvoll sind. Manche Bewerber, vor allem in den USA und Großbritannien, lassen ein Abschlussjahr weg, das mehr als 15 Jahre zurückliegt, um das Risiko einer Altersdiskriminierung zu verringern. In anderen Ländern und in wissenschaftlichen Lebensläufen ist die Jahresangabe üblich. Beides ist in Ordnung; entscheiden Sie bewusst.</Li>
         </Ul>
 
         <H2>Was ein Checker davon für Sie prüfen kann</H2>
