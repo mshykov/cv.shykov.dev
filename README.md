@@ -15,6 +15,8 @@
   ·
   <a href="#run-locally">Run locally</a>
   ·
+  <a href="#design">Design</a>
+  ·
   <a href="#how-the-score-works">How scoring works</a>
   ·
   <a href="#writing-style-check">Writing style check</a>
@@ -30,17 +32,19 @@
 
 ## What It Does
 
-`cv.shykov.dev` is a privacy-first resume toolkit with two workflows:
+`cv.shykov.dev` is a privacy-first resume toolkit with three pages, each a real URL (so the browser's
+Back button works) and each in seven languages:
 
-- **Fast ATS Score** — drop a PDF or DOCX and get a 0-100 ATS-readiness score
-  plus top fixes. Four tabs: **Full report** (the deterministic score
-  breakdown), **Writing style** (habits that make CV prose read as
-  boilerplate), **Job match** (keyword coverage against a pasted job
-  description), and **Extracted data** (what a parser actually reads out of the
-  document).
-- **Build** — edit a clean single-column CV with live preview, document settings,
-  import from an existing CV, live score feedback, and export to selectable-text
-  PDF.
+- **Fast ATS Score** (`/`) — the first screen is one headline, an example of what a report looks like,
+  and a drop target. Drop a PDF or DOCX and get a 0-100 ATS-readiness score, the top three fixes and a
+  few advisories. Everything else is in a closed **Full report and details** disclosure with four tabs:
+  **Full report** (the deterministic score breakdown), **Writing style** (habits that make CV prose read
+  as boilerplate), **Job match** (keyword coverage against up to five pasted postings) and **Extracted
+  data** (what a parser actually reads out of the document). A second file in the same tab shows what
+  changed since the previous one.
+- **CV builder** (`/build`) — edit a clean single-column CV with live preview, document settings,
+  import from an existing CV, live score feedback, and export to selectable-text PDF.
+- **Guides** (`/guides`) — a static index of the long-form guides (see [Guides](#guides)).
 
 The product is intentionally narrow: it helps you check whether a resume is
 parser-friendly and gives concrete fixes without sending the document away.
@@ -57,14 +61,21 @@ Your CV is read in memory by the browser, analyzed locally, and then discarded.
 
 `public/sw.js` exists only as a kill switch for older cached installs.
 
+The Content-Security-Policy (`public/_headers`) sets `connect-src 'self' data: blob:`, so the
+page cannot send your file to another origin even by mistake, and fonts are self-hosted
+(`font-src 'self'`): there is no Google Fonts request. After an analysis, a collapsed note
+shows what the page actually requested (see [Check what this page sent](#check-what-this-page-sent)).
+
 ## Feature Summary
 
 | Area | What You Get |
 |------|--------------|
+| First screen | One headline, an example report, a drop target, and the facts that matter: runs in your browser, no account, no AI, no upload to a server |
 | ATS scoring | Parseability, contact, sections, format, and content checks |
 | Top fixes | Highest-impact failed or warning checks first |
 | Writing style | Rhythm, filler, repeated openers, unquantified claims, passive voice |
-| Job matching | Deterministic keyword coverage against a pasted job description |
+| Job matching | Deterministic keyword coverage against up to five pasted postings |
+| Score change | What moved since the previous file in the same tab (in memory only) |
 | Extracted data | Contact details, links, sections, entries, dates, and skills |
 | CV builder | Form-driven editor, live preview, document settings, import, export |
 | PDF export | ATS-clean single-column PDF with selectable text |
@@ -82,10 +93,15 @@ Useful commands:
 
 ```bash
 npm run lint
-npm test
-npm run build
-npm run smoke:build
+npm test               # unit tests (node:test)
+npm run build          # type-check, build, prerender every page in every language
+npm run smoke:build    # checks every built page: lang, hreflang, canonical, JSON-LD, links
+npm run test:e2e       # WebKit under the production CSP (build first)
 ```
+
+To preview a build the way production serves it, `npx vite preview --port 4319` (it applies the
+production CSP). For a Lighthouse run, serve `dist/` with compression: `vite preview` does not
+compress, which makes every number look worse than it is on Cloudflare.
 
 Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md) and the
 [`good first issue`](https://github.com/mshykov/cv.shykov.dev/labels/good%20first%20issue) label.
@@ -244,9 +260,9 @@ human wrote it in a hurry, and that is still worth fixing.
 ## Guides
 
 Static, JavaScript-free pages generated at build time by
-`scripts/prerender.mjs` from `src/content/<locale>/articles.tsx`. They share the app's
-stylesheet, ship no bundle, and exist because a single URL can rank for a
-handful of queries at most.
+`scripts/prerender.mjs` from `src/content/<locale>/articles.tsx`, indexed by the **Guides** page
+(`/guides`, `src/content/GuidesPage.tsx`). They share the app's stylesheet and header, ship no bundle,
+and exist because a single URL can rank for a handful of queries at most.
 
 | Page | Covers |
 |------|--------|
@@ -255,54 +271,71 @@ handful of queries at most.
 | [`/pdf-or-docx-for-ats`](https://cv.shykov.dev/pdf-or-docx-for-ats) | Which format to send, and the one PDF that fails every time |
 | [`/how-ats-parsing-works`](https://cv.shykov.dev/how-ats-parsing-works) | The four parsing stages, and which formatting rule maps to each |
 | [`/ats-resume-checklist`](https://cv.shykov.dev/ats-resume-checklist) | Fifteen checks ordered by what each one costs you |
+| [`/how-to-check-your-cv-score`](https://cv.shykov.dev/how-to-check-your-cv-score) | Checking a score for free in four steps, what the number means and which fixes move it |
 
 Adding one means adding an entry to `ARTICLES` (and `GUIDES`) in every language.
-The sitemap, `llms.txt`, and the homepage guide list are all generated from those
+The sitemap, `llms.txt`, the guides index and the homepage guide list are all generated from those
 arrays, so none of them can drift out of step with the pages that actually exist.
 
 ## Languages
 
 The toolkit and the guides are published in English (`/`), Spanish (`/es/`),
-Brazilian Portuguese (`/pt-br/`), European Portuguese (`/pt-pt/`), French (`/fr/`)
-German (`/de/`) and Ukrainian (`/uk/`). The
-interface, the scorer's messages, the report export and the
-builder are translated, and the scorer reads CVs written in any of these languages
-whatever language the page is in. `docs/localization.md` describes the architecture
-and how to add another language.
+Brazilian Portuguese (`/pt-br/`), European Portuguese (`/pt-pt/`), French (`/fr/`),
+German (`/de/`) and Ukrainian (`/uk/`). Each language has its own homepage, Build page
+(`/<code>/build`) and guides index (`/<code>/guides`). The interface, the scorer's messages,
+the report export and the builder are translated, and the scorer reads CVs written in any of
+these languages whatever language the page is in. The web font has no Cyrillic, so the
+Ukrainian pages draw Cyrillic in Onest (see [Design](#design)). `docs/localization.md` describes
+the architecture and how to add another language.
+
+## Design
+
+Black ink on warm paper, one neon (`#ccff00`) used only as a fill behind ink, hairlines instead of
+cards, square corners (the upload field is the one rounded shape), and one self-hosted grotesk
+(Schibsted Grotesk, plus Onest for Cyrillic). The page was cut down on purpose: a visitor needs to know
+that it is free, that nothing is uploaded and that there is no AI, so everything else (questions, guides,
+the full report) is folded away or sits below the first screen. Colours, radii and shadows are tokens
+only: the default Tailwind palette is switched off in `src/index.css`.
+
+The rules, the tokens, the font subset, why the previous template was dropped and what has to stay true
+are in [docs/design.md](docs/design.md). Read it before changing a class name.
 
 ## Tech Stack
 
 | Package | Version |
 |---------|---------|
-| Vite | 8.2.2 |
-| React | 19.2.8 |
+| Vite | 8.3.4 |
+| React | 19.3.1 |
 | TypeScript | 7.0.2 (`tsc`; 6.0 API kept for typescript-eslint) |
 | Tailwind CSS | 4.3.3 |
-| pdf.js (`pdfjs-dist`) | 6.2.108 |
-| mammoth | 1.12.1 |
-| @react-pdf/renderer | 4.8.1 |
+| pdf.js (`pdfjs-dist`) | 6.4.299 |
+| mammoth | 1.13.0 |
+| @react-pdf/renderer | 4.9.0 |
+| Playwright (e2e) | 1.64.1 |
 
-Versions tracked from `package.json`; a monthly dependency sweep keeps them current.
+Versions tracked from `package-lock.json`; a monthly dependency sweep keeps them current.
 
 ## Project Health
 
-**Code quality** — [SonarCloud](https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev), last analysis 2026-08-27, 3.1k lines of code (TypeScript, HTML):
+**Code quality** — [SonarCloud](https://sonarcloud.io/dashboard?id=mshykov_cv.shykov.dev), analysis of 2026-10-18, 15k lines of code (TypeScript, CSS, HTML):
 
 | Security | Reliability | Maintainability | Hotspots Reviewed | Coverage | Duplications |
 |----------|-------------|------------------|--------------------|----------|---------------|
-| A (0 issues) | A (0 issues) | A (7 issues) | 100% | – | 0.0% |
+| A (0 issues) | A (0 bugs) | A (52 code smells) | 100% | – | 0.0% |
 
-**Tests** — 95 unit tests (`node:test`) plus 3 Playwright end-to-end tests that
+**Tests** — 246 unit tests (`node:test`) plus 22 Playwright end-to-end tests that
 run WebKit under the production CSP, because this project's worst bugs have all
-been Safari-only.
+been Safari-only. The end-to-end suite scores a CV in every language, opens the builder in
+every language and exports a PDF, and checks that the Back button returns from `/build` to the
+score page.
 
-**Lighthouse** (mobile, cv.shykov.dev/, Lighthouse 12.8.2, 2026-09-01):
+**Lighthouse** (mobile, cv.shykov.dev/, simulated slow 4G with a 4x CPU slowdown, Lighthouse 13.4.1, 2026-10-18, after the redesign):
 
 | Performance | Accessibility | Best Practices | SEO |
 |--------------|----------------|-----------------|-----|
-| 99 | 100 | 100 | 100 |
+| 100 | 100 | 100 | 100 |
 
-FCP 1.5 s · LCP 1.7 s · TBT 0 ms · CLS 0 · zero console errors.
+FCP 0.9 s · LCP 1.1 s · TBT 0 ms · CLS 0 · Speed Index 0.9 s · 153 KiB transferred · zero console errors.
 
 Best Practices was 93 until 2026-09-01. Cloudflare was auto-injecting its Web
 Analytics beacon, and this site's own CSP blocked it, logging a violation in
