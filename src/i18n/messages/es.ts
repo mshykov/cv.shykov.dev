@@ -197,6 +197,11 @@ export const es: Messages = {
       missing: 'Faltan en tu CV',
       missingHint: '(añade solo las que sean ciertas)',
       covered: 'Ya cubiertas',
+      onlySkills: 'solo en Habilidades',
+      niceToHave: 'deseable',
+      onlySkillsHint: 'Aparece en Habilidades pero en ningún punto de experiencia. Una palabra clave pesa más cuando una viñeta muestra lo que hiciste con ella.',
+      copyMissing: 'Copiar palabras clave que faltan',
+      copied: 'Copiado',
     },
     data: {
       profile: 'Perfil',

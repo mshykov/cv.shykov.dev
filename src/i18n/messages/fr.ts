@@ -205,6 +205,11 @@ export const fr: Messages = {
       missing: 'Absents de votre CV',
       missingHint: '(n’ajoutez que ceux qui correspondent vraiment à votre parcours)',
       covered: 'Déjà présents',
+      onlySkills: 'seulement dans Compétences',
+      niceToHave: 'un plus',
+      onlySkillsHint: 'Présent dans Compétences, mais dans aucune puce d’expérience. Un mot-clé pèse davantage quand une puce montre ce que vous en avez fait.',
+      copyMissing: 'Copier les mots-clés manquants',
+      copied: 'Copié',
     },
     data: {
       profile: 'Profil',

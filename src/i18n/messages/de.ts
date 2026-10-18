@@ -199,6 +199,11 @@ export const de: Messages = {
       missing: 'In Ihrem Lebenslauf fehlen',
       missingHint: '(ergänzen Sie nur, was wirklich zutrifft)',
       covered: 'Bereits abgedeckt',
+      onlySkills: 'nur unter Kenntnisse',
+      niceToHave: 'wünschenswert',
+      onlySkillsHint: 'Steht unter Kenntnisse, aber in keinem Erfahrungspunkt. Ein Stichwort wirkt stärker, wenn ein Punkt zeigt, was Sie damit getan haben.',
+      copyMissing: 'Fehlende Schlüsselwörter kopieren',
+      copied: 'Kopiert',
     },
     data: {
       profile: 'Profil',

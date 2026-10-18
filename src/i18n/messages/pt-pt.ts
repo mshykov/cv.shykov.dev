@@ -198,6 +198,11 @@ export const ptPT: Messages = {
       missing: 'Em falta no seu CV',
       missingHint: '(acrescente apenas as que forem verdadeiras)',
       covered: 'Já incluídas',
+      onlySkills: 'só em Competências',
+      niceToHave: 'valorizado',
+      onlySkillsHint: 'Aparece em Competências, mas em nenhum marcador de experiência. Uma palavra-chave pesa mais quando um marcador mostra o que fez com ela.',
+      copyMissing: 'Copiar palavras-chave em falta',
+      copied: 'Copiado',
     },
     data: {
       profile: 'Perfil',

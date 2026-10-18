@@ -245,6 +245,7 @@ export default function Analyzer() {
   const [tab, setTab] = useState<Tab>('analyze')
   const [jdText, setJdText] = useState('')
   const [jd, setJd] = useState<JDMatch | null>(null)
+  const [copiedMissing, setCopiedMissing] = useState(false)
   const [style, setStyle] = useState<StyleReport | null>(null)
   // The CV was not written in English, so the English-only style checks stay out of it.
   const [styleSkipped, setStyleSkipped] = useState(false)
@@ -314,7 +315,7 @@ export default function Analyzer() {
     // A new CV may have finished analyzing during that import; its own reset
     // already cleared `jd`, and this match belongs to the previous document.
     if (runId.current !== id) return
-    setJd(matchJD(cvText, resume.skills, jdText))
+    setJd(matchJD(cvText, resume.skills, jdText, { experienceText: resume.experience.flatMap((e) => [e.title, e.company, ...e.bullets]).join('\n') }))
   }, [resume, cvText, jdText])
 
   const download = useCallback(async () => {
@@ -495,13 +496,33 @@ export default function Analyzer() {
                   {jd.missing.length > 0 && (
                     <div className="mt-4">
                       <h3 className="text-sm font-medium text-stone-700">{analyzer.jd.missing} <span className="font-normal text-stone-400">{analyzer.jd.missingHint}</span></h3>
-                      <div className="mt-2 flex flex-wrap gap-1.5">{jd.missing.map((k) => <span key={k.term} className="rounded-md bg-rose-50 px-2 py-1 text-xs text-rose-700 ring-1 ring-rose-200">{k.term}</span>)}</div>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {jd.missing.map((k) => (
+                          <span key={k.term} className="rounded-md bg-rose-50 px-2 py-1 text-xs text-rose-700 ring-1 ring-rose-200">
+                            {k.term}{k.priority === 'nice' && <span className="ml-1 text-rose-400">· {analyzer.jd.niceToHave}</span>}
+                          </span>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { void navigator.clipboard?.writeText(jd.missing.map((k) => k.term).join(', ')).then(() => { setCopiedMissing(true); setTimeout(() => setCopiedMissing(false), 1500) }) }}
+                        className="mt-2 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
+                      >
+                        {copiedMissing ? analyzer.jd.copied : analyzer.jd.copyMissing}
+                      </button>
                     </div>
                   )}
                   {jd.matched.length > 0 && (
                     <div className="mt-4">
                       <h3 className="text-sm font-medium text-stone-700">{analyzer.jd.covered}</h3>
-                      <div className="mt-2 flex flex-wrap gap-1.5">{jd.matched.map((k) => <span key={k.term} className="rounded-md bg-emerald-50 px-2 py-1 text-xs text-emerald-700 ring-1 ring-emerald-200">{k.term}</span>)}</div>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {jd.matched.map((k) => (
+                          <span key={k.term} className="rounded-md bg-emerald-50 px-2 py-1 text-xs text-emerald-700 ring-1 ring-emerald-200">
+                            {k.term}{k.where === 'skills' && <span className="ml-1 text-amber-600">· {analyzer.jd.onlySkills}</span>}
+                          </span>
+                        ))}
+                      </div>
+                      {jd.matched.some((k) => k.where === 'skills') && <p className="mt-2 text-xs text-stone-500">{analyzer.jd.onlySkillsHint}</p>}
                     </div>
                   )}
                 </div>
