@@ -53,7 +53,7 @@ export const fr: Messages = {
     header: {
       primaryMode: 'Mode principal de l’application',
       analyze: 'Score ATS rapide',
-      build: 'Créer un CV',
+      build: 'Éditeur de CV',
       openSource: 'Open source',
     },
     hero: {
@@ -279,7 +279,7 @@ export const fr: Messages = {
   },
 
   builder: {
-    heading: 'Créez un CV compatible ATS',
+    heading: 'Éditeur de CV compatible ATS',
     // <meta name="description"> of the Build page.
     description: 'Créez un CV compatible ATS dans votre navigateur : texte brut, rubriques standard, score et aperçu en direct, puis export en PDF sélectionnable. Sans envoi ni compte.',
     liveScore: 'Score en direct',

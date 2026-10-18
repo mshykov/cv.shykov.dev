@@ -21,7 +21,7 @@ drift back to the default SaaS template or grow the page again.
 
 | Where | What | Notes |
 |---|---|---|
-| First screen | wordmark, "Build a CV" link, language | no nav bar, no buttons row |
+| First screen | wordmark, the three pages, GitHub, language | one header on every page |
 | | H1, set huge | the sentence is the design (`messages.home.hero.h1`, unchanged: it carries the local search terms) |
 | | "Runs in your browser" set large, then "No account · No AI · No upload to server" with a neon square before each | the privacy claim, said plainly (a struck-through version was tried and dropped: it had to be decoded) |
 | | **the upload field**: dashed, rounded box (full width, one row on a laptop), upload icon, "Drop a PDF or DOCX here" underlined in neon (filled on hover/drag), solid "Choose file" button | looks like every upload field on purpose; no explanatory line. The whole hero accepts a dropped file |
@@ -38,13 +38,13 @@ in, it goes below the fold or into a closed disclosure, never above the drop lin
 
 ## Pages and navigation
 
-Four kinds of page, one header (`SiteHeader`: wordmark, **Fast ATS Score · Build a CV · Guides**,
+Four kinds of page, one header (`SiteHeader`: wordmark, **Fast ATS Score · CV builder · Guides**,
 GitHub, language) and one footer (`SiteFooter`):
 
 | URL (en / es) | Page | Built how |
 |---|---|---|
 | `/` · `/es/` | score checker | `App` (mode `analyze`), prerendered |
-| `/build` · `/es/build` | Build a CV | `App` (mode `build`), prerendered, same bundle |
+| `/build` · `/es/build` | CV builder | `App` (mode `build`), prerendered, same bundle |
 | `/guides` · `/es/guides` | guide index | `GuidesPage`, static, no JavaScript |
 | `/<slug>` | a guide | `ArticlePage`, static, no JavaScript |
 
@@ -55,7 +55,7 @@ On phones the three links drop to a second row under the wordmark.
 
 ## The Build view
 
-Same language, smaller scale: an H1 ("Build an ATS-clean CV", `messages.builder.heading`), one
+Same language, smaller scale: an H1 ("ATS-clean CV builder", `messages.builder.heading`), one
 toolbar row (live score block, "Import CV" as underlined text, solid "Export PDF"), the form on
 the left as titled sections between hairlines with line-style inputs (`.field-line`; textareas
 stay boxed), the live preview on the right. The section hints and the intro paragraph are gone;

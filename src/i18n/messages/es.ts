@@ -51,7 +51,7 @@ export const es: Messages = {
     header: {
       primaryMode: 'Modo principal de la aplicación',
       analyze: 'Puntuación ATS rápida',
-      build: 'Crear un CV',
+      build: 'Crear CV',
       openSource: 'Código abierto',
     },
     hero: {
@@ -271,7 +271,7 @@ export const es: Messages = {
   },
 
   builder: {
-    heading: 'Crea un CV compatible con ATS',
+    heading: 'Creador de CV compatible con ATS',
     // <meta name="description"> of the Build page.
     description: 'Crea un CV compatible con ATS en tu navegador: texto plano, secciones estándar, puntuación y vista previa en vivo, y exporta un PDF seleccionable. Sin subida ni cuenta.',
     liveScore: 'Puntuación en directo',

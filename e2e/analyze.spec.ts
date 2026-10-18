@@ -66,9 +66,9 @@ test('a superseded upload never overwrites the newer result', async ({ page }) =
 test('Build is a page of its own and Back returns to the score page', async ({ page }) => {
   await page.goto('/')
   const nav = page.getByRole('navigation', { name: 'Primary app mode' })
-  await nav.getByRole('link', { name: 'Build a CV' }).click()
+  await nav.getByRole('link', { name: 'CV builder' }).click()
   await expect(page).toHaveURL(/\/build$/)
-  await expect(page.getByRole('heading', { level: 1, name: 'Build an ATS-clean CV' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'ATS-clean CV builder' })).toBeVisible()
   await page.goBack()
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Free CV ATS score checker')

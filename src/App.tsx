@@ -5,6 +5,7 @@ import { SiteHeader } from './components/SiteHeader'
 import type { LanguageLink } from './components/LanguageSwitcher'
 import { LocaleProvider, useLocale, useMessages, type LocaleBundle } from './i18n/context.ts'
 import { LOCALES, buildPath, guidePath, homePath } from './i18n/locales.ts'
+import { headlineSize } from './components/headline.ts'
 import type { Job } from './lib/job.ts'
 
 // The page is a sentence, the drop line and three crossed-out words; everything else
@@ -21,31 +22,26 @@ const pageLinks = (path: (code: (typeof LOCALES)[number]['code']) => string): La
 const HOME_LINKS = pageLinks(homePath)
 const BUILD_LINKS = pageLinks(buildPath)
 
-// Headline steps: the shorter the sentence, the bigger it is set. On a laptop the size is
-// also capped by the height of the window, so the whole first screen stays in view.
-function headlineSize(h1: string): string {
-  const length = h1.replaceAll('\n', ' ').length
-  if (length <= 36) return 'text-[clamp(3.4rem,14.2vw,9.5rem)] lg:text-[clamp(3rem,min(6.4vw,15vh),6.5rem)]'
-  if (length <= 56) return 'text-[clamp(2.9rem,11.2vw,7.25rem)] lg:text-[clamp(2.5rem,min(5.6vw,13vh),5.25rem)]'
-  return 'text-[clamp(2.4rem,8.4vw,5.5rem)] lg:text-[clamp(2.25rem,min(4.2vw,10vh),4rem)]'
-}
-
 // A report, drawn in type: the number, a bar, the three biggest fixes. Labels come from the
 // scorer's own messages; the numbers are an example and the page says so.
 function SampleReport() {
   const { home: { hero }, analysis: { labels } } = useMessages()
   const fixes = [[5, labels.phone], [3, labels.links], [2, labels.quant]] as const
   return (
-    <div aria-hidden className="hidden border border-rule-2 p-6 lg:block">
-      <p className="lab">{hero.example}</p>
-      <div className="mt-2 flex items-end gap-2">
-        <span className="text-[4.5rem] font-semibold leading-[0.8] tracking-[-0.07em] tabular-nums">90</span>
-        <span className="pb-1 text-lg font-medium text-ink-2">/100</span>
+    <div aria-hidden className="hidden flex-col justify-between border border-rule-2 p-4 lg:mb-3 lg:mt-2 lg:flex">
+      <div>
+        <div className="flex items-end justify-between gap-3">
+          <div className="flex items-end gap-2">
+            <span className="text-[3.5rem] font-semibold leading-[0.8] tracking-[-0.07em] tabular-nums">90</span>
+            <span className="pb-0.5 text-base font-medium text-ink-2">/100</span>
+          </div>
+          <span className="lab">{hero.example}</span>
+        </div>
+        <div className="mt-3 h-1.5 bg-rule"><div className="h-full w-[90%] bg-neon outline outline-1 outline-ink" /></div>
       </div>
-      <div className="mt-4 h-1.5 bg-rule"><div className="h-full w-[90%] bg-neon outline outline-1 outline-ink" /></div>
-      <ol className="mt-4">
+      <ol className="mt-3">
         {fixes.map(([points, label]) => (
-          <li key={label} className="flex items-center justify-between gap-3 border-t border-rule py-2 text-sm">
+          <li key={label} className="flex items-center justify-between gap-3 border-t border-rule py-1.5 text-sm">
             <span className="truncate">{label}</span>
             <span className="neon-block shrink-0 px-1.5 py-0.5 font-mono text-xs font-semibold">−{points}</span>
           </li>
@@ -56,7 +52,6 @@ function SampleReport() {
 }
 
 type HeroProps = Readonly<{
-  compact: boolean
   busy: boolean
   drag: boolean
   onBrowse: () => void
@@ -65,11 +60,11 @@ type HeroProps = Readonly<{
 }>
 
 // The whole first screen: a sentence, the one thing to do, and what it does without.
-function Hero({ compact, busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
+function Hero({ busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
   const { home: { hero }, analyzer } = useMessages()
   return (
     <section
-      className={`flex flex-col justify-center gap-10 pb-12 pt-6 lg:gap-12 ${compact ? '' : 'min-h-[calc(100svh-4rem)]'}`}
+      className="flex flex-col gap-10 pb-12 pt-8 lg:gap-12 lg:pt-12"
       onDragOver={(e) => { e.preventDefault(); onDrag(true) }}
       onDragLeave={() => onDrag(false)}
       onDrop={(e) => {
@@ -79,7 +74,7 @@ function Hero({ compact, busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
         if (file) onDrop(file)
       }}
     >
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-end lg:gap-14">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-stretch lg:gap-14">
         <h1 className={`whitespace-pre-line text-balance font-semibold leading-[0.92] tracking-[-0.055em] ${headlineSize(hero.h1)}`}>{hero.h1}</h1>
         <SampleReport />
       </div>
@@ -150,7 +145,7 @@ function BuildPage() {
   const { home: { loading }, builder } = useMessages()
   return (
     <>
-      <h1 className={`pb-8 pt-6 font-semibold leading-[0.92] tracking-[-0.055em] sm:text-balance ${headlineSize(builder.heading)}`}>
+      <h1 className={`pb-8 pt-8 lg:pt-12 font-semibold leading-[0.92] tracking-[-0.055em] sm:text-balance ${headlineSize(builder.heading)}`}>
         {builder.heading.split(' ').map((word, i) => (
           // A short hyphenated word ("ATS-clean") must not break at its hyphen; a long one may.
           <span key={word} className={word.includes('-') && word.length <= 10 ? 'whitespace-nowrap' : undefined}>{i > 0 && ' '}{word}</span>
@@ -192,7 +187,7 @@ function AnalyzePage() {
           e.currentTarget.value = ''
         }}
       />}
-      <Hero compact={job !== null} busy={busy} drag={drag} onBrowse={browse} onDrop={choose} onDrag={setDrag} />
+      <Hero busy={busy} drag={drag} onBrowse={browse} onDrop={choose} onDrag={setDrag} />
       {job && (
         <Suspense fallback={<p className="py-20 text-mute">{m.home.loading.score}</p>}>
           <Analyzer key={job.id} job={job} onBusyChange={setBusy} onAnother={browse} />

@@ -272,7 +272,7 @@ export const ptPT: Messages = {
   },
 
   builder: {
-    heading: 'Crie um CV compatível com ATS',
+    heading: 'Criador de CV compatível com ATS',
     // <meta name="description"> of the Build page.
     description: 'Crie um CV compatível com ATS no navegador: texto simples, secções padrão, pontuação e pré-visualização em direto, e exporte um PDF selecionável. Sem envio nem conta.',
     liveScore: 'Pontuação em direto',

@@ -63,7 +63,7 @@ export const en = {
     header: {
       primaryMode: 'Primary app mode',
       analyze: 'Fast ATS Score',
-      build: 'Build a CV',
+      build: 'CV builder',
       openSource: 'Open source',
     },
     hero: {
@@ -288,7 +288,7 @@ export const en = {
   },
 
   builder: {
-    heading: 'Build an ATS-clean CV',
+    heading: 'ATS-clean CV builder',
     // <meta name="description"> of the Build page.
     description: 'Build an ATS-clean CV in your browser: plain text, standard sections, live score and preview, then export a selectable PDF. No upload, no account.',
     liveScore: 'Live score',

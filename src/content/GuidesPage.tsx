@@ -4,6 +4,7 @@ import type { LanguageLink } from '../components/LanguageSwitcher'
 import { SiteFooter } from '../components/SiteFooter'
 import { SiteHeader } from '../components/SiteHeader'
 import { LocaleProvider, useLocale, type LocaleBundle } from '../i18n/context.ts'
+import { headlineSize } from '../components/headline.ts'
 import { guidePath } from '../i18n/locales.ts'
 
 type Props = Readonly<{ bundle: LocaleBundle; links: LanguageLink[] }>
@@ -15,7 +16,7 @@ function Page({ links }: Readonly<{ links: LanguageLink[] }>) {
       <SiteHeader current="guides" links={links} />
       <div className="mx-auto max-w-300 px-5 pb-10 sm:px-8">
         <main>
-          <h1 className="pb-8 pt-6 text-[clamp(3.4rem,14.2vw,9.5rem)] font-semibold leading-[0.92] tracking-[-0.055em] lg:text-[clamp(3rem,min(8vw,16vh),7rem)]">{m.home.guides.heading}</h1>
+          <h1 className={`pb-8 pt-8 font-semibold leading-[0.92] tracking-[-0.055em] lg:pt-12 ${headlineSize(m.home.guides.heading)}`}>{m.home.guides.heading}</h1>
           <p className="max-w-[34em] text-xl text-ink-2">{m.home.guides.description}</p>
           <ul className="mt-12 border-t-2 border-ink">
             {guides.map((a) => (

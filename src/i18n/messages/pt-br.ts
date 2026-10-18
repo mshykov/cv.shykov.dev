@@ -270,7 +270,7 @@ export const ptBR: Messages = {
   },
 
   builder: {
-    heading: 'Crie um currículo para ATS',
+    heading: 'Criador de currículo para ATS',
     // <meta name="description"> of the Build page.
     description: 'Crie um currículo para ATS no navegador: texto simples, seções padrão, pontuação e prévia ao vivo, e exporte um PDF selecionável. Sem envio de arquivo nem cadastro.',
     liveScore: 'Pontuação ao vivo',
