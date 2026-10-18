@@ -5,6 +5,7 @@ import { getTopFixes } from './lib/analyze'
 import { isSupportedDocument } from './lib/filetype.ts'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
+import type { Segment, TitleMatch } from './lib/jdsignals'
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
 import type { Advisory } from './lib/advisories'
 import { deltaBetween, snapshotOf, type Delta, type Snapshot } from './lib/delta'
@@ -251,6 +252,11 @@ export default function Analyzer() {
   const [tab, setTab] = useState<Tab>('analyze')
   const [jdText, setJdText] = useState('')
   const [jd, setJd] = useState<JDMatch | null>(null)
+  // What the posting says beyond keywords: a title of yours, and the years of experience it asks for.
+  const [jdSignals, setJdSignals] = useState<{ title: TitleMatch; asked: number | null; have: number | null } | null>(null)
+  // The CV text split into plain and highlighted runs (matched keywords), shown on request.
+  const [cvSegments, setCvSegments] = useState<Segment[] | null>(null)
+  const [showCv, setShowCv] = useState(false)
   const [copiedMissing, setCopiedMissing] = useState(false)
   const [style, setStyle] = useState<StyleReport | null>(null)
   // The CV was not written in English, so the English-only style checks stay out of it.
@@ -272,7 +278,7 @@ export default function Analyzer() {
 
   const run = useCallback(async (file: File) => {
     const id = (runId.current += 1)
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([]); setNetwork(null)
+    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setJdSignals(null); setCvSegments(null); setShowCv(false); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([]); setNetwork(null)
     if (!isSupportedDocument(file)) { setError(analyzer.chooseFile); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
     // Everything the page requests from here on belongs to this file: see NetworkNote.
@@ -323,11 +329,19 @@ export default function Analyzer() {
   const runJd = useCallback(async () => {
     if (!resume || !jdText.trim()) return
     const id = runId.current
-    const { matchJD } = await import('./lib/jdmatch')
+    const [{ matchJD }, signals] = await Promise.all([import('./lib/jdmatch'), import('./lib/jdsignals')])
     // A new CV may have finished analyzing during that import; its own reset
     // already cleared `jd`, and this match belongs to the previous document.
     if (runId.current !== id) return
-    setJd(matchJD(cvText, resume.skills, jdText, { experienceText: resume.experience.flatMap((e) => [e.title, e.company, ...e.bullets]).join('\n') }))
+    const match = matchJD(cvText, resume.skills, jdText, { experienceText: resume.experience.flatMap((e) => [e.title, e.company, ...e.bullets]).join('\n') })
+    setJd(match)
+    setJdSignals({
+      title: signals.titleMatch(jdText, resume.experience.map((e) => e.title)),
+      asked: signals.yearsAsked(jdText),
+      have: signals.yearsSpanned(resume.experience.map((e) => e.date), new Date().getFullYear()),
+    })
+    setCvSegments(signals.highlight(cvText, match.matched.flatMap((k) => signals.variantsOf(k.term))))
+    setShowCv(false)
   }, [resume, cvText, jdText])
 
   const download = useCallback(async () => {
@@ -510,6 +524,22 @@ export default function Analyzer() {
                     <span className={`text-3xl font-semibold tabular-nums ${jdCoverageClass(jd.coverage)}`}>{jd.coverage}%</span>
                     <span className="text-sm text-stone-500">{analyzer.jd.coverage} · {analyzer.jd.matchedOf(jd.matched.length, jd.total)}</span>
                   </div>
+                  {jdSignals && (
+                    <ul className="mt-3 space-y-1 text-sm text-stone-600">
+                      {jdSignals.title.checked && (
+                        <li>{jdSignals.title.matched ? analyzer.jd.titleFound(jdSignals.title.matched) : analyzer.jd.titleNone}</li>
+                      )}
+                      {jdSignals.asked !== null && (
+                        <li>
+                          {jdSignals.have === null
+                            ? analyzer.jd.yearsNoDates(jdSignals.asked)
+                            : jdSignals.have >= jdSignals.asked
+                              ? analyzer.jd.yearsMeets(jdSignals.asked, jdSignals.have)
+                              : analyzer.jd.yearsBelow(jdSignals.asked, jdSignals.have)}
+                        </li>
+                      )}
+                    </ul>
+                  )}
                   {jd.missing.length > 0 && (
                     <div className="mt-4">
                       <h3 className="text-sm font-medium text-stone-700">{analyzer.jd.missing} <span className="font-normal text-stone-400">{analyzer.jd.missingHint}</span></h3>
@@ -540,6 +570,26 @@ export default function Analyzer() {
                         ))}
                       </div>
                       {jd.matched.some((k) => k.where === 'skills') && <p className="mt-2 text-xs text-stone-500">{analyzer.jd.onlySkillsHint}</p>}
+                    </div>
+                  )}
+                  {cvSegments && jd.matched.length > 0 && (
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        onClick={() => setShowCv((v) => !v)}
+                        aria-expanded={showCv}
+                        className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
+                      >
+                        {showCv ? analyzer.jd.hideCv : analyzer.jd.showCv}
+                      </button>
+                      {showCv && (
+                        <>
+                          <p className="mt-2 text-xs text-stone-500">{analyzer.jd.highlightHint}</p>
+                          <div className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg bg-stone-50 p-3 text-sm leading-6 text-stone-700 ring-1 ring-stone-200">
+                            {cvSegments.map((seg, i) => (seg.hit ? <mark key={i} className="rounded bg-emerald-100 px-0.5 text-emerald-900">{seg.text}</mark> : <span key={i}>{seg.text}</span>))}
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
