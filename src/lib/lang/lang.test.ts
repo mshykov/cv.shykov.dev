@@ -148,7 +148,8 @@ test('language detection tells English from the rest, and stays quiet on short t
 })
 
 test('a heading must contain a keyword as a whole word', () => {
-  const sections = (lines: string[]) => Object.fromEntries(score(lines).checks.filter((c) => c.id.startsWith('sec-')).map((c) => [c.id, c.status]))
+  // A bare heading earns nothing, so each one gets a line of content under it.
+  const sections = (lines: string[]) => Object.fromEntries(score(lines.flatMap((l) => [l, 'Entries are listed under this heading'])).checks.filter((c) => c.id.startsWith('sec-')).map((c) => [c.id, c.status]))
   assert.equal(sections(['Informations personnelles'])['sec-edu'], 'fail')
   assert.equal(sections(['Sprachkenntnisse'])['sec-skills'], 'fail')
   assert.equal(sections(['Weiterbildung'])['sec-edu'], 'fail')
@@ -158,7 +159,7 @@ test('a heading must contain a keyword as a whole word', () => {
 })
 
 test('a specific heading is not also credited to the general one it contains', () => {
-  const sections = (lines: string[]) => Object.fromEntries(score(lines).checks.filter((c) => c.id.startsWith('sec-')).map((c) => [c.id, c]))
+  const sections = (lines: string[]) => Object.fromEntries(score(lines.flatMap((l) => [l, 'Entries are listed under this heading'])).checks.filter((c) => c.id.startsWith('sec-')).map((c) => [c.id, c]))
   for (const heading of ['FORMACIÓN COMPLEMENTARIA', 'FORMATIONS COMPLÉMENTAIRES', 'FORMAÇÃO COMPLEMENTAR']) {
     const found = sections([heading])
     assert.equal(found['sec-edu'].status, 'fail', `${heading} is not an Education section`)

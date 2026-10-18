@@ -2,6 +2,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { analyze as analyzeWith } from './analyze.ts'
 import { analyzeStyle } from './style.ts'
+import { getAdvisories } from './advisories.ts'
+import { parseResume } from './parse.ts'
 import type { Extracted } from './pdf.ts'
 import { en } from '../i18n/messages/en.ts'
 
@@ -111,33 +113,49 @@ test('the writing-style score separates natural wording from boilerplate', () =>
   assert.ok(natural.score > boilerplate.score, `natural ${natural.score} vs boilerplate ${boilerplate.score}`)
 })
 
-// Expected behaviour that other checkers have and this one does not yet. Each is
-// a `todo` test: it runs and reports, but a failure does not fail the suite.
-// When the rule ships, delete `todo` so the test guards it from then on.
-// Found in the 2026-10-16 cross-check, see docs/comparison-2026-10-16.md.
+// Behaviour found missing in the 2026-10-16 cross-check (docs/comparison-2026-10-16.md). It
+// shipped as advisories, outside the score (#106, #107, #108); these are real tests now.
 
-const flagged = (report: ReturnType<typeof analyze>, pattern: RegExp) =>
-  report.checks.some((c) => pattern.test(`${c.id} ${c.label}`) && c.status !== 'pass')
-
-test('flags a graduation year more than 15 years old (#106)', { todo: 'issue #106' }, () => {
+test('advises on a graduation year more than 15 years old, in English only (#106)', () => {
   const old = ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, 'EDUCATION', '• BSc Computer Science — Example University, 1998'])
   const recent = ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, 'EDUCATION', '• BSc Computer Science — Example University, 2022'])
-  assert.ok(flagged(analyze(old), /graduat|education year/i), 'an old graduation year should be flagged')
-  assert.ok(!flagged(analyze(recent), /graduat|education year/i), 'a recent graduation year should not be')
+  const opts = { locale: 'en', now: 2026 }
+  assert.ok(getAdvisories(old, parseResume(old), en.analysis.advisories, opts).some((a) => a.id === 'graduation-year'))
+  assert.ok(!getAdvisories(recent, parseResume(recent), en.analysis.advisories, opts).some((a) => a.id === 'graduation-year'))
+  assert.ok(!getAdvisories(old, parseResume(old), en.analysis.advisories, { ...opts, locale: 'de' }).some((a) => a.id === 'graduation-year'))
 })
 
-test('flags a resume over ~1,000 words (#107)', { todo: 'issue #107' }, () => {
+test('advises on a resume over ~1,000 words (#107)', () => {
   const filler = Array.from({ length: 140 }, (_, i) => `• Delivered project ${i + 1} with a team of ${(i % 7) + 3} engineers, cutting cycle time by ${(i % 40) + 5}% across two quarters and three regions`)
   const long = ex([...CONTACT, ...SUMMARY, 'EXPERIENCE', 'Engineering Manager — Acme Jan 2020 – now', ...filler, ...SKILLS, ...EDUCATION])
-  assert.ok(flagged(analyze(long), /word|length/i), 'a very long CV should get a length warning')
+  assert.ok(getAdvisories(long, parseResume(long), en.analysis.advisories).some((a) => a.id === 'length'))
+  const normal = ex(FULL)
+  assert.ok(!getAdvisories(normal, parseResume(normal), en.analysis.advisories).some((a) => a.id === 'length'))
 })
 
-test('flags a role that has a single bullet (#108)', { todo: 'issue #108' }, () => {
+test('advises on a role that has a single bullet (#108)', () => {
   const thin = ex([
     ...CONTACT, ...SUMMARY, 'EXPERIENCE',
     'Engineering Manager — Acme Jan 2020 – now', '• Led a team of 8 engineers and cut costs by 30%',
     'Senior Engineer — Beta Corp Jan 2016 – Dec 2019', '• Built things',
     ...SKILLS, ...EDUCATION,
   ])
-  assert.ok(flagged(analyze(thin), /single bullet|bullet balance|thin/i), 'a one-bullet role should be flagged')
+  assert.ok(getAdvisories(thin, parseResume(thin), en.analysis.advisories).some((a) => a.id === 'thin-role'))
+})
+
+// Reported by a reader on 2026-10-17 and fixed since. Kept here so it stays fixed.
+test('empty text is not scored as a perfect writing style', () => {
+  assert.equal(analyzeStyle('', []).insufficient, true)
+})
+
+test('adding bare headings does not raise the ATS score', () => {
+  const without = analyze(ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, ...EDUCATION])).score
+  const withEmpty = analyze(ex([...CONTACT, ...SUMMARY, ...EXPERIENCE, ...SKILLS, ...EDUCATION, 'ACHIEVEMENTS', 'PROJECTS', 'CERTIFICATIONS'])).score
+  assert.equal(withEmpty, without)
+})
+
+test('adding a year to weak sentences does not raise the writing-style score', () => {
+  const weak = Array.from({ length: 5 }, () => 'Responsible for managing various projects.')
+  const dated = weak.map((l) => l.replace('.', ' in 2025.'))
+  assert.ok(analyzeStyle(dated.join('\n'), dated).score <= analyzeStyle(weak.join('\n'), weak).score)
 })

@@ -512,7 +512,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-11',
+    updated: '2026-10-17',
     summary:
       'Corrigez d’abord cinq points : du texte sélectionnable, votre adresse e-mail dans le corps, une seule colonne, des titres de rubriques standard et une date sur chaque poste. Ils décident si la candidature arrive intacte. Tout le reste décide si elle est trouvée dans une recherche, puis si un humain prend plaisir à la lire.',
     body: (
@@ -548,6 +548,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
           <Li><strong>Pas de formules toutes faites.</strong> « Professionnel dynamique et motivé, fort d’une solide expérience » n’apprend rien à un lecteur.</Li>
           <Li><strong>La longueur correspond à votre parcours.</strong> Une page en début de carrière, deux sont normales après une dizaine d’années. Trois demandent une raison.</Li>
           <Li><strong>Le nom du fichier est un nom</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Prenom_Nom_CV.pdf</code>, pas <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">cv_final_v3_VRAI.pdf</code>.</Li>
+          <Li>Réfléchissez aux années de diplôme. Certains candidats, surtout aux États-Unis et au Royaume-Uni, omettent une année de diplôme vieille de plus de 15 ans pour réduire le risque de biais lié à l’âge. Dans d’autres pays, et dans les CV universitaires, l’année est d’usage. Les deux choix se valent : décidez en connaissance de cause.</Li>
         </Ul>
 
         <H2>Ce qu’un vérificateur peut contrôler à votre place</H2>

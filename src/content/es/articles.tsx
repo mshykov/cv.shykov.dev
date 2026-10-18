@@ -503,7 +503,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-11',
+    updated: '2026-10-17',
     summary:
       'Corrige primero cinco cosas: texto seleccionable, el correo en el cuerpo, una sola columna, títulos de sección estándar y una fecha en cada puesto. De ellas depende que la candidatura llegue intacta. Todo lo demás decide si te encuentran en una búsqueda y, después, si a una persona le gusta leerla.',
     body: (
@@ -538,6 +538,7 @@ ene 2020 – actualidad Terraform, AWS`}</Pre>
           <Li><strong>Nada de frases hechas.</strong> «Profesional orientado a resultados con una trayectoria demostrada» no le dice nada a quien lo lee.</Li>
           <Li><strong>La extensión se ajusta a tu trayectoria.</strong> Una página al principio; dos es lo normal tras una década. Tres necesitan una razón.</Li>
           <Li><strong>El nombre del archivo es un nombre:</strong> <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nombre_Apellidos_CV.pdf</code>, no <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">cv_final_v3_DEFINITIVO.pdf</code>.</Li>
+          <Li>Piensa en los años de graduación. Algunos candidatos, sobre todo en EE. UU. y el Reino Unido, omiten un año de graduación de hace más de 15 años para reducir el riesgo de sesgo por edad. En otros países, y en los CV académicos, el año es lo habitual. Ambas opciones son válidas: decide a propósito.</Li>
         </Ul>
 
         <H2>Cuáles de estos puntos puede verificar un comprobador por ti</H2>

@@ -122,6 +122,7 @@ export const ptBR: Messages = {
     stages: { loading: 'carregamento dos módulos', extracting: 'extração do texto', analyzing: 'análise', parsing: 'leitura da estrutura', style: 'verificação do estilo' },
     copyDetails: 'Copiar detalhes',
     scoreHeading: 'Pontuação ATS',
+    estimateNote: 'Uma estimativa de quão bem um analisador lê este arquivo, não uma previsão de decisão de contratação.',
     topFixes: 'Principais correções',
     downloadReport: '↓ Relatório',
     noPriorityFixes: 'Nenhuma correção prioritária encontrada. O restante do relatório é, em sua maior parte, confirmação.',
@@ -131,6 +132,7 @@ export const ptBR: Messages = {
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palavras · ${chars} caracteres legíveis.`,
     style: {
+      tooShort: 'Não há texto suficiente para avaliar o estilo de escrita.',
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palavras`,
       intro: 'Verificações de escrita determinísticas, feitas no seu dispositivo.',
       notDetector: 'Isto não é um detector de IA',
@@ -165,6 +167,13 @@ export const ptBR: Messages = {
 
   analysis: {
     formatNumber: number,
+    advisories: {
+      heading: 'Vale uma olhada',
+      note: 'São convenções, não regras, e não fazem parte da pontuação.',
+      length: { detail: (words: number) => `${number(words)} palavras, o que é longo para a maioria das vagas.`, fix: 'Abaixo de cerca de 1.000 palavras, o currículo se lê melhor à primeira vista. Corte as experiências mais antigas e os marcadores repetidos. Currículos executivos, acadêmicos e de alguns cargos públicos costumam ser mais longos.' },
+      thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'experiência tem' : 'experiências têm'} apenas um marcador.`, fix: 'Uma experiência com um único marcador parece rasa. Acrescente um ou dois resultados concretos, ou resuma-a em uma linha de experiências anteriores.' },
+      longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'marcador passa' : 'marcadores passam'} de 40 palavras.`, fix: 'Divida os marcadores longos em um resultado e em como você chegou a ele. Uma a duas linhas cada um são mais fáceis de ler.' },
+    },
     categories: { Parseability: 'Legibilidade', Contact: 'Contato', Sections: 'Seções', Format: 'Formato', Content: 'Conteúdo' },
     labels: {
       'machine-text': 'Texto legível por máquina',

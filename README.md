@@ -103,6 +103,21 @@ guidance, not a guarantee; real ATS platforms differ.
 | Format | 15 | Page count, dated history, bulleted structure |
 | Content | 10 | Quantified impact, strong action verbs |
 
+A section heading only earns points when text follows it (or it carries its own, as in
+"Skills: Go, Rust"); a bare heading is a label, not a section.
+
+### Advisories (not scored)
+
+Four conventions are shown in a separate "Worth a look" card and never change the score,
+because they vary by country, seniority and sector (`src/lib/advisories.ts`):
+
+| Advisory | Shown when |
+|----------|------------|
+| Length | the CV has more than 1,000 words |
+| Thin role | the CV has at least two roles and one of them has exactly one bullet |
+| Long bullets | a bullet runs past 40 words |
+| Graduation year | English interface only: an education entry whose latest year is more than 15 years back |
+
 PDF text extraction uses `pdf.js`. DOCX extraction uses `mammoth`.
 PDF export uses `@react-pdf/renderer`.
 
@@ -162,6 +177,10 @@ the 100-point ATS rubric above.
 | Passive voice | "was implemented by" where "implemented" would do |
 | Punctuation tics | Em-dash overuse in prose. Role-heading separators are not counted |
 | Vocabulary range | Type-token ratio — how much the wording repeats itself |
+
+A CV with too little text (empty, or a couple of words) is reported as "not enough text"
+rather than scored. A line that mentions a date still counts as an achievement; only
+dated role headings are left out, and a year does not count as a figure backing a claim.
 
 Bands: **85+** reads naturally · **65-84** a few habits to fix · **under 65**
 reads formulaic.

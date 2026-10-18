@@ -123,6 +123,7 @@ export const es: Messages = {
     stages: { loading: 'carga de módulos', extracting: 'extracción del texto', analyzing: 'análisis', parsing: 'interpretación', style: 'revisión del estilo' },
     copyDetails: 'Copiar detalles',
     scoreHeading: 'Puntuación ATS rápida',
+    estimateNote: 'Una estimación de lo bien que un analizador leerá este archivo, no una predicción de una decisión de contratación.',
     topFixes: 'Correcciones principales',
     downloadReport: '↓ Informe',
     noPriorityFixes: 'No hay correcciones prioritarias. El resto del informe es sobre todo confirmación.',
@@ -132,6 +133,7 @@ export const es: Messages = {
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palabras · ${chars} caracteres legibles.`,
     style: {
+      tooShort: 'No hay texto suficiente para evaluar el estilo de redacción.',
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palabras`,
       intro: 'Comprobaciones deterministas de redacción, ejecutadas en tu dispositivo.',
       notDetector: 'Esto no es un detector de IA',
@@ -166,6 +168,13 @@ export const es: Messages = {
 
   analysis: {
     formatNumber: number,
+    advisories: {
+      heading: 'Conviene revisarlo',
+      note: 'Son convenciones, no reglas, y no forman parte de la puntuación.',
+      length: { detail: (words: number) => `${number(words)} palabras, algo largo para la mayoría de los puestos.`, fix: 'Por debajo de unas 1000 palabras se lee mejor a primera vista. Recorta los puestos más antiguos y las viñetas repetidas. Los CV de dirección, los académicos y los de algunos puestos públicos suelen ser más largos.' },
+      thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'puesto tiene' : 'puestos tienen'} una sola viñeta.`, fix: 'Un puesto con una sola viñeta parece escaso. Añade uno o dos resultados concretos, o resúmelo en una línea de experiencia anterior.' },
+      longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'viñeta supera' : 'viñetas superan'} las 40 palabras.`, fix: 'Divide las viñetas largas en un resultado y en cómo lo conseguiste. Una o dos líneas cada una se leen más rápido.' },
+    },
     categories: { Parseability: 'Legibilidad', Contact: 'Contacto', Sections: 'Secciones', Format: 'Formato', Content: 'Contenido' },
     labels: {
       'machine-text': 'Texto legible por máquina',

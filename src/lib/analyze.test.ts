@@ -143,3 +143,16 @@ test('top fixes respects the requested limit', () => {
 
   assert.equal(getTopFixes(r, 2).length, 2)
 })
+
+test('empty section headings are not rewarded', () => {
+  const base = [...STRONG.filter((l) => !['PROJECTS', '• Widget — an internal tool', 'CERTIFICATIONS', '• AWS Certified, 2021'].includes(l))]
+  const without = analyze(ex(base)).score
+  const withEmpty = analyze(ex([...base, 'ACHIEVEMENTS', 'PROJECTS', 'CERTIFICATIONS'])).score
+  assert.equal(withEmpty, without, `three bare headings changed the score from ${without} to ${withEmpty}`)
+})
+
+test('a heading that carries its own text still counts', () => {
+  const r = analyze(ex(['JOHN DOE', 'john@example.com', 'Skills: Go, Rust, Kotlin', 'Education: BSc, 2014']))
+  assert.equal(r.checks.find((c) => c.id === 'sec-skills')?.status, 'pass')
+  assert.equal(r.checks.find((c) => c.id === 'sec-edu')?.status, 'pass')
+})

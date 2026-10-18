@@ -501,7 +501,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
   {
     ...guide('ats-resume-checklist'),
     published: '2026-08-31',
-    updated: '2026-10-11',
+    updated: '2026-10-17',
     summary:
       'Corrija primeiro cinco coisas: texto selecionável, e-mail no corpo da página, coluna única, títulos de seção padrão e uma data em cada cargo. Elas decidem se a candidatura chega inteira. O restante decide se ela é encontrada em uma busca e, depois, se uma pessoa gosta de lê-la.',
     body: (
@@ -536,6 +536,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
           <Li><strong>Nada de frases-padrão.</strong> “Profissional focado em resultados e com histórico comprovado” não diz nada ao leitor.</Li>
           <Li><strong>O tamanho acompanha a carreira.</strong> Uma página no começo; duas é normal depois de uma década. Três precisam de um motivo.</Li>
           <Li><strong>O nome do arquivo é um nome</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nome_Sobrenome_Curriculo.pdf</code>, não <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">curriculo_final_v3_AGORA_VAI.pdf</code>.</Li>
+          <Li>Pense nos anos de formatura. Alguns candidatos, principalmente nos EUA e no Reino Unido, omitem um ano de formatura de mais de 15 anos para reduzir o risco de viés de idade. Em outros países, e em currículos acadêmicos, o ano é costumeiro. As duas opções são válidas: decida de propósito.</Li>
         </Ul>
 
         <H2>O que um verificador consegue conferir por você</H2>

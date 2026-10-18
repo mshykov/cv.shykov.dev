@@ -36,8 +36,9 @@ calibrated against them.
 | Resume over ~1,000 words | Jobscan | [#107](https://github.com/mshykov/cv.shykov.dev/issues/107) |
 | A role with a single bullet; very short or very long bullets | AIResume.guru | [#108](https://github.com/mshykov/cv.shykov.dev/issues/108) |
 
-Each has a `todo` test in `src/lib/benchmark.test.ts` that is switched on when the
-rule ships.
+All three shipped afterwards as advisories in a separate "Worth a look" card that does not
+change the score (see `src/lib/advisories.ts`); the graduation-year one is English-only because
+the convention differs by country. Each has a test in `src/lib/benchmark.test.ts`.
 
 ## What it does not show
 

@@ -17,7 +17,7 @@
 // rubric (25/15/35/15/10) documented in the README, and style findings must not
 // silently move it.
 
-import { hasDate } from './text.ts'
+import { hasDate, isBulletLine } from './text.ts'
 
 export type StyleLevel = 'ok' | 'minor' | 'major'
 
@@ -39,6 +39,8 @@ export interface StyleReport {
   score: number
   band: { label: string; tone: StyleLevel }
   meta: { sentences: number; words: number }
+  /** Too little text to judge. The score is not meaningful and must not be shown. */
+  insufficient: boolean
 }
 
 /** Phrases that read as filler on a CV: they occupy space without evidence. */
@@ -66,6 +68,11 @@ const VAGUE_QUANTIFIERS = [
 // silently skips every other sentence when used inside a filter.
 const PASSIVE_RE = /\b(?:was|were|is|are|been|being|be)\s+(?:\w+ly\s+)?\w+(?:ed|en)\b/i
 const NUMBER_RE = /\d/
+// A year or a month/year is a date, not a figure: "in 2025" does not back a claim.
+const DATE_DIGITS_RE = /\b(?:0?[1-9]|1[0-2])[./](?:19|20)\d{2}\b|\b(?:19|20)\d{2}\b/g
+// Below this there is nothing to judge, and an empty report would score 100.
+const MIN_SENTENCES = 2
+const MIN_WORDS = 15
 
 // U+0000 never appears in extracted CV text, so it is a safe break marker.
 const SENTINEL = '\u0000'
@@ -182,7 +189,7 @@ function checkFiller(text: string): StyleSignal {
 
 function checkVagueClaims(lines: string[]): StyleSignal {
   const vague = lines.filter((line) => {
-    if (NUMBER_RE.test(line)) return false
+    if (NUMBER_RE.test(line.replace(DATE_DIGITS_RE, ''))) return false
     return VAGUE_QUANTIFIERS.some((w) => countOccurrences(line, w) > 0)
   })
   if (vague.length === 0) {
@@ -267,13 +274,27 @@ function styleBand(score: number): StyleReport['band'] {
   return { label: 'Reads formulaic', tone: 'major' }
 }
 
+/**
+ * A dated line is a role heading ("QA Engineer — MacPaw Jul 2019 – Mar 2020"), not a
+ * bullet. Bullets, and anything that reads as a sentence, stay in even when they
+ * mention a date: "Led the migration in 2025." is an achievement.
+ */
+function isDatedHeading(line: string): boolean {
+  const text = line.trim()
+  return hasDate(text) && !isBulletLine(text) && !/[.!?]$/.test(text) && wordsOf(text).length <= 14
+}
+
 export function analyzeStyle(text: string, lines: string[]): StyleReport {
   const sents = sentences(text)
   const words = wordsOf(text)
+  const meta = { sentences: sents.length, words: words.length }
+  if (sents.length < MIN_SENTENCES || words.length < MIN_WORDS) {
+    return { signals: [], score: 0, band: { label: 'Not enough text', tone: 'ok' }, meta, insufficient: true }
+  }
   // Prose/bullet lines only. Job-title rows ("QA Engineer — MacPaw … Jul 2019 –
   // Mar 2020") carry dates and would otherwise dominate the opener check with
   // role names, producing advice about bullets that is really about headings.
-  const contentLines = lines.filter((l) => wordsOf(l).length >= 4 && !hasDate(l))
+  const contentLines = lines.filter((l) => wordsOf(l).length >= 4 && !isDatedHeading(l))
 
   const signals: StyleSignal[] = [
     checkRhythm(sents),
@@ -290,5 +311,5 @@ export function analyzeStyle(text: string, lines: string[]): StyleReport {
   const penalty = signals.reduce((sum, s) => sum + WEIGHT[s.level], 0)
   const score = Math.max(0, 100 - penalty)
 
-  return { signals, score, band: styleBand(score), meta: { sentences: sents.length, words: words.length } }
+  return { signals, score, band: styleBand(score), meta, insufficient: false }
 }

@@ -7,6 +7,7 @@ import type { Job } from './lib/job.ts'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
+import type { Advisory } from './lib/advisories'
 import { ScoreRing } from './components/ScoreRing'
 import { StatusMark } from './components/StatusMark'
 import { useLocale, useMessages } from './i18n/context.ts'
@@ -105,6 +106,25 @@ function StyleRow({ s }: StyleRowProps) {
   )
 }
 
+// Conventions that are not part of the score: length and bullet balance. Set apart from the
+// fixes (no points, no marks) so nobody mistakes them for lost points.
+function AdvisoryList({ advisories }: Readonly<{ advisories: Advisory[] }>) {
+  const { analysis } = useMessages()
+  return (
+    <section className="mt-10">
+      <h3 className="text-base font-semibold">{analysis.advisories.heading}</h3>
+      <p className="mt-1 max-w-[42em] text-sm text-ink-2">{analysis.advisories.note}</p>
+      <ul className="mt-3 border-t border-rule">
+        {advisories.map((a) => (
+          <li key={a.id} className="border-b border-rule py-3">
+            <span className="font-medium">{a.detail}</span> <span className="text-ink-2">{a.fix}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 type AnalyzerProps = Readonly<{
   /** The CV to score. The parent remounts this component for every new file. */
   job: Job
@@ -128,10 +148,13 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
   const [style, setStyle] = useState<StyleReport | null>(null)
   // The CV was not written in English, so the English-only style checks stay out of it.
   const [styleSkipped, setStyleSkipped] = useState(false)
+  // The CV has too little text for the style checks to say anything (an empty report would read 100).
+  const [styleTooShort, setStyleTooShort] = useState(false)
+  const [advisories, setAdvisories] = useState<Advisory[]>([])
   const resultRef = useRef<HTMLElement>(null)
   // The run reads the messages of the moment it starts; a new messages object must not restart it.
-  const messages = useRef(m)
-  useEffect(() => { messages.current = m })
+  const latest = useRef({ m, locale })
+  useEffect(() => { latest.current = { m, locale } })
 
   // One run per mounted job. Choosing another file remounts this component, so a slow
   // earlier run (a 60-page PDF) can never write over the newer result: its `current`
@@ -142,7 +165,8 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
       if (current) onBusyChange(false)
     }
     const run = async (file: File) => {
-      const { analysis, analyzer } = messages.current
+      const { m: msg, locale: lang } = latest.current
+      const { analysis, analyzer } = msg
       if (!isSupportedDocument(file)) {
         setError(analyzer.chooseFile)
         settle()
@@ -150,8 +174,8 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
       }
       let stage: Stage = 'loading'
       try {
-        const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }] = await Promise.all([
-          import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'),
+        const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }, { getAdvisories }] = await Promise.all([
+          import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'), import('./lib/advisories'),
         ])
         stage = 'extracting'
         const ex = await extractDocument(file)
@@ -159,14 +183,17 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
         const rep = analyze(ex, analysis)
         stage = 'parsing'
         const res = parseResume(ex)
+        const adv = getAdvisories(ex, res, analysis.advisories, { locale: lang })
         stage = 'style'
         // The writing-style signals look for English stock phrases and English
         // passive voice. On a Spanish or German CV they would measure nothing.
         const language = detectLanguage(ex.text)
         const skip = language !== 'en' && language !== 'unknown'
-        const sty = skip ? null : analyzeStyle(ex.text, ex.lines)
+        const analysed = skip ? null : analyzeStyle(ex.text, ex.lines)
+        const tooShort = analysed?.insufficient === true
+        const sty = tooShort ? null : analysed
         if (!current) return
-        setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip)
+        setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort); setAdvisories(adv)
       } catch (e) {
         if (!current) return
         const err = e instanceof Error ? e : new Error(String(e))
@@ -233,6 +260,7 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
               {report.band.label}
             </p>
             <p className="lab mt-3 normal-case">{fileName} · {reportMetaSummary(m, report)}</p>
+            <p className="mt-2 max-w-[24em] text-sm text-ink-2">{analyzer.estimateNote}</p>
           </div>
 
           <div className="min-w-0">
@@ -242,6 +270,8 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
               <button type="button" onClick={download} className="alt">{analyzer.downloadReport}</button>
               <button type="button" onClick={onAnother} className="alt">{analyzer.analyzeAnother}</button>
             </div>
+
+            {advisories.length > 0 && <AdvisoryList advisories={advisories} />}
 
             <details className="group mt-8 border-b border-rule">
               <summary className="flex min-h-13 cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
@@ -282,6 +312,10 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
 
               {tab === 'style' && !style && styleSkipped && (
                 <p className="mt-6 border-y border-rule py-5 text-ink-2">{analyzer.style.englishOnly}</p>
+              )}
+
+              {tab === 'style' && !style && styleTooShort && (
+                <p className="mt-6 border-y border-rule py-5 text-ink-2">{analyzer.style.tooShort}</p>
               )}
 
               {tab === 'style' && style && (
