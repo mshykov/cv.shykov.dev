@@ -129,6 +129,7 @@ export const es: Messages = {
       up: (n: number, previous: number) => `+${n} respecto al archivo anterior (${previous})`,
       down: (n: number, previous: number) => `−${n} respecto al archivo anterior (${previous})`,
       same: (previous: number) => `Misma puntuación que el archivo anterior (${previous})`,
+      category: 'Cambio en esta categoría desde el archivo anterior',
     },
     network: {
       summary: 'Comprueba qué envió esta página',

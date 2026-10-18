@@ -385,7 +385,11 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
                           <h2 className="text-lg font-bold">{m.analysis.categories[cat]}</h2>
                           <span className="font-mono text-sm font-semibold tabular-nums">
                             {items.reduce((s, c) => s + c.points, 0)}/{items.reduce((s, c) => s + c.max, 0)}
-                            {delta?.categories[cat] ? <span className="neon-block ml-2 px-1">{delta.categories[cat] > 0 ? '+' : '−'}{Math.abs(delta.categories[cat])}</span> : null}
+                            {delta?.categories[cat] ? (
+                              <span className="neon-block ml-2 px-1" title={analyzer.delta.category} aria-label={`${delta.categories[cat] > 0 ? '+' : '−'}${Math.abs(delta.categories[cat])}: ${analyzer.delta.category}`}>
+                                {delta.categories[cat] > 0 ? '+' : '−'}{Math.abs(delta.categories[cat])}
+                              </span>
+                            ) : null}
                           </span>
                         </div>
                         <div>{items.map((c) => <CheckRow key={c.id} c={c} />)}</div>

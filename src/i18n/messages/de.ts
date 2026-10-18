@@ -131,6 +131,7 @@ export const de: Messages = {
       up: (n: number, previous: number) => `+${n} gegenüber der vorherigen Datei (${previous})`,
       down: (n: number, previous: number) => `−${n} gegenüber der vorherigen Datei (${previous})`,
       same: (previous: number) => `Gleicher Score wie bei der vorherigen Datei (${previous})`,
+      category: 'Veränderung in dieser Kategorie seit der vorherigen Datei',
     },
     network: {
       summary: 'Prüfen, was diese Seite gesendet hat',

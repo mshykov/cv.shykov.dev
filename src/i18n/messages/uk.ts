@@ -139,6 +139,7 @@ export const uk: Messages = {
       up: (n: number, previous: number) => `+${n} порівняно з попереднім файлом (${previous})`,
       down: (n: number, previous: number) => `−${n} порівняно з попереднім файлом (${previous})`,
       same: (previous: number) => `Той самий результат, що й у попереднього файлу (${previous})`,
+      category: 'Зміна в цій категорії порівняно з попереднім файлом',
     },
     network: {
       summary: 'Перевірте, що надсилала ця сторінка',

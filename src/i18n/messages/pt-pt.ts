@@ -130,6 +130,7 @@ export const ptPT: Messages = {
       up: (n: number, previous: number) => `+${n} face ao ficheiro anterior (${previous})`,
       down: (n: number, previous: number) => `−${n} face ao ficheiro anterior (${previous})`,
       same: (previous: number) => `Mesma pontuação do ficheiro anterior (${previous})`,
+      category: 'Alteração nesta categoria desde o ficheiro anterior',
     },
     network: {
       summary: 'Veja o que esta página enviou',

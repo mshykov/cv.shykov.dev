@@ -128,6 +128,7 @@ export const ptBR: Messages = {
       up: (n: number, previous: number) => `+${n} em relação ao arquivo anterior (${previous})`,
       down: (n: number, previous: number) => `−${n} em relação ao arquivo anterior (${previous})`,
       same: (previous: number) => `Mesma pontuação do arquivo anterior (${previous})`,
+      category: 'Mudança nesta categoria desde o arquivo anterior',
     },
     network: {
       summary: 'Veja o que esta página enviou',

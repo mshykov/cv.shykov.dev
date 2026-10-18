@@ -137,6 +137,7 @@ export const fr: Messages = {
       up: (n: number, previous: number) => `+${n} par rapport au fichier précédent (${previous})`,
       down: (n: number, previous: number) => `−${n} par rapport au fichier précédent (${previous})`,
       same: (previous: number) => `Même score que le fichier précédent (${previous})`,
+      category: 'Évolution de cette catégorie depuis le fichier précédent',
     },
     network: {
       summary: 'Vérifiez ce que cette page a envoyé',

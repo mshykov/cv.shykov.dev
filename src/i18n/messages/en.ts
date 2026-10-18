@@ -143,6 +143,7 @@ export const en = {
       up: (n: number, previous: number) => `+${n} since the previous file (${previous})`,
       down: (n: number, previous: number) => `−${n} since the previous file (${previous})`,
       same: (previous: number) => `Same score as the previous file (${previous})`,
+      category: 'Change in this category since the previous file',
     },
     network: {
       summary: 'Check what this page sent',
