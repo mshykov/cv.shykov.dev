@@ -60,6 +60,8 @@ export const de: Messages = {
       h1: 'Lebenslauf ATS Check kostenlos\nPrivat im Browser',
       check: 'Lebenslauf prüfen',
       // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Beispiel',
       runs: 'Läuft in Ihrem Browser',
       facts: ['Kein Konto', 'Keine KI', 'Kein Upload auf einen Server'],
     },

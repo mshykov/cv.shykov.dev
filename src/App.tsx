@@ -28,9 +28,34 @@ const TEXT_LINK = 'font-medium underline underline-offset-4 decoration-rule-2 ho
 // also capped by the height of the window, so the whole first screen stays in view.
 function headlineSize(h1: string): string {
   const length = h1.replaceAll('\n', ' ').length
-  if (length <= 36) return 'text-[clamp(3.4rem,14.2vw,9.5rem)] lg:text-[clamp(3rem,min(8vw,16vh),7rem)]'
-  if (length <= 56) return 'text-[clamp(2.9rem,11.2vw,7.25rem)] lg:text-[clamp(2.75rem,min(6.4vw,14vh),5.5rem)]'
-  return 'text-[clamp(2.4rem,8.4vw,5.5rem)] lg:text-[clamp(2.25rem,min(4.6vw,11vh),4.25rem)]'
+  if (length <= 36) return 'text-[clamp(3.4rem,14.2vw,9.5rem)] lg:text-[clamp(3rem,min(6.4vw,15vh),6.5rem)]'
+  if (length <= 56) return 'text-[clamp(2.9rem,11.2vw,7.25rem)] lg:text-[clamp(2.5rem,min(5.6vw,13vh),5.25rem)]'
+  return 'text-[clamp(2.4rem,8.4vw,5.5rem)] lg:text-[clamp(2.25rem,min(4.2vw,10vh),4rem)]'
+}
+
+// A report, drawn in type: the number, a bar, the three biggest fixes. Labels come from the
+// scorer's own messages; the numbers are an example and the page says so.
+function SampleReport() {
+  const { home: { hero }, analysis: { labels } } = useMessages()
+  const fixes = [[5, labels.phone], [3, labels.links], [2, labels.quant]] as const
+  return (
+    <div aria-hidden className="hidden border border-rule-2 p-6 lg:block">
+      <p className="lab">{hero.example}</p>
+      <div className="mt-2 flex items-end gap-2">
+        <span className="text-[4.5rem] font-semibold leading-[0.8] tracking-[-0.07em] tabular-nums">90</span>
+        <span className="pb-1 text-lg font-medium text-ink-2">/100</span>
+      </div>
+      <div className="mt-4 h-1.5 bg-rule"><div className="h-full w-[90%] bg-neon outline outline-1 outline-ink" /></div>
+      <ol className="mt-4">
+        {fixes.map(([points, label]) => (
+          <li key={label} className="flex items-center justify-between gap-3 border-t border-rule py-2 text-sm">
+            <span className="truncate">{label}</span>
+            <span className="neon-block shrink-0 px-1.5 py-0.5 font-mono text-xs font-semibold">−{points}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
 }
 
 function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
@@ -101,29 +126,30 @@ function Hero({ compact, busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-end lg:gap-14">
         <h1 className={`whitespace-pre-line text-balance font-semibold leading-[0.92] tracking-[-0.055em] ${headlineSize(hero.h1)}`}>{hero.h1}</h1>
+        <SampleReport />
+      </div>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-14">
         <div>
           <p className="text-[clamp(1.5rem,3.4vw,2.25rem)] font-semibold leading-tight tracking-[-0.03em]">{hero.runs}</p>
           <ul className="facts mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[clamp(1.125rem,2.2vw,1.375rem)] font-medium leading-tight text-ink-2 lg:flex-col lg:gap-y-2">
             {hero.facts.map((fact) => <li key={fact}>{fact}</li>)}
           </ul>
         </div>
-      </div>
-      <button
-        type="button"
-        data-drag={drag}
-        onClick={onBrowse}
-        onPointerEnter={loadAnalyzer}
-        onFocus={loadAnalyzer}
-        className="dropzone"
-      >
-        <span className="flex flex-col items-center gap-3 lg:flex-row lg:gap-5">
+        <button
+          type="button"
+          data-drag={drag}
+          onClick={onBrowse}
+          onPointerEnter={loadAnalyzer}
+          onFocus={loadAnalyzer}
+          className="dropzone"
+        >
           <svg className="size-10 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" aria-hidden>
             <path d="M12 16V4M7 9l5-5 5 5M4 15v5h16v-5" />
           </svg>
           <span className="dz-label text-[clamp(1.375rem,3vw,2rem)] font-semibold leading-tight tracking-[-0.03em]">{busy ? analyzer.dropBusy : analyzer.dropIdle}</span>
-        </span>
-        <span className="inline-flex min-h-12 shrink-0 items-center bg-ink px-6 text-base font-semibold text-paper">{analyzer.chooseButton}</span>
-      </button>
+          <span className="inline-flex min-h-12 shrink-0 items-center bg-ink px-6 text-base font-semibold text-paper">{analyzer.chooseButton}</span>
+        </button>
+      </div>
     </section>
   )
 }

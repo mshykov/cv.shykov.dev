@@ -58,6 +58,8 @@ export const es: Messages = {
       h1: 'Revisar CV ATS gratis: comprueba tu puntuación ATS con total privacidad',
       check: 'Revisar mi CV',
       // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Ejemplo',
       runs: 'Funciona en tu navegador',
       facts: ['Sin cuenta', 'Sin IA', 'Sin subida a servidores'],
     },

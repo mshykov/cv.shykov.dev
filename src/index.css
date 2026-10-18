@@ -140,7 +140,7 @@ body {
    field. The one rounded shape on the site (--radius-field). */
 @layer components {
   .dropzone {
-    @apply flex w-full cursor-pointer flex-col items-center gap-5 rounded-field border-2 border-dashed border-rule-2 px-6 py-8 text-center transition-colors duration-150 hover:border-ink hover:bg-panel focus-visible:border-ink lg:flex-row lg:justify-between lg:px-10 lg:py-7 lg:text-left;
+    @apply flex w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-field border-2 border-dashed border-rule-2 px-6 py-8 text-center transition-colors duration-150 hover:border-ink hover:bg-panel focus-visible:border-ink lg:min-h-[min(15rem,34vh)];
   }
 
   .dropzone[data-drag='true'] {

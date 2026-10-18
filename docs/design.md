@@ -47,11 +47,14 @@ preview. The exported PDF template (`ResumeDoc`) is unchanged.
 
 ## First screen on a laptop
 
-The first screen (header, H1, the three facts, the upload field) fits one window from 1280×680
-up: the H1 is capped by the window height as well as its width (`headlineSize`, `min(vw, vh)`),
-the facts sit to the right of the headline from 1024 px, and the upload field is a shallow
-single row. Check it in 1440×800 and 1280×680 before changing spacing. Headlines have no full
-stops: the two clauses are two lines (`\n` in the message, `white-space: pre-line`).
+One window, no scrolling, from 1280×680 up: **the hero** (the headline, with an *example* report
+beside it, drawn in type: 90/100, a bar, three fixes; labels come from the scorer's messages, the
+numbers are an example and the card says so) and, below it, **two blocks**: the privacy message
+("Runs in your browser" + three facts) on the left, the upload field (a rounded dashed card) on
+the right. Below 1024 px the example is hidden and everything stacks: headline, message, field.
+The headline is capped by the window height as well as its width (`headlineSize`, `min(vw, vh)`).
+Check 1440×800 and 1280×680 before changing spacing. Headlines have no full stops: the two
+clauses are two lines (`\n` in the message, `white-space: pre-line`).
 
 ## Rules
 

@@ -59,6 +59,8 @@ export const ptPT: Messages = {
       h1: 'Verificador de CV ATS gratuito\nPrivado por defeito',
       check: 'Verificar o meu CV',
       // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Exemplo',
       runs: 'Funciona no navegador',
       facts: ['Sem conta', 'Sem IA', 'Sem envio para servidores'],
     },
