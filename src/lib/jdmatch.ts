@@ -70,7 +70,7 @@ const EQUIVALENTS: string[][] = [
 /** Every term the lexicon knows, including the acronyms and expansions listed as equivalents. */
 const LEXICON = [...new Set([...SKILL_LEXICON, ...EQUIVALENTS.flat()])]
 
-function equivalentsOf(term: string): string[] {
+export function equivalentsOf(term: string): string[] {
   const key = fold(term)
   const group = EQUIVALENTS.find((g) => g.includes(key))
   return group ? group.filter((t) => t !== key) : []
@@ -103,7 +103,7 @@ function normalize(s: string): string {
   return fold(s)
 }
 
-function wordRe(term: string): RegExp {
+export function wordRe(term: string): RegExp {
   // Custom word boundary that tolerates term chars like "ci/cd", "c#", ".net".
   // Avoid look-behind (Safari < 16.4 lacks it); a leading non-alnum class works
   // the same for the boolean .test() we use it for.

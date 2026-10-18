@@ -141,6 +141,14 @@ The Job match tab extracts the keywords a pasted posting emphasises and checks y
 - **Nice to have.** A keyword that the posting mentions only under a "Nice to have" /
   "Preferred" heading or marker is tagged and weighs half as much in the coverage number; one
   mentioned both as required and as preferred stays a must-have. English markers only.
+- **Job title.** Whether the posting names one of your job titles (whole phrase, ignoring case and
+  accents; a team after a comma is ignored). Recruiters often search by title.
+- **Years of experience.** The largest number of years the posting asks for ("8+ years", "3-5 years",
+  also in Ukrainian, Spanish, Portuguese, French and German), counted only in an experience sentence or a
+  line under a requirements heading, and not when it is about the company or a warranty. It is compared
+  with the span from your earliest dated role to today. A comparison of numbers, not a verdict.
+- **Your CV with the matches highlighted.** Matched keywords (and their listed equivalents) are marked in
+  the extracted text of your CV, on request. It is rendered from plain text, never as HTML.
 - **Copy the missing list** with one click.
 
 The history of every change that moved a score is in [docs/scoring-changelog.md](docs/scoring-changelog.md).
