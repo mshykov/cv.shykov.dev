@@ -20,14 +20,15 @@ import { ArticlePage } from './content/ArticlePage.tsx'
 import type { Article } from './content/types.ts'
 import { ARTICLES, BUNDLES } from './i18n/all.ts'
 import { GUIDE_IDS } from './content/types.ts'
-import { LOCALES, buildPath, guidePath, guidesPath, homePath, type Locale } from './i18n/locales.ts'
+import { LOCALES, guidePath, guidesPath, homePath, type Locale } from './i18n/locales.ts'
 import { alternates, buildJsonLd, buildPaths, guideJsonLd, guidePaths, guidesIndexPaths, guidesJsonLd, homeJsonLd, homePaths } from './i18n/seo.ts'
 
 export { buildHead, escapeAttr, guideHead, guidesHead, homeHead } from './i18n/head.ts'
 export { ogImage } from './i18n/seo.ts'
 import type { LanguageLink } from './components/LanguageSwitcher.tsx'
 
-export { LOCALES, homePath, buildPath, guidesPath, guidePath, alternates }
+export { LOCALES, homePath, guidesPath, guidePath, alternates }
+export { buildPath } from './i18n/locales.ts'
 
 /** Everything the prerender script needs, per locale, without any JSX. */
 export function localeIndex() {

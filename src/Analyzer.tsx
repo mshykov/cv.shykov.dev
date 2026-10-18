@@ -21,12 +21,28 @@ type Tab = 'analyze' | 'style' | 'jd' | 'data'
 
 // One posting matched against the CV: its label, the keyword match, the extra signals and the highlighted CV.
 interface JdResult {
+  /** Id of the posting it came from: a stable key for the comparison table. */
+  id: number
   label: string
   match: JDMatch
   signals: { title: TitleMatch; asked: number | null; have: number | null }
   segments: Segment[]
 }
 const MAX_POSTINGS = 5
+/** A posting the visitor pasted. The id is a stable key: its position changes when one above it is removed. */
+interface Posting {
+  id: number
+  text: string
+}
+/** The highlighted CV with each piece keyed by where it starts in the text, which never changes. */
+function withOffsets(segments: Segment[]): (Segment & { start: number })[] {
+  let start = 0
+  return segments.map((seg) => {
+    const keyed = { ...seg, start }
+    start += seg.text.length
+    return keyed
+  })
+}
 /** A posting's name: its first non-empty line, shortened. */
 const postingName = (text: string, fallback: string) => {
   const first = text.split(/\r?\n/).map((l) => l.trim()).find(Boolean)
@@ -180,7 +196,8 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
   const [error, setError] = useState('')
   const [errDetail, setErrDetail] = useState('')
   const [tab, setTab] = useState<Tab>('analyze')
-  const [postings, setPostings] = useState<string[]>(savedPostings)
+  const [postings, setPostings] = useState<Posting[]>(() => savedPostings().map((text, id) => ({ id, text })))
+  const nextPostingId = useRef(postings.length)
   const [jdResults, setJdResults] = useState<JdResult[]>([])
   const [selectedJd, setSelectedJd] = useState(0)
   const currentJd = jdResults[selectedJd] ?? null
@@ -199,6 +216,7 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
   const [styleTooShort, setStyleTooShort] = useState(false)
   const [advisories, setAdvisories] = useState<Advisory[]>([])
   const resultRef = useRef<HTMLElement>(null)
+  const errorRef = useRef<HTMLDivElement>(null)
   // The run reads the messages of the moment it starts; a new messages object must not restart it.
   const latest = useRef({ m, locale })
   useEffect(() => { latest.current = { m, locale } })
@@ -263,25 +281,29 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
   }, [job.file, onBusyChange])
 
   // The first screen is full height, so bring the report into view once it exists.
+  // The same for a failure (an unsupported file, a PDF that would not read): the message sits
+  // below the first screen, so scroll to it too.
   useEffect(() => {
-    if (!report) return
+    const target = report ? resultRef.current : error ? errorRef.current : null
+    if (!target) return
     const calm = globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches
-    resultRef.current?.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' })
-  }, [report])
+    target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' })
+  }, [report, error])
 
-  const updatePostings = (next: string[]) => {
-    savePostings(next)
+  const updatePostings = (next: Posting[]) => {
+    savePostings(next.map((p) => p.text))
     setPostings(next)
   }
 
   const runJd = async () => {
-    const filled = postings.map((text, i) => ({ text, i })).filter(({ text }) => text.trim())
+    const filled = postings.map((p, i) => ({ ...p, i })).filter(({ text }) => text.trim())
     if (!resume || filled.length === 0) return
     const [{ matchJD }, signals] = await Promise.all([import('./lib/jdmatch'), import('./lib/jdsignals')])
     const experienceText = resume.experience.flatMap((e) => [e.title, e.company, ...e.bullets]).join('\n')
-    const results = filled.map(({ text, i }): JdResult => {
+    const results = filled.map(({ id, text, i }): JdResult => {
       const match = matchJD(cvText, resume.skills, text, { experienceText })
       return {
+        id,
         label: postingName(text, analyzer.jd.postingLabel(i + 1)),
         match,
         signals: {
@@ -309,7 +331,7 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
   return (
     <div>
       {error && (
-        <div role="alert" className="flex gap-3 border-2 border-ink px-5 py-4">
+        <div ref={errorRef} role="alert" className="flex scroll-mt-6 gap-3 border-2 border-ink px-5 py-4">
           <StatusMark status="fail" className="mt-0.5" />
           <div className="min-w-0">
             <p className="font-semibold">{error}</p>
@@ -427,21 +449,21 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
                 <div className="mt-6">
                   <h2 className="text-lg font-bold">{analyzer.jd.heading}</h2>
                   <p className="mt-1 max-w-[42em] text-ink-2">{analyzer.jd.blurb}</p>
-                  {postings.map((text, i) => (
-                    <div key={i} className="mt-4">
+                  {postings.map(({ id, text }, i) => (
+                    <div key={id} className="mt-4">
                       {postings.length > 1 && (
                         <div className="mb-1 flex items-center justify-between">
-                          <label htmlFor={`posting-${i}`} className="text-sm text-ink-2">{analyzer.jd.postingLabel(i + 1)}</label>
-                          <button type="button" onClick={() => updatePostings(postings.filter((_, k) => k !== i))} className="text-sm text-ink-2 underline underline-offset-4 decoration-rule-2 hover:decoration-ink">{analyzer.jd.removePosting}</button>
+                          <label htmlFor={`posting-${id}`} className="text-sm text-ink-2">{analyzer.jd.postingLabel(i + 1)}</label>
+                          <button type="button" onClick={() => updatePostings(postings.filter((p) => p.id !== id))} className="text-sm text-ink-2 underline underline-offset-4 decoration-rule-2 hover:decoration-ink">{analyzer.jd.removePosting}</button>
                         </div>
                       )}
-                      <textarea id={`posting-${i}`} value={text} onChange={(e) => updatePostings(postings.map((t, k) => (k === i ? e.target.value : t)))} rows={6} placeholder={analyzer.jd.placeholder} className="field resize-y" />
+                      <textarea id={`posting-${id}`} value={text} onChange={(e) => updatePostings(postings.map((p) => (p.id === id ? { ...p, text: e.target.value } : p)))} rows={6} placeholder={analyzer.jd.placeholder} className="field resize-y" />
                     </div>
                   ))}
                   <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <button type="button" onClick={runJd} disabled={!postings.some((t) => t.trim())} className="btn-sm bg-ink text-paper hover:bg-neon hover:text-on-neon">{analyzer.jd.button}</button>
+                    <button type="button" onClick={runJd} disabled={!postings.some((p) => p.text.trim())} className="btn-sm bg-ink text-paper hover:bg-neon hover:text-on-neon">{analyzer.jd.button}</button>
                     {postings.length < MAX_POSTINGS && (
-                      <button type="button" onClick={() => updatePostings([...postings, ''])} className="btn-sm">{analyzer.jd.addPosting}</button>
+                      <button type="button" onClick={() => updatePostings([...postings, { id: nextPostingId.current++, text: '' }])} className="btn-sm">{analyzer.jd.addPosting}</button>
                     )}
                   </div>
 
@@ -454,7 +476,7 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
                         </thead>
                         <tbody>
                           {jdResults.map((r, i) => (
-                            <tr key={i} className={`border-b border-rule ${i === selectedJd ? 'bg-panel' : ''}`}>
+                            <tr key={r.id} className={`border-b border-rule ${i === selectedJd ? 'bg-panel' : ''}`}>
                               <td className="py-2.5 pr-3">
                                 <button type="button" aria-pressed={i === selectedJd} onClick={() => { setSelectedJd(i); setShowCv(false) }} className="text-left font-semibold underline underline-offset-4 decoration-rule-2 hover:decoration-ink">{r.label}</button>
                               </td>
@@ -533,7 +555,7 @@ export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps
                             <>
                               <p className="mt-3 text-sm text-ink-2">{analyzer.jd.highlightHint}</p>
                               <div className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap border border-rule bg-panel p-3 text-sm leading-6">
-                                {cvSegments.map((seg, i) => (seg.hit ? <mark key={i} className="bg-neon px-0.5 text-on-neon">{seg.text}</mark> : <span key={i}>{seg.text}</span>))}
+                                {withOffsets(cvSegments).map((seg) => (seg.hit ? <mark key={seg.start} className="bg-neon px-0.5 text-on-neon">{seg.text}</mark> : <span key={seg.start}>{seg.text}</span>))}
                               </div>
                             </>
                           )}

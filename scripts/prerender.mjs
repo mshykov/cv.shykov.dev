@@ -208,9 +208,11 @@ function homeLastmod() {
 const homeDate = homeLastmod()
 const urls = []
 for (const loc of locales) {
-  urls.push({ loc: `${SITE}${homePath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: loc.locale === 'en' ? '1.0' : '0.9', alternates: loc.homeAlternates })
-  urls.push({ loc: `${SITE}${buildPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.buildAlternates })
-  urls.push({ loc: `${SITE}${guidesPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.guidesAlternates })
+  urls.push(
+    { loc: `${SITE}${homePath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: loc.locale === 'en' ? '1.0' : '0.9', alternates: loc.homeAlternates },
+    { loc: `${SITE}${buildPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.buildAlternates },
+    { loc: `${SITE}${guidesPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.guidesAlternates },
+  )
   for (const g of loc.articles) {
     urls.push({ loc: `${SITE}${guidePath(loc.locale, g.slug)}`, lastmod: g.updated, changefreq: 'yearly', priority: '0.8', alternates: g.alternates })
   }

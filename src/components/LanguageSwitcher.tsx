@@ -24,7 +24,12 @@ export function LanguageSwitcher({ current, links, label }: Props) {
       if (el?.open && !(e instanceof PointerEvent && el.contains(e.target as Node))) el.open = false
     }
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close(e)
+      if (e.key !== 'Escape') return
+      const el = menu.current
+      // Escape closes the menu and, if focus was inside it, hands focus back to its button.
+      const hadFocus = el?.contains(document.activeElement) ?? false
+      close(e)
+      if (hadFocus) el?.querySelector('summary')?.focus()
     }
     document.addEventListener('pointerdown', close)
     document.addEventListener('keydown', onKey)
