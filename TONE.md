@@ -34,8 +34,9 @@ local" read as "local install"). Use the wording on the right.
 | AI | "No LLM calls", "deterministic checks". "No AI" is used in the homepage meta description and is accurate there (no model of any kind) | Wording that implies a model is used anywhere, or "AI-powered" |
 | Score | "an estimate of how well a parser will read the document" | "your ATS score" as if one exists; "real ATS" — each employer's system differs |
 | Writing-style tab | English CVs only; say so | Implying it reviews other languages |
+| Network panel | what was observed: "this page made N requests, all to this site; none went to another site and none was a fetch, XHR or beacon" | "secure", "nothing was stored", "we cannot see your file" (a page cannot prove a body was not sent) |
 | Accuracy and bias | "an estimate", "a heuristic", "not validated against hiring outcomes"; the rules carry assumptions even though there is no model or training data | "accurate", "unbiased", "fair", "proven", or any outcome claim |
-| Languages | The CV may be in any supported language; the interface in six | "supports every language" |
+| Languages | The CV may be in any supported language; the interface in seven | "supports every language" |
 
 If a new feature changes any row (a network call, an optional AI step, an account),
 update this table and the FAQ answers in the same PR — `messages/en.ts`

@@ -1,9 +1,11 @@
 // The exported PDF. Single column, Helvetica (a standard PDF font with no
-// ligature shaping), real selectable text — i.e. ATS-clean by construction.
+// ligature shaping; Liberation Sans for Cyrillic and other non-WinAnsi text, see
+// pdfFonts.ts), real selectable text — i.e. ATS-clean by construction.
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type { Style } from '@react-pdf/types'
 import type { BuilderState, SectionTitles, Spacing } from './model'
 import type { EducationEntry, ExperienceEntry, ProjectEntry } from '../lib/parse'
+import { fontFaces, needsUnicodeFont, registerUnicodeFont } from './pdfFonts'
 
 const LINE_GAP: Record<Spacing, number> = { compact: 1.25, standard: 1.4, relaxed: 1.6 }
 const SECTION_GAP: Record<Spacing, number> = { compact: 8, standard: 11, relaxed: 15 }
@@ -30,14 +32,17 @@ export function ResumeDoc({ state, titles, docTitle }: ResumeDocProps) {
   const gap = SECTION_GAP[cfg.spacing]
 
   const modern = cfg.template === 'modern'
+  const unicode = needsUnicodeFont(JSON.stringify([state, titles, docTitle]))
+  if (unicode) registerUnicodeFont()
+  const font = fontFaces(unicode)
   const s = StyleSheet.create({
-    page: { paddingVertical: 34, paddingHorizontal: 40, fontFamily: 'Helvetica', fontSize: fs, color: '#1a1a1a', lineHeight: lh },
-    name: { fontFamily: 'Helvetica-Bold', fontSize: fs + 9, lineHeight: 1.3, marginBottom: 5, color: modern ? cfg.accent : '#1a1a1a' },
+    page: { paddingVertical: 34, paddingHorizontal: 40, ...font.regular, fontSize: fs, color: '#1a1a1a', lineHeight: lh },
+    name: { ...font.bold, fontSize: fs + 9, lineHeight: 1.3, marginBottom: 5, color: modern ? cfg.accent : '#1a1a1a' },
     contact: { fontSize: fs - 1.5, color: '#444', marginBottom: 1 },
-    h2: { fontFamily: 'Helvetica-Bold', fontSize: fs + 1, color: modern ? '#1a1a1a' : cfg.accent, marginTop: gap, marginBottom: modern ? 4 : 3, textTransform: 'uppercase', letterSpacing: modern ? 1.2 : 0.5 },
+    h2: { ...font.bold, fontSize: fs + 1, color: modern ? '#1a1a1a' : cfg.accent, marginTop: gap, marginBottom: modern ? 4 : 3, textTransform: 'uppercase', letterSpacing: modern ? 1.2 : 0.5 },
     rule: modern ? { marginBottom: 1 } : { borderBottomWidth: 0.7, borderBottomColor: '#bbb', marginBottom: 5 },
     entryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 1 },
-    entryTitle: { fontFamily: 'Helvetica-Bold' },
+    entryTitle: { ...font.bold },
     entryDate: { color: '#555', fontSize: fs - 1 },
     bulletRow: { flexDirection: 'row', marginBottom: 1.5 },
     bulletDot: { width: 10, color: cfg.accent },

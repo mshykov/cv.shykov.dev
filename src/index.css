@@ -7,6 +7,18 @@
   the accents. Labels and numbers use the system mono, so there is no second font
   to download. How the subset was cut: docs/design.md.
 */
+/* Schibsted Grotesk has no Cyrillic. The Ukrainian pages draw their Cyrillic glyphs in Onest, a
+   grotesk of similar width and weight, listed after it in --font-sans: the browser takes each
+   glyph from the first family that has it, and downloads this file only for Cyrillic text. */
+@font-face {
+  font-family: 'Onest Cyrillic';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('./fonts/onest-cyrillic-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
 /* Same width as the web font, so the swap does not move the layout (or the LCP element). */
 @font-face {
   font-family: 'Schibsted Fallback';
@@ -56,7 +68,7 @@
   --color-neon: #ccff00;
   --color-on-neon: #0a0a0a;
 
-  --font-sans: 'Schibsted Grotesk', 'Schibsted Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: 'Schibsted Grotesk', 'Onest Cyrillic', 'Schibsted Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --radius-*: initial;

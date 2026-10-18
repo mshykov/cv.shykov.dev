@@ -34,6 +34,10 @@ export interface Extracted {
   text: string
   /** PDF hyperlink targets. These may not be visible to ATS-style text parsers. */
   linkTargets?: string[]
+  /** Page sizes in PDF points, one per page (PDF only), for layout checks. */
+  pages?: { width: number; height: number }[]
+  /** PDF document properties (Title, Author) when present. */
+  properties?: { title?: string; author?: string }
   numPages: number
   charCount: number
   /** Which extractor produced this (affects which checks are meaningful). */
@@ -53,6 +57,7 @@ interface PdfTextItem {
 }
 
 interface PdfPageLike {
+  getViewport?(params: { scale: number }): { width: number; height: number }
   getTextContent(): Promise<PdfTextContent>
   getAnnotations(): Promise<unknown[]>
 }
@@ -81,7 +86,9 @@ function addTextPiece(pieces: TextPiece[], item: PdfTextItem, styles: PdfTextCon
   })
 }
 
-async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPiece[], linkTargets: Set<string>) {
+async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPiece[], linkTargets: Set<string>, sizes: { width: number; height: number }[]) {
+  const viewport = page.getViewport?.({ scale: 1 })
+  if (viewport) sizes[pageNumber - 1] = { width: viewport.width, height: viewport.height }
   const content = await page.getTextContent()
   for (const item of content.items) {
     if (isTextItem(item)) addTextPiece(pieces, item, content.styles, pageNumber)
@@ -109,6 +116,19 @@ async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPi
   }
 }
 
+async function readProperties(doc: { getMetadata?: () => Promise<{ info?: unknown }> }): Promise<Extracted['properties']> {
+  // Metadata is a nicety: a malformed info dictionary must never fail the analysis.
+  try {
+    const info = (await doc.getMetadata?.())?.info as { Title?: unknown; Author?: unknown } | undefined
+    const clean = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 200) : undefined)
+    const title = clean(info?.Title)
+    const author = clean(info?.Author)
+    return title || author ? { title, author } : undefined
+  } catch {
+    return undefined
+  }
+}
+
 export async function extractPdf(file: File): Promise<Extracted> {
   const data = new Uint8Array(await file.arrayBuffer())
   await ensureMainThreadWorker()
@@ -116,11 +136,13 @@ export async function extractPdf(file: File): Promise<Extracted> {
   const doc = await task.promise
   const pieces: TextPiece[] = []
   const linkTargets = new Set<string>()
+  const sizes: { width: number; height: number }[] = []
+  const properties = await readProperties(doc)
 
   try {
     for (let p = 1; p <= doc.numPages; p++) {
       const page = await doc.getPage(p)
-      await collectPage(page, p, pieces, linkTargets)
+      await collectPage(page, p, pieces, linkTargets, sizes)
       await yieldToBrowser()
     }
   } finally {
@@ -135,6 +157,8 @@ export async function extractPdf(file: File): Promise<Extracted> {
     lines,
     text,
     linkTargets: [...linkTargets],
+    properties,
+    pages: sizes.filter(Boolean),
     numPages: doc.numPages,
     charCount: text.replace(/\s/g, '').length,
     source: 'pdf',

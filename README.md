@@ -108,7 +108,7 @@ A section heading only earns points when text follows it (or it carries its own,
 
 ### Advisories (not scored)
 
-Four conventions are shown in a separate "Worth a look" card and never change the score,
+Conventions are shown in a separate "Worth a look" card and never change the score,
 because they vary by country, seniority and sector (`src/lib/advisories.ts`):
 
 | Advisory | Shown when |
@@ -117,9 +117,44 @@ because they vary by country, seniority and sector (`src/lib/advisories.ts`):
 | Thin role | the CV has at least two roles and one of them has exactly one bullet |
 | Long bullets | a bullet runs past 40 words |
 | Graduation year | English interface only: an education entry whose latest year is more than 15 years back |
+| Columns / table | PDF only: two or more text columns side by side (a sidebar), or three or more aligned columns; right-aligned dates and indented bullets are not columns |
+| Contacts in header/footer | PDF with 2+ pages only: your email or phone appears only in a header or footer that repeats on every page |
+| File name | the file is called something like `cv_final_v3` or `Resume (2)` |
+| Document properties | a PDF whose Author shares no word with the name on the CV, or whose Title looks like a scratch name |
 
 PDF text extraction uses `pdf.js`. DOCX extraction uses `mammoth`.
 PDF export uses `@react-pdf/renderer`.
+
+## Job Match
+
+The Job match tab extracts the keywords a pasted posting emphasises and checks your CV
+(`src/lib/jdmatch.ts`). It is a keyword overlap, not a prediction, and it never rewrites the CV.
+
+- **Forms and equivalents.** A light English stemmer meets "managing" with "managed" and
+  "management" (words of five letters or more, exact stem equality only). A short, conservative
+  list treats acronyms and their expansions as the same thing (SEO / search engine optimization,
+  CI/CD / continuous integration, ML / machine learning, k8s / Kubernetes…). It is kept short on
+  purpose: a wrong equivalence invents a match.
+- **Where it appears.** A matched keyword found only in the Skills list, and in no experience
+  bullet, is tagged "only in Skills": a keyword reads as stronger when a bullet shows what you
+  did with it.
+- **Nice to have.** A keyword that the posting mentions only under a "Nice to have" /
+  "Preferred" heading or marker is tagged and weighs half as much in the coverage number; one
+  mentioned both as required and as preferred stays a must-have. English markers only.
+- **Job title.** Whether the posting names one of your job titles (whole phrase, ignoring case and
+  accents; a team after a comma is ignored). Recruiters often search by title.
+- **Years of experience.** The largest number of years the posting asks for ("8+ years", "3-5 years",
+  also in Ukrainian, Spanish, Portuguese, French and German), counted only in an experience sentence or a
+  line under a requirements heading, and not when it is about the company or a warranty. It is compared
+  with the span from your earliest dated role to today. A comparison of numbers, not a verdict.
+- **Your CV with the matches highlighted.** Matched keywords (and their listed equivalents) are marked in
+  the extracted text of your CV, on request. It is rendered from plain text, never as HTML.
+- **Compare up to five postings.** Add more postings, match them all against the same CV, and read
+  a table of coverage and missing keywords with the best match marked; pick a row to see its detail.
+  The postings stay when you analyse another CV, so you can try the same ones against a new version.
+- **Copy the missing list** with one click.
+
+The history of every change that moved a score is in [docs/scoring-changelog.md](docs/scoring-changelog.md).
 
 ## Limitations And Bias
 
@@ -161,6 +196,15 @@ Read this before you trust a number.
 If the score is wrong for your CV, or you can break the order above, open a
 [Wrong score](https://github.com/mshykov/cv.shykov.dev/issues/new?template=wrong-score.md)
 issue (do not attach your CV; paste the line involved).
+
+### "Check what this page sent"
+
+After an analysis, a collapsed note states what the page observed about its own network
+activity since the file was chosen, using Resource Timing (`src/lib/network.ts`): how many
+requests it made, how many went to another site (expected: none) and how many were `fetch`,
+XHR or beacon requests (expected: none; `data:` and `blob:` URLs do not leave the page). A page
+cannot read a request body, so this is what was counted, not a guarantee; the note tells the
+reader how to check in the browser's Network tab.
 
 ## Writing Style Check
 
@@ -220,7 +264,8 @@ arrays, so none of them can drift out of step with the pages that actually exist
 
 The toolkit and the guides are published in English (`/`), Spanish (`/es/`),
 Brazilian Portuguese (`/pt-br/`), European Portuguese (`/pt-pt/`), French (`/fr/`)
-and German (`/de/`). The interface, the scorer's messages, the report export and the
+German (`/de/`) and Ukrainian (`/uk/`). The
+interface, the scorer's messages, the report export and the
 builder are translated, and the scorer reads CVs written in any of these languages
 whatever language the page is in. `docs/localization.md` describes the architecture
 and how to add another language.

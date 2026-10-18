@@ -6,6 +6,14 @@ import { LOCALES, SITE, buildPath, guidePath, guidesPath, homePath } from '../sr
 import { GUIDE_IDS } from '../src/content/types.ts'
 import { SIBLINGS } from '../src/components/siblings.ts'
 
+// Which guides each language has. A language may ship before all its guides are written (a
+// language without a guide is simply left out of that guide's hreflang cluster), so the checks
+// below expect exactly the guides it declares, not always all of GUIDE_IDS.
+const GUIDE_META = Object.fromEntries(await Promise.all(LOCALES.map(async (l) => [l.code, (await import(`../src/content/${l.code}/guides.ts`)).GUIDES])))
+const GUIDES_OF = Object.fromEntries(LOCALES.map((l) => [l.code, GUIDE_META[l.code].map((g) => g.id)]))
+const hasGuide = (code, id) => GUIDES_OF[code].includes(id)
+const GUIDE_TOTAL = LOCALES.reduce((n, l) => n + GUIDES_OF[l.code].length, 0)
+
 const root = new URL('..', import.meta.url)
 const dist = new URL('dist/', root)
 const headersPath = new URL('_headers', dist)
@@ -79,7 +87,7 @@ for (const loc of LOCALES) {
   const slugs = []
   const guideLinks = [...new Set(internalLinks(home).filter((href) => href.startsWith(homeUrl === '/' ? '/' : homeUrl)))]
   const guideHrefs = guideLinks.filter((href) => href !== homeUrl && href !== '/' && !href.startsWith('/assets') && !/\.\w+$/.test(href) && !LOCALES.some((l) => homePath(l.code) === href) && href !== buildPath(loc.code) && href !== guidesPath(loc.code))
-  assert.equal(guideHrefs.length, GUIDE_IDS.length, `${label} homepage should list ${GUIDE_IDS.length} guides, found ${guideHrefs.join(', ')}`)
+  assert.equal(guideHrefs.length, GUIDES_OF[loc.code].length, `${label} homepage should list ${GUIDES_OF[loc.code].length} guides, found ${guideHrefs.join(', ')}`)
 
   for (const href of guideHrefs) {
     urlCount += 1
@@ -109,7 +117,9 @@ for (const loc of LOCALES) {
 
     // Every guide names the same page in every other language (and x-default).
     const galts = Object.fromEntries(hreflangs(guide))
-    for (const other of LOCALES) assert.ok(galts[other.htmlLang], `${label} ${href} should link its ${other.htmlLang} version`)
+    const guideId = GUIDE_META[loc.code].find((g) => guidePath(loc.code, g.slug) === href)?.id
+    assert.ok(guideId, `${label} ${href} should be one of this language's declared guides`)
+    for (const other of LOCALES.filter((o) => hasGuide(o.code, guideId))) assert.ok(galts[other.htmlLang], `${label} ${href} should link its ${other.htmlLang} version`)
     assert.equal(galts[loc.htmlLang], `${SITE}${href}`, `${label} ${href} hreflang for itself`)
 
     // No dead internal links: every local href must be a built page or file.
@@ -119,7 +129,7 @@ for (const loc of LOCALES) {
     }
     slugs.push(href.slice(href.lastIndexOf('/') + 1))
   }
-  assert.equal(new Set(slugs).size, GUIDE_IDS.length, `${label} guide slugs should be unique`)
+  assert.equal(new Set(slugs).size, GUIDES_OF[loc.code].length, `${label} guide slugs should be unique`)
   guideSlugs[loc.code] = slugs
 
   for (const link of new Set(internalLinks(home))) {
@@ -150,8 +160,8 @@ for (const id of GUIDE_IDS) assert.ok(guideSlugs.en.includes(id), `English guide
 assert.ok(guidePath('en', 'x') === '/x', 'English stays at the root')
 
 const sitemap = readFileSync(new URL('sitemap.xml', dist), 'utf8')
-assert.equal((sitemap.match(/<loc>/g) ?? []).length, urlCount, `sitemap should list every page: ${LOCALES.length} homepages, build pages and guide indexes plus ${GUIDE_IDS.length} guides each`)
-assert.equal((sitemap.match(/<loc>/g) ?? []).length, LOCALES.length * (3 + GUIDE_IDS.length))
+assert.equal((sitemap.match(/<loc>/g) ?? []).length, urlCount, `sitemap should list every page: ${LOCALES.length} homepages, build pages and guide indexes plus ${GUIDE_TOTAL} guides`)
+assert.equal((sitemap.match(/<loc>/g) ?? []).length, LOCALES.length * 3 + GUIDE_TOTAL)
 assert.ok(sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'), 'sitemap should declare the xhtml namespace for hreflang alternates')
 assert.equal((sitemap.match(/hreflang="x-default"/g) ?? []).length, urlCount, 'every sitemap url should carry an x-default alternate')
 

@@ -6,8 +6,8 @@ Privacy-first **CV Toolkit** (https://cv.shykov.dev). Two modes:
 - **Build** — form → live preview + live ATS score → export an ATS-clean PDF.
 
 Everything runs **100% in the browser**; nothing is uploaded. Open-source (MIT).
-Published in six language versions — English at `/`, then `/es/`, `/pt-br/`,
-`/pt-pt/`, `/fr/`, `/de/` — see `docs/localization.md` before touching any text.
+Published in seven language versions — English at `/`, then `/es/`, `/pt-br/`,
+`/pt-pt/`, `/fr/`, `/de/`, `/uk/` — see `docs/localization.md` before touching any text.
 
 ## Stack & deploy
 Vite 8 · React 19 · TypeScript · Tailwind v4 (theme = tokens only, see `docs/design.md`). `pdf.js` (read PDF), `mammoth`
@@ -123,7 +123,7 @@ self-merge via squash. Never commit straight to `main` (check your branch first)
 - `docs/project-quality.md` — CV toolkit-specific quality rules.
 - `TONE.md` — voice and the privacy/scoring claims the site may make (read before
   writing any rendered text, guide or post).
-- `docs/localization.md` — **how the six languages work and how to add a seventh**
+- `docs/localization.md` — **how the seven languages work and how to add another**
   (URL scheme, SEO/hreflang rules, translation voice and glossary, validation).
 - `docs/ai-visibility.md` — AI/search visibility baseline (2026-09-26) + re-run protocol.
 - `docs/session_2026-06-24_history.md` — last session's work + **current backlog**.

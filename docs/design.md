@@ -127,6 +127,7 @@ headlines still fit. Labels (`.lab`) are the system mono, so there is no second 
   --layout-features=kern,liga,calt,ccmp,locl,mark,mkmk,tnum,case`). Re-cut it from Fontsource's
   `@fontsource-variable/schibsted-grotesk` if the range ever has to grow. Latin-1 covers the
   fr/de/es/pt diacritics.
+- Cyrillic (the Ukrainian pages): Schibsted Grotesk has none, so `Onest Cyrillic` (11 KB, wght 400-700, OFL) comes after it in `--font-sans` and is downloaded only for Cyrillic text.
 - **LCP:** `index.html` preloads the latin file, and `Schibsted Fallback` (Arial with
   `size-adjust: 103%`) keeps the swap from changing the layout. Without the preload the second
   paint of the lead text (after the font arrived) was a *larger* LCP candidate. Guides get the

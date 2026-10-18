@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { getAdvisories, LONG_BULLET_WORDS, LONG_CV_WORDS } from './advisories.ts'
+import { authorLooksForeign, getAdvisories, LONG_BULLET_WORDS, LONG_CV_WORDS, looksLikeScratchName } from './advisories.ts'
 import { parseResume } from './parse.ts'
 import type { Extracted } from './pdf.ts'
 import { en } from '../i18n/messages/en.ts'
@@ -96,4 +96,39 @@ test('a graduation-year advisory never changes the score', async () => {
   const withOld = analyze(ex(withEducation('• BSc Computer Science — Example University, 1998')), en.analysis).score
   const withNew = analyze(ex(withEducation('• BSc Computer Science — Example University, 2022')), en.analysis).score
   assert.equal(withOld, withNew)
+})
+
+const adviseWith = (extra: Partial<Extracted>, fileName?: string) => {
+  const e = { ...ex([...HEAD, ...GOOD_ROLES]), ...extra }
+  return getAdvisories(e, parseResume(e), en.analysis.advisories, { locale: 'en', now: 2026, fileName }).map((a) => a.id)
+}
+
+test('scratch file names are recognised, good ones are not', () => {
+  for (const bad of ['cv_final_v3_REAL.pdf', 'Resume (2).pdf', 'Untitled.pdf', 'cv_draft.docx', 'Microsoft Word - CV.pdf', 'CV_20261017_1530.pdf']) {
+    assert.ok(looksLikeScratchName(bad), bad)
+  }
+  for (const good of ['Jane_Doe_CV.pdf', 'Jane Doe - Engineering Manager.pdf', 'jane-doe-cv.docx', 'Maksym_Shykov_Engineering_Manager.pdf']) {
+    assert.ok(!looksLikeScratchName(good), good)
+  }
+})
+
+test('the file-name advisory appears for a scratch name only', () => {
+  assert.ok(adviseWith({}, 'cv_final_v3.pdf').includes('file-name'))
+  assert.ok(!adviseWith({}, 'Jane_Doe_CV.pdf').includes('file-name'))
+  assert.ok(!adviseWith({}).includes('file-name'))
+})
+
+test('an author that shares no word with the CV name is foreign; diacritics and order do not matter', () => {
+  assert.ok(authorLooksForeign('Olena Kovalenko', 'JANE DOE'))
+  assert.ok(!authorLooksForeign('Doe, Jane', 'JANE DOE'))
+  assert.ok(!authorLooksForeign('José García', 'JOSE GARCIA'))
+  assert.ok(!authorLooksForeign('', 'JANE DOE'))
+  assert.ok(!authorLooksForeign('Jane Doe', ''))
+})
+
+test('document properties are flagged only when they look left over', () => {
+  assert.ok(adviseWith({ properties: { author: 'Olena Kovalenko' } }).includes('document-properties'))
+  assert.ok(adviseWith({ properties: { title: 'cv_final_v3' } }).includes('document-properties'))
+  assert.ok(!adviseWith({ properties: { author: 'Jane Doe', title: 'Jane Doe CV' } }).includes('document-properties'))
+  assert.ok(!adviseWith({}).includes('document-properties'))
 })

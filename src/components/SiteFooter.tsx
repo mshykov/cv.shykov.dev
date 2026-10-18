@@ -17,6 +17,8 @@ export function SiteFooter({ links }: Readonly<{ links: LanguageLink[] }>) {
       </div>
       <p className="mt-2">{m.home.footer.noTracking}</p>
       <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+        <a href={`${REPO_URL}/blob/main/docs/scoring-changelog.md`} rel="noreferrer" target="_blank" className={TEXT_LINK}>{m.home.footer.scoringChangelog}</a>
+        <span aria-hidden>·</span>
         <span>{m.home.footer.moreFrom}:</span>
         {SIBLINGS.map((s) => (
           <a key={s.name} href={s.href} className={TEXT_LINK}>{s.name}</a>

@@ -1,8 +1,9 @@
 # Localization — how cv.shykov.dev speaks more than one language
 
-The site ships in six language versions: English (the original, at the root) and
+The site ships in seven language versions: English (the original, at the root) and
 Spanish (`/es/`), Brazilian Portuguese (`/pt-br/`), European Portuguese
-(`/pt-pt/`), French (`/fr/`) and German (`/de/`). This document is the contract
+(`/pt-pt/`), French (`/fr/`), German (`/de/`) and Ukrainian (`/uk/`, see
+[Ukrainian](#ukrainian)). This document is the contract
 for all of them and the procedure for adding the next one. If you only read one
 section, read [Adding a language](#adding-a-language).
 
@@ -75,6 +76,7 @@ a Spanish CV dropped on `/de/` is scored correctly, and so is an English one on
 | Portuguese (Portugal) | `/pt-pt/` | `/pt-pt/<slug>` |
 | French | `/fr/` | `/fr/<slug>` |
 | German | `/de/` | `/de/<slug>` |
+| Ukrainian | `/uk/` | `/uk/<slug>` (Latin transliteration) |
 
 Files are written as `dist/<code>/index.html` (served at `/es/`) and
 `dist/<code>/<slug>.html` (served at `/es/<slug>` with a 200 — not
@@ -174,6 +176,7 @@ language and never mix it:
 | pt-PT | formal imperative, no *tu*/*você* | "Carregue o seu CV". Portugal says **CV**; "ficheiro", "carregar", "descarregar" — never "arquivo", "upload", "baixar" |
 | fr-FR | *vous* | "CV" is the everyday word; "candidat", "recruteur" |
 | de-DE | *Sie* | **Lebenslauf**; "Bewerbung"; "hochladen" |
+| uk-UA | *ви* (lower case) | **резюме**, and **CV** where it is the everyday word; "ATS-скор", "парсер", "завантажити", "рекрутер" |
 
 **Terminology (keep consistent inside a language).**
 
@@ -201,6 +204,7 @@ the targets, not a script):
 | pt-pt | verificador de CV ATS gratuito · analisar CV ATS · pontuação ATS do CV |
 | fr | vérificateur de CV ATS gratuit · score ATS de son CV · analyser son CV ATS gratuitement |
 | de | Lebenslauf ATS Check kostenlos · ATS Lebenslauf prüfen · CV Check kostenlos |
+| uk | перевірка резюме ATS безкоштовно · ATS-скор резюме · перевірити CV на ATS онлайн |
 
 **Honesty.** The claims are factual and checkable: runs in the browser, no upload,
 deterministic, no LLM, open source, heuristic not a guarantee. Never add claims the
@@ -217,6 +221,29 @@ leave it out.
 (a plausible local city and phone format, local month names and the local word for
 "present"), headings the scorer recognises, and must score at least as well as the
 English one — `locales.test.ts` enforces it.
+
+## Ukrainian
+
+Added as the seventh language. Things specific to it:
+
+- **Cyrillic is not Latin.** `foldHeading` (`src/lib/lang/fold.ts`) keeps `\u0400-\u04ff`, and
+  `detectLanguage` tokenises Cyrillic, otherwise a Ukrainian heading folds to nothing and a
+  Ukrainian CV is never recognised. Names with accents (`Ana Pérez`) and Cyrillic names are
+  matched by Unicode letter in `parse.ts`, not `a-z`.
+- **Plurals have three forms** (1 / 2–4 / 5+). `messages/uk.ts` defines a local `plural` helper.
+- **The exported PDF needs an embedded font.** Helvetica cannot draw Cyrillic. When a built CV
+  contains Cyrillic, Greek or Latin Extended letters, `src/builder/pdfFonts.ts` embeds Liberation
+  Sans (shipped with `pdfjs-dist`; licence in `THIRD_PARTY_NOTICES.md`). Latin-only CVs still use
+  Helvetica. The embedded text extracts and parses back (checked with the app's own analyzer).
+- **Russian-language CVs are not claimed.** `detectWords` lists words that are Ukrainian rather
+  than Russian, and the section lists contain Ukrainian headings only.
+- **Guides.** All six are written. Slugs are Latin transliterations (`/uk/shcho-take-ats-skor`),
+  because Cyrillic URLs turn into long percent-encoded strings when shared. Titles and descriptions
+  are written for what Ukrainians search, not translated word for word; numbers (the 100-point
+  rubric, 85 = good) are identical to the English guides and the tables come from the scorer.
+- **A language may ship before its guides.** `content/<code>/guides.ts` can be empty or partial: the
+  homepage lists only what exists, the language is left out of the hreflang cluster of any guide it
+  lacks, and `smoke-built.mjs` expects exactly the guides each language declares.
 
 ## Seeing a language while developing
 

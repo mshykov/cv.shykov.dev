@@ -64,6 +64,14 @@ const FIXTURES: Record<string, string[]> = {
     'AUSBILDUNG', '• Bachelor Informatik — Technische Universität Berlin, 2010 – 2014',
     'KENNTNISSE', 'Führung, Teamentwicklung, Agile, CI/CD', 'PROJEKTE', '• Interne Metrik-Plattform', 'ZERTIFIKATE', '• AWS Certified, 2021',
   ],
+  uk: [
+    'ОЛЕНА КОВАЛЕНКО', 'olena.kovalenko@email.com · +380 50 123 4567 · linkedin.com/in/olenakovalenko', 'Київ, Україна',
+    'ПРО СЕБЕ', 'Керівник інженерної команди з десятирічним досвідом створення продуктових і платформних команд.',
+    'ДОСВІД РОБОТИ', 'Engineering Manager — Acme січ 2022 – наразі',
+    '• Керувала командою з 9 інженерів у вебі та мобільній розробці', '• Скоротила цикл релізу на 40% завдяки CI/CD', '• Найняла 6 інженерів і запровадила процес підвищень',
+    'ОСВІТА', '• Бакалавр комп’ютерних наук — КПІ ім. Ігоря Сікорського, 2010 – 2014',
+    'НАВИЧКИ', 'Лідерство, Управління людьми, Agile, CI/CD', 'ПРОЄКТИ', '• Внутрішня платформа метрик', 'СЕРТИФІКАТИ', '• AWS Certified, 2021',
+  ],
 }
 
 for (const [name, lines] of Object.entries(FIXTURES)) {
@@ -186,4 +194,22 @@ test('quantified results count in every typography: 40%, 40 %, 40 % (no-break sp
   }
   assert.equal(quant('Managed 12 people and a 5 year plan'), 3)
   assert.equal(quant('Rate went from 1 to 2 over the year'), 0)
+})
+
+test('Ukrainian headings survive folding: Cyrillic is kept, accents and «й»/«ї» fold the same on both sides', () => {
+  assert.equal(normalizeHeader('ДОСВІД РОБОТИ'), normalizeHeader('Досвід роботи'))
+  assert.ok(normalizeHeader('ПРОЄКТИ').length > 0)
+  assert.equal(fold('Проєкти'), fold('ПРОЄКТИ'))
+})
+
+test('Ukrainian dates: abbreviated and inflected months, and "наразі"', () => {
+  for (const line of ['січ 2022 – наразі', 'березня 2021', 'груд 2019 – лип 2021', 'Київ, 2020 – дотепер']) assert.ok(hasDate(line), line)
+  assert.ok(!hasDate('Керувала командою з 9 інженерів'))
+})
+
+test('a Ukrainian CV is recognised as Ukrainian; a Russian one is not claimed', () => {
+  const uk = FIXTURES.uk.join(' ') + ' Також відповідала за найм і розвиток команди, що працювала над продуктом протягом кількох років, і була залучена до всіх етапів роботи.'
+  assert.equal(detectLanguage(uk.repeat(2)), 'uk')
+  const ru = 'Руководитель команды инженеров с десятилетним опытом. Отвечал за найм, развитие команды и запуск продуктов. Сократил время релиза на 40 процентов благодаря автоматизации. Нанял шесть инженеров и внедрил процесс повышений в компании, где работал несколько лет подряд.'
+  assert.notEqual(detectLanguage(ru.repeat(2)), 'uk')
 })

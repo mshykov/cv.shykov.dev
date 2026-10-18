@@ -11,7 +11,7 @@ import { fold } from '../lib/lang/index.ts'
 // left in place), working functions, and a builder sample that scores well with
 // that language's own headings. docs/localization.md describes the workflow.
 
-const MODULES: Record<string, string> = { es: 'es', 'pt-br': 'ptBR', 'pt-pt': 'ptPT', fr: 'fr', de: 'de' }
+const MODULES: Record<string, string> = { es: 'es', 'pt-br': 'ptBR', 'pt-pt': 'ptPT', fr: 'fr', de: 'de', uk: 'uk' }
 
 async function messagesOf(code: string): Promise<Messages> {
   if (code === DEFAULT_LOCALE) return en
@@ -52,6 +52,18 @@ const PROBES: Record<string, unknown[]> = {
   'analysis.advisories.length.detail': [123],
   'analysis.advisories.thinRole.detail': [2],
   'analysis.advisories.longBullets.detail': [3],
+  'analysis.advisories.fileName.detail': ['PROBE'],
+  'analysis.advisories.properties.detail': ['PROBE', 'PROBE2'],
+  'analyzer.jd.postingLabel': [2],
+  'analyzer.jd.titleFound': ['PROBE'],
+  'analyzer.jd.yearsMeets': [8, 15],
+  'analyzer.jd.yearsBelow': [8, 3],
+  'analyzer.jd.yearsNoDates': [8],
+  'analyzer.delta.up': [8, 83],
+  'analyzer.delta.down': [5, 91],
+  'analyzer.delta.same': [83],
+  'analyzer.network.ok': [7],
+  'analyzer.network.warn': [3, 2],
   'analyzer.failed': ['PROBE'],
   'analyzer.pages': [2],
   'analyzer.reportMeta': ['PAGES', 'WORDS', 'CHARS'],

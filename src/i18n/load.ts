@@ -15,6 +15,7 @@ export async function loadLocale(locale: Locale): Promise<LocaleBundle> {
     case 'pt-pt': return (await import('./bundles/pt-pt.ts')).bundle
     case 'fr': return (await import('./bundles/fr.ts')).bundle
     case 'de': return (await import('./bundles/de.ts')).bundle
+    case 'uk': return (await import('./bundles/uk.ts')).bundle
     default: return en
   }
 }
