@@ -211,6 +211,11 @@ export const en = {
       missing: 'Missing from your CV',
       missingHint: '(add the ones that are genuinely true)',
       covered: 'Already covered',
+      onlySkills: 'only in Skills',
+      niceToHave: 'nice to have',
+      onlySkillsHint: 'Listed in Skills but not in any experience bullet. A keyword reads as stronger when a bullet shows what you did with it.',
+      copyMissing: 'Copy missing keywords',
+      copied: 'Copied',
     },
     data: {
       profile: 'Profile',

@@ -196,6 +196,11 @@ export const ptBR: Messages = {
       missing: 'Ausentes no seu currículo',
       missingHint: '(adicione apenas as que forem verdadeiras)',
       covered: 'Já cobertas',
+      onlySkills: 'só em Habilidades',
+      niceToHave: 'diferencial',
+      onlySkillsHint: 'Aparece em Habilidades, mas em nenhum marcador de experiência. Uma palavra-chave pesa mais quando um marcador mostra o que você fez com ela.',
+      copyMissing: 'Copiar palavras-chave que faltam',
+      copied: 'Copiado',
     },
     data: {
       profile: 'Perfil',

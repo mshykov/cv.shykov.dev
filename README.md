@@ -125,6 +125,24 @@ because they vary by country, seniority and sector (`src/lib/advisories.ts`):
 PDF text extraction uses `pdf.js`. DOCX extraction uses `mammoth`.
 PDF export uses `@react-pdf/renderer`.
 
+## Job Match
+
+The Job match tab extracts the keywords a pasted posting emphasises and checks your CV
+(`src/lib/jdmatch.ts`). It is a keyword overlap, not a prediction, and it never rewrites the CV.
+
+- **Forms and equivalents.** A light English stemmer meets "managing" with "managed" and
+  "management" (words of five letters or more, exact stem equality only). A short, conservative
+  list treats acronyms and their expansions as the same thing (SEO / search engine optimization,
+  CI/CD / continuous integration, ML / machine learning, k8s / Kubernetes…). It is kept short on
+  purpose: a wrong equivalence invents a match.
+- **Where it appears.** A matched keyword found only in the Skills list, and in no experience
+  bullet, is tagged "only in Skills": a keyword reads as stronger when a bullet shows what you
+  did with it.
+- **Nice to have.** A keyword that the posting mentions only under a "Nice to have" /
+  "Preferred" heading or marker is tagged and weighs half as much in the coverage number; one
+  mentioned both as required and as preferred stays a must-have. English markers only.
+- **Copy the missing list** with one click.
+
 ## Limitations And Bias
 
 Read this before you trust a number.
