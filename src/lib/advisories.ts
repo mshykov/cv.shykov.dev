@@ -7,8 +7,9 @@
 import type { Extracted } from './pdf.ts'
 import type { Resume } from './parse.ts'
 import type { AnalysisMessages } from './analyze.ts'
+import { analyzeLayout } from './layout.ts'
 
-export type AdvisoryId = 'length' | 'thin-role' | 'long-bullets' | 'graduation-year' | 'file-name' | 'document-properties'
+export type AdvisoryId = 'length' | 'thin-role' | 'long-bullets' | 'graduation-year' | 'file-name' | 'document-properties' | 'columns' | 'table' | 'header-contact'
 
 export interface Advisory {
   id: AdvisoryId
@@ -90,6 +91,15 @@ export function getAdvisories(ex: Extracted, resume: Resume, m: AnalysisMessages
     if (author || title) {
       out.push({ id: 'document-properties', detail: m.properties.detail(author, title), fix: m.properties.fix })
     }
+  }
+
+  // Layout risks need text positions, which only a PDF has. A table implies columns,
+  // so say the more specific thing once.
+  if (ex.source === 'pdf' && ex.pages?.length) {
+    const layout = analyzeLayout(ex.pieces, ex.pages)
+    if (layout.table) out.push({ id: 'table', detail: m.table.detail, fix: m.table.fix })
+    else if (layout.columns) out.push({ id: 'columns', detail: m.columns.detail, fix: m.columns.fix })
+    if (layout.headerContact) out.push({ id: 'header-contact', detail: m.headerContact.detail, fix: m.headerContact.fix })
   }
 
   // English only, on purpose: whether to show a graduation year is a convention that

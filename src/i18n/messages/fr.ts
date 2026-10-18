@@ -231,6 +231,9 @@ export const fr: Messages = {
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'puce dépasse' : 'puces dépassent'} 40 mots.`, fix: 'Découpez les puces longues en un résultat et la façon de l’obtenir. Une à deux lignes chacune se parcourent plus vite.' },
       fileName: { detail: (name: string) => `Le fichier s’appelle « ${name} ».`, fix: 'Les recruteurs enregistrent beaucoup de fichiers. Nommez-le Prenom_Nom_CV.pdf, sans mots comme « final », numéros de version ni dates.' },
       properties: { detail: (author?: string, title?: string) => `Les propriétés du fichier indiquent ${[author && `l’auteur « ${author} »`, title && `le titre « ${title} »`].filter(Boolean).join(' et ')}.`, fix: 'Quiconque ouvre les propriétés du fichier voit ces champs. Mettez votre nom comme auteur et un titre du type « Prénom Nom CV », puis exportez à nouveau.' },
+      columns: { detail: 'La mise en page semble comporter deux colonnes de texte ou plus.', fix: 'Les analyseurs lisent la page ligne par ligne : le texte en colonnes peut donc ressortir mélangé. Si l’ordre compte (un poste à côté de ses dates), utilisez une seule colonne.' },
+      table: { detail: 'Une partie de la page ressemble à un tableau.', fix: 'Les tableaux et les zones de texte peuvent ressortir dans le mauvais ordre. Pour l’essentiel, préférez des lignes simples et des puces.' },
+      headerContact: { detail: 'Votre e-mail ou téléphone n’apparaît que dans l’en-tête ou le pied de page.', fix: 'Certains analyseurs ignorent l’en-tête et le pied de page. Répétez vos coordonnées dans le corps de la première page.' },
     },
     categories: { Parseability: 'Lisibilité', Contact: 'Contact', Sections: 'Rubriques', Format: 'Format', Content: 'Contenu' },
     labels: {

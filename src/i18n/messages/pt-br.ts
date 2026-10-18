@@ -222,6 +222,9 @@ export const ptBR: Messages = {
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'marcador passa' : 'marcadores passam'} de 40 palavras.`, fix: 'Divida os marcadores longos em um resultado e em como você chegou a ele. Uma a duas linhas cada um são mais fáceis de ler.' },
       fileName: { detail: (name: string) => `O arquivo se chama “${name}”.`, fix: 'Recrutadores salvam muitos arquivos. Chame-o de Nome_Sobrenome_CV.pdf, sem palavras como “final”, números de versão ou datas.' },
       properties: { detail: (author?: string, title?: string) => `As propriedades do arquivo mostram ${[author && `o autor “${author}”`, title && `o título “${title}”`].filter(Boolean).join(' e ')}.`, fix: 'Qualquer pessoa que abra as propriedades do arquivo vê esses campos. Coloque seu nome como autor e um título como “Nome Sobrenome CV” e exporte de novo.' },
+      columns: { detail: 'O layout parece ter duas ou mais colunas de texto.', fix: 'Analisadores leem a página linha a linha, então o texto em colunas pode sair misturado. Se a ordem importa (um cargo junto das datas), use uma única coluna.' },
+      table: { detail: 'Parte da página parece uma tabela.', fix: 'Tabelas e caixas de texto podem sair na ordem errada. Para o que é importante, prefira linhas simples e marcadores.' },
+      headerContact: { detail: 'Seu e-mail ou telefone aparece apenas no cabeçalho ou no rodapé.', fix: 'Alguns analisadores ignoram cabeçalho e rodapé. Repita seus dados de contato no corpo da primeira página.' },
     },
     categories: { Parseability: 'Legibilidade', Contact: 'Contato', Sections: 'Seções', Format: 'Formato', Content: 'Conteúdo' },
     labels: {

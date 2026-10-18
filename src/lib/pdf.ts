@@ -34,6 +34,8 @@ export interface Extracted {
   text: string
   /** PDF hyperlink targets. These may not be visible to ATS-style text parsers. */
   linkTargets?: string[]
+  /** Page sizes in PDF points, one per page (PDF only), for layout checks. */
+  pages?: { width: number; height: number }[]
   /** PDF document properties (Title, Author) when present. */
   properties?: { title?: string; author?: string }
   numPages: number
@@ -55,6 +57,7 @@ interface PdfTextItem {
 }
 
 interface PdfPageLike {
+  getViewport?(params: { scale: number }): { width: number; height: number }
   getTextContent(): Promise<PdfTextContent>
   getAnnotations(): Promise<unknown[]>
 }
@@ -83,7 +86,9 @@ function addTextPiece(pieces: TextPiece[], item: PdfTextItem, styles: PdfTextCon
   })
 }
 
-async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPiece[], linkTargets: Set<string>) {
+async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPiece[], linkTargets: Set<string>, sizes: { width: number; height: number }[]) {
+  const viewport = page.getViewport?.({ scale: 1 })
+  if (viewport) sizes[pageNumber - 1] = { width: viewport.width, height: viewport.height }
   const content = await page.getTextContent()
   for (const item of content.items) {
     if (isTextItem(item)) addTextPiece(pieces, item, content.styles, pageNumber)
@@ -131,12 +136,13 @@ export async function extractPdf(file: File): Promise<Extracted> {
   const doc = await task.promise
   const pieces: TextPiece[] = []
   const linkTargets = new Set<string>()
+  const sizes: { width: number; height: number }[] = []
   const properties = await readProperties(doc)
 
   try {
     for (let p = 1; p <= doc.numPages; p++) {
       const page = await doc.getPage(p)
-      await collectPage(page, p, pieces, linkTargets)
+      await collectPage(page, p, pieces, linkTargets, sizes)
       await yieldToBrowser()
     }
   } finally {
@@ -152,6 +158,7 @@ export async function extractPdf(file: File): Promise<Extracted> {
     text,
     linkTargets: [...linkTargets],
     properties,
+    pages: sizes.filter(Boolean),
     numPages: doc.numPages,
     charCount: text.replace(/\s/g, '').length,
     source: 'pdf',
