@@ -7,7 +7,7 @@ Privacy-first **CV Toolkit** (https://cv.shykov.dev). Two modes:
 
 Everything runs **100% in the browser**; nothing is uploaded. Open-source (MIT).
 Published in seven language versions — English at `/`, then `/es/`, `/pt-br/`,
-`/pt-pt/`, `/fr/`, `/de/`, `/uk/` (Ukrainian: tool only, guides pending) — see `docs/localization.md` before touching any text.
+`/pt-pt/`, `/fr/`, `/de/`, `/uk/` — see `docs/localization.md` before touching any text.
 
 ## Stack & deploy
 Vite 8 · React 19 · TypeScript · Tailwind v4. `pdf.js` (read PDF), `mammoth`

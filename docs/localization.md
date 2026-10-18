@@ -2,8 +2,8 @@
 
 The site ships in seven language versions: English (the original, at the root) and
 Spanish (`/es/`), Brazilian Portuguese (`/pt-br/`), European Portuguese
-(`/pt-pt/`), French (`/fr/`), German (`/de/`) and Ukrainian (`/uk/`; its guides are
-still to be written, see [Ukrainian](#ukrainian)). This document is the contract
+(`/pt-pt/`), French (`/fr/`), German (`/de/`) and Ukrainian (`/uk/`, see
+[Ukrainian](#ukrainian)). This document is the contract
 for all of them and the procedure for adding the next one. If you only read one
 section, read [Adding a language](#adding-a-language).
 
@@ -76,7 +76,7 @@ a Spanish CV dropped on `/de/` is scored correctly, and so is an English one on
 | Portuguese (Portugal) | `/pt-pt/` | `/pt-pt/<slug>` |
 | French | `/fr/` | `/fr/<slug>` |
 | German | `/de/` | `/de/<slug>` |
-| Ukrainian | `/uk/` | `/uk/<slug>` (no guides yet) |
+| Ukrainian | `/uk/` | `/uk/<slug>` (Latin transliteration) |
 
 Files are written as `dist/<code>/index.html` (served at `/es/`) and
 `dist/<code>/<slug>.html` (served at `/es/<slug>` with a 200 — not
@@ -237,9 +237,13 @@ Added as the seventh language. Things specific to it:
   Helvetica. The embedded text extracts and parses back (checked with the app's own analyzer).
 - **Russian-language CVs are not claimed.** `detectWords` lists words that are Ukrainian rather
   than Russian, and the section lists contain Ukrainian headings only.
-- **Guides are not written yet.** `content/uk/guides.ts` is empty, so the homepage lists no guides
-  and the language is absent from every guide's hreflang cluster. `smoke-built.mjs` expects
-  exactly the guides each language declares. Writing them is a separate step.
+- **Guides.** All six are written. Slugs are Latin transliterations (`/uk/shcho-take-ats-skor`),
+  because Cyrillic URLs turn into long percent-encoded strings when shared. Titles and descriptions
+  are written for what Ukrainians search, not translated word for word; numbers (the 100-point
+  rubric, 85 = good) are identical to the English guides and the tables come from the scorer.
+- **A language may ship before its guides.** `content/<code>/guides.ts` can be empty or partial: the
+  homepage lists only what exists, the language is left out of the hreflang cluster of any guide it
+  lacks, and `smoke-built.mjs` expects exactly the guides each language declares.
 
 ## Seeing a language while developing
 
