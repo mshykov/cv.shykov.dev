@@ -51,62 +51,25 @@ export const es: Messages = {
     header: {
       primaryMode: 'Modo principal de la aplicación',
       analyze: 'Puntuación ATS rápida',
-      build: 'Crear',
-      github: 'GitHub',
-      githubAria: 'Código abierto en GitHub',
-    },
-    hero: {
-      badge: 'Análisis de CV 100% en tu navegador',
-      h1: 'Revisar CV ATS gratis: comprueba tu puntuación ATS con total privacidad',
-      lead: 'Consigue la puntuación ATS de tu CV a partir de un PDF o DOCX en segundos, ve primero las correcciones de mayor impacto, compara palabras clave y crea un CV compatible con ATS sin subir archivos, sin cuentas y sin llamadas a un LLM.',
-      check: 'Revisar mi CV',
-      build: 'Crear un CV compatible con ATS',
-      runsInBrowser: 'Funciona en tu navegador',
-      noUploads: 'Sin subidas',
-      noLlm: 'Sin LLM',
-      pdfDocx: 'PDF y DOCX',
+      build: 'Crear CV',
       openSource: 'Código abierto',
     },
-    heroCard: {
-      localParse: 'en tu navegador',
-      noUpload: 'Sin subida',
-      noLlm: 'Sin LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Vista previa de la puntuación ATS local',
-      localParse: 'En tu navegador',
-      caption: 'Puntuación, correcciones principales y palabras clave',
-      categories: ['Legibilidad', 'Secciones', 'Contenido'],
-    },
-    how: {
-      aria: 'Cómo funciona el comprobador de CV ATS local',
-      steps: [
-        { title: 'Elige un PDF/DOCX', body: 'Selecciona el archivo de tu CV en tu dispositivo.' },
-        { title: 'Análisis en tu navegador', body: 'La extracción del texto y la puntuación se ejecutan en este navegador.' },
-        { title: 'Corrige lo principal', body: 'Verás la puntuación, el desglose, las palabras clave y notas que puedes exportar.' },
-      ],
-      noServerUpload: 'Sin subida a ningún servidor',
-      deterministic: 'Comprobaciones deterministas, sin llamadas a un LLM',
-      openSourceMit: 'Código abierto, licencia MIT',
+    hero: {
+      h1: 'Revisar CV ATS gratis: comprueba tu puntuación ATS con total privacidad',
+      check: 'Revisar mi CV',
+      // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Ejemplo',
+      runs: 'Funciona en tu navegador',
+      facts: ['Sin cuenta', 'Sin IA', 'Sin subida a servidores'],
     },
     loading: {
       score: 'Cargando la puntuación ATS…',
       builder: 'Cargando el creador de CV…',
     },
-    trust: {
-      aria: 'Notas de privacidad y confianza',
-      heading: 'Privacidad que puedes comprobar.',
-      body: 'El código es abierto con licencia MIT y la promesa del producto es acotada: lectura local de documentos, puntuación determinista, sin obligación de crear una cuenta y sin ningún modelo de IA escondido tras la interfaz.',
-      cards: [
-        { title: 'Lectura en tu navegador', body: 'El texto de los PDF y DOCX se extrae en el navegador con librerías que se ejecutan en tu dispositivo.' },
-        { title: 'Sin puntuación por LLM', body: 'La puntuación sale de comprobaciones repetibles de legibilidad, secciones, formato y contenido.' },
-      ],
-      repoTitle: 'Código abierto en GitHub',
-      repoBody: 'Con licencia MIT. Lee las comprobaciones de puntuación, el analizador y la exportación, abre una incidencia o envía una pull request.',
-    },
     faq: {
       aria: 'Preguntas frecuentes sobre el comprobador de CV ATS',
+      heading: 'Preguntas frecuentes',
       items: [
         { q: '¿Qué es la puntuación ATS?', a: 'Una comprobación heurística rápida de si el CV tiene texto legible para un analizador, datos de contacto, secciones, fechas, viñetas y resultados medibles.' },
         { q: '¿Se sube mi CV a algún servidor?', a: 'No. Los archivos PDF y DOCX se procesan en local, en tu navegador, y no se envían a ningún servidor.' },
@@ -116,7 +79,11 @@ export const es: Messages = {
         { q: '¿Puede la puntuación tener sesgos?', a: 'No hay ningún modelo ni datos de entrenamiento, así que no existe un conjunto de datos que pueda estar sesgado. Aun así, las reglas contienen supuestos, como los encabezados de sección y las convenciones de CV que aceptan, y la revisión de estilo solo cubre CV en inglés y puede marcar textos bien escritos. No es un detector de IA. Nada se decide sobre ti: cada punto muestra la regla que lo origina y tú decides qué cambiar.' },
       ],
     },
-    guides: { aria: 'Guías', heading: 'Guías' },
+    guides: {
+      aria: 'Guías',
+      heading: 'Guías',
+      description: 'Guías sobre cómo funciona el análisis de CV en un ATS, qué mide la puntuación ATS, PDF o DOCX y una lista de qué corregir primero. Respuestas claras.',
+    },
     footer: {
       disclaimer: 'Orientación heurística, no una garantía. Creado por',
       author: 'Maksym Shykov',
@@ -142,9 +109,6 @@ export const es: Messages = {
     published: 'Publicado',
     updated: 'Actualizado',
     by: 'por',
-    footerRuns: 'funciona en tu navegador.',
-    footerNo: 'Sin subidas, sin cuentas, sin rastreo.',
-    openSource: 'Código abierto en GitHub',
     bonusPoints: (points: number) => `${points} (extra)`,
   },
 
@@ -153,8 +117,8 @@ export const es: Messages = {
     analyzed: 'Analizado',
     analyzeAnother: 'Analizar otro CV',
     dropBusy: 'Puntuando tu CV…',
-    dropIdle: 'Suelta aquí tu CV para ver su puntuación ATS',
-    dropHint: 'PDF o DOCX · en tu navegador · sin subida · sin LLM',
+    dropIdle: 'Suelta aquí un PDF o DOCX',
+    chooseButton: 'Elegir archivo',
     chooseFile: 'Elige un archivo PDF o DOCX.',
     failed: (stage: string) => `El análisis falló en la fase de ${stage}. Pulsa «Copiar detalles» y envíamelos.`,
     stages: { loading: 'carga de módulos', extracting: 'extracción del texto', analyzing: 'análisis', parsing: 'interpretación', style: 'revisión del estilo' },
@@ -165,6 +129,7 @@ export const es: Messages = {
       up: (n: number, previous: number) => `+${n} respecto al archivo anterior (${previous})`,
       down: (n: number, previous: number) => `−${n} respecto al archivo anterior (${previous})`,
       same: (previous: number) => `Misma puntuación que el archivo anterior (${previous})`,
+      category: 'Cambio en esta categoría desde el archivo anterior',
     },
     network: {
       summary: 'Comprueba qué envió esta página',
@@ -177,14 +142,9 @@ export const es: Messages = {
     noPriorityFixes: 'No hay correcciones prioritarias. El resto del informe es sobre todo confirmación.',
     fix: 'Solución:',
     tabs: { analyze: 'Informe completo', style: 'Estilo de redacción', jd: 'Coincidencia con la oferta', data: 'Datos extraídos' },
+    details: 'Informe completo y detalles',
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palabras · ${chars} caracteres legibles.`,
-    humanization: {
-      title: 'Puntuación de naturalidad',
-      blurb: 'Lo natural que suena la redacción: ritmo, relleno, inicios repetidos, voz pasiva. No es un detector de IA.',
-      none: 'No se ha marcado ningún hábito de redacción.',
-      all: 'Todas las comprobaciones de redacción →',
-    },
     style: {
       tooShort: 'No hay texto suficiente para evaluar el estilo de redacción.',
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palabras`,
@@ -229,7 +189,7 @@ export const es: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nombre', email: 'Correo electrónico', phone: 'Teléfono', location: 'Ubicación', links: 'Enlaces' },
       notDetected: 'no detectado',
-      profileNote: 'Esto es lo que extrae un analizador de tipo ATS. Los campos vacíos en rojo suelen indicar un problema de formato.',
+      profileNote: 'Esto es lo que extrae un analizador de tipo ATS. Los campos vacíos resaltados suelen indicar un problema de formato.',
       experience: 'Experiencia',
       parsed: (n: number) => `(${n} detectadas)`,
       bullets: (n: number) => `${n} viñeta${n === 1 ? '' : 's'}`,
@@ -359,7 +319,9 @@ export const es: Messages = {
   },
 
   builder: {
-    intro: 'Crea un CV compatible con ATS con texto normal, secciones estándar y vista previa en directo. Importa un CV que ya tengas, ajusta el diseño y exporta un PDF de una sola columna con texto seleccionable.',
+    heading: 'Creador de CV compatible con ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Crea un CV compatible con ATS en tu navegador: texto plano, secciones estándar, puntuación y vista previa en vivo, y exporta un PDF seleccionable. Sin subida ni cuenta.',
     liveScore: 'Puntuación en directo',
     importCv: 'Importar CV',
     exportPdf: '↓ Exportar PDF',
@@ -372,7 +334,6 @@ export const es: Messages = {
     fileName: (name: string) => `${(name || 'curriculum').replace(/\s+/g, '_')}_CV.pdf`,
     profile: {
       title: 'Perfil',
-      hint: 'Escribe los datos de contacto como texto normal para que los analizadores los lean.',
       fullName: 'Nombre y apellidos',
       email: 'Correo electrónico',
       phone: 'Teléfono',
@@ -383,7 +344,6 @@ export const es: Messages = {
     },
     experience: {
       title: 'Experiencia',
-      hint: 'Usa verbos de acción, impacto medible y un resultado por viñeta.',
       add: 'Añadir',
       moveUp: 'Subir puesto',
       moveDown: 'Bajar puesto',
@@ -398,12 +358,10 @@ export const es: Messages = {
     },
     skills: {
       title: 'Habilidades',
-      hint: 'Separa las habilidades con comas o saltos de línea y usa términos que reconozca un reclutador.',
       field: 'Habilidades (separadas por comas o saltos de línea)',
     },
     projects: {
       title: 'Proyectos',
-      hint: 'Opcional; útil para demostrar autoría o trabajos dignos de portfolio.',
       add: 'Añadir',
       delete: 'Eliminar proyecto',
       name: 'Nombre',
@@ -412,7 +370,6 @@ export const es: Messages = {
     },
     education: {
       title: 'Formación',
-      hint: 'Mantén las fechas y los nombres de los títulos coherentes con la sección de experiencia.',
       add: 'Añadir',
       delete: 'Eliminar formación',
       degree: 'Titulación',
@@ -422,7 +379,6 @@ export const es: Messages = {
     },
     settings: {
       title: 'Ajustes del documento',
-      blurb: 'Afectan a la vista previa y al PDF exportado.',
       pagePreview: (size: string) => `Vista previa ${size}`,
       accent: 'Color de acento',
       useAccent: (color: string) => `Usar acento ${color}`,

@@ -1,53 +1,32 @@
 // The standalone shell a guide is rendered into. Ships no JavaScript: these
 // pages are prose, so the app bundle would cost load time and buy nothing.
 import type { Article } from './types.ts'
-import { REPO_URL } from '../components/GitHubMark'
-import { LanguageFooter, LanguageSwitcher, type LanguageLink } from '../components/LanguageSwitcher'
+import { ArrowUpRight } from '../components/ArrowUpRight'
+import type { LanguageLink } from '../components/LanguageSwitcher'
+import { SiteFooter } from '../components/SiteFooter'
+import { SiteHeader } from '../components/SiteHeader'
 import { LocaleProvider, useLocale, type LocaleBundle } from '../i18n/context.ts'
-import { guidePath, homePath } from '../i18n/locales.ts'
-import { SIBLINGS } from '../components/siblings.ts'
+import { guidePath, guidesPath, homePath } from '../i18n/locales.ts'
 
 type PageProps = Readonly<{ article: Article; bundle: LocaleBundle; links: LanguageLink[] }>
 
-function SiteHeader({ links }: Readonly<{ links: LanguageLink[] }>) {
-  const { locale, messages: m } = useLocale()
-  const home = homePath(locale)
-  return (
-    <header className="border-b border-stone-200 bg-white/80">
-      <div className="mx-auto flex max-w-3xl items-center gap-3 px-5 py-4">
-        <a href={home} className="flex min-w-0 items-center gap-3">
-          <img src="/logo.png" alt="" width={40} height={40} className="h-10 w-10 shrink-0 rounded-2xl shadow-sm ring-1 ring-black/5" />
-          <span className="min-w-0">
-            <span className="block truncate text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700">cv.shykov.dev</span>
-            <span className="block truncate text-base font-semibold tracking-tight text-stone-950">{m.brand}</span>
-          </span>
-        </a>
-        <div className="ml-auto flex shrink-0 items-center gap-2">
-          <LanguageSwitcher current={locale} links={links} label={m.languages.label} />
-          <a
-            href={home}
-            className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
-          >
-            {m.article.check}
-          </a>
-        </div>
-      </div>
-    </header>
-  )
-}
+const LINK = 'font-medium underline underline-offset-4 decoration-rule-2 hover:decoration-ink'
 
 function MoreGuides({ current }: { current: string }) {
   const { locale, messages: m, guides } = useLocale()
   const others = guides.filter((a) => a.slug !== current)
   return (
-    <nav aria-label={m.article.moreGuides} className="mt-14 border-t border-stone-200 pt-8">
-      <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-stone-500">{m.article.moreGuides}</h2>
-      <ul className="mt-4 space-y-3">
+    <nav aria-label={m.article.moreGuides} className="mt-20">
+      <h2 className="lab border-b-2 border-ink pb-2">{m.article.moreGuides}</h2>
+      <ul>
         {others.map((a) => (
-          <li key={a.slug}>
-            <a href={guidePath(locale, a.slug)} className="group block">
-              <span className="text-[15px] font-medium text-indigo-700 underline underline-offset-2 group-hover:text-indigo-800">{a.title}</span>
-              <span className="mt-0.5 block text-sm leading-6 text-stone-500">{a.description}</span>
+          <li key={a.slug} className="border-b border-rule">
+            <a href={guidePath(locale, a.slug)} className="group flex items-start justify-between gap-6 py-4">
+              <span>
+                <span className="block text-lg font-semibold group-hover:underline group-hover:decoration-neon group-hover:decoration-4 group-hover:underline-offset-4">{a.title}</span>
+                <span className="mt-0.5 block text-ink-2">{a.description}</span>
+              </span>
+              <ArrowUpRight className="mt-2 h-4 w-4 shrink-0" />
             </a>
           </li>
         ))}
@@ -62,13 +41,13 @@ function Breadcrumbs({ title }: { title: string }) {
   const { locale, messages: m } = useLocale()
   const home = homePath(locale)
   return (
-    <nav aria-label={m.article.breadcrumbAria} className="text-sm text-stone-500">
-      <ol className="flex flex-wrap items-center gap-1.5">
-        <li><a href={home} className="underline underline-offset-2 hover:text-stone-700">{m.brand}</a></li>
-        <li aria-hidden>›</li>
-        <li><a href={`${home}#guides`} className="underline underline-offset-2 hover:text-stone-700">{m.article.guidesCrumb}</a></li>
-        <li aria-hidden>›</li>
-        <li aria-current="page" className="text-stone-700">{title}</li>
+    <nav aria-label={m.article.breadcrumbAria} className="text-sm text-ink-2">
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <li><a href={home} className={LINK}>{m.brand}</a></li>
+        <li aria-hidden>/</li>
+        <li><a href={guidesPath(locale)} className={LINK}>{m.article.guidesCrumb}</a></li>
+        <li aria-hidden>/</li>
+        <li aria-current="page" className="text-ink">{title}</li>
       </ol>
     </nav>
   )
@@ -79,9 +58,9 @@ function Breadcrumbs({ title }: { title: string }) {
 function ShortAnswer({ children }: { children: string }) {
   const { messages: m } = useLocale()
   return (
-    <section aria-labelledby="short-answer" className="mt-6 rounded-xl border border-indigo-100 bg-white p-4 shadow-sm">
-      <h2 id="short-answer" className="text-xs font-semibold uppercase tracking-[0.14em] text-indigo-700">{m.article.shortAnswer}</h2>
-      <p className="mt-2 text-[15px] leading-7 text-stone-800">{children}</p>
+    <section aria-labelledby="short-answer" className="mt-8 border-l-4 border-neon bg-panel p-5">
+      <h2 id="short-answer" className="lab">{m.article.shortAnswer}</h2>
+      <p className="mt-2 text-lg leading-8">{children}</p>
     </section>
   )
 }
@@ -92,13 +71,13 @@ function ShortAnswer({ children }: { children: string }) {
 function Faq({ items }: { items: Article['faq'] }) {
   const { messages: m } = useLocale()
   return (
-    <section aria-labelledby="faq" className="mt-12">
-      <h2 id="faq" className="text-xl font-semibold tracking-tight text-stone-900">{m.article.faqHeading}</h2>
-      <dl className="mt-4 divide-y divide-stone-200 rounded-xl border border-stone-200 bg-white">
+    <section aria-labelledby="faq" className="mt-16">
+      <h2 id="faq" className="text-2xl font-bold tracking-tight">{m.article.faqHeading}</h2>
+      <dl className="mt-4 border-t-2 border-ink">
         {items.map(({ q, a }) => (
-          <div key={q} className="p-4">
-            <dt className="text-[15px] font-semibold text-stone-900">{q}</dt>
-            <dd className="mt-1.5 text-[15px] leading-7 text-stone-700">{a}</dd>
+          <div key={q} className="border-b border-rule py-5">
+            <dt className="text-lg font-semibold">{q}</dt>
+            <dd className="mt-1.5 text-[17px] leading-8 text-ink-2">{a}</dd>
           </div>
         ))}
       </dl>
@@ -107,19 +86,19 @@ function Faq({ items }: { items: Article['faq'] }) {
 }
 
 function Page({ article, links }: Readonly<{ article: Article; links: LanguageLink[] }>) {
-  const { locale, messages: m } = useLocale()
+  const { messages: m } = useLocale()
   return (
-    <div className="min-h-screen bg-stone-50">
-      <SiteHeader links={links} />
-      <main className="mx-auto max-w-3xl px-5 pb-16 pt-8">
+    <div className="min-h-screen bg-paper">
+      <SiteHeader current="guides" links={links} />
+      <main className="mx-auto max-w-3xl px-5 pb-20 pt-10 sm:px-8 lg:pt-[var(--first-gap)]">
         <Breadcrumbs title={article.title} />
-        <article className="mt-6">
-          <h1 className="text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">{article.title}</h1>
-          <p className="mt-4 text-lg leading-8 text-stone-600">{article.description}</p>
-          <p className="mt-4 text-sm text-stone-500">
+        <article className="mt-8">
+          <h1 className="text-[clamp(2.25rem,7vw,3.75rem)] font-bold leading-[1.04] tracking-[-0.04em]">{article.title}</h1>
+          <p className="mt-5 text-xl leading-relaxed text-ink-2">{article.description}</p>
+          <p className="lab mt-5 normal-case tracking-normal">
             {m.article.published} <time dateTime={article.published}>{article.published}</time> · {m.article.updated}{' '}
             <time dateTime={article.updated}>{article.updated}</time> · {m.article.by}{' '}
-            <a href="https://shykov.dev/" className="underline underline-offset-2 hover:text-stone-700">Maksym Shykov</a>
+            <a href="https://shykov.dev/" className="underline underline-offset-4 decoration-rule-2 hover:decoration-ink">Maksym Shykov</a>
           </p>
           <ShortAnswer>{article.summary}</ShortAnswer>
           <div className="mt-8">{article.body}</div>
@@ -127,28 +106,7 @@ function Page({ article, links }: Readonly<{ article: Article; links: LanguageLi
         </article>
         <MoreGuides current={article.slug} />
       </main>
-      <footer className="border-t border-stone-200 bg-white">
-        <div className="mx-auto max-w-3xl px-5 py-6 text-sm text-stone-500">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p>
-              <a href={homePath(locale)} className="font-medium text-stone-700 underline underline-offset-2">{m.brand}</a> — {m.article.footerRuns}
-            </p>
-            <p>
-              {m.article.footerNo}{' '}
-              <a href={REPO_URL} className="font-medium text-stone-700 underline underline-offset-2">{m.article.openSource}</a>.
-            </p>
-          </div>
-          <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-            <a href={`${REPO_URL}/blob/main/docs/scoring-changelog.md`} rel="noreferrer" target="_blank" className="font-medium text-stone-700 underline underline-offset-2">{m.home.footer.scoringChangelog}</a>
-          <span aria-hidden>·</span>
-          <span>{m.home.footer.moreFrom}:</span>
-            {SIBLINGS.map((s) => (
-              <a key={s.name} href={s.href} className="font-medium text-stone-700 underline underline-offset-2">{s.name}</a>
-            ))}
-          </nav>
-          <LanguageFooter current={locale} links={links} label={m.languages.footerLabel} />
-        </div>
-      </footer>
+      <div className="mx-auto max-w-3xl px-5 pb-10 sm:px-8"><SiteFooter links={links} /></div>
     </div>
   )
 }

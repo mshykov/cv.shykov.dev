@@ -14,19 +14,21 @@
 // Deliberately imports App and nothing else: `main.tsx` pulls in `index.css`
 // and the pdf.js polyfills, which touch browser globals that do not exist here.
 import { renderToString } from 'react-dom/server'
-import App from './App.tsx'
+import App, { type Mode } from './App.tsx'
+import { GuidesPage } from './content/GuidesPage.tsx'
 import { ArticlePage } from './content/ArticlePage.tsx'
 import type { Article } from './content/types.ts'
 import { ARTICLES, BUNDLES } from './i18n/all.ts'
 import { GUIDE_IDS } from './content/types.ts'
-import { LOCALES, guidePath, homePath, type Locale } from './i18n/locales.ts'
-import { alternates, guideJsonLd, guidePaths, homeJsonLd, homePaths } from './i18n/seo.ts'
+import { LOCALES, guidePath, guidesPath, homePath, type Locale } from './i18n/locales.ts'
+import { alternates, buildJsonLd, buildPaths, guideJsonLd, guidePaths, guidesIndexPaths, guidesJsonLd, homeJsonLd, homePaths } from './i18n/seo.ts'
 
-export { escapeAttr, guideHead, homeHead } from './i18n/head.ts'
+export { buildHead, escapeAttr, guideHead, guidesHead, homeHead } from './i18n/head.ts'
 export { ogImage } from './i18n/seo.ts'
 import type { LanguageLink } from './components/LanguageSwitcher.tsx'
 
-export { LOCALES, homePath, guidePath, alternates }
+export { LOCALES, homePath, guidesPath, guidePath, alternates }
+export { buildPath } from './i18n/locales.ts'
 
 /** Everything the prerender script needs, per locale, without any JSX. */
 export function localeIndex() {
@@ -46,6 +48,10 @@ export function localeIndex() {
       messages: bundle.messages,
       homeAlternates: alternates(homePaths()),
       homeJsonLd: homeJsonLd(l.code, bundle.messages),
+      buildAlternates: alternates(buildPaths()),
+      buildJsonLd: buildJsonLd(l.code, bundle.messages),
+      guidesAlternates: alternates(guidesIndexPaths()),
+      guidesJsonLd: guidesJsonLd(l.code, bundle.messages, bundle.guides),
       articles: articles.map(({ id, slug, title, description, published, updated, summary, faq }: Article) => {
         const meta = { id, slug, title, description, published, updated, summary, faq }
         return {
@@ -60,8 +66,13 @@ export function localeIndex() {
 
 const homeLinks = (): LanguageLink[] => LOCALES.map((l) => ({ locale: l.code, href: homePath(l.code) }))
 
-export function render(locale: Locale): string {
-  return renderToString(<App bundle={BUNDLES[locale]} />)
+export function render(locale: Locale, mode: Mode = 'analyze'): string {
+  return renderToString(<App bundle={BUNDLES[locale]} mode={mode} />)
+}
+
+export function renderGuides(locale: Locale): string {
+  const links: LanguageLink[] = LOCALES.map((l) => ({ locale: l.code, href: guidesPath(l.code) }))
+  return renderToString(<GuidesPage bundle={BUNDLES[locale]} links={links} />)
 }
 
 export function renderArticle(locale: Locale, id: Article['id']): string {

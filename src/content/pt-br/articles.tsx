@@ -232,8 +232,8 @@ export const ARTICLES: Article[] = [
         <Note>
           <strong>Este site é do tipo local.</strong>{' '}
           O <A href="/pt-br/">verificador de currículo ATS grátis</A> lê seu PDF ou DOCX no navegador com{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> e{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">pdf.js</code> e{' '}
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">mammoth</code>,
           pontua com regras fixas e não tem backend que possa receber um arquivo. O código tem
           licença MIT, então a afirmação pode ser conferida, em vez de apenas prometida.
         </Note>
@@ -320,7 +320,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Quando o DOCX é a resposta certa</H2>
         <Ul>
-          <Li><strong>O formulário exige.</strong> Se o campo de envio lista só <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto que o formulário.</Li>
+          <Li><strong>O formulário exige.</strong> Se o campo de envio lista só <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto que o formulário.</Li>
           <Li><strong>Um recrutador pediu.</strong> Agências costumam colocar seu currículo no modelo delas, e isso exige um arquivo editável.</Li>
           <Li><strong>A empresa usa um sistema antigo.</strong> Hoje é raro, mas não custa nada atender.</Li>
         </Ul>
@@ -335,7 +335,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>Nenhum texto dentro de imagens.</strong> Um logotipo tudo bem; seu cargo desenhado como imagem, não.</Li>
           <Li><strong>Nenhum dado crítico no cabeçalho ou no rodapé.</strong> Alguns leitores ignoram essas áreas. Coloque seu e-mail no corpo da página.</Li>
           <Li><strong>Marcadores de verdade,</strong> não travessões desenhados à mão dentro de uma célula de tabela.</Li>
-          <Li><strong>Um nome de arquivo sensato</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Sobrenome_Curriculo.pdf</code>. Uma pessoa o vê em uma pasta com centenas de arquivos.</Li>
+          <Li><strong>Um nome de arquivo sensato</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nome_Sobrenome_Curriculo.pdf</code>. Uma pessoa o vê em uma pasta com centenas de arquivos.</Li>
         </Ul>
 
         <Note>
@@ -525,7 +525,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
           <Li><strong>Os cargos são reconhecíveis.</strong> Se o seu título interno é “Ninja de Entregas”, coloque ao lado o título padrão do mercado.</Li>
           <Li><strong>O vocabulário da vaga aparece</strong>, mas só onde você o conquistou de verdade.</Li>
           <Li><strong>Existe uma seção de habilidades,</strong> em texto simples separado por vírgulas, e não um gráfico de barras de nível.</Li>
-          <Li><strong>Os links estão escritos</strong> como texto visível: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/voce</code>. O leitor lê texto, não o destino do link.</Li>
+          <Li><strong>Os links estão escritos</strong> como texto visível: <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">linkedin.com/in/voce</code>. O leitor lê texto, não o destino do link.</Li>
           <Li><strong>Nenhum texto fica dentro de uma imagem ou de uma caixa de texto.</strong></Li>
         </Ul>
 
@@ -535,7 +535,7 @@ jan 2020 – atual Terraform, AWS`}</Pre>
           <Li><strong>O impacto traz um número.</strong> “Melhorei a confiabilidade” é uma afirmação; “sessões sem falha de 96% para 99,5%” é evidência.</Li>
           <Li><strong>Nada de frases-padrão.</strong> “Profissional focado em resultados e com histórico comprovado” não diz nada ao leitor.</Li>
           <Li><strong>O tamanho acompanha a carreira.</strong> Uma página no começo; duas é normal depois de uma década. Três precisam de um motivo.</Li>
-          <Li><strong>O nome do arquivo é um nome</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Sobrenome_Curriculo.pdf</code>, não <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">curriculo_final_v3_AGORA_VAI.pdf</code>.</Li>
+          <Li><strong>O nome do arquivo é um nome</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nome_Sobrenome_Curriculo.pdf</code>, não <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">curriculo_final_v3_AGORA_VAI.pdf</code>.</Li>
           <Li>Pense nos anos de formatura. Alguns candidatos, principalmente nos EUA e no Reino Unido, omitem um ano de formatura de mais de 15 anos para reduzir o risco de viés de idade. Em outros países, e em currículos acadêmicos, o ano é costumeiro. As duas opções são válidas: decida de propósito.</Li>
         </Ul>
 

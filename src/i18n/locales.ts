@@ -48,6 +48,15 @@ export const homePath = (code: Locale): string => (code === DEFAULT_LOCALE ? '/'
 /** Path of a guide in a locale, given that locale's own slug for it. */
 export const guidePath = (code: Locale, slug: string): string => `${localePrefix(code)}/${slug}`
 
+/** Path of the guides index: "/guides" for English, "/es/guides" for Spanish. */
+export const guidesPath = (code: Locale): string => `${localePrefix(code)}/guides`
+
+/** Path of the Build page: "/build" for English, "/es/build" for Spanish. */
+export const buildPath = (code: Locale): string => `${localePrefix(code)}/build`
+
+/** Whether a URL path is a Build page ("/build", "/es/build", with or without a trailing slash). */
+export const isBuildPath = (pathname: string): boolean => /^(?:\/[a-z]{2}(?:-[a-z]{2})?)?\/build\/?$/i.test(pathname)
+
 export const absolute = (path: string): string => `${SITE}${path}`
 
 /** The locale a path belongs to: "/es/x" → "es", "/anything-else" → "en". */

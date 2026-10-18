@@ -231,8 +231,8 @@ export const ARTICLES: Article[] = [
         <Note>
           <strong>Este site é do tipo local.</strong>{' '}
           O <A href="/pt-pt/">verificador de CV ATS gratuito</A> lê o seu PDF ou DOCX no navegador com{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> e{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">pdf.js</code> e{' '}
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">mammoth</code>,
           pontua-o com regras fixas e não tem nenhum servidor que possa receber um ficheiro. Tem
           licença MIT, pelo que a afirmação se pode confirmar em vez de ser apenas prometida.
         </Note>
@@ -319,7 +319,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Quando o DOCX é a resposta certa</H2>
         <Ul>
-          <Li><strong>O formulário assim o diz.</strong> Se o campo de envio aceita apenas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto do que o formulário.</Li>
+          <Li><strong>O formulário assim o diz.</strong> Se o campo de envio aceita apenas <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">.doc/.docx</code>, essa é a resposta. Não tente ser mais esperto do que o formulário.</Li>
           <Li><strong>Um recrutador pediu.</strong> As agências costumam passar o seu CV para o modelo delas, o que exige um ficheiro editável.</Li>
           <Li><strong>A empresa usa um sistema mais antigo.</strong> Raro hoje, mas não custa cumprir.</Li>
         </Ul>
@@ -334,7 +334,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>Sem texto dentro de imagens.</strong> Um logótipo não faz mal; o cargo desenhado como gráfico faz.</Li>
           <Li><strong>Nenhum dado essencial no cabeçalho ou no rodapé.</strong> Alguns leitores ignoram essas zonas. Ponha o email no corpo.</Li>
           <Li><strong>Marcadores verdadeiros,</strong> e não traços desenhados à mão dentro de uma célula de tabela.</Li>
-          <Li><strong>Um nome de ficheiro sensato</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Apelido_CV.pdf</code>. Uma pessoa vê-o numa pasta com centenas.</Li>
+          <Li><strong>Um nome de ficheiro sensato</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nome_Apelido_CV.pdf</code>. Uma pessoa vê-o numa pasta com centenas.</Li>
         </Ul>
 
         <Note>
@@ -524,7 +524,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
           <Li><strong>Os cargos são reconhecíveis.</strong> Se o seu cargo interno é “Ninja da Entrega”, ponha ao lado o cargo habitual do setor.</Li>
           <Li><strong>O vocabulário do anúncio aparece</strong> — mas só onde o aplicou de facto.</Li>
           <Li><strong>Existe uma secção de competências,</strong> em texto simples separado por vírgulas e não num gráfico de barras de competências.</Li>
-          <Li><strong>As ligações estão escritas</strong> como texto visível: <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/nome</code>. Um leitor lê texto, não o destino da ligação.</Li>
+          <Li><strong>As ligações estão escritas</strong> como texto visível: <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">linkedin.com/in/nome</code>. Um leitor lê texto, não o destino da ligação.</Li>
           <Li><strong>Nenhum texto vive dentro de uma imagem ou de uma caixa de texto.</strong></Li>
         </Ul>
 
@@ -534,7 +534,7 @@ jan 2020 – presente Terraform, AWS`}</Pre>
           <Li><strong>O impacto leva um número.</strong> “Melhorei a fiabilidade” é uma afirmação; “sessões sem falhas de 96% para 99,5%” é prova.</Li>
           <Li><strong>Sem frases feitas.</strong> “Profissional orientado para resultados com historial comprovado” não diz nada a quem lê.</Li>
           <Li><strong>A extensão corresponde à carreira.</strong> Uma página no início, duas é normal passada uma década. Três pedem uma razão.</Li>
-          <Li><strong>O nome do ficheiro é um nome</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Nome_Apelido_CV.pdf</code>, e não <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_MESMO.pdf</code>.</Li>
+          <Li><strong>O nome do ficheiro é um nome</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Nome_Apelido_CV.pdf</code>, e não <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">cv_final_v3_MESMO.pdf</code>.</Li>
           <Li>Pense nos anos de conclusão do curso. Alguns candidatos, sobretudo nos EUA e no Reino Unido, omitem um ano de conclusão com mais de 15 anos para reduzir o risco de enviesamento pela idade. Noutros países, e nos CV académicos, o ano é habitual. Ambas as opções são válidas: decida de forma intencional.</Li>
         </Ul>
 

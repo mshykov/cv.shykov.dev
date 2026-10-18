@@ -23,7 +23,7 @@ for (const loc of LOCALES.filter((l) => l.code !== 'en')) {
       await page.goto(homePath(loc.code))
       await expect(page.locator('html')).toHaveAttribute('lang', loc.htmlLang)
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(m.home.hero.h1)
-      await expect(page.getByRole('link', { name: m.home.hero.openSource }).first()).toBeVisible()
+      await expect(page.getByRole('link', { name: m.home.footer.openSource }).first()).toBeVisible()
       // The language switcher lists every language, this one marked current.
       for (const other of LOCALES) await expect(page.locator(`details a[hreflang="${other.htmlLang}"]`)).toHaveCount(1)
       await expect(page.locator(`details a[hreflang="${loc.htmlLang}"]`)).toHaveAttribute('aria-current', 'true')
@@ -35,6 +35,8 @@ for (const loc of LOCALES.filter((l) => l.code !== 'en')) {
       await expect(page.getByRole('heading', { name: m.analyzer.scoreHeading, exact: true })).toBeVisible({ timeout: 30_000 })
       await expect(page.getByRole('alert')).toHaveCount(0)
       // The report is rendered by the scorer in this language, not just the chrome.
+      // The full report sits in a closed disclosure under the score and the top fixes.
+      await page.locator('summary', { hasText: m.analyzer.details }).click()
       await expect(page.getByRole('heading', { name: m.analysis.categories.Parseability })).toBeVisible()
       await expect(page.getByText(m.analysis.labels['machine-text'], { exact: true }).first()).toBeVisible()
       await expect(page.getByRole('button', { name: m.analyzer.tabs.jd })).toBeVisible()
@@ -42,7 +44,8 @@ for (const loc of LOCALES.filter((l) => l.code !== 'en')) {
 
     test('the builder opens in this language and exports a PDF', async ({ page }) => {
       await page.goto(homePath(loc.code))
-      await page.getByRole('button', { name: m.home.header.build, exact: true }).click()
+      await page.getByRole('navigation', { name: m.home.header.primaryMode }).getByRole('link', { name: m.home.header.build, exact: true }).click()
+      await expect(page).toHaveURL(/\/build$/)
       await expect(page.getByText(m.builder.sample.name).first()).toBeVisible({ timeout: 30_000 })
       await expect(page.getByText(m.builder.docSections.experience, { exact: true }).first()).toBeVisible()
       const download = page.waitForEvent('download', { timeout: 60_000 })

@@ -50,62 +50,25 @@ export const ptBR: Messages = {
     header: {
       primaryMode: 'Modo principal do app',
       analyze: 'Pontuação ATS',
-      build: 'Criar',
-      github: 'GitHub',
-      githubAria: 'Código aberto no GitHub',
-    },
-    hero: {
-      badge: 'Análise de currículo 100% no navegador',
-      h1: 'Verificador de currículo ATS grátis. Privado por padrão.',
-      lead: 'Veja a pontuação ATS do seu currículo a partir de um PDF ou DOCX em segundos, comece pelas correções de maior impacto, compare palavras-chave e crie um currículo compatível com ATS, sem enviar arquivo, sem cadastro e sem chamadas a LLM.',
-      check: 'Verificar meu currículo',
-      build: 'Criar currículo para ATS',
-      runsInBrowser: 'Roda no seu navegador',
-      noUploads: 'Sem envio de arquivo',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF e DOCX',
+      build: 'Criar currículo',
       openSource: 'Código aberto',
     },
-    heroCard: {
-      localParse: 'no navegador',
-      noUpload: 'Sem envio',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Prévia da pontuação ATS local',
-      localParse: 'No navegador',
-      caption: 'Pontuação, principais correções, palavras-chave',
-      categories: ['Legibilidade', 'Seções', 'Conteúdo'],
-    },
-    how: {
-      aria: 'Como funciona o verificador de currículo ATS local',
-      steps: [
-        { title: 'Escolha o PDF/DOCX', body: 'Selecione um arquivo de currículo no seu dispositivo.' },
-        { title: 'Leitura no navegador', body: 'A extração do texto e a pontuação rodam neste navegador.' },
-        { title: 'Corrija os principais problemas', body: 'Veja pontuação, detalhamento, palavras-chave e notas para exportar.' },
-      ],
-      noServerUpload: 'Nada é enviado a servidor',
-      deterministic: 'Verificações determinísticas, sem LLM',
-      openSourceMit: 'Código aberto, licença MIT',
+    hero: {
+      h1: 'Verificador de currículo ATS grátis\nPrivado por padrão',
+      check: 'Verificar meu currículo',
+      // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Exemplo',
+      runs: 'Roda no seu navegador',
+      facts: ['Sem cadastro', 'Sem IA', 'Sem envio a servidor'],
     },
     loading: {
       score: 'Carregando a pontuação ATS…',
       builder: 'Carregando o construtor…',
     },
-    trust: {
-      aria: 'Notas de privacidade e confiança',
-      heading: 'Promessas de privacidade que você pode conferir.',
-      body: 'O código é aberto, sob licença MIT, e a promessa do produto é estreita: leitura local do documento, pontuação determinística, sem cadastro obrigatório e sem nenhum modelo de IA escondido atrás da interface.',
-      cards: [
-        { title: 'Leitor no navegador', body: 'O texto de PDF e DOCX é extraído no navegador, com bibliotecas que rodam no próprio dispositivo.' },
-        { title: 'Pontuação sem LLM', body: 'As notas vêm de verificações repetíveis de legibilidade, seções, formato e conteúdo.' },
-      ],
-      repoTitle: 'Código aberto no GitHub',
-      repoBody: 'Licença MIT. Leia as verificações de pontuação, o leitor e a exportação, abra uma issue ou envie um pull request.',
-    },
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de currículo ATS',
+      heading: 'Perguntas frequentes',
       items: [
         { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por sistemas, dados de contato, seções, datas, listas com marcadores e resultados mensuráveis.' },
         { q: 'Meu currículo é enviado para algum servidor?', a: 'Não. Os arquivos PDF e DOCX são processados localmente no seu navegador e não são enviados a nenhum servidor.' },
@@ -115,7 +78,11 @@ export const ptBR: Messages = {
         { q: 'A pontuação pode ter viés?', a: 'Não há modelo nem dados de treinamento, então não existe um conjunto de dados que possa ter viés. As regras, porém, carregam suposições, como os títulos de seção e as convenções de currículo que aceitam, e a revisão de estilo cobre apenas currículos em inglês e pode marcar textos bem escritos. Não é um detector de IA. Nada é decidido sobre você: cada ponto mostra a regra por trás dele e você decide o que mudar.' },
       ],
     },
-    guides: { aria: 'Guias', heading: 'Guias' },
+    guides: {
+      aria: 'Guias',
+      heading: 'Guias',
+      description: 'Guias sobre como funciona a leitura de currículos por um ATS, o que a pontuação ATS mede, PDF ou DOCX e um checklist do que corrigir primeiro.',
+    },
     footer: {
       disclaimer: 'Orientação heurística, não uma garantia. Criado por',
       author: 'Maksym Shykov',
@@ -141,9 +108,6 @@ export const ptBR: Messages = {
     published: 'Publicado em',
     updated: 'Atualizado em',
     by: 'por',
-    footerRuns: 'roda no seu navegador.',
-    footerNo: 'Sem envio de arquivo, sem cadastro, sem rastreamento.',
-    openSource: 'Código aberto no GitHub',
     bonusPoints: (points: number) => `${points} (bônus)`,
   },
 
@@ -152,8 +116,8 @@ export const ptBR: Messages = {
     analyzed: 'Analisado',
     analyzeAnother: 'Analisar outro currículo',
     dropBusy: 'Pontuando seu currículo…',
-    dropIdle: 'Solte seu currículo aqui para ver a pontuação ATS',
-    dropHint: 'PDF ou DOCX · roda no navegador · sem envio · sem LLM',
+    dropIdle: 'Solte aqui um PDF ou DOCX',
+    chooseButton: 'Escolher arquivo',
     chooseFile: 'Escolha um arquivo PDF ou DOCX.',
     failed: (stage: string) => `A análise falhou na etapa “${stage}”. Toque em “Copiar detalhes” e envie-os para mim.`,
     stages: { loading: 'carregamento dos módulos', extracting: 'extração do texto', analyzing: 'análise', parsing: 'leitura da estrutura', style: 'verificação do estilo' },
@@ -164,6 +128,7 @@ export const ptBR: Messages = {
       up: (n: number, previous: number) => `+${n} em relação ao arquivo anterior (${previous})`,
       down: (n: number, previous: number) => `−${n} em relação ao arquivo anterior (${previous})`,
       same: (previous: number) => `Mesma pontuação do arquivo anterior (${previous})`,
+      category: 'Mudança nesta categoria desde o arquivo anterior',
     },
     network: {
       summary: 'Veja o que esta página enviou',
@@ -176,14 +141,9 @@ export const ptBR: Messages = {
     noPriorityFixes: 'Nenhuma correção prioritária encontrada. O restante do relatório é, em sua maior parte, confirmação.',
     fix: 'Correção:',
     tabs: { analyze: 'Relatório completo', style: 'Estilo de escrita', jd: 'Compatibilidade com a vaga', data: 'Dados extraídos' },
+    details: 'Relatório completo e detalhes',
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palavras · ${chars} caracteres legíveis.`,
-    humanization: {
-      title: 'Índice de naturalidade',
-      blurb: 'Quão natural a escrita soa: ritmo, enchimento, inícios repetidos, voz passiva. Não é um detector de IA.',
-      none: 'Nenhum vício de escrita encontrado.',
-      all: 'Todas as verificações de escrita →',
-    },
     style: {
       tooShort: 'Não há texto suficiente para avaliar o estilo de escrita.',
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palavras`,
@@ -228,7 +188,7 @@ export const ptBR: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nome', email: 'E-mail', phone: 'Telefone', location: 'Localização', links: 'Links' },
       notDetected: 'não detectado',
-      profileNote: 'É isto que um analisador semelhante ao de um ATS extrai. Campos vazios em vermelho geralmente indicam um problema de formatação.',
+      profileNote: 'É isto que um analisador semelhante ao de um ATS extrai. Campos vazios destacados geralmente indicam um problema de formatação.',
       experience: 'Experiência',
       parsed: (n: number) => `(${n} ${n === 1 ? 'lida' : 'lidas'})`,
       bullets: (n: number) => `${n} ${n === 1 ? 'marcador' : 'marcadores'}`,
@@ -358,7 +318,9 @@ export const ptBR: Messages = {
   },
 
   builder: {
-    intro: 'Crie um currículo compatível com ATS, com texto simples, seções padrão e prévia ao vivo. Importe um currículo existente, ajuste o layout e exporte um PDF de coluna única com texto selecionável.',
+    heading: 'Criador de currículo para ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Crie um currículo para ATS no navegador: texto simples, seções padrão, pontuação e prévia ao vivo, e exporte um PDF selecionável. Sem envio de arquivo nem cadastro.',
     liveScore: 'Pontuação ao vivo',
     importCv: 'Importar currículo',
     exportPdf: '↓ Exportar PDF',
@@ -371,7 +333,6 @@ export const ptBR: Messages = {
     fileName: (name: string) => `${(name || 'curriculo').replace(/\s+/g, '_')}_Curriculo.pdf`,
     profile: {
       title: 'Perfil',
-      hint: 'Deixe os dados de contato em texto simples para que os leitores consigam lê-los.',
       fullName: 'Nome completo',
       email: 'E-mail',
       phone: 'Telefone',
@@ -382,7 +343,6 @@ export const ptBR: Messages = {
     },
     experience: {
       title: 'Experiência',
-      hint: 'Use verbos de ação, impacto mensurável e um resultado por marcador.',
       add: 'Adicionar',
       moveUp: 'Mover cargo para cima',
       moveDown: 'Mover cargo para baixo',
@@ -397,12 +357,10 @@ export const ptBR: Messages = {
     },
     skills: {
       title: 'Habilidades',
-      hint: 'Separe as habilidades por vírgula ou quebra de linha; use termos que o recrutador reconheça.',
       field: 'Habilidades (separadas por vírgula ou nova linha)',
     },
     projects: {
       title: 'Projetos',
-      hint: 'Opcional, ideal para mostrar autoria ou trabalhos dignos de portfólio.',
       add: 'Adicionar',
       delete: 'Excluir projeto',
       name: 'Nome',
@@ -411,7 +369,6 @@ export const ptBR: Messages = {
     },
     education: {
       title: 'Educação',
-      hint: 'Mantenha datas e nomes de cursos coerentes com a seção de experiência.',
       add: 'Adicionar',
       delete: 'Excluir formação',
       degree: 'Curso',
@@ -421,7 +378,6 @@ export const ptBR: Messages = {
     },
     settings: {
       title: 'Configurações do documento',
-      blurb: 'Afeta a prévia e o PDF exportado.',
       pagePreview: (size: string) => `Prévia em ${size}`,
       accent: 'Cor de destaque',
       useAccent: (color: string) => `Usar destaque ${color}`,

@@ -3,7 +3,7 @@
 // registry and the messages, so the prerender script stays a thin writer and the
 // rules are unit-tested (seo.test.ts).
 import type { Article, Guide, GuideId } from '../content/types.ts'
-import { DEFAULT_LOCALE, LOCALES, SITE, absolute, guidePath, homePath, localeInfo, type Locale } from './locales.ts'
+import { DEFAULT_LOCALE, LOCALES, SITE, absolute, buildPath, guidePath, guidesPath, homePath, localeInfo, type Locale } from './locales.ts'
 import type { Messages } from './messages/en.ts'
 
 export const AUTHOR_ID = 'https://shykov.dev/#person'
@@ -22,6 +22,10 @@ export function alternates(paths: Partial<Record<Locale, string>>): (Alternate |
   const english = paths[DEFAULT_LOCALE]
   return english ? [...rows, { locale: 'x-default' as const, hreflang: 'x-default' as const, url: absolute(english) }] : rows
 }
+
+export const buildPaths = (): Partial<Record<Locale, string>> => Object.fromEntries(LOCALES.map((l) => [l.code, buildPath(l.code)]))
+
+export const guidesIndexPaths = (): Partial<Record<Locale, string>> => Object.fromEntries(LOCALES.map((l) => [l.code, guidesPath(l.code)]))
 
 export const homePaths = (): Partial<Record<Locale, string>> => Object.fromEntries(LOCALES.map((l) => [l.code, homePath(l.code)]))
 
@@ -75,6 +79,62 @@ export function homeJsonLd(locale: Locale, m: Messages) {
   }
 }
 
+export function buildJsonLd(locale: Locale, m: Messages) {
+  const url = absolute(buildPath(locale))
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${url}#page`,
+        name: m.builder.heading,
+        description: m.builder.description,
+        url,
+        inLanguage: localeInfo(locale).htmlLang,
+        isPartOf: { '@id': `${SITE}/#website` },
+        author: { '@id': AUTHOR_ID },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: m.brand, item: absolute(homePath(locale)) },
+          { '@type': 'ListItem', position: 2, name: m.builder.heading, item: url },
+        ],
+      },
+    ],
+  }
+}
+
+export function guidesJsonLd(locale: Locale, m: Messages, guides: Guide[]) {
+  const url = absolute(guidesPath(locale))
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${url}#page`,
+        name: m.home.guides.heading,
+        description: m.home.guides.description,
+        url,
+        inLanguage: localeInfo(locale).htmlLang,
+        isPartOf: { '@id': `${SITE}/#website` },
+        author: { '@id': AUTHOR_ID },
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: guides.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: g.title, url: absolute(guidePath(locale, g.slug)) })),
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: m.brand, item: absolute(homePath(locale)) },
+          { '@type': 'ListItem', position: 2, name: m.home.guides.heading, item: url },
+        ],
+      },
+    ],
+  }
+}
+
 export function guideJsonLd(locale: Locale, m: Messages, article: Omit<Article, 'body'>) {
   const info = localeInfo(locale)
   const url = absolute(guidePath(locale, article.slug))
@@ -102,7 +162,7 @@ export function guideJsonLd(locale: Locale, m: Messages, article: Omit<Article, 
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: m.brand, item: absolute(homePath(locale)) },
-          { '@type': 'ListItem', position: 2, name: m.article.guidesCrumb, item: `${absolute(homePath(locale))}#guides` },
+          { '@type': 'ListItem', position: 2, name: m.article.guidesCrumb, item: absolute(guidesPath(locale)) },
           { '@type': 'ListItem', position: 3, name: article.title, item: url },
         ],
       },

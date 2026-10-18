@@ -52,62 +52,25 @@ export const ptPT: Messages = {
     header: {
       primaryMode: 'Modo principal da aplicação',
       analyze: 'Pontuação ATS rápida',
-      build: 'Criar',
-      github: 'GitHub',
-      githubAria: 'Código aberto no GitHub',
-    },
-    hero: {
-      badge: 'Análise de CV 100% no navegador',
-      h1: 'Verificador de CV ATS gratuito. Privado por defeito.',
-      lead: 'Obtenha a pontuação ATS do seu CV a partir de um PDF ou DOCX em segundos, veja primeiro as correções de maior impacto, compare palavras-chave e crie um CV compatível com ATS, sem carregar ficheiros, sem contas e sem chamadas a LLM.',
-      check: 'Verificar o meu CV',
-      build: 'Criar CV compatível com ATS',
-      runsInBrowser: 'Funciona no navegador',
-      noUploads: 'Sem carregar ficheiros',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF e DOCX',
+      build: 'Criar CV',
       openSource: 'Código aberto',
     },
-    heroCard: {
-      localParse: 'no navegador',
-      noUpload: 'Sem carregar',
-      noLlm: 'Sem LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Pré-visualização da pontuação ATS local',
-      localParse: 'No navegador',
-      caption: 'Pontuação, principais correções, palavras-chave',
-      categories: ['Legibilidade', 'Secções', 'Conteúdo'],
-    },
-    how: {
-      aria: 'Como funciona o verificador de CV ATS local',
-      steps: [
-        { title: 'Escolha o PDF/DOCX', body: 'Selecione o ficheiro do CV no seu dispositivo.' },
-        { title: 'Leitura no navegador', body: 'A extração do texto e a pontuação correm neste navegador.' },
-        { title: 'Corrija o mais importante', body: 'Veja a pontuação, o detalhe, as palavras-chave e notas exportáveis.' },
-      ],
-      noServerUpload: 'Sem envio para servidores',
-      deterministic: 'Verificações determinísticas, sem chamadas a LLM',
-      openSourceMit: 'Código aberto, licença MIT',
+    hero: {
+      h1: 'Verificador de CV ATS gratuito\nPrivado por defeito',
+      check: 'Verificar o meu CV',
+      // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Exemplo',
+      runs: 'Funciona no navegador',
+      facts: ['Sem conta', 'Sem IA', 'Sem envio para servidores'],
     },
     loading: {
       score: 'A carregar a pontuação ATS rápida…',
       builder: 'A carregar o criador…',
     },
-    trust: {
-      aria: 'Notas sobre privacidade e confiança',
-      heading: 'Promessas de privacidade que pode verificar.',
-      body: 'O código é aberto, sob licença MIT, e a promessa do produto é curta: leitura local dos documentos, pontuação determinística, sem obrigação de criar conta e sem nenhum modelo de IA escondido por trás da interface.',
-      cards: [
-        { title: 'Leitor no navegador', body: 'O texto de PDF e DOCX é extraído no navegador, com bibliotecas do lado do cliente.' },
-        { title: 'Pontuação sem LLM', body: 'As pontuações vêm de verificações repetíveis de legibilidade, secções, formato e conteúdo.' },
-      ],
-      repoTitle: 'Código aberto no GitHub',
-      repoBody: 'Licença MIT. Leia as verificações de pontuação, o leitor e o processo de exportação, abra uma issue ou envie um pull request.',
-    },
     faq: {
       aria: 'Perguntas frequentes sobre o verificador de CV ATS',
+      heading: 'Perguntas frequentes',
       items: [
         { q: 'O que é a pontuação ATS?', a: 'Uma verificação heurística rápida de texto legível por máquinas, contactos, secções, datas, listas com marcadores e resultados mensuráveis.' },
         { q: 'O meu CV é carregado para algum servidor?', a: 'Não. Os ficheiros PDF e DOCX são processados localmente no seu navegador e não são enviados para nenhum servidor.' },
@@ -117,7 +80,11 @@ export const ptPT: Messages = {
         { q: 'A pontuação pode ser enviesada?', a: 'Não existe modelo nem dados de treino, pelo que não há um conjunto de dados que possa ser enviesado. Ainda assim, as regras assentam em pressupostos, como os títulos de secção e as convenções de CV que aceitam, e a verificação de estilo cobre apenas CV em inglês e pode assinalar textos bem escritos. Não é um detetor de IA. Nada é decidido a seu respeito: cada ponto mostra a regra que o origina, e é a própria pessoa que decide o que alterar.' },
       ],
     },
-    guides: { aria: 'Guias', heading: 'Guias' },
+    guides: {
+      aria: 'Guias',
+      heading: 'Guias',
+      description: 'Guias sobre como funciona a leitura de CV por um ATS, o que mede a pontuação ATS, PDF ou DOCX e uma lista do que corrigir primeiro.',
+    },
     footer: {
       disclaimer: 'Orientação heurística, não uma garantia. Criado por',
       author: 'Maksym Shykov',
@@ -143,9 +110,6 @@ export const ptPT: Messages = {
     published: 'Publicado em',
     updated: 'Atualizado em',
     by: 'por',
-    footerRuns: 'funciona no seu navegador.',
-    footerNo: 'Sem carregamentos, sem contas, sem rastreamento.',
-    openSource: 'Código aberto no GitHub',
     bonusPoints: (points: number) => `${points} (bónus)`,
   },
 
@@ -154,8 +118,8 @@ export const ptPT: Messages = {
     analyzed: 'Analisado',
     analyzeAnother: 'Analisar outro CV',
     dropBusy: 'A pontuar o seu CV…',
-    dropIdle: 'Largue aqui o seu CV para obter uma pontuação ATS rápida',
-    dropHint: 'PDF ou DOCX · funciona no navegador · sem carregar · sem LLM',
+    dropIdle: 'Arraste um PDF ou DOCX para aqui',
+    chooseButton: 'Escolher ficheiro',
     chooseFile: 'Escolha um ficheiro PDF ou DOCX.',
     failed: (stage: string) => `A análise falhou na fase de ${stage}. Toque em “Copiar detalhes” e envie-me os detalhes.`,
     stages: { loading: 'carregamento dos módulos', extracting: 'extração do texto', analyzing: 'análise', parsing: 'interpretação', style: 'verificação do estilo' },
@@ -166,6 +130,7 @@ export const ptPT: Messages = {
       up: (n: number, previous: number) => `+${n} face ao ficheiro anterior (${previous})`,
       down: (n: number, previous: number) => `−${n} face ao ficheiro anterior (${previous})`,
       same: (previous: number) => `Mesma pontuação do ficheiro anterior (${previous})`,
+      category: 'Alteração nesta categoria desde o ficheiro anterior',
     },
     network: {
       summary: 'Veja o que esta página enviou',
@@ -178,14 +143,9 @@ export const ptPT: Messages = {
     noPriorityFixes: 'Não há correções prioritárias. O resto do relatório é sobretudo confirmação.',
     fix: 'Correção:',
     tabs: { analyze: 'Relatório completo', style: 'Estilo de escrita', jd: 'Correspondência com o anúncio', data: 'Dados extraídos' },
+    details: 'Relatório completo e detalhes',
     pages: (n: number) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} palavras · ${chars} carateres legíveis.`,
-    humanization: {
-      title: 'Pontuação de naturalidade',
-      blurb: 'Quão natural soa a escrita: ritmo, palavreado vazio, inícios repetidos, voz passiva. Não é um detetor de IA.',
-      none: 'Nenhum hábito de escrita assinalado.',
-      all: 'Todas as verificações de escrita →',
-    },
     style: {
       tooShort: 'Não há texto suficiente para avaliar o estilo de escrita.',
       counts: (sentences: number, words: number) => `${sentences} frases, ${words} palavras`,
@@ -230,7 +190,7 @@ export const ptPT: Messages = {
       profile: 'Perfil',
       fields: { name: 'Nome', email: 'Email', phone: 'Telefone', location: 'Localidade', links: 'Ligações' },
       notDetected: 'não detetado',
-      profileNote: 'É isto que um leitor do tipo ATS extrai. Os campos vazios a vermelho costumam indicar um problema de formatação.',
+      profileNote: 'É isto que um leitor do tipo ATS extrai. Os campos vazios destacados costumam indicar um problema de formatação.',
       experience: 'Experiência',
       parsed: (n: number) => `(${n} lidas)`,
       bullets: (n: number) => `${n} ${n === 1 ? 'marcador' : 'marcadores'}`,
@@ -360,7 +320,9 @@ export const ptPT: Messages = {
   },
 
   builder: {
-    intro: 'Crie um CV compatível com ATS, com texto simples, secções padrão e pré-visualização em direto. Importe um CV existente, ajuste a disposição e exporte um PDF de coluna única com texto selecionável.',
+    heading: 'Criador de CV compatível com ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Crie um CV compatível com ATS no navegador: texto simples, secções padrão, pontuação e pré-visualização em direto, e exporte um PDF selecionável. Sem envio nem conta.',
     liveScore: 'Pontuação em direto',
     importCv: 'Importar CV',
     exportPdf: '↓ Exportar PDF',
@@ -373,7 +335,6 @@ export const ptPT: Messages = {
     fileName: (name: string) => `${(name || 'cv').replace(/\s+/g, '_')}_CV.pdf`,
     profile: {
       title: 'Perfil',
-      hint: 'Mantenha os contactos em texto simples para que os leitores os consigam ler.',
       fullName: 'Nome completo',
       email: 'Email',
       phone: 'Telefone',
@@ -384,7 +345,6 @@ export const ptPT: Messages = {
     },
     experience: {
       title: 'Experiência',
-      hint: 'Use verbos de ação, impacto mensurável e um resultado por marcador.',
       add: 'Adicionar',
       moveUp: 'Subir função',
       moveDown: 'Descer função',
@@ -399,12 +359,10 @@ export const ptPT: Messages = {
     },
     skills: {
       title: 'Competências',
-      hint: 'Separe as competências por vírgulas ou quebras de linha; use termos que os recrutadores reconheçam.',
       field: 'Competências (separadas por vírgulas ou linhas)',
     },
     projects: {
       title: 'Projetos',
-      hint: 'Opcional; útil para mostrar autoria ou trabalho digno de portefólio.',
       add: 'Adicionar',
       delete: 'Eliminar projeto',
       name: 'Nome',
@@ -413,7 +371,6 @@ export const ptPT: Messages = {
     },
     education: {
       title: 'Formação',
-      hint: 'Mantenha as datas e os nomes dos graus coerentes com a secção de experiência.',
       add: 'Adicionar',
       delete: 'Eliminar formação',
       degree: 'Grau',
@@ -423,7 +380,6 @@ export const ptPT: Messages = {
     },
     settings: {
       title: 'Definições do documento',
-      blurb: 'Afeta a pré-visualização e o PDF exportado.',
       pagePreview: (size: string) => `Pré-visualização ${size}`,
       accent: 'Cor de destaque',
       useAccent: (color: string) => `Usar a cor de destaque ${color}`,

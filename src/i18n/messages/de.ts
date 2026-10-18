@@ -53,62 +53,25 @@ export const de: Messages = {
     header: {
       primaryMode: 'Hauptmodus der App',
       analyze: 'Schneller ATS-Score',
-      build: 'Erstellen',
-      github: 'GitHub',
-      githubAria: 'Open Source auf GitHub',
-    },
-    hero: {
-      badge: '100 % Lebenslauf-Analyse im Browser',
-      h1: 'Lebenslauf ATS Check kostenlos. Privat im Browser.',
-      lead: 'ATS Lebenslauf prüfen: Sie erhalten den ATS-Score Ihres Lebenslaufs aus einer PDF- oder DOCX-Datei in Sekunden, sehen die wirksamsten Korrekturen zuerst, gleichen Keywords ab und erstellen einen ATS-tauglichen Lebenslauf – ohne Upload, Konto oder LLM-Aufrufe.',
-      check: 'Lebenslauf prüfen',
-      build: 'ATS-tauglichen Lebenslauf erstellen',
-      runsInBrowser: 'Läuft in Ihrem Browser',
-      noUploads: 'Kein Upload',
-      noLlm: 'Kein LLM',
-      pdfDocx: 'PDF & DOCX',
+      build: 'CV erstellen',
       openSource: 'Open Source',
     },
-    heroCard: {
-      localParse: 'im Browser',
-      noUpload: 'Kein Upload',
-      noLlm: 'Kein LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Vorschau der lokalen ATS-Bewertung',
-      localParse: 'Im Browser',
-      caption: 'Score, wichtigste Korrekturen, Keyword-Signale',
-      categories: ['Lesbarkeit', 'Abschnitte', 'Inhalt'],
-    },
-    how: {
-      aria: 'So funktioniert der lokale ATS-Check für den Lebenslauf',
-      steps: [
-        { title: 'PDF/DOCX auswählen', body: 'Wählen Sie eine Lebenslaufdatei von Ihrem Gerät aus.' },
-        { title: 'Im Browser auslesen', body: 'Textextraktion und Bewertung laufen in diesem Browser.' },
-        { title: 'Wichtigste Probleme beheben', body: 'Sehen Sie Score, Aufschlüsselung, Keywords und exportierbare Hinweise.' },
-      ],
-      noServerUpload: 'Kein Upload auf einen Server',
-      deterministic: 'Deterministische Prüfungen, keine LLM-Aufrufe',
-      openSourceMit: 'Open Source, MIT-Lizenz',
+    hero: {
+      h1: 'Lebenslauf ATS Check kostenlos\nPrivat im Browser',
+      check: 'Lebenslauf prüfen',
+      // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Beispiel',
+      runs: 'Läuft in Ihrem Browser',
+      facts: ['Kein Konto', 'Keine KI', 'Kein Upload auf einen Server'],
     },
     loading: {
       score: 'Schneller ATS-Score wird geladen …',
       builder: 'Lebenslauf-Editor wird geladen …',
     },
-    trust: {
-      aria: 'Hinweise zu Datenschutz und Vertrauen',
-      heading: 'Datenschutzversprechen zum Nachprüfen.',
-      body: 'Der Code ist Open Source unter der MIT-Lizenz, und das Produktversprechen bleibt eng gefasst: lokale Verarbeitung der Dokumente, deterministische Bewertung, kein Kontozwang und kein KI-Modell, das sich hinter der Oberfläche versteckt.',
-      cards: [
-        { title: 'Parser im Browser', body: 'Der Text aus PDF und DOCX wird im Browser mit clientseitigen Bibliotheken extrahiert.' },
-        { title: 'Keine LLM-Bewertung', body: 'Der Score entsteht aus wiederholbaren Prüfungen zu Lesbarkeit, Abschnitten, Format und Inhaltssignalen.' },
-      ],
-      repoTitle: 'Open Source auf GitHub',
-      repoBody: 'MIT-lizenziert. Lesen Sie die Prüfregeln, den Parser und den Exportablauf, eröffnen Sie ein Issue oder senden Sie einen Pull Request.',
-    },
     faq: {
       aria: 'Häufige Fragen zum ATS-Check für den Lebenslauf',
+      heading: 'Häufige Fragen',
       items: [
         { q: 'Was ist ein ATS-Score?', a: 'Eine schnelle heuristische Prüfung auf parserfreundlichen Text, Kontaktdaten, Abschnitte, Datumsangaben, Aufzählungen und messbare Ergebnisse.' },
         { q: 'Wird mein Lebenslauf hochgeladen?', a: 'Nein. PDF- und DOCX-Dateien werden lokal in Ihrem Browser verarbeitet und nicht an einen Server gesendet.' },
@@ -118,7 +81,11 @@ export const de: Messages = {
         { q: 'Kann der Score voreingenommen sein?', a: 'Es gibt weder ein Modell noch Trainingsdaten, also auch keinen Datensatz, der verzerrt sein könnte. Die Regeln enthalten dennoch Annahmen, etwa die akzeptierten Abschnittsüberschriften und Lebenslauf-Konventionen, und die Stilprüfung gilt nur für englische Lebensläufe und kann gut geschriebene Texte markieren. Sie ist kein KI-Detektor. Über Sie wird nichts entschieden: Jeder Punkt zeigt die Regel dahinter, und Sie entscheiden, was Sie ändern.' },
       ],
     },
-    guides: { aria: 'Ratgeber', heading: 'Ratgeber' },
+    guides: {
+      aria: 'Ratgeber',
+      heading: 'Ratgeber',
+      description: 'Ratgeber dazu, wie ATS Lebensläufe auslesen, was der ATS-Score misst, PDF oder DOCX und eine Checkliste, was zuerst zu korrigieren ist.',
+    },
     footer: {
       disclaimer: 'Heuristische Orientierung, keine Garantie. Entwickelt von',
       author: 'Maksym Shykov',
@@ -144,9 +111,6 @@ export const de: Messages = {
     published: 'Veröffentlicht',
     updated: 'Aktualisiert',
     by: 'von',
-    footerRuns: 'läuft in Ihrem Browser.',
-    footerNo: 'Kein Upload, keine Konten, kein Tracking.',
-    openSource: 'Open Source auf GitHub',
     bonusPoints: (points: number) => `${points} (Bonus)`,
   },
 
@@ -155,8 +119,8 @@ export const de: Messages = {
     analyzed: 'Analysiert',
     analyzeAnother: 'Weiteren Lebenslauf analysieren',
     dropBusy: 'Ihr Lebenslauf wird bewertet …',
-    dropIdle: 'Lebenslauf hier ablegen für einen schnellen ATS-Score',
-    dropHint: 'PDF oder DOCX · läuft in Ihrem Browser · kein Upload · keine KI',
+    dropIdle: 'PDF oder DOCX hier ablegen',
+    chooseButton: 'Datei wählen',
     chooseFile: 'Bitte wählen Sie eine PDF- oder DOCX-Datei aus.',
     failed: (stage: string) => `Die Analyse ist ${stage} fehlgeschlagen. Bitte tippen Sie auf „Details kopieren“ und senden Sie mir die Angaben.`,
     stages: { loading: 'beim Laden der Module', extracting: 'beim Extrahieren des Texts', analyzing: 'bei der Analyse', parsing: 'beim Auslesen der Daten', style: 'bei der Stilprüfung' },
@@ -167,6 +131,7 @@ export const de: Messages = {
       up: (n: number, previous: number) => `+${n} gegenüber der vorherigen Datei (${previous})`,
       down: (n: number, previous: number) => `−${n} gegenüber der vorherigen Datei (${previous})`,
       same: (previous: number) => `Gleicher Score wie bei der vorherigen Datei (${previous})`,
+      category: 'Veränderung in dieser Kategorie seit der vorherigen Datei',
     },
     network: {
       summary: 'Prüfen, was diese Seite gesendet hat',
@@ -179,14 +144,9 @@ export const de: Messages = {
     noPriorityFixes: 'Keine vorrangigen Korrekturen gefunden. Der restliche Bericht ist überwiegend Bestätigung.',
     fix: 'Korrektur:',
     tabs: { analyze: 'Vollständiger Bericht', style: 'Schreibstil', jd: 'Stellenabgleich', data: 'Extrahierte Daten' },
+    details: 'Vollständiger Bericht und Details',
     pages: (n: number) => `${n} ${n === 1 ? 'Seite' : 'Seiten'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} Wörter · ${chars} lesbare Zeichen.`,
-    humanization: {
-      title: 'Natürlichkeits-Score',
-      blurb: 'Wie natürlich der Text klingt: Rhythmus, Füllwörter, wiederholte Satzanfänge, Passiv. Kein KI-Detektor.',
-      none: 'Keine auffälligen Schreibgewohnheiten.',
-      all: 'Alle Stilprüfungen →',
-    },
     style: {
       tooShort: 'Es gibt nicht genug Text, um den Schreibstil zu beurteilen.',
       counts: (sentences: number, words: number) => `${sentences} Sätze, ${words} Wörter`,
@@ -231,7 +191,7 @@ export const de: Messages = {
       profile: 'Profil',
       fields: { name: 'Name', email: 'E-Mail', phone: 'Telefon', location: 'Ort', links: 'Links' },
       notDetected: 'nicht erkannt',
-      profileNote: 'Das zieht ein Parser nach Art eines ATS aus Ihrem Dokument. Rot markierte leere Felder deuten meist auf ein Formatierungsproblem hin.',
+      profileNote: 'Das zieht ein Parser nach Art eines ATS aus Ihrem Dokument. Hervorgehobene leere Felder deuten meist auf ein Formatierungsproblem hin.',
       experience: 'Berufserfahrung',
       parsed: (n: number) => `(${n} erkannt)`,
       bullets: (n: number) => `${n} ${n === 1 ? 'Aufzählungspunkt' : 'Aufzählungspunkte'}`,
@@ -361,7 +321,9 @@ export const de: Messages = {
   },
 
   builder: {
-    intro: 'Erstellen Sie einen ATS-tauglichen Lebenslauf mit reinem Text, Standardabschnitten und Live-Vorschau. Importieren Sie einen vorhandenen Lebenslauf, passen Sie das Layout an und exportieren Sie ein einspaltiges PDF mit auswählbarem Text.',
+    heading: 'ATS-tauglichen Lebenslauf erstellen',
+    // <meta name="description"> of the Build page.
+    description: 'ATS-tauglichen Lebenslauf im Browser erstellen: reiner Text, Standardabschnitte, Live-Score und Vorschau, dann als auswählbares PDF exportieren. Ohne Upload und Konto.',
     liveScore: 'Live-Score',
     importCv: 'Lebenslauf importieren',
     exportPdf: '↓ PDF exportieren',
@@ -374,7 +336,6 @@ export const de: Messages = {
     fileName: (name: string) => (name ? `${name.replace(/\s+/g, '_')}_Lebenslauf.pdf` : 'Lebenslauf.pdf'),
     profile: {
       title: 'Profil',
-      hint: 'Halten Sie Kontaktdaten als reinen Text, damit Parser sie lesen können.',
       fullName: 'Vollständiger Name',
       email: 'E-Mail',
       phone: 'Telefon',
@@ -385,7 +346,6 @@ export const de: Messages = {
     },
     experience: {
       title: 'Berufserfahrung',
-      hint: 'Nutzen Sie Aktionsverben, messbare Ergebnisse und ein Ergebnis pro Aufzählungspunkt.',
       add: 'Hinzufügen',
       moveUp: 'Station nach oben',
       moveDown: 'Station nach unten',
@@ -400,12 +360,10 @@ export const de: Messages = {
     },
     skills: {
       title: 'Kenntnisse',
-      hint: 'Trennen Sie Kenntnisse durch Komma oder Zeilenumbruch; wählen Sie Begriffe, nach denen Recruiter suchen.',
       field: 'Kenntnisse (durch Komma oder Zeilenumbruch getrennt)',
     },
     projects: {
       title: 'Projekte',
-      hint: 'Optional – gut als Nachweis für Eigenverantwortung oder vorzeigbare Arbeiten.',
       add: 'Hinzufügen',
       delete: 'Projekt löschen',
       name: 'Name',
@@ -414,7 +372,6 @@ export const de: Messages = {
     },
     education: {
       title: 'Ausbildung',
-      hint: 'Halten Sie Zeiträume und Abschlüsse im Einklang mit Ihrer Berufserfahrung.',
       add: 'Hinzufügen',
       delete: 'Ausbildung löschen',
       degree: 'Abschluss',
@@ -424,7 +381,6 @@ export const de: Messages = {
     },
     settings: {
       title: 'Dokumenteinstellungen',
-      blurb: 'Wirkt sich auf Vorschau und exportiertes PDF aus.',
       pagePreview: (size: string) => `Vorschau ${size}`,
       accent: 'Akzentfarbe',
       useAccent: (color: string) => `Akzentfarbe ${color} verwenden`,

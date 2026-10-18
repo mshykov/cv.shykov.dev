@@ -241,8 +241,8 @@ export const ARTICLES: Article[] = [
           <strong>Ce site est de type local.</strong>{' '}
           Le <A href="/fr/">vérificateur de CV ATS gratuit</A> lit votre PDF ou votre DOCX dans le
           navigateur avec{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">pdf.js</code> et{' '}
-          <code className="rounded bg-white px-1 py-0.5 text-[13px] text-stone-800">mammoth</code>,
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">pdf.js</code> et{' '}
+          <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">mammoth</code>,
           le note avec des règles fixes, et n’a aucun serveur capable de recevoir un fichier. Il est
           sous licence MIT : l’affirmation se vérifie, elle n’est pas seulement promise.
         </Note>
@@ -329,7 +329,7 @@ export const ARTICLES: Article[] = [
 
         <H2>Quand le DOCX est la bonne réponse</H2>
         <Ul>
-          <Li><strong>Le formulaire l’exige.</strong> Si le champ d’envoi n’accepte que <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">.doc/.docx</code>, c’est la réponse. Inutile de faire plus malin que le formulaire.</Li>
+          <Li><strong>Le formulaire l’exige.</strong> Si le champ d’envoi n’accepte que <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">.doc/.docx</code>, c’est la réponse. Inutile de faire plus malin que le formulaire.</Li>
           <Li><strong>Un recruteur l’a demandé.</strong> Les cabinets remettent souvent votre CV dans leur propre modèle, ce qui suppose un fichier modifiable.</Li>
           <Li><strong>L’employeur utilise un système plus ancien.</strong> Rare aujourd’hui, mais respecter ces règles ne coûte rien.</Li>
         </Ul>
@@ -344,7 +344,7 @@ export const ARTICLES: Article[] = [
           <Li><strong>Pas de texte dans des images.</strong> Un logo passe ; votre intitulé de poste transformé en image, non.</Li>
           <Li><strong>Aucune information essentielle dans l’en-tête ou le pied de page.</strong> Certains analyseurs ignorent ces zones. Mettez votre adresse e-mail dans le corps.</Li>
           <Li><strong>De vraies puces,</strong> pas des tirets tracés à la main dans une cellule de tableau.</Li>
-          <Li><strong>Un nom de fichier sensé</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>. Un humain le voit dans un dossier de centaines de fichiers.</Li>
+          <Li><strong>Un nom de fichier sensé</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Prenom_Nom_CV.pdf</code>. Un humain le voit dans un dossier de centaines de fichiers.</Li>
         </Ul>
 
         <Note>
@@ -537,7 +537,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
           <Li><strong>Les intitulés de poste sont reconnaissables.</strong> Si votre titre interne est « Ninja du déploiement », ajoutez à côté l’intitulé courant dans votre métier.</Li>
           <Li><strong>Le vocabulaire de l’offre apparaît</strong> — mais seulement là où vous l’avez honnêtement mérité.</Li>
           <Li><strong>Une rubrique de compétences existe,</strong> en texte simple séparé par des virgules plutôt qu’en graphique de jauges.</Li>
-          <Li><strong>Vos liens sont écrits</strong> en texte visible : <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">linkedin.com/in/vous</code>. Un analyseur lit du texte, pas la cible d’un lien.</Li>
+          <Li><strong>Vos liens sont écrits</strong> en texte visible : <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">linkedin.com/in/vous</code>. Un analyseur lit du texte, pas la cible d’un lien.</Li>
           <Li><strong>Aucun texte ne se trouve dans une image ou une zone de texte.</strong></Li>
         </Ul>
 
@@ -547,7 +547,7 @@ janv. 2020 – aujourd’hui Terraform, AWS`}</Pre>
           <Li><strong>L’impact est chiffré.</strong> « Fiabilité améliorée » est une affirmation ; « sessions sans crash passées de 96&#8239;% à 99,5&#8239;% » est une preuve.</Li>
           <Li><strong>Pas de formules toutes faites.</strong> « Professionnel dynamique et motivé, fort d’une solide expérience » n’apprend rien à un lecteur.</Li>
           <Li><strong>La longueur correspond à votre parcours.</strong> Une page en début de carrière, deux sont normales après une dizaine d’années. Trois demandent une raison.</Li>
-          <Li><strong>Le nom du fichier est un nom</strong> — <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">Prenom_Nom_CV.pdf</code>, pas <code className="rounded bg-stone-100 px-1 py-0.5 text-[13px]">cv_final_v3_VRAI.pdf</code>.</Li>
+          <Li><strong>Le nom du fichier est un nom</strong> — <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">Prenom_Nom_CV.pdf</code>, pas <code className="bg-panel px-1 py-0.5 font-mono text-[0.85em]">cv_final_v3_VRAI.pdf</code>.</Li>
           <Li>Réfléchissez aux années de diplôme. Certains candidats, surtout aux États-Unis et au Royaume-Uni, omettent une année de diplôme vieille de plus de 15 ans pour réduire le risque de biais lié à l’âge. Dans d’autres pays, et dans les CV universitaires, l’année est d’usage. Les deux choix se valent : décidez en connaissance de cause.</Li>
         </Ul>
 

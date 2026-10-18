@@ -10,7 +10,7 @@ Published in seven language versions — English at `/`, then `/es/`, `/pt-br/`,
 `/pt-pt/`, `/fr/`, `/de/`, `/uk/` — see `docs/localization.md` before touching any text.
 
 ## Stack & deploy
-Vite 8 · React 19 · TypeScript · Tailwind v4. `pdf.js` (read PDF), `mammoth`
+Vite 8 · React 19 · TypeScript · Tailwind v4 (theme = tokens only, see `docs/design.md`). `pdf.js` (read PDF), `mammoth`
 (read DOCX), `@react-pdf/renderer` (write PDF). Deployed on **Cloudflare Workers
 Builds** — auto-deploys on push to `main`; custom domain in `wrangler.jsonc`.
 
@@ -46,7 +46,7 @@ npm run smoke:build            # after build: every built page in every language
 - `src/lib/` — pure logic + colocated tests: `pdf.ts`/`extract.ts` (extract
   text), `parse.ts` (structured résumé), `analyze.ts` (ATS score), `jdmatch.ts`
   (JD keyword match), `report.ts`, `download.ts`.
-- `src/components/` — shared UI (`ScoreRing`, `tone`).
+- `src/components/` — shared UI (`ScoreRing`, `StatusMark`, `tone`, `LanguageSwitcher`).
 - `src/content/<locale>/` — the six guide pages per language (`articles.tsx`: body,
   short answer, FAQ; `guides.ts`: id, slug, title, description), prerendered to
   static HTML with Article/Breadcrumb/FAQPage JSON-LD. `rubric.ts` is the published
@@ -63,7 +63,7 @@ npm run smoke:build            # after build: every built page in every language
   action verbs, months, units, stop words). Merged: any CV is read in any language.
 - `src/builder/` — Build mode: `Builder.tsx`, `ResumeDoc.tsx` (the react-pdf
   template), `model.ts`.
-- `src/` — `App.tsx` (Analyze/Build shell), `Analyzer.tsx`, `ErrorBoundary.tsx`,
+- `src/` — `App.tsx` (the score page and the Build page: header, first screen, file input/drop; `main.tsx` picks the page from the URL via `isBuildPath`), `Analyzer.tsx` (report, loaded on the first file, remounted per file), `ErrorBoundary.tsx`,
   `polyfills.ts` (loaded first in `main.tsx`).
 - `public/<32-hex>.txt` — IndexNow ownership key (public by design; `scripts/indexnow.mjs` reads it).
 - `public/_headers` — security headers + **CSP** + cache rules. `docs/` — design
@@ -95,6 +95,12 @@ npm run smoke:build            # after build: every built page in every language
    fails with ERESOLVE and lint can't load. Revisit when TS 7.1 ships its new
    API and typescript-eslint supports it.
 
+7. **Fonts and LCP.** One self-hosted family (Schibsted Grotesk), the latin file is
+   preloaded from `index.html` and `scripts/prerender.mjs`, and `Schibsted Fallback`
+   (`size-adjust`) stops the swap from moving the layout. Do not remove either, add a
+   second webfont, or animate the hero text in: each one made LCP worse in testing
+   (`docs/design.md` §Type). No Google Fonts: the CSP is `font-src 'self' data:`.
+
 ## Workflow
 `main` is branch-protected: **PR + green `build` check + linear history**;
 self-merge via squash. Never commit straight to `main` (check your branch first).
@@ -111,6 +117,7 @@ self-merge via squash. Never commit straight to `main` (check your branch first)
   keep conditional state mutations in clear multiline blocks.
 
 ## Read next
+- `docs/design.md` — the look (black on paper + one neon, one grotesk, tokens only, why the old template was dropped). Read before touching any class name.
 - `docs/retrospective.md` — what went well / wrong + lessons.
 - `docs/sonar.md` — reusable Sonar/code-quality checklist.
 - `docs/project-quality.md` — CV toolkit-specific quality rules.

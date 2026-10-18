@@ -60,3 +60,19 @@ test('a superseded upload never overwrites the newer result', async ({ page }) =
   expect(body, 'the 60-page report must not be showing under the 1-page filename').not.toMatch(/\b60\s*pages\b/)
   await expect(page.getByRole('alert')).toHaveCount(0)
 })
+
+// The pages are real URLs: Build opens at /build and the browser's Back button returns to the
+// score page, which is where the visitor was.
+test('Build is a page of its own and Back returns to the score page', async ({ page }) => {
+  await page.goto('/')
+  const nav = page.getByRole('navigation', { name: 'Primary app mode' })
+  await nav.getByRole('link', { name: 'CV builder' }).click()
+  await expect(page).toHaveURL(/\/build$/)
+  await expect(page.getByRole('heading', { level: 1, name: 'ATS-clean CV builder' })).toBeVisible()
+  await page.goBack()
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Free CV ATS score checker')
+  await nav.getByRole('link', { name: 'Guides' }).click()
+  await expect(page).toHaveURL(/\/guides$/)
+  await expect(page.getByRole('heading', { level: 1, name: 'Guides' })).toBeVisible()
+})

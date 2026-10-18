@@ -40,7 +40,7 @@ await build({
 })
 
 const server = await import(pathToFileURL(new URL('entry-server.js', OUT).pathname))
-const { render, renderArticle, localeIndex, homePath, guidePath, homeHead, guideHead, escapeAttr } = server
+const { render, renderArticle, renderGuides, localeIndex, homePath, buildPath, guidesPath, guidePath, homeHead, buildHead, guidesHead, guideHead, escapeAttr } = server
 const locales = localeIndex()
 
 const template = readFileSync(HTML, 'utf8')
@@ -69,6 +69,15 @@ for (const loc of locales) {
   // English keeps /index.html; Spanish is /es/index.html, served at /es/.
   write(`${homePath(loc.locale).slice(1)}index.html`, page)
   console.log(`prerender: ${loc.locale} homepage, ${body.length} bytes of static HTML`)
+
+  // The Build page is its own URL, so the Back button works. "<prefix>build.html" is served at
+  // /build (/es/build), the same way the guides are.
+  const buildBody = render(loc.locale, 'build')
+  const buildPage = template
+    .replace('<html lang="en">', `<html lang="${loc.info.htmlLang}">`)
+    .replace(seoBlock, buildHead(loc.locale, loc.messages, loc.buildAlternates, loc.buildJsonLd).trimStart())
+    .replace(marker, `<div id="root">${buildBody}</div>`)
+  write(`${buildPath(loc.locale).slice(1)}.html`, buildPage)
 }
 
 // Guides reuse the app's stylesheet rather than carrying their own, so the two
@@ -78,8 +87,10 @@ const cssHref = template.match(/<link rel="stylesheet"[^>]*href="([^"]+)"/)?.[1]
   ?? template.match(/href="(\/assets\/index-[^"]+\.css)"/)?.[1]
 if (!cssHref) throw new Error('prerender: could not find the built stylesheet in dist/index.html')
 
-function guidePage(loc, meta, body) {
-  const head = guideHead(loc.locale, loc.messages, meta, meta.alternates, meta.jsonLd)
+// The font the page preloads (index.html), so a guide's first paint is in it too.
+const fontPreload = template.match(/<link rel="preload"[^>]*as="font"[^>]*>/)?.[0] ?? ''
+
+function guidePage(loc, head, body) {
   // No app script: a guide is prose, and the bundle would only slow it down.
   return `<!doctype html>
 <html lang="${loc.info.htmlLang}">
@@ -90,7 +101,8 @@ ${head}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/logo.png" />
-    <meta name="theme-color" content="#4f46e5" />
+    <meta name="theme-color" content="#f4f4ef" />
+    ${fontPreload}
     <link rel="stylesheet" href="${cssHref}" />
   </head>
   <body>${body}</body>
@@ -112,17 +124,17 @@ function notFoundPage(loc) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${escapeAttr(nf.title)} | ${escapeAttr(loc.messages.brand)}</title>
     <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#4f46e5" />
+    <meta name="theme-color" content="#f4f4ef" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="${cssHref}" />
   </head>
   <body>
-    <div class="flex min-h-screen items-center justify-center bg-stone-50 px-5">
-      <div class="max-w-md text-center">
-        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-700">404</p>
-        <h1 class="mt-3 text-3xl font-semibold tracking-tight text-stone-950">${escapeAttr(nf.heading)}</h1>
-        <p class="mt-4 text-[15px] leading-7 text-stone-600">${escapeAttr(nf.body)}</p>
-        <a href="${homePath(loc.locale)}" class="mt-6 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">${escapeAttr(nf.cta)}</a>
+    <div class="flex min-h-screen items-center bg-paper px-5">
+      <div class="mx-auto w-full max-w-300 sm:px-3">
+        <p class="lab">404</p>
+        <h1 class="mt-4 max-w-[14em] text-[clamp(2.6rem,9vw,5.25rem)] font-bold leading-[1.04] tracking-[-0.045em]">${escapeAttr(nf.heading)}</h1>
+        <p class="mt-6 max-w-[32em] text-lg leading-relaxed text-ink-2">${escapeAttr(nf.body)}</p>
+        <a href="${homePath(loc.locale)}" class="btn mt-8">${escapeAttr(nf.cta)}</a>
       </div>
     </div>
   </body>
@@ -134,12 +146,13 @@ let guideCount = 0
 for (const loc of locales) {
   const prefix = homePath(loc.locale).slice(1) // "" for English, "es/" for Spanish
   write(`${prefix}404.html`, notFoundPage(loc))
+  write(`${guidesPath(loc.locale).slice(1)}.html`, guidePage(loc, guidesHead(loc.locale, loc.messages, loc.guidesAlternates, loc.guidesJsonLd), renderGuides(loc.locale)))
   for (const meta of loc.articles) {
     // "<slug>.html", not "<slug>/index.html". Cloudflare's auto-trailing-slash
     // asset handling serves the former at /<slug> with a 200, while the latter
     // 307-redirects /<slug> to /<slug>/ - which would have made every canonical
     // tag and sitemap entry here point at a URL that redirects.
-    write(`${prefix}${meta.slug}.html`, guidePage(loc, meta, renderArticle(loc.locale, meta.id)))
+    write(`${prefix}${meta.slug}.html`, guidePage(loc, guideHead(loc.locale, loc.messages, meta, meta.alternates, meta.jsonLd), renderArticle(loc.locale, meta.id)))
     guideCount += 1
   }
 }
@@ -195,7 +208,11 @@ function homeLastmod() {
 const homeDate = homeLastmod()
 const urls = []
 for (const loc of locales) {
-  urls.push({ loc: `${SITE}${homePath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: loc.locale === 'en' ? '1.0' : '0.9', alternates: loc.homeAlternates })
+  urls.push(
+    { loc: `${SITE}${homePath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: loc.locale === 'en' ? '1.0' : '0.9', alternates: loc.homeAlternates },
+    { loc: `${SITE}${buildPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.buildAlternates },
+    { loc: `${SITE}${guidesPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.guidesAlternates },
+  )
   for (const g of loc.articles) {
     urls.push({ loc: `${SITE}${guidePath(loc.locale, g.slug)}`, lastmod: g.updated, changefreq: 'yearly', priority: '0.8', alternates: g.alternates })
   }

@@ -53,62 +53,25 @@ export const fr: Messages = {
     header: {
       primaryMode: 'Mode principal de l’application',
       analyze: 'Score ATS rapide',
-      build: 'Créer',
-      github: 'GitHub',
-      githubAria: 'Code source ouvert sur GitHub',
+      build: 'Éditeur de CV',
+      openSource: 'Open source',
     },
     hero: {
-      badge: 'Analyse du CV 100 % dans le navigateur',
       h1: 'Vérificateur de CV ATS gratuit : votre score, sans envoi du fichier',
-      lead: 'Obtenez le score ATS de votre CV à partir d’un PDF ou d’un DOCX en quelques secondes, voyez d’abord les corrections les plus utiles, comparez les mots-clés d’une offre et créez un CV compatible ATS, sans envoi de fichier, sans compte et sans appel à une IA.',
       check: 'Analyser mon CV',
-      build: 'Créer un CV compatible ATS',
-      runsInBrowser: 'Dans votre navigateur',
-      noUploads: 'Aucun envoi',
-      noLlm: 'Sans LLM',
-      pdfDocx: 'PDF et DOCX',
-      openSource: 'Code source ouvert',
-    },
-    heroCard: {
-      localParse: 'dans le navigateur',
-      noUpload: 'Sans envoi',
-      noLlm: 'Sans LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Aperçu du score ATS calculé en local',
-      localParse: 'Dans le navigateur',
-      caption: 'Score, corrections prioritaires, mots-clés',
-      categories: ['Lisibilité', 'Rubriques', 'Contenu'],
-    },
-    how: {
-      aria: 'Comment fonctionne ce vérificateur de CV ATS local',
-      steps: [
-        { title: 'Choisissez un PDF/DOCX', body: 'Sélectionnez le fichier de votre CV sur votre appareil.' },
-        { title: 'Analyse dans le navigateur', body: 'L’extraction du texte et le calcul du score se font dans ce navigateur.' },
-        { title: 'Corrigez l’essentiel', body: 'Consultez le score, le détail, les mots-clés et des notes exportables.' },
-      ],
-      noServerUpload: 'Aucun envoi à un serveur',
-      deterministic: 'Vérifications déterministes, sans appel à une IA',
-      openSourceMit: 'Code source ouvert, licence MIT',
+      // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Exemple',
+      runs: 'Fonctionne dans votre navigateur',
+      facts: ['Sans compte', 'Sans IA', 'Aucun envoi à un serveur'],
     },
     loading: {
       score: 'Chargement du score ATS rapide…',
       builder: 'Chargement du créateur de CV…',
     },
-    trust: {
-      aria: 'Notes sur la confidentialité et la confiance',
-      heading: 'Des engagements de confidentialité que vous pouvez vérifier.',
-      body: 'Le code est ouvert, sous licence MIT, et la promesse reste volontairement étroite : lecture des documents en local, score déterministe, aucun compte obligatoire, aucun modèle d’IA caché derrière l’interface.',
-      cards: [
-        { title: 'Lecture dans le navigateur', body: 'Le texte des PDF et DOCX est extrait dans le navigateur, avec des bibliothèques côté client.' },
-        { title: 'Aucun score par IA', body: 'Les scores viennent de vérifications reproductibles : lisibilité, rubriques, format et contenu.' },
-      ],
-      repoTitle: 'Code source ouvert sur GitHub',
-      repoBody: 'Sous licence MIT. Lisez les vérifications du score, l’analyseur et l’export, ouvrez un ticket ou proposez une pull request.',
-    },
     faq: {
       aria: 'Questions fréquentes sur le vérificateur de CV ATS',
+      heading: 'Questions fréquentes',
       items: [
         { q: 'Qu’est-ce qu’un score ATS ?', a: 'Une vérification heuristique rapide : texte lisible par un analyseur, coordonnées, rubriques, dates, puces et résultats chiffrés.' },
         { q: 'Mon CV est-il envoyé quelque part ?', a: 'Non. Les fichiers PDF et DOCX sont traités localement dans votre navigateur et ne sont envoyés à aucun serveur.' },
@@ -118,7 +81,11 @@ export const fr: Messages = {
         { q: 'Le score peut-il être biaisé ?', a: 'Il n’y a ni modèle ni données d’entraînement, donc aucun jeu de données susceptible d’être biaisé. Les règles reposent toutefois sur des hypothèses, comme les intitulés de rubrique et les conventions de CV qu’elles acceptent, et la vérification du style ne couvre que les CV en anglais et peut signaler un texte bien écrit. Ce n’est pas un détecteur d’IA. Rien n’est décidé à votre sujet : chaque point montre la règle qui le produit, et c’est vous qui décidez quoi modifier.' },
       ],
     },
-    guides: { aria: 'Guides', heading: 'Guides' },
+    guides: {
+      aria: 'Guides',
+      heading: 'Guides',
+      description: 'Guides sur le fonctionnement de l’analyse de CV par un ATS, ce que mesure le score ATS, PDF ou DOCX et une liste de ce qu’il faut corriger d’abord.',
+    },
     footer: {
       disclaimer: 'Indications heuristiques, sans garantie. Conçu par',
       author: 'Maksym Shykov',
@@ -144,9 +111,6 @@ export const fr: Messages = {
     published: 'Publié le',
     updated: 'Mis à jour le',
     by: 'par',
-    footerRuns: 'fonctionne dans votre navigateur.',
-    footerNo: 'Aucun envoi, aucun compte, aucun suivi.',
-    openSource: 'Code source ouvert sur GitHub',
     bonusPoints: (points: number) => `${points} (bonus)`,
   },
 
@@ -155,8 +119,8 @@ export const fr: Messages = {
     analyzed: 'Analysé',
     analyzeAnother: 'Analyser un autre CV',
     dropBusy: 'Analyse de votre CV…',
-    dropIdle: 'Déposez votre CV ici pour un score ATS rapide',
-    dropHint: 'PDF ou DOCX · dans votre navigateur · sans envoi · sans IA',
+    dropIdle: 'Déposez un PDF ou un DOCX ici',
+    chooseButton: 'Choisir un fichier',
     chooseFile: 'Veuillez choisir un fichier PDF ou DOCX.',
     failed: (stage: string) => `L’analyse a échoué pendant ${stage}. Appuyez sur « Copier les détails » et envoyez-les-moi.`,
     stages: {
@@ -173,6 +137,7 @@ export const fr: Messages = {
       up: (n: number, previous: number) => `+${n} par rapport au fichier précédent (${previous})`,
       down: (n: number, previous: number) => `−${n} par rapport au fichier précédent (${previous})`,
       same: (previous: number) => `Même score que le fichier précédent (${previous})`,
+      category: 'Évolution de cette catégorie depuis le fichier précédent',
     },
     network: {
       summary: 'Vérifiez ce que cette page a envoyé',
@@ -185,14 +150,9 @@ export const fr: Messages = {
     noPriorityFixes: 'Aucune correction prioritaire. Le reste du rapport est surtout une confirmation.',
     fix: 'Correction :',
     tabs: { analyze: 'Rapport complet', style: 'Style rédactionnel', jd: 'Correspondance avec l’offre', data: 'Données extraites' },
+    details: 'Rapport complet et détails',
     pages: (n: number) => `${n} ${n > 1 ? 'pages' : 'page'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} mots · ${chars} caractères lisibles.`,
-    humanization: {
-      title: 'Score de naturel',
-      blurb: 'Mesure le naturel de l’écriture : rythme, remplissage, débuts de phrase répétés, voix passive. Ce n’est pas un détecteur d’IA.',
-      none: 'Aucune habitude d’écriture signalée.',
-      all: 'Toutes les vérifications d’écriture →',
-    },
     style: {
       tooShort: 'Il n’y a pas assez de texte pour juger le style d’écriture.',
       counts: (sentences: number, words: number) => `${sentences} phrases, ${words} mots`,
@@ -237,7 +197,7 @@ export const fr: Messages = {
       profile: 'Profil',
       fields: { name: 'Nom', email: 'E-mail', phone: 'Téléphone', location: 'Localisation', links: 'Liens' },
       notDetected: 'non détecté',
-      profileNote: 'Voici ce que tire de votre CV un analyseur de type ATS. Un champ vide en rouge signale en général un problème de mise en forme.',
+      profileNote: 'Voici ce que tire de votre CV un analyseur de type ATS. Un champ vide surligné signale en général un problème de mise en forme.',
       experience: 'Expérience',
       parsed: (n: number) => `(${n} ${n > 1 ? 'identifiées' : 'identifiée'})`,
       bullets: (n: number) => `${n} ${n > 1 ? 'puces' : 'puce'}`,
@@ -367,7 +327,9 @@ export const fr: Messages = {
   },
 
   builder: {
-    intro: 'Créez un CV compatible ATS : texte brut, rubriques standard et aperçu en direct. Importez un CV existant, ajustez la mise en page, puis exportez un PDF en une seule colonne, au texte sélectionnable.',
+    heading: 'Éditeur de CV compatible ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Créez un CV compatible ATS dans votre navigateur : texte brut, rubriques standard, score et aperçu en direct, puis export en PDF sélectionnable. Sans envoi ni compte.',
     liveScore: 'Score en direct',
     importCv: 'Importer un CV',
     exportPdf: '↓ Exporter en PDF',
@@ -380,7 +342,6 @@ export const fr: Messages = {
     fileName: (name: string) => `${(name || 'cv').replace(/\s+/g, '_')}_CV.pdf`,
     profile: {
       title: 'Profil',
-      hint: 'Gardez les coordonnées en texte brut pour que les analyseurs puissent les lire.',
       fullName: 'Nom et prénom',
       email: 'E-mail',
       phone: 'Téléphone',
@@ -391,7 +352,6 @@ export const fr: Messages = {
     },
     experience: {
       title: 'Expérience',
-      hint: 'Utilisez des verbes d’action, un impact mesurable et un résultat par puce.',
       add: 'Ajouter',
       moveUp: 'Monter ce poste',
       moveDown: 'Descendre ce poste',
@@ -406,12 +366,10 @@ export const fr: Messages = {
     },
     skills: {
       title: 'Compétences',
-      hint: 'Séparez les compétences par une virgule ou un retour à la ligne, avec des termes que les recruteurs recherchent.',
       field: 'Compétences (séparées par une virgule ou un retour à la ligne)',
     },
     projects: {
       title: 'Projets',
-      hint: 'Facultatif, utile pour montrer une réalisation personnelle ou un travail de portfolio.',
       add: 'Ajouter',
       delete: 'Supprimer ce projet',
       name: 'Nom',
@@ -420,7 +378,6 @@ export const fr: Messages = {
     },
     education: {
       title: 'Formation',
-      hint: 'Gardez des dates et des intitulés de diplôme cohérents avec la rubrique expérience.',
       add: 'Ajouter',
       delete: 'Supprimer cette formation',
       degree: 'Diplôme',
@@ -430,7 +387,6 @@ export const fr: Messages = {
     },
     settings: {
       title: 'Réglages du document',
-      blurb: 'S’applique à l’aperçu et au PDF exporté.',
       pagePreview: (size: string) => `Aperçu ${size}`,
       accent: 'Couleur d’accent',
       useAccent: (color: string) => `Utiliser l’accent ${color}`,

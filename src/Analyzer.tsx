@@ -1,57 +1,61 @@
-import { useCallback, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Report, Check, Status } from './lib/analyze'
 import { getTopFixes } from './lib/analyze'
 // Dependency-free, so this stays out of the lazily loaded extractor bundle.
 import { isSupportedDocument } from './lib/filetype.ts'
+import type { Job } from './lib/job.ts'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { Segment, TitleMatch } from './lib/jdsignals'
+import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
+import type { Advisory } from './lib/advisories'
+import { deltaBetween, snapshotOf, type Delta } from './lib/delta'
+import { previousScore, rememberScore, savePostings, savedPostings } from './lib/session.ts'
+import { markNow, observeNetworkSince, type NetworkReport } from './lib/network'
+import { ScoreRing } from './components/ScoreRing'
+import { StatusMark } from './components/StatusMark'
+import { useLocale, useMessages } from './i18n/context.ts'
+import type { Messages } from './i18n/messages/en.ts'
+
+type Tab = 'analyze' | 'style' | 'jd' | 'data'
 
 // One posting matched against the CV: its label, the keyword match, the extra signals and the highlighted CV.
 interface JdResult {
+  /** Id of the posting it came from: a stable key for the comparison table. */
+  id: number
   label: string
   match: JDMatch
   signals: { title: TitleMatch; asked: number | null; have: number | null }
   segments: Segment[]
 }
 const MAX_POSTINGS = 5
+/** A posting the visitor pasted. The id is a stable key: its position changes when one above it is removed. */
+interface Posting {
+  id: number
+  text: string
+}
+/** The highlighted CV with each piece keyed by where it starts in the text, which never changes. */
+function withOffsets(segments: Segment[]): (Segment & { start: number })[] {
+  let start = 0
+  return segments.map((seg) => {
+    const keyed = { ...seg, start }
+    start += seg.text.length
+    return keyed
+  })
+}
 /** A posting's name: its first non-empty line, shortened. */
 const postingName = (text: string, fallback: string) => {
   const first = text.split(/\r?\n/).map((l) => l.trim()).find(Boolean)
   return first ? (first.length > 60 ? `${first.slice(0, 57)}…` : first) : fallback
 }
-import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
-import type { Advisory } from './lib/advisories'
-import { deltaBetween, snapshotOf, type Delta, type Snapshot } from './lib/delta'
-import { markNow, observeNetworkSince, type NetworkReport } from './lib/network'
-import { TONE } from './components/tone'
-import { ScoreRing } from './components/ScoreRing'
-import { useLocale, useMessages } from './i18n/context.ts'
-import type { Messages } from './i18n/messages/en.ts'
 
-type Tab = 'analyze' | 'style' | 'jd' | 'data'
-
-// Style levels are advisory, so they map onto the shared status palette rather
-// than introducing a second colour language.
-const STYLE_TONE: Record<StyleLevel, { dot: string; text: string }> = {
-  ok: TONE.pass,
-  minor: TONE.warn,
-  major: TONE.fail,
-}
 type CheckRowProps = Readonly<{ c: Check }>
-type CategoryBreakdownProps = Readonly<{ report: Report; deltas?: Record<string, number> }>
 type TopFixesProps = Readonly<{ fixes: Check[] }>
 
 // Stage names for the developer-facing error detail stay English on purpose: it is
 // what gets pasted into a bug report.
 const STAGE_DETAIL = { loading: 'loading modules', extracting: 'extracting text', analyzing: 'analyzing', parsing: 'parsing', style: 'checking style' } as const
 type Stage = keyof typeof STAGE_DETAIL
-
-function jdCoverageClass(coverage: number): string {
-  if (coverage >= 70) return 'text-emerald-600'
-  if (coverage >= 40) return 'text-amber-600'
-  return 'text-rose-600'
-}
 
 function experienceKey(entry: Resume['experience'][number]): string {
   return [entry.title, entry.company, entry.date, entry.bullets.join('|')].join('::')
@@ -67,52 +71,26 @@ function reportMetaSummary(m: Messages, report: Report): string {
   return m.analyzer.reportMeta(pageCount ? m.analyzer.pages(pageCount) : '', fmt(report.meta.words), fmt(report.meta.charCount))
 }
 
+const STYLE_STATUS: Record<StyleLevel, Status> = { ok: 'pass', minor: 'warn', major: 'fail' }
+
+// Points lost are the neon mark: the one place the eye should land.
+function LostPoints({ n }: Readonly<{ n: number }>) {
+  return <span className="neon-block shrink-0 px-1.5 py-0.5 font-mono text-sm font-semibold tabular-nums">−{n}</span>
+}
+
 function CheckRow({ c }: CheckRowProps) {
   const { analyzer } = useMessages()
   return (
-    <div className="flex gap-3 py-3">
-      <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${TONE[c.status].dot}`} aria-hidden />
+    <div className="flex gap-3 border-b border-rule py-4">
+      <StatusMark status={c.status} className="mt-0.5" />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-3">
-          <span className="font-medium text-stone-800">{c.label}</span>
-          <span className="shrink-0 text-xs tabular-nums text-stone-400">{c.points}/{c.max}</span>
+          <span className="font-semibold">{c.label}</span>
+          <span className={`shrink-0 font-mono text-sm tabular-nums ${c.status === 'pass' ? '' : 'neon-block px-1.5 py-0.5 font-semibold'}`}>{c.points}/{c.max}</span>
         </div>
-        <p className="mt-0.5 text-sm text-stone-500">{c.detail}</p>
-        {c.fix && <p className="mt-1 text-sm text-stone-700"><span className="font-medium">{analyzer.fix}</span> {c.fix}</p>}
+        <p className="mt-0.5 text-ink-2">{c.detail}</p>
+        {c.fix && <p className="mt-1.5"><span className="font-semibold">{analyzer.fix}</span> {c.fix}</p>}
       </div>
-    </div>
-  )
-}
-
-function CategoryBreakdown({ report, deltas }: CategoryBreakdownProps) {
-  const { analysis } = useMessages()
-  const categories = [...new Set(report.checks.map((c) => c.category))]
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {categories.map((cat) => {
-        const items = report.checks.filter((c) => c.category === cat)
-        const points = items.reduce((s, c) => s + c.points, 0)
-        const max = items.reduce((s, c) => s + c.max, 0)
-        const pct = Math.round((points / max) * 100)
-
-        return (
-          <div key={cat} className="min-w-34 flex-1 rounded-xl bg-stone-50 px-3 py-2 ring-1 ring-stone-200">
-            <div className="flex items-baseline justify-between gap-3">
-              <span className="text-xs font-medium text-stone-500">{analysis.categories[cat]}</span>
-              <span className="text-xs tabular-nums text-stone-400">
-                {points}/{max}
-                {deltas && deltas[cat] !== 0 && deltas[cat] !== undefined && (
-                  <span className={`ml-1 font-medium ${deltas[cat] > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{deltas[cat] > 0 ? '+' : '−'}{Math.abs(deltas[cat])}</span>
-                )}
-              </span>
-            </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-stone-200">
-              <div className="h-full rounded-full bg-stone-900 transition-[width]" style={{ width: `${pct}%` }} />
-            </div>
-          </div>
-        )
-      })}
     </div>
   )
 }
@@ -120,111 +98,23 @@ function CategoryBreakdown({ report, deltas }: CategoryBreakdownProps) {
 function TopFixes({ fixes }: TopFixesProps) {
   const { analyzer } = useMessages()
   if (!fixes.length) {
-    return (
-      <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800 ring-1 ring-emerald-200">
-        {analyzer.noPriorityFixes}
-      </div>
-    )
+    return <p className="border-y border-rule py-5">{analyzer.noPriorityFixes}</p>
   }
 
   return (
-    <div className="space-y-2">
-      {fixes.map((fix) => (
-        <div key={fix.id} className="rounded-xl bg-white px-4 py-3 ring-1 ring-stone-200">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className={`h-2 w-2 rounded-full ${TONE[fix.status].dot}`} aria-hidden />
-                <span className="text-sm font-semibold text-stone-900">{fix.label}</span>
-              </div>
-              <p className="mt-1 text-sm text-stone-600">{fix.fix ?? fix.detail}</p>
-            </div>
-            <span className="shrink-0 rounded-md bg-stone-100 px-2 py-1 text-xs tabular-nums text-stone-500">
-              -{fix.max - fix.points}
-            </span>
-          </div>
-        </div>
+    <ol className="border-t-2 border-ink">
+      {fixes.map((fix, i) => (
+        <li key={fix.id} className="grid grid-cols-[2rem_minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-b border-rule py-5">
+          <span className="text-2xl font-bold leading-tight tabular-nums">{i + 1}</span>
+          <h4 className="flex items-center gap-2 text-lg font-semibold leading-snug">
+            <StatusMark status={fix.status} />
+            {fix.label}
+          </h4>
+          <LostPoints n={fix.max - fix.points} />
+          <p className="col-start-2 col-end-4 max-w-[42em] text-ink-2">{fix.fix ?? fix.detail}</p>
+        </li>
       ))}
-    </div>
-  )
-}
-
-const STYLE_STATUS: Record<StyleLevel, Status> = { ok: 'pass', minor: 'warn', major: 'fail' }
-
-type NetworkNoteProps = Readonly<{ report: NetworkReport }>
-
-// States only what the page can observe about itself (Resource Timing): where its
-// requests went and of what kind. It cannot read a request body, so it never says
-// "secure" or "nothing was stored", only what was counted.
-function NetworkNote({ report }: NetworkNoteProps) {
-  const { analyzer } = useMessages()
-  const clean = report.otherOrigin === 0 && report.data === 0
-  return (
-    <details className="mt-4 rounded-xl bg-stone-50 p-3 text-sm text-stone-600 ring-1 ring-stone-200">
-      <summary className="cursor-pointer font-medium text-stone-700">{analyzer.network.summary}</summary>
-      <p className="mt-2">{clean ? analyzer.network.ok(report.total) : analyzer.network.warn(report.otherOrigin, report.data)}</p>
-      <p className="mt-1 text-xs text-stone-500">{analyzer.network.hint}</p>
-    </details>
-  )
-}
-
-type AdvisoryCardProps = Readonly<{ advisories: Advisory[] }>
-
-// Conventions that are not part of the score: length and bullet balance. Kept in
-// a card of their own so nobody mistakes them for lost points.
-function AdvisoryCard({ advisories }: AdvisoryCardProps) {
-  const { analysis } = useMessages()
-  return (
-    <div className="mt-5 min-w-0 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
-      <h2 className="text-xl font-semibold tracking-tight text-stone-900">{analysis.advisories.heading}</h2>
-      <p className="mt-1 text-sm text-stone-500">{analysis.advisories.note}</p>
-      <ul className="mt-3 space-y-2 text-sm text-stone-700">
-        {advisories.map((a) => (
-          <li key={a.id} className="flex gap-2">
-            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" aria-hidden />
-            <span><span className="font-medium">{a.detail}</span> {a.fix}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-type HumanizationCardProps = Readonly<{ style: StyleReport; onOpen: () => void }>
-
-// Surfaces the writing-style score next to the ATS score so it is not hidden
-// behind a tab. Same honesty as the tab: habits to fix, not an AI-detector verdict.
-function HumanizationCard({ style, onOpen }: HumanizationCardProps) {
-  const { analyzer } = useMessages()
-  const tone = STYLE_STATUS[style.band.tone]
-  const flagged = style.signals.filter((s) => s.level !== 'ok').sort((a, b) => Number(b.level === 'major') - Number(a.level === 'major'))
-  return (
-    <div className="mt-5 min-w-0 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-        <ScoreRing score={style.score} tone={tone} />
-        <div className="min-w-0 flex-1">
-          <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ring-1 ${TONE[tone].chip}`}>
-            <span className={`h-2 w-2 rounded-full ${TONE[tone].dot}`} aria-hidden />
-            <span>{style.band.label}</span>
-          </div>
-          <h2 className="mt-3 text-xl font-semibold tracking-tight text-stone-900">{analyzer.humanization.title}</h2>
-          <p className="mt-1 text-sm text-stone-500">{analyzer.humanization.blurb}</p>
-          {flagged.length > 0 ? (
-            <ul className="mt-3 space-y-1 text-sm text-stone-700">
-              {flagged.slice(0, 3).map((s) => (
-                <li key={s.id} className="flex gap-2">
-                  <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${STYLE_TONE[s.level].dot}`} aria-hidden />
-                  <span><span className="font-medium">{s.label}.</span> {s.fix ?? s.detail}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-3 text-sm text-emerald-700">{analyzer.humanization.none}</p>
-          )}
-          <button type="button" onClick={onOpen} className="mt-3 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">{analyzer.humanization.all}</button>
-        </div>
-      </div>
-    </div>
+    </ol>
   )
 }
 
@@ -232,40 +122,82 @@ type StyleRowProps = Readonly<{ s: StyleSignal }>
 
 function StyleRow({ s }: StyleRowProps) {
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-stone-200">
-      <div className="flex items-start gap-2.5">
-        <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${STYLE_TONE[s.level].dot}`} aria-hidden />
-        <div className="min-w-0">
-          <p className="font-medium text-stone-800">{s.label}</p>
-          <p className="mt-0.5 text-sm text-stone-500">{s.detail}</p>
-          {s.fix && <p className="mt-1.5 text-sm text-stone-700">{s.fix}</p>}
-          {s.examples && s.examples.length > 0 && (
-            <ul className="mt-2 space-y-1">
-              {s.examples.map((ex) => (
-                <li key={ex} className="truncate rounded bg-stone-50 px-2 py-1 font-mono text-xs text-stone-500 ring-1 ring-stone-200">{ex}</li>
-              ))}
-            </ul>
-          )}
-        </div>
+    <div className="flex items-start gap-3 border-b border-rule py-4">
+      <StatusMark status={STYLE_STATUS[s.level]} className="mt-0.5" />
+      <div className="min-w-0">
+        <p className="font-semibold">{s.label}</p>
+        <p className="mt-0.5 text-ink-2">{s.detail}</p>
+        {s.fix && <p className="mt-1.5">{s.fix}</p>}
+        {s.examples && s.examples.length > 0 && (
+          <ul className="mt-2 space-y-1">
+            {s.examples.map((ex) => (
+              <li key={ex} className="break-words bg-panel px-2 py-1 font-mono text-xs text-ink-2">{ex}</li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )
 }
 
-export default function Analyzer() {
+// States only what the page can observe about itself (Resource Timing): where its requests went
+// and of what kind. It cannot read a request body, so it never says "secure" or "nothing was
+// stored", only what was counted.
+function NetworkNote({ report }: Readonly<{ report: NetworkReport }>) {
+  const { analyzer } = useMessages()
+  const clean = report.otherOrigin === 0 && report.data === 0
+  return (
+    <details className="group mt-6 border-b border-rule">
+      <summary className="flex min-h-13 cursor-pointer list-none items-center justify-between gap-4 font-medium [&::-webkit-details-marker]:hidden">
+        {analyzer.network.summary}
+        <span aria-hidden className="font-mono text-xl text-ink-2 group-open:hidden">+</span>
+        <span aria-hidden className="hidden font-mono text-xl text-ink-2 group-open:inline">−</span>
+      </summary>
+      <p>{clean ? analyzer.network.ok(report.total) : analyzer.network.warn(report.otherOrigin, report.data)}</p>
+      <p className="mt-1 pb-4 text-sm text-ink-2">{analyzer.network.hint}</p>
+    </details>
+  )
+}
+
+// Conventions that are not part of the score: length and bullet balance. Set apart from the
+// fixes (no points, no marks) so nobody mistakes them for lost points.
+function AdvisoryList({ advisories }: Readonly<{ advisories: Advisory[] }>) {
+  const { analysis } = useMessages()
+  return (
+    <section className="mt-10">
+      <h3 className="text-base font-semibold">{analysis.advisories.heading}</h3>
+      <p className="mt-1 max-w-[42em] text-sm text-ink-2">{analysis.advisories.note}</p>
+      <ul className="mt-3 border-t border-rule">
+        {advisories.map((a) => (
+          <li key={a.id} className="border-b border-rule py-3">
+            <span className="font-medium">{a.detail}</span> <span className="text-ink-2">{a.fix}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+type AnalyzerProps = Readonly<{
+  /** The CV to score. The parent remounts this component for every new file. */
+  job: Job
+  onBusyChange: (busy: boolean) => void
+  /** Open the file picker again. */
+  onAnother: () => void
+}>
+
+export default function Analyzer({ job, onBusyChange, onAnother }: AnalyzerProps) {
   const { locale, messages: m } = useLocale()
   const { analyzer } = m
+  const fileName = job.file.name
   const [report, setReport] = useState<Report | null>(null)
   const [resume, setResume] = useState<Resume | null>(null)
   const [cvText, setCvText] = useState('')
-  const [fileName, setFileName] = useState('')
-  const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [errDetail, setErrDetail] = useState('')
-  const [drag, setDrag] = useState(false)
   const [tab, setTab] = useState<Tab>('analyze')
-  // Up to MAX_POSTINGS postings, kept when a new CV is analysed so the same ones can be tried against it.
-  const [postings, setPostings] = useState<string[]>([''])
+  const [postings, setPostings] = useState<Posting[]>(() => savedPostings().map((text, id) => ({ id, text })))
+  const nextPostingId = useRef(postings.length)
   const [jdResults, setJdResults] = useState<JdResult[]>([])
   const [selectedJd, setSelectedJd] = useState(0)
   const currentJd = jdResults[selectedJd] ?? null
@@ -275,86 +207,103 @@ export default function Analyzer() {
   const bestCoverage = jdResults.length > 1 ? Math.max(...jdResults.map((r) => r.match.coverage)) : -1
   const [showCv, setShowCv] = useState(false)
   const [copiedMissing, setCopiedMissing] = useState(false)
+  const [network, setNetwork] = useState<NetworkReport | null>(null)
+  const [delta, setDelta] = useState<Delta | null>(null)
   const [style, setStyle] = useState<StyleReport | null>(null)
   // The CV was not written in English, so the English-only style checks stay out of it.
   const [styleSkipped, setStyleSkipped] = useState(false)
   // The CV has too little text for the style checks to say anything (an empty report would read 100).
   const [styleTooShort, setStyleTooShort] = useState(false)
   const [advisories, setAdvisories] = useState<Advisory[]>([])
-  const [network, setNetwork] = useState<NetworkReport | null>(null)
-  // The previous file's score in this session, in memory only, so a second upload shows what changed.
-  const previousSnapshot = useRef<Snapshot | null>(null)
-  const [delta, setDelta] = useState<Delta | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  // Nothing blocks a second upload while the first is still parsing - the
-  // dropzone stays droppable and `busy` only swaps a caption. Two runs then
-  // race, and the slower one lands last: the header said "Analyzed
-  // sample-cv.pdf" above a 60-page report. Stamp each run and let only the
-  // newest one write state.
-  const runId = useRef(0)
+  const resultRef = useRef<HTMLElement>(null)
+  const errorRef = useRef<HTMLDivElement>(null)
+  // The run reads the messages of the moment it starts; a new messages object must not restart it.
+  const latest = useRef({ m, locale })
+  useEffect(() => { latest.current = { m, locale } })
 
-  const run = useCallback(async (file: File) => {
-    const id = (runId.current += 1)
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJdResults([]); setSelectedJd(0); setShowCv(false); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([]); setNetwork(null)
-    if (!isSupportedDocument(file)) { setError(analyzer.chooseFile); return }
-    setBusy(true); setFileName(file.name); setTab('analyze')
-    // Everything the page requests from here on belongs to this file: see NetworkNote.
-    const mark = markNow()
-    let stage: Stage = 'loading'
-    try {
-      const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }, { getAdvisories }] = await Promise.all([
-        import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'), import('./lib/advisories'),
-      ])
-      stage = 'extracting'
-      const ex = await extractDocument(file)
-      stage = 'analyzing'
-      const rep = analyze(ex, m.analysis)
-      stage = 'parsing'
-      const res = parseResume(ex)
-      const adv = getAdvisories(ex, res, m.analysis.advisories, { locale, fileName: file.name })
-      stage = 'style'
-      // The writing-style signals look for English stock phrases and English
-      // passive voice. On a Spanish or German CV they would measure nothing.
-      const language = detectLanguage(ex.text)
-      const skip = language !== 'en' && language !== 'unknown'
-      const analysed = skip ? null : analyzeStyle(ex.text, ex.lines)
-      const tooShort = analysed?.insufficient === true
-      const sty = tooShort ? null : analysed
-      if (runId.current !== id) return
-      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort); setAdvisories(adv); setNetwork(observeNetworkSince(mark))
-      const snap = snapshotOf(rep)
-      setDelta(previousSnapshot.current ? deltaBetween(previousSnapshot.current, snap) : null)
-      previousSnapshot.current = snap
-    } catch (e) {
-      if (runId.current !== id) return
-      const err = e instanceof Error ? e : new Error(String(e))
-      const detail = `stage: ${STAGE_DETAIL[stage]}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
-      console.error('[ATS Resume Toolkit] analyze failed —', detail)
-      setError(analyzer.failed(analyzer.stages[stage]))
-      setErrDetail(detail)
-    } finally {
-      // A superseded run must not clear the spinner out from under the new one.
-      if (runId.current === id) setBusy(false)
+  // One run per mounted job. Choosing another file remounts this component, so a slow
+  // earlier run (a 60-page PDF) can never write over the newer result: its `current`
+  // flag is false by then (e2e: "a superseded upload never overwrites the newer result").
+  useEffect(() => {
+    let current = true
+    const settle = () => {
+      if (current) onBusyChange(false)
     }
-  }, [m.analysis, analyzer, locale])
+    const run = async (file: File) => {
+      const { m: msg, locale: lang } = latest.current
+      const { analysis, analyzer } = msg
+      if (!isSupportedDocument(file)) {
+        setError(analyzer.chooseFile)
+        settle()
+        return
+      }
+      // Everything the page requests from here on belongs to this file: see NetworkNote.
+      const mark = markNow()
+      let stage: Stage = 'loading'
+      try {
+        const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }, { getAdvisories }] = await Promise.all([
+          import('./lib/extract'), import('./lib/analyze'), import('./lib/parse'), import('./lib/style'), import('./lib/lang/index.ts'), import('./lib/advisories'),
+        ])
+        stage = 'extracting'
+        const ex = await extractDocument(file)
+        stage = 'analyzing'
+        const rep = analyze(ex, analysis)
+        stage = 'parsing'
+        const res = parseResume(ex)
+        const adv = getAdvisories(ex, res, analysis.advisories, { locale: lang, fileName: file.name })
+        stage = 'style'
+        // The writing-style signals look for English stock phrases and English
+        // passive voice. On a Spanish or German CV they would measure nothing.
+        const language = detectLanguage(ex.text)
+        const skip = language !== 'en' && language !== 'unknown'
+        const analysed = skip ? null : analyzeStyle(ex.text, ex.lines)
+        const tooShort = analysed?.insufficient === true
+        const sty = tooShort ? null : analysed
+        if (!current) return
+        setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort); setAdvisories(adv); setNetwork(observeNetworkSince(mark))
+        const snap = snapshotOf(rep)
+        const before = previousScore()
+        setDelta(before ? deltaBetween(before, snap) : null)
+        rememberScore(snap)
+      } catch (e) {
+        if (!current) return
+        const err = e instanceof Error ? e : new Error(String(e))
+        const detail = `stage: ${STAGE_DETAIL[stage]}\n${err.name}: ${err.message}\n\n${err.stack ?? '(no stack)'}\n\nfile: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes)\nUA: ${navigator.userAgent}\nbuild: ${import.meta.env.MODE}`
+        console.error('[ATS Resume Toolkit] analyze failed —', detail)
+        setError(analyzer.failed(analyzer.stages[stage]))
+        setErrDetail(detail)
+      } finally {
+        settle()
+      }
+    }
+    void run(job.file)
+    return () => { current = false }
+  }, [job.file, onBusyChange])
 
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault(); setDrag(false)
-    const f = e.dataTransfer.files?.[0]; if (f) run(f)
-  }, [run])
+  // The first screen is full height, so bring the report into view once it exists.
+  // The same for a failure (an unsupported file, a PDF that would not read): the message sits
+  // below the first screen, so scroll to it too.
+  useEffect(() => {
+    const target = report ? resultRef.current : error ? errorRef.current : null
+    if (!target) return
+    const calm = globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches
+    target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' })
+  }, [report, error])
 
-  const runJd = useCallback(async () => {
-    const filled = postings.map((text, i) => ({ text, i })).filter(({ text }) => text.trim())
+  const updatePostings = (next: Posting[]) => {
+    savePostings(next.map((p) => p.text))
+    setPostings(next)
+  }
+
+  const runJd = async () => {
+    const filled = postings.map((p, i) => ({ ...p, i })).filter(({ text }) => text.trim())
     if (!resume || filled.length === 0) return
-    const id = runId.current
     const [{ matchJD }, signals] = await Promise.all([import('./lib/jdmatch'), import('./lib/jdsignals')])
-    // A new CV may have finished analyzing during that import; its own reset
-    // already cleared the results, and these belong to the previous document.
-    if (runId.current !== id) return
     const experienceText = resume.experience.flatMap((e) => [e.title, e.company, ...e.bullets]).join('\n')
-    const results = filled.map(({ text, i }): JdResult => {
+    const results = filled.map(({ id, text, i }): JdResult => {
       const match = matchJD(cvText, resume.skills, text, { experienceText })
       return {
+        id,
         label: postingName(text, analyzer.jd.postingLabel(i + 1)),
         match,
         signals: {
@@ -368,338 +317,298 @@ export default function Analyzer() {
     setJdResults(results)
     setSelectedJd(0)
     setShowCv(false)
-  }, [resume, cvText, postings, analyzer])
+  }
 
-  const download = useCallback(async () => {
+  const download = async () => {
     if (!report || !resume) return
     const [{ toMarkdown }, { downloadText }] = await Promise.all([import('./lib/report'), import('./lib/download')])
     downloadText(fileName.replace(/\.[^.]+$/, '') + m.report.fileSuffix, toMarkdown(fileName, report, resume, m, jd ?? undefined))
-  }, [report, resume, jd, fileName, m])
+  }
 
   const categories = report ? [...new Set(report.checks.map((c) => c.category))] : []
   const topFixes = report ? getTopFixes(report, 3) : []
 
   return (
     <div>
-      <h2 className="sr-only">{analyzer.srHeading}</h2>
-
-      {report ? (
-        <div
-          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
-          onDragLeave={() => setDrag(false)}
-          onDrop={onDrop}
-          className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 shadow-sm transition ${drag ? 'border-indigo-300 bg-indigo-50' : 'border-stone-200 bg-white'}`}
-        >
-          <p className="text-sm text-stone-500">{analyzer.analyzed} <span className="font-medium text-stone-800">{fileName}</span></p>
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
-          >
-            {analyzer.analyzeAnother}
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
-          onDragLeave={() => setDrag(false)}
-          onDrop={onDrop}
-          className={`group flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-12 text-center shadow-sm transition ${drag ? 'border-indigo-400 bg-indigo-50' : 'border-stone-300 bg-white hover:border-stone-400 hover:bg-stone-50/40'}`}
-        >
-          <svg className="h-9 w-9 text-stone-400 group-hover:text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14" /></svg>
-          <span className="mt-3 font-medium text-stone-800">{busy ? analyzer.dropBusy : analyzer.dropIdle}</span>
-          <span className="mt-1 text-sm text-stone-600">{analyzer.dropHint}</span>
-        </button>
-      )}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0]
-          if (f) run(f)
-          e.currentTarget.value = ''
-        }}
-      />
-
       {error && (
-        <div role="alert" className="mt-3 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">
-          <p>{error}</p>
-          {errDetail && (
-            <>
-              <button
-                type="button"
-                onClick={() => { void navigator.clipboard?.writeText(errDetail) }}
-                className="mt-2 rounded border border-rose-300 px-2 py-1 text-xs font-medium hover:bg-rose-100"
-              >
-                {analyzer.copyDetails}
-              </button>
-              <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded bg-white/70 p-2 text-[11px] leading-snug text-rose-900 ring-1 ring-rose-200">{errDetail}</pre>
-            </>
-          )}
+        <div ref={errorRef} role="alert" className="flex scroll-mt-6 gap-3 border-2 border-ink px-5 py-4">
+          <StatusMark status="fail" className="mt-0.5" />
+          <div className="min-w-0">
+            <p className="font-semibold">{error}</p>
+            {errDetail && (
+              <>
+                <button type="button" onClick={() => { void navigator.clipboard?.writeText(errDetail) }} className="btn-sm mt-3">
+                  {analyzer.copyDetails}
+                </button>
+                <pre className="mt-3 max-h-56 overflow-auto whitespace-pre-wrap break-words bg-panel p-3 font-mono text-xs leading-snug">{errDetail}</pre>
+              </>
+            )}
+          </div>
         </div>
       )}
 
       {report && resume && (
-        <section className="mt-8" aria-live="polite">
-          <div className="mb-6 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
-            <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,0.8fr)]">
-              <div className="min-w-0 rounded-xl bg-stone-50 p-4 ring-1 ring-stone-200">
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                  <ScoreRing score={report.score} tone={report.band.tone} />
-                  <div className="min-w-0 flex-1">
-                    <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ring-1 ${TONE[report.band.tone].chip}`}>
-                      <span className={`h-2 w-2 rounded-full ${TONE[report.band.tone].dot}`} aria-hidden />
-                      <span>{report.band.label}</span>
-                    </div>
-                    <h2 className="mt-3 text-xl font-semibold tracking-tight text-stone-900">{analyzer.scoreHeading}</h2>
-                    <p className="mt-1 text-sm text-stone-500">{reportMetaSummary(m, report)}</p>
-                    {delta && (
-                      <p className={`mt-1 text-sm font-medium ${delta.change > 0 ? 'text-emerald-700' : delta.change < 0 ? 'text-rose-700' : 'text-stone-500'}`}>
-                        {delta.change > 0 ? analyzer.delta.up(delta.change, delta.previous) : delta.change < 0 ? analyzer.delta.down(-delta.change, delta.previous) : analyzer.delta.same(delta.previous)}
-                      </p>
-                    )}
-                    <p className="mt-1 text-xs text-stone-500">{analyzer.estimateNote}</p>
-                  </div>
-                </div>
-                <div className="mt-4"><CategoryBreakdown report={report} deltas={delta?.categories} /></div>
-              </div>
-              <div className="min-w-0">
-                <div className="mb-2 flex items-center justify-between gap-3">
-                  <h3 className="text-sm font-semibold text-stone-900">{analyzer.topFixes}</h3>
-                  <button type="button" onClick={download} className="shrink-0 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">{analyzer.downloadReport}</button>
-                </div>
-                <TopFixes fixes={topFixes} />
-              </div>
+        <section ref={resultRef} className="grid scroll-mt-6 gap-12 pt-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-24" aria-live="polite">
+          <div>
+            <h2 className="lab">{analyzer.scoreHeading}</h2>
+            <ScoreRing score={report.score} tone={report.band.tone} className="mt-3" />
+            <p className="mt-5 flex items-center gap-2.5 text-2xl font-semibold tracking-[-0.02em]">
+              <StatusMark status={report.band.tone} />
+              {report.band.label}
+            </p>
+            <p className="lab mt-3 normal-case">{fileName} · {reportMetaSummary(m, report)}</p>
+            {delta && (
+              <p className="mt-2 text-sm font-semibold">
+                {delta.change > 0 ? analyzer.delta.up(delta.change, delta.previous) : delta.change < 0 ? analyzer.delta.down(-delta.change, delta.previous) : analyzer.delta.same(delta.previous)}
+              </p>
+            )}
+            <p className="mt-2 max-w-[24em] text-sm text-ink-2">{analyzer.estimateNote}</p>
+          </div>
+
+          <div className="min-w-0">
+            <h3 className="sr-only">{analyzer.topFixes}</h3>
+            <TopFixes fixes={topFixes} />
+            <div className="mt-5 flex flex-wrap gap-x-7">
+              <button type="button" onClick={download} className="alt">{analyzer.downloadReport}</button>
+              <button type="button" onClick={onAnother} className="alt">{analyzer.analyzeAnother}</button>
             </div>
 
-            {style && <HumanizationCard style={style} onOpen={() => setTab('style')} />}
-
-            {advisories.length > 0 && <AdvisoryCard advisories={advisories} />}
+            {advisories.length > 0 && <AdvisoryList advisories={advisories} />}
 
             {network && <NetworkNote report={network} />}
 
-            <div className="mt-4 flex sm:justify-end">
-              <nav className="grid w-full grid-cols-2 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium sm:flex sm:w-auto sm:shrink-0">
+            <details className="group mt-8 border-b border-rule">
+              <summary className="flex min-h-13 cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
+                {analyzer.details}
+                <span aria-hidden className="font-mono text-xl text-ink-2 group-open:hidden">+</span>
+                <span aria-hidden className="hidden font-mono text-xl text-ink-2 group-open:inline">−</span>
+              </summary>
+              <nav className="flex flex-wrap gap-x-1 border-b border-rule" aria-label={analyzer.details}>
                 {([['analyze', analyzer.tabs.analyze], ['style', analyzer.tabs.style], ['jd', analyzer.tabs.jd], ['data', analyzer.tabs.data]] as [Tab, string][]).map(([id, label]) => (
-                  <button key={id} type="button" onClick={() => setTab(id)} className={`rounded-md px-3 py-1.5 text-center transition ${tab === id ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>{label}</button>
+                  <button
+                    key={id}
+                    type="button"
+                    aria-pressed={tab === id}
+                    onClick={() => setTab(id)}
+                    className={`min-h-11 px-3 text-base font-medium transition-colors ${tab === id ? 'text-ink shadow-[inset_0_-2px_0_var(--color-ink)]' : 'text-ink-2 hover:text-ink'}`}
+                  >
+                    {label}
+                  </button>
                 ))}
               </nav>
-            </div>
-          </div>
-
-          {tab === 'analyze' && (
-            <div>
-              <div className="mt-6 grid gap-5 lg:grid-cols-2">
-                {categories.map((cat) => {
-                  const items = report.checks.filter((c) => c.category === cat)
-                  return (
-                    <div key={cat} className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-                      <div className="flex items-baseline justify-between border-b border-stone-100 pb-2">
-                        <h2 className="font-semibold text-stone-800">{m.analysis.categories[cat]}</h2>
-                        <span className="text-sm tabular-nums text-stone-400">{items.reduce((s, c) => s + c.points, 0)}/{items.reduce((s, c) => s + c.max, 0)}</span>
+              <div className="pb-10">
+              {tab === 'analyze' && (
+                <div>
+                  {categories.map((cat) => {
+                    const items = report.checks.filter((c) => c.category === cat)
+                    return (
+                      <div key={cat} className="mt-10 first:mt-6">
+                        <div className="flex items-baseline justify-between border-b border-ink pb-2">
+                          <h2 className="text-lg font-bold">{m.analysis.categories[cat]}</h2>
+                          <span className="font-mono text-sm font-semibold tabular-nums">
+                            {items.reduce((s, c) => s + c.points, 0)}/{items.reduce((s, c) => s + c.max, 0)}
+                            {delta?.categories[cat] ? (
+                              <span className="neon-block ml-2 px-1" title={analyzer.delta.category} aria-label={`${delta.categories[cat] > 0 ? '+' : '−'}${Math.abs(delta.categories[cat])}: ${analyzer.delta.category}`}>
+                                {delta.categories[cat] > 0 ? '+' : '−'}{Math.abs(delta.categories[cat])}
+                              </span>
+                            ) : null}
+                          </span>
+                        </div>
+                        <div>{items.map((c) => <CheckRow key={c.id} c={c} />)}</div>
                       </div>
-                      <div className="divide-y divide-stone-100">{items.map((c) => <CheckRow key={c.id} c={c} />)}</div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {tab === 'style' && !style && styleSkipped && (
-            <div className="rounded-2xl bg-white p-5 text-sm text-stone-600 shadow-sm ring-1 ring-stone-200">{analyzer.style.englishOnly}</div>
-          )}
-
-          {tab === 'style' && !style && styleTooShort && (
-            <div className="rounded-2xl bg-white p-5 text-sm text-stone-600 shadow-sm ring-1 ring-stone-200">{analyzer.style.tooShort}</div>
-          )}
-
-          {tab === 'style' && style && (
-            <div className="space-y-5">
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className={`text-3xl font-semibold tabular-nums ${STYLE_TONE[style.band.tone].text}`}>{style.score}</span>
-                  <span className="text-sm text-stone-500">{style.band.label} · {analyzer.style.counts(style.meta.sentences, style.meta.words)}</span>
-                </div>
-                <p className="mt-3 text-sm text-stone-600">
-                  {analyzer.style.intro} <strong>{analyzer.style.notDetector}</strong> {analyzer.style.introRest}
-                </p>
-                {locale !== 'en' && <p className="mt-2 text-sm text-stone-500">{analyzer.style.englishOnly}</p>}
-              </div>
-
-              <div className="grid gap-4 lg:grid-cols-2">
-                {style.signals.map((s) => <StyleRow key={s.id} s={s} />)}
-              </div>
-            </div>
-          )}
-
-          {tab === 'jd' && (
-            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-              <h2 className="font-semibold text-stone-800">{analyzer.jd.heading}</h2>
-              <p className="mt-1 text-sm text-stone-500">{analyzer.jd.blurb}</p>
-              {postings.map((text, i) => (
-                <div key={i} className="mt-3">
-                  {postings.length > 1 && (
-                    <div className="mb-1 flex items-center justify-between">
-                      <label htmlFor={`posting-${i}`} className="text-xs font-medium text-stone-500">{analyzer.jd.postingLabel(i + 1)}</label>
-                      <button type="button" onClick={() => setPostings((p) => p.filter((_, k) => k !== i))} className="text-xs text-stone-400 underline-offset-2 hover:text-stone-600 hover:underline">{analyzer.jd.removePosting}</button>
-                    </div>
-                  )}
-                  <textarea id={`posting-${i}`} value={text} onChange={(e) => setPostings((p) => p.map((t, k) => (k === i ? e.target.value : t)))} rows={6} placeholder={analyzer.jd.placeholder} className="w-full resize-y rounded-lg border border-stone-300 p-3 text-sm outline-none transition hover:border-stone-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
-                </div>
-              ))}
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <button type="button" onClick={runJd} disabled={!postings.some((t) => t.trim())} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">{analyzer.jd.button}</button>
-                {postings.length < MAX_POSTINGS && (
-                  <button type="button" onClick={() => setPostings((p) => [...p, ''])} className="rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">{analyzer.jd.addPosting}</button>
-                )}
-              </div>
-
-              {jdResults.length > 1 && (
-                <div className="mt-5 overflow-x-auto">
-                  <h3 className="text-sm font-medium text-stone-700">{analyzer.jd.compareHeading}</h3>
-                  <table className="mt-2 w-full text-left text-sm">
-                    <thead className="text-xs uppercase tracking-wide text-stone-400">
-                      <tr><th className="py-1 pr-3 font-medium">{analyzer.jd.colPosting}</th><th className="py-1 pr-3 font-medium">{analyzer.jd.colCoverage}</th><th className="py-1 font-medium">{analyzer.jd.colMissing}</th></tr>
-                    </thead>
-                    <tbody>
-                      {jdResults.map((r, i) => (
-                        <tr key={i} className={`border-t border-stone-200 ${i === selectedJd ? 'bg-indigo-50/60' : ''}`}>
-                          <td className="py-2 pr-3">
-                            <button type="button" aria-pressed={i === selectedJd} onClick={() => { setSelectedJd(i); setShowCv(false) }} className="text-left font-medium text-stone-800 underline-offset-2 hover:underline">{r.label}</button>
-                          </td>
-                          <td className="py-2 pr-3 tabular-nums">
-                            <span className={jdCoverageClass(r.match.coverage)}>{r.match.coverage}%</span>
-                            {r.match.coverage === bestCoverage && <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700 ring-1 ring-emerald-200">{analyzer.jd.bestMatch}</span>}
-                          </td>
-                          <td className="py-2 tabular-nums text-stone-600">{r.match.missing.length}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                    )
+                  })}
                 </div>
               )}
 
-              {jd && (
-                <div className="mt-5">
-                  <div className="flex items-center gap-3">
-                    <span className={`text-3xl font-semibold tabular-nums ${jdCoverageClass(jd.coverage)}`}>{jd.coverage}%</span>
-                    <span className="text-sm text-stone-500">{analyzer.jd.coverage} · {analyzer.jd.matchedOf(jd.matched.length, jd.total)}</span>
+              {tab === 'style' && !style && styleSkipped && (
+                <p className="mt-6 border-y border-rule py-5 text-ink-2">{analyzer.style.englishOnly}</p>
+              )}
+
+              {tab === 'style' && !style && styleTooShort && (
+                <p className="mt-6 border-y border-rule py-5 text-ink-2">{analyzer.style.tooShort}</p>
+              )}
+
+              {tab === 'style' && style && (
+                <div className="mt-6">
+                  <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                    <span className="text-5xl font-bold tabular-nums tracking-[-0.04em]">{style.score}</span>
+                    <span className="text-ink-2">{style.band.label} · {analyzer.style.counts(style.meta.sentences, style.meta.words)}</span>
                   </div>
-                  {jdSignals && (
-                    <ul className="mt-3 space-y-1 text-sm text-stone-600">
-                      {jdSignals.title.checked && (
-                        <li>{jdSignals.title.matched ? analyzer.jd.titleFound(jdSignals.title.matched) : analyzer.jd.titleNone}</li>
+                  <p className="mt-3 max-w-[42em] text-ink-2">
+                    {analyzer.style.intro} <strong className="font-semibold text-ink">{analyzer.style.notDetector}</strong> {analyzer.style.introRest}
+                  </p>
+                  {locale !== 'en' && <p className="mt-2 text-ink-2">{analyzer.style.englishOnly}</p>}
+                  <div className="mt-6 border-t-2 border-ink">
+                    {style.signals.map((s) => <StyleRow key={s.id} s={s} />)}
+                  </div>
+                </div>
+              )}
+
+              {tab === 'jd' && (
+                <div className="mt-6">
+                  <h2 className="text-lg font-bold">{analyzer.jd.heading}</h2>
+                  <p className="mt-1 max-w-[42em] text-ink-2">{analyzer.jd.blurb}</p>
+                  {postings.map(({ id, text }, i) => (
+                    <div key={id} className="mt-4">
+                      {postings.length > 1 && (
+                        <div className="mb-1 flex items-center justify-between">
+                          <label htmlFor={`posting-${id}`} className="text-sm text-ink-2">{analyzer.jd.postingLabel(i + 1)}</label>
+                          <button type="button" onClick={() => updatePostings(postings.filter((p) => p.id !== id))} className="text-sm text-ink-2 underline underline-offset-4 decoration-rule-2 hover:decoration-ink">{analyzer.jd.removePosting}</button>
+                        </div>
                       )}
-                      {jdSignals.asked !== null && (
-                        <li>
-                          {jdSignals.have === null
-                            ? analyzer.jd.yearsNoDates(jdSignals.asked)
-                            : jdSignals.have >= jdSignals.asked
-                              ? analyzer.jd.yearsMeets(jdSignals.asked, jdSignals.have)
-                              : analyzer.jd.yearsBelow(jdSignals.asked, jdSignals.have)}
-                        </li>
-                      )}
-                    </ul>
-                  )}
-                  {jd.missing.length > 0 && (
-                    <div className="mt-4">
-                      <h3 className="text-sm font-medium text-stone-700">{analyzer.jd.missing} <span className="font-normal text-stone-400">{analyzer.jd.missingHint}</span></h3>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {jd.missing.map((k) => (
-                          <span key={k.term} className="rounded-md bg-rose-50 px-2 py-1 text-xs text-rose-700 ring-1 ring-rose-200">
-                            {k.term}{k.priority === 'nice' && <span className="ml-1 text-rose-400">· {analyzer.jd.niceToHave}</span>}
-                          </span>
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => { void navigator.clipboard?.writeText(jd.missing.map((k) => k.term).join(', ')).then(() => { setCopiedMissing(true); setTimeout(() => setCopiedMissing(false), 1500) }) }}
-                        className="mt-2 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
-                      >
-                        {copiedMissing ? analyzer.jd.copied : analyzer.jd.copyMissing}
-                      </button>
+                      <textarea id={`posting-${id}`} value={text} onChange={(e) => updatePostings(postings.map((p) => (p.id === id ? { ...p, text: e.target.value } : p)))} rows={6} placeholder={analyzer.jd.placeholder} className="field resize-y" />
+                    </div>
+                  ))}
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <button type="button" onClick={runJd} disabled={!postings.some((p) => p.text.trim())} className="btn-sm bg-ink text-paper hover:bg-neon hover:text-on-neon">{analyzer.jd.button}</button>
+                    {postings.length < MAX_POSTINGS && (
+                      <button type="button" onClick={() => updatePostings([...postings, { id: nextPostingId.current++, text: '' }])} className="btn-sm">{analyzer.jd.addPosting}</button>
+                    )}
+                  </div>
+
+                  {jdResults.length > 1 && (
+                    <div className="mt-8 overflow-x-auto">
+                      <h3 className="font-semibold">{analyzer.jd.compareHeading}</h3>
+                      <table className="mt-2 w-full text-left text-sm">
+                        <thead className="lab border-b-2 border-ink">
+                          <tr><th className="py-2 pr-3 font-medium">{analyzer.jd.colPosting}</th><th className="py-2 pr-3 font-medium">{analyzer.jd.colCoverage}</th><th className="py-2 font-medium">{analyzer.jd.colMissing}</th></tr>
+                        </thead>
+                        <tbody>
+                          {jdResults.map((r, i) => (
+                            <tr key={r.id} className={`border-b border-rule ${i === selectedJd ? 'bg-panel' : ''}`}>
+                              <td className="py-2.5 pr-3">
+                                <button type="button" aria-pressed={i === selectedJd} onClick={() => { setSelectedJd(i); setShowCv(false) }} className="text-left font-semibold underline underline-offset-4 decoration-rule-2 hover:decoration-ink">{r.label}</button>
+                              </td>
+                              <td className="py-2.5 pr-3 tabular-nums">
+                                {r.match.coverage}%
+                                {r.match.coverage === bestCoverage && <span className="neon-block ml-2 px-1.5 py-0.5 text-xs font-semibold">{analyzer.jd.bestMatch}</span>}
+                              </td>
+                              <td className="py-2.5 tabular-nums">{r.match.missing.length}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   )}
-                  {jd.matched.length > 0 && (
-                    <div className="mt-4">
-                      <h3 className="text-sm font-medium text-stone-700">{analyzer.jd.covered}</h3>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {jd.matched.map((k) => (
-                          <span key={k.term} className="rounded-md bg-emerald-50 px-2 py-1 text-xs text-emerald-700 ring-1 ring-emerald-200">
-                            {k.term}{k.where === 'skills' && <span className="ml-1 text-amber-600">· {analyzer.jd.onlySkills}</span>}
-                          </span>
-                        ))}
+
+                  {jd && (
+                    <div className="mt-8">
+                      <div className="flex items-baseline gap-4">
+                        <span className="text-5xl font-bold tabular-nums tracking-[-0.04em]">{jd.coverage}%</span>
+                        <span className="text-ink-2">{analyzer.jd.coverage} · {analyzer.jd.matchedOf(jd.matched.length, jd.total)}</span>
                       </div>
-                      {jd.matched.some((k) => k.where === 'skills') && <p className="mt-2 text-xs text-stone-500">{analyzer.jd.onlySkillsHint}</p>}
-                    </div>
-                  )}
-                  {cvSegments && jd.matched.length > 0 && (
-                    <div className="mt-4">
-                      <button
-                        type="button"
-                        onClick={() => setShowCv((v) => !v)}
-                        aria-expanded={showCv}
-                        className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
-                      >
-                        {showCv ? analyzer.jd.hideCv : analyzer.jd.showCv}
-                      </button>
-                      {showCv && (
-                        <>
-                          <p className="mt-2 text-xs text-stone-500">{analyzer.jd.highlightHint}</p>
-                          <div className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg bg-stone-50 p-3 text-sm leading-6 text-stone-700 ring-1 ring-stone-200">
-                            {cvSegments.map((seg, i) => (seg.hit ? <mark key={i} className="rounded bg-emerald-100 px-0.5 text-emerald-900">{seg.text}</mark> : <span key={i}>{seg.text}</span>))}
+                      {jdSignals && (
+                        <ul className="mt-3 space-y-1 text-ink-2">
+                          {jdSignals.title.checked && (
+                            <li>{jdSignals.title.matched ? analyzer.jd.titleFound(jdSignals.title.matched) : analyzer.jd.titleNone}</li>
+                          )}
+                          {jdSignals.asked !== null && (
+                            <li>
+                              {jdSignals.have === null
+                                ? analyzer.jd.yearsNoDates(jdSignals.asked)
+                                : jdSignals.have >= jdSignals.asked
+                                  ? analyzer.jd.yearsMeets(jdSignals.asked, jdSignals.have)
+                                  : analyzer.jd.yearsBelow(jdSignals.asked, jdSignals.have)}
+                            </li>
+                          )}
+                        </ul>
+                      )}
+                      {jd.missing.length > 0 && (
+                        <div className="mt-6">
+                          <h3 className="font-semibold">{analyzer.jd.missing} <span className="font-normal text-ink-2">{analyzer.jd.missingHint}</span></h3>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {jd.missing.map((k) => (
+                              <span key={k.term} className="neon-block px-2 py-1 text-sm font-medium">
+                                {k.term}{k.priority === 'nice' && <span className="ml-1 opacity-70">· {analyzer.jd.niceToHave}</span>}
+                              </span>
+                            ))}
                           </div>
-                        </>
+                          <button
+                            type="button"
+                            onClick={() => { void navigator.clipboard?.writeText(jd.missing.map((k) => k.term).join(', ')).then(() => { setCopiedMissing(true); setTimeout(() => setCopiedMissing(false), 1500) }) }}
+                            className="btn-sm mt-3"
+                          >
+                            {copiedMissing ? analyzer.jd.copied : analyzer.jd.copyMissing}
+                          </button>
+                        </div>
+                      )}
+                      {jd.matched.length > 0 && (
+                        <div className="mt-6">
+                          <h3 className="font-semibold">{analyzer.jd.covered}</h3>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {jd.matched.map((k) => (
+                              <span key={k.term} className="border border-rule-2 px-2 py-1 text-sm">
+                                {k.term}{k.where === 'skills' && <span className="ml-1 text-ink-2">· {analyzer.jd.onlySkills}</span>}
+                              </span>
+                            ))}
+                          </div>
+                          {jd.matched.some((k) => k.where === 'skills') && <p className="mt-2 text-sm text-ink-2">{analyzer.jd.onlySkillsHint}</p>}
+                        </div>
+                      )}
+                      {cvSegments && jd.matched.length > 0 && (
+                        <div className="mt-6">
+                          <button type="button" onClick={() => setShowCv((v) => !v)} aria-expanded={showCv} className="btn-sm">
+                            {showCv ? analyzer.jd.hideCv : analyzer.jd.showCv}
+                          </button>
+                          {showCv && (
+                            <>
+                              <p className="mt-3 text-sm text-ink-2">{analyzer.jd.highlightHint}</p>
+                              <div className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap border border-rule bg-panel p-3 text-sm leading-6">
+                                {withOffsets(cvSegments).map((seg) => (seg.hit ? <mark key={seg.start} className="bg-neon px-0.5 text-on-neon">{seg.text}</mark> : <span key={seg.start}>{seg.text}</span>))}
+                              </div>
+                            </>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}
                 </div>
               )}
-            </div>
-          )}
 
-          {tab === 'data' && (
-            <div className="space-y-5">
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-                <h2 className="mb-2 font-semibold text-stone-800">{analyzer.data.profile}</h2>
-                <dl className="grid grid-cols-[7rem_1fr] gap-y-1.5 text-sm">
-                  {([[analyzer.data.fields.name, resume.profile.name], [analyzer.data.fields.email, resume.profile.email], [analyzer.data.fields.phone, resume.profile.phone], [analyzer.data.fields.location, resume.profile.location], [analyzer.data.fields.links, resume.profile.links.join('  ·  ')]] as [string, string][]).map(([k, v]) => (
-                    <div key={k} className="contents"><dt className="text-stone-400">{k}</dt><dd className={v ? 'text-stone-800' : 'text-rose-500'}>{v || analyzer.data.notDetected}</dd></div>
-                  ))}
-                </dl>
-                <p className="mt-2 text-xs text-stone-400">{analyzer.data.profileNote}</p>
-              </div>
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-                <h2 className="mb-3 font-semibold text-stone-800">{analyzer.data.experience} <span className="text-sm font-normal text-stone-400">{analyzer.data.parsed(resume.experience.length)}</span></h2>
-                <div className="space-y-3">
-                  {resume.experience.map((e) => (
-                    <div key={experienceKey(e)} className="border-l-2 border-stone-200 pl-3">
-                      <div className="flex flex-wrap items-baseline justify-between gap-2"><span className="font-medium text-stone-800">{e.title}{e.company && <span className="font-normal text-stone-500"> — {e.company}</span>}</span><span className="text-xs text-stone-400">{e.date}</span></div>
-                      <p className="text-xs text-stone-400">{analyzer.data.bullets(e.bullets.length)}</p>
+              {tab === 'data' && (
+                <div className="mt-6 space-y-10">
+                  <div>
+                    <h2 className="border-b border-ink pb-2 text-lg font-bold">{analyzer.data.profile}</h2>
+                    <dl className="mt-2 grid grid-cols-[7rem_minmax(0,1fr)]">
+                      {([[analyzer.data.fields.name, resume.profile.name], [analyzer.data.fields.email, resume.profile.email], [analyzer.data.fields.phone, resume.profile.phone], [analyzer.data.fields.location, resume.profile.location], [analyzer.data.fields.links, resume.profile.links.join('  ·  ')]] as [string, string][]).map(([k, v]) => (
+                        <div key={k} className="contents">
+                          <dt className="border-b border-rule py-2.5 text-ink-2">{k}</dt>
+                          <dd className="min-w-0 break-words border-b border-rule py-2.5">{v || <span className="neon-block px-1.5 py-0.5">{analyzer.data.notDetected}</span>}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <p className="mt-3 text-sm text-ink-2">{analyzer.data.profileNote}</p>
+                  </div>
+                  <div>
+                    <h2 className="border-b border-ink pb-2 text-lg font-bold">{analyzer.data.experience} <span className="font-normal text-ink-2">{analyzer.data.parsed(resume.experience.length)}</span></h2>
+                    <div>
+                      {resume.experience.map((e) => (
+                        <div key={experienceKey(e)} className="border-b border-rule py-3">
+                          <div className="flex flex-wrap items-baseline justify-between gap-2"><span className="font-semibold">{e.title}{e.company && <span className="font-normal text-ink-2"> — {e.company}</span>}</span><span className="font-mono text-xs text-ink-2">{e.date}</span></div>
+                          <p className="text-sm text-ink-2">{analyzer.data.bullets(e.bullets.length)}</p>
+                        </div>
+                      ))}
+                      {!resume.experience.length && <p className="py-3"><span className="neon-block px-1.5 py-0.5">{analyzer.data.noExperience}</span></p>}
                     </div>
-                  ))}
-                  {!resume.experience.length && <p className="text-sm text-rose-500">{analyzer.data.noExperience}</p>}
+                  </div>
+                  <div className="grid gap-10 sm:grid-cols-2">
+                    <div>
+                      <h2 className="border-b border-ink pb-2 text-lg font-bold">{analyzer.data.education} <span className="font-normal text-ink-2">({resume.education.length})</span></h2>
+                      {resume.education.map((e) => <p key={educationKey(e)} className="border-b border-rule py-3">{e.degree || e.school}<span className="text-ink-2"> · {e.date}</span></p>)}
+                      {!resume.education.length && <p className="py-3"><span className="neon-block px-1.5 py-0.5">{analyzer.data.noneParsed}</span></p>}
+                    </div>
+                    <div>
+                      <h2 className="border-b border-ink pb-2 text-lg font-bold">{analyzer.data.skills} <span className="font-normal text-ink-2">({resume.skills.length})</span></h2>
+                      <div className="mt-3 flex flex-wrap gap-1.5">{resume.skills.slice(0, 30).map((s) => <span key={s} className="border border-rule-2 px-2 py-0.5 text-sm">{s}</span>)}</div>
+                      {!resume.skills.length && <p className="py-3"><span className="neon-block px-1.5 py-0.5">{analyzer.data.noneParsed}</span></p>}
+                    </div>
+                  </div>
                 </div>
+              )}
               </div>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-                  <h2 className="mb-3 font-semibold text-stone-800">{analyzer.data.education} <span className="text-sm font-normal text-stone-400">({resume.education.length})</span></h2>
-                  {resume.education.map((e) => <p key={educationKey(e)} className="text-sm text-stone-700">{e.degree || e.school}<span className="text-stone-400"> · {e.date}</span></p>)}
-                  {!resume.education.length && <p className="text-sm text-rose-500">{analyzer.data.noneParsed}</p>}
-                </div>
-                <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-                  <h2 className="mb-3 font-semibold text-stone-800">{analyzer.data.skills} <span className="text-sm font-normal text-stone-400">({resume.skills.length})</span></h2>
-                  <div className="flex flex-wrap gap-1.5">{resume.skills.slice(0, 30).map((s) => <span key={s} className="rounded bg-stone-100 px-2 py-0.5 text-xs text-stone-600">{s}</span>)}</div>
-                  {!resume.skills.length && <p className="text-sm text-rose-500">{analyzer.data.noneParsed}</p>}
-                </div>
-              </div>
-            </div>
-          )}
+            </details>
+          </div>
         </section>
       )}
     </div>

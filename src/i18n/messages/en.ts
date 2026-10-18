@@ -63,62 +63,25 @@ export const en = {
     header: {
       primaryMode: 'Primary app mode',
       analyze: 'Fast ATS Score',
-      build: 'Build',
-      github: 'GitHub',
-      githubAria: 'Open source on GitHub',
-    },
-    hero: {
-      badge: '100% in-browser resume analysis',
-      h1: 'Free CV ATS score checker. Private by default.',
-      lead: 'Get your CV ATS score from a PDF or DOCX in seconds, see the highest-impact fixes first, match keywords, and build an ATS-clean resume without uploads, accounts, or LLM calls.',
-      check: 'Check my resume',
-      build: 'Build ATS-clean CV',
-      runsInBrowser: 'Runs in your browser',
-      noUploads: 'No uploads',
-      noLlm: 'No LLM',
-      pdfDocx: 'PDF & DOCX',
+      build: 'CV builder',
       openSource: 'Open source',
     },
-    heroCard: {
-      localParse: 'in your browser',
-      noUpload: 'No upload',
-      noLlm: 'No LLM',
-      pdfDocx: 'PDF/DOCX',
-    },
-    heroMini: {
-      aria: 'Preview of local ATS scoring',
-      localParse: 'In your browser',
-      caption: 'Score, top fixes, keyword signals',
-      categories: ['Parseability', 'Sections', 'Content'],
-    },
-    how: {
-      aria: 'How the local ATS resume checker works',
-      steps: [
-        { title: 'Choose PDF/DOCX', body: 'Pick a resume file from your device.' },
-        { title: 'Parse in your browser', body: 'Text extraction and scoring run in this browser.' },
-        { title: 'Fix the top issues', body: 'See score, breakdown, keywords, and exportable notes.' },
-      ],
-      noServerUpload: 'No server upload',
-      deterministic: 'Deterministic checks, no LLM calls',
-      openSourceMit: 'Open source, MIT license',
+    hero: {
+      h1: 'Free CV ATS score checker\nPrivate by default',
+      check: 'Check my resume',
+      // Said right under the headline: where it runs, and three things it does not need.
+      // What a report looks like, drawn from the scorer's own labels; the numbers are an example.
+      example: 'Example',
+      runs: 'Runs in your browser',
+      facts: ['No account', 'No AI', 'No upload to server'],
     },
     loading: {
       score: 'Loading fast ATS score…',
       builder: 'Loading builder…',
     },
-    trust: {
-      aria: 'Privacy and trust notes',
-      heading: 'Privacy claims you can inspect.',
-      body: 'The code is open source under the MIT license, and the product promise stays narrow: local document parsing, deterministic scoring, no account wall, and no AI model call hidden behind the interface.',
-      cards: [
-        { title: 'Browser-side parser', body: 'PDF and DOCX text is extracted in the browser with client-side libraries.' },
-        { title: 'No LLM scoring', body: 'Scores come from repeatable checks for parseability, sections, format, and content signals.' },
-      ],
-      repoTitle: 'Open source on GitHub',
-      repoBody: 'MIT-licensed. Read the scoring checks, parser, and export flow, open an issue, or send a pull request.',
-    },
     faq: {
       aria: 'ATS resume checker FAQ',
+      heading: 'FAQ',
       items: [
         { q: 'What is an ATS score?', a: 'A fast heuristic check for parser-friendly text, contact details, sections, dates, bullets, and measurable impact.' },
         { q: 'Is my CV uploaded?', a: 'No. PDF and DOCX files are processed locally in your browser and are not sent to a server.' },
@@ -128,7 +91,11 @@ export const en = {
         { q: 'Can the score be biased?', a: 'There is no model and no training data, so there is no dataset to be biased. The rules still carry assumptions, such as the section headings and CV conventions they accept, and the writing-style check covers English CVs only and can flag good writing. It is not an AI detector. Nothing is decided about you: each point shows the rule behind it, and you decide what to change.' },
       ],
     },
-    guides: { aria: 'Guides', heading: 'Guides' },
+    guides: {
+      aria: 'Guides',
+      heading: 'Guides',
+      description: 'Guides on how ATS resume parsing works, what an ATS score measures, PDF or DOCX, and a checklist of what to fix first. Plain answers, no hype.',
+    },
     footer: {
       disclaimer: 'Heuristic guidance, not a guarantee. Built by',
       author: 'Maksym Shykov',
@@ -155,9 +122,6 @@ export const en = {
     published: 'Published',
     updated: 'Updated',
     by: 'by',
-    footerRuns: 'runs in your browser.',
-    footerNo: 'No uploads, no accounts, no tracking.',
-    openSource: 'Open source on GitHub',
     bonusPoints: (points: number) => `${points} (bonus)`,
   },
 
@@ -166,8 +130,8 @@ export const en = {
     analyzed: 'Analyzed',
     analyzeAnother: 'Analyze another CV',
     dropBusy: 'Scoring your CV…',
-    dropIdle: 'Drop your CV here for a fast ATS score',
-    dropHint: 'PDF or DOCX · runs in your browser · no upload · no LLM',
+    dropIdle: 'Drop a PDF or DOCX here',
+    chooseButton: 'Choose file',
     chooseFile: 'Please choose a PDF or DOCX file.',
     // `stage` is one of the stage names below.
     failed: (stage: string) => `Analysis failed while ${stage}. Please tap “Copy details” and send them to me.`,
@@ -179,6 +143,7 @@ export const en = {
       up: (n: number, previous: number) => `+${n} since the previous file (${previous})`,
       down: (n: number, previous: number) => `−${n} since the previous file (${previous})`,
       same: (previous: number) => `Same score as the previous file (${previous})`,
+      category: 'Change in this category since the previous file',
     },
     network: {
       summary: 'Check what this page sent',
@@ -191,14 +156,9 @@ export const en = {
     noPriorityFixes: 'No priority fixes found. The remaining report is mostly confirmation.',
     fix: 'Fix:',
     tabs: { analyze: 'Full report', style: 'Writing style', jd: 'Job match', data: 'Extracted data' },
+    details: 'Full report and details',
     pages: (n: number) => `${n} ${n === 1 ? 'page' : 'pages'}`,
     reportMeta: (pages: string, words: string, chars: string) => `${pages ? pages + ' · ' : ''}${words} words · ${chars} readable characters.`,
-    humanization: {
-      title: 'Humanization score',
-      blurb: 'How natural the writing reads: rhythm, filler, repeated openers, passive voice. Not an AI detector.',
-      none: 'No writing habits flagged.',
-      all: 'All writing checks →',
-    },
     style: {
       tooShort: 'There is not enough text to judge the writing style.',
       counts: (sentences: number, words: number) => `${sentences} sentences, ${words} words`,
@@ -243,7 +203,7 @@ export const en = {
       profile: 'Profile',
       fields: { name: 'Name', email: 'Email', phone: 'Phone', location: 'Location', links: 'Links' },
       notDetected: 'not detected',
-      profileNote: 'This is what an ATS-style parser pulls out. Blank fields in red usually mean a formatting issue.',
+      profileNote: 'This is what an ATS-style parser pulls out. Highlighted blank fields usually mean a formatting issue.',
       experience: 'Experience',
       parsed: (n: number) => `(${n} parsed)`,
       bullets: (n: number) => `${n} bullet${n === 1 ? '' : 's'}`,
@@ -376,7 +336,9 @@ export const en = {
   },
 
   builder: {
-    intro: 'Build an ATS-clean resume with plain text, standard sections, and a live preview. Import an existing CV, tune the layout, then export a selectable single-column PDF.',
+    heading: 'ATS-clean CV builder',
+    // <meta name="description"> of the Build page.
+    description: 'Build an ATS-clean CV in your browser: plain text, standard sections, live score and preview, then export a selectable PDF. No upload, no account.',
     liveScore: 'Live score',
     importCv: 'Import CV',
     exportPdf: '↓ Export PDF',
@@ -390,7 +352,6 @@ export const en = {
     fileName: (name: string) => `${(name || 'resume').replace(/\s+/g, '_')}_CV.pdf`,
     profile: {
       title: 'Profile',
-      hint: 'Keep contact details plain-text so parsers can read them.',
       fullName: 'Full name',
       email: 'Email',
       phone: 'Phone',
@@ -401,7 +362,6 @@ export const en = {
     },
     experience: {
       title: 'Experience',
-      hint: 'Use action verbs, measurable impact, and one result per bullet.',
       add: 'Add',
       moveUp: 'Move role up',
       moveDown: 'Move role down',
@@ -416,12 +376,10 @@ export const en = {
     },
     skills: {
       title: 'Skills',
-      hint: 'Separate skills by comma or line break; keep terms recruiter-friendly.',
       field: 'Skills (comma or new-line separated)',
     },
     projects: {
       title: 'Projects',
-      hint: 'Optional, best for proof of ownership or portfolio-worthy work.',
       add: 'Add',
       delete: 'Delete project',
       name: 'Name',
@@ -430,7 +388,6 @@ export const en = {
     },
     education: {
       title: 'Education',
-      hint: 'Keep dates and degree names consistent with your experience section.',
       add: 'Add',
       delete: 'Delete education',
       degree: 'Degree',
@@ -440,7 +397,6 @@ export const en = {
     },
     settings: {
       title: 'Document settings',
-      blurb: 'Affects preview and exported PDF.',
       pagePreview: (size: string) => `${size} preview`,
       accent: 'Accent',
       useAccent: (color: string) => `Use ${color} accent`,

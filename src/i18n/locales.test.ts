@@ -20,8 +20,9 @@ async function messagesOf(code: string): Promise<Messages> {
 }
 
 // String leaves that may legitimately equal the English text: names, acronyms,
-// file formats, units, and the sample CV's proper nouns.
-const MAY_MATCH_ENGLISH = [/^[A-Z0-9/&+. ,-]{1,12}$/, /^\+?[\d ]+$/, /@/, /^linkedin\.com|github\.com/, /^(Alex Morgan|Acme Corp|ATS Resume Toolkit|GitHub|CI\/CD|PDF\/DOCX|PDF & DOCX|A4|Agile|LLM|Maksym Shykov)$/, /^[\d\s:.,;·–—\-/%+×]+$/]
+// file formats, units, the sample CV's proper nouns, and words that are the same
+// word in English and French (Guides, Contact, Format, Description…).
+const MAY_MATCH_ENGLISH = [/^[A-Z0-9/&+. ,-]{1,12}$/, /^\+?[\d ]+$/, /@/, /^linkedin\.com|github\.com/, /^(Alex Morgan|Acme Corp|ATS Resume Toolkit|GitHub|CI\/CD|PDF\/DOCX|PDF & DOCX|A4|Agile|LLM|Maksym Shykov)$/, /^[\d\s:.,;·–—\-/%+×]+$/, /^(Guides|Contact|Format|Dates?|Description|Page|Letter|Certifications?)$/]
 
 function leaves(value: unknown, path: string[] = []): { path: string; value: unknown }[] {
   if (typeof value === 'string' || typeof value === 'function') return [{ path: path.join('.'), value }]

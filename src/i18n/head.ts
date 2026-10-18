@@ -1,7 +1,7 @@
 // The <head> tags that differ per page and per language, as strings. Used by the
 // prerender script; kept in TypeScript so seo.test.ts can check them.
 import type { Article } from '../content/types.ts'
-import { LOCALES, absolute, guidePath, homePath, localeInfo, type Locale } from './locales.ts'
+import { LOCALES, absolute, buildPath, guidePath, guidesPath, homePath, localeInfo, type Locale } from './locales.ts'
 import { ogImage, type Alternate } from './seo.ts'
 import type { Messages } from './messages/en.ts'
 
@@ -75,6 +75,34 @@ export function homeHead(locale: Locale, m: Messages, alternates: AnyAlternate[]
     ogDescription: m.meta.ogDescription,
     twitterDescription: m.meta.twitterDescription,
     path: homePath(locale),
+    type: 'website',
+  })
+}
+
+export function buildHead(locale: Locale, m: Messages, alternates: AnyAlternate[], jsonLd: unknown): string {
+  const title = `${m.builder.heading} | ${m.brand}`
+  return head({
+    locale, m, alternates, jsonLd,
+    title,
+    description: m.builder.description,
+    ogTitle: title,
+    ogDescription: m.builder.description,
+    twitterDescription: m.builder.description,
+    path: buildPath(locale),
+    type: 'website',
+  })
+}
+
+export function guidesHead(locale: Locale, m: Messages, alternates: AnyAlternate[], jsonLd: unknown): string {
+  const title = `${m.home.guides.heading} | ${m.brand}`
+  return head({
+    locale, m, alternates, jsonLd,
+    title,
+    description: m.home.guides.description,
+    ogTitle: title,
+    ogDescription: m.home.guides.description,
+    twitterDescription: m.home.guides.description,
+    path: guidesPath(locale),
     type: 'website',
   })
 }

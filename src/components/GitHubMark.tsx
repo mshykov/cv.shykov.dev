@@ -1,5 +1,3 @@
-export const REPO_URL = 'https://github.com/mshykov/cv.shykov.dev'
-
 export function GitHubMark({ className = 'h-4 w-4' }: Readonly<{ className?: string }>) {
   return (
     <svg className={className} aria-hidden viewBox="0 0 24 24" fill="currentColor">
