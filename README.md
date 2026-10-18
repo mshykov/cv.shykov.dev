@@ -149,6 +149,9 @@ The Job match tab extracts the keywords a pasted posting emphasises and checks y
   with the span from your earliest dated role to today. A comparison of numbers, not a verdict.
 - **Your CV with the matches highlighted.** Matched keywords (and their listed equivalents) are marked in
   the extracted text of your CV, on request. It is rendered from plain text, never as HTML.
+- **Compare up to five postings.** Add more postings, match them all against the same CV, and read
+  a table of coverage and missing keywords with the best match marked; pick a row to see its detail.
+  The postings stay when you analyse another CV, so you can try the same ones against a new version.
 - **Copy the missing list** with one click.
 
 The history of every change that moved a score is in [docs/scoring-changelog.md](docs/scoring-changelog.md).

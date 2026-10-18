@@ -53,6 +53,7 @@ const PROBES: Record<string, unknown[]> = {
   'analysis.advisories.longBullets.detail': [3],
   'analysis.advisories.fileName.detail': ['PROBE'],
   'analysis.advisories.properties.detail': ['PROBE', 'PROBE2'],
+  'analyzer.jd.postingLabel': [2],
   'analyzer.jd.titleFound': ['PROBE'],
   'analyzer.jd.yearsMeets': [8, 15],
   'analyzer.jd.yearsBelow': [8, 3],

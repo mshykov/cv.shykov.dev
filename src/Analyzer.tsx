@@ -6,6 +6,20 @@ import { isSupportedDocument } from './lib/filetype.ts'
 import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { Segment, TitleMatch } from './lib/jdsignals'
+
+// One posting matched against the CV: its label, the keyword match, the extra signals and the highlighted CV.
+interface JdResult {
+  label: string
+  match: JDMatch
+  signals: { title: TitleMatch; asked: number | null; have: number | null }
+  segments: Segment[]
+}
+const MAX_POSTINGS = 5
+/** A posting's name: its first non-empty line, shortened. */
+const postingName = (text: string, fallback: string) => {
+  const first = text.split(/\r?\n/).map((l) => l.trim()).find(Boolean)
+  return first ? (first.length > 60 ? `${first.slice(0, 57)}…` : first) : fallback
+}
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
 import type { Advisory } from './lib/advisories'
 import { deltaBetween, snapshotOf, type Delta, type Snapshot } from './lib/delta'
@@ -250,12 +264,15 @@ export default function Analyzer() {
   const [errDetail, setErrDetail] = useState('')
   const [drag, setDrag] = useState(false)
   const [tab, setTab] = useState<Tab>('analyze')
-  const [jdText, setJdText] = useState('')
-  const [jd, setJd] = useState<JDMatch | null>(null)
-  // What the posting says beyond keywords: a title of yours, and the years of experience it asks for.
-  const [jdSignals, setJdSignals] = useState<{ title: TitleMatch; asked: number | null; have: number | null } | null>(null)
-  // The CV text split into plain and highlighted runs (matched keywords), shown on request.
-  const [cvSegments, setCvSegments] = useState<Segment[] | null>(null)
+  // Up to MAX_POSTINGS postings, kept when a new CV is analysed so the same ones can be tried against it.
+  const [postings, setPostings] = useState<string[]>([''])
+  const [jdResults, setJdResults] = useState<JdResult[]>([])
+  const [selectedJd, setSelectedJd] = useState(0)
+  const currentJd = jdResults[selectedJd] ?? null
+  const jd = currentJd?.match ?? null
+  const jdSignals = currentJd?.signals ?? null
+  const cvSegments = currentJd?.segments ?? null
+  const bestCoverage = jdResults.length > 1 ? Math.max(...jdResults.map((r) => r.match.coverage)) : -1
   const [showCv, setShowCv] = useState(false)
   const [copiedMissing, setCopiedMissing] = useState(false)
   const [style, setStyle] = useState<StyleReport | null>(null)
@@ -278,7 +295,7 @@ export default function Analyzer() {
 
   const run = useCallback(async (file: File) => {
     const id = (runId.current += 1)
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setJdSignals(null); setCvSegments(null); setShowCv(false); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([]); setNetwork(null)
+    setError(''); setErrDetail(''); setReport(null); setResume(null); setJdResults([]); setSelectedJd(0); setShowCv(false); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([]); setNetwork(null)
     if (!isSupportedDocument(file)) { setError(analyzer.chooseFile); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
     // Everything the page requests from here on belongs to this file: see NetworkNote.
@@ -327,22 +344,31 @@ export default function Analyzer() {
   }, [run])
 
   const runJd = useCallback(async () => {
-    if (!resume || !jdText.trim()) return
+    const filled = postings.map((text, i) => ({ text, i })).filter(({ text }) => text.trim())
+    if (!resume || filled.length === 0) return
     const id = runId.current
     const [{ matchJD }, signals] = await Promise.all([import('./lib/jdmatch'), import('./lib/jdsignals')])
     // A new CV may have finished analyzing during that import; its own reset
-    // already cleared `jd`, and this match belongs to the previous document.
+    // already cleared the results, and these belong to the previous document.
     if (runId.current !== id) return
-    const match = matchJD(cvText, resume.skills, jdText, { experienceText: resume.experience.flatMap((e) => [e.title, e.company, ...e.bullets]).join('\n') })
-    setJd(match)
-    setJdSignals({
-      title: signals.titleMatch(jdText, resume.experience.map((e) => e.title)),
-      asked: signals.yearsAsked(jdText),
-      have: signals.yearsSpanned(resume.experience.map((e) => e.date), new Date().getFullYear()),
+    const experienceText = resume.experience.flatMap((e) => [e.title, e.company, ...e.bullets]).join('\n')
+    const results = filled.map(({ text, i }): JdResult => {
+      const match = matchJD(cvText, resume.skills, text, { experienceText })
+      return {
+        label: postingName(text, analyzer.jd.postingLabel(i + 1)),
+        match,
+        signals: {
+          title: signals.titleMatch(text, resume.experience.map((e) => e.title)),
+          asked: signals.yearsAsked(text),
+          have: signals.yearsSpanned(resume.experience.map((e) => e.date), new Date().getFullYear()),
+        },
+        segments: signals.highlight(cvText, match.matched.flatMap((k) => signals.variantsOf(k.term))),
+      }
     })
-    setCvSegments(signals.highlight(cvText, match.matched.flatMap((k) => signals.variantsOf(k.term))))
+    setJdResults(results)
+    setSelectedJd(0)
     setShowCv(false)
-  }, [resume, cvText, jdText])
+  }, [resume, cvText, postings, analyzer])
 
   const download = useCallback(async () => {
     if (!report || !resume) return
@@ -515,8 +541,48 @@ export default function Analyzer() {
             <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
               <h2 className="font-semibold text-stone-800">{analyzer.jd.heading}</h2>
               <p className="mt-1 text-sm text-stone-500">{analyzer.jd.blurb}</p>
-              <textarea value={jdText} onChange={(e) => setJdText(e.target.value)} rows={6} placeholder={analyzer.jd.placeholder} className="mt-3 w-full resize-y rounded-lg border border-stone-300 p-3 text-sm outline-none transition hover:border-stone-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
-              <button type="button" onClick={runJd} disabled={!jdText.trim()} className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">{analyzer.jd.button}</button>
+              {postings.map((text, i) => (
+                <div key={i} className="mt-3">
+                  {postings.length > 1 && (
+                    <div className="mb-1 flex items-center justify-between">
+                      <label htmlFor={`posting-${i}`} className="text-xs font-medium text-stone-500">{analyzer.jd.postingLabel(i + 1)}</label>
+                      <button type="button" onClick={() => setPostings((p) => p.filter((_, k) => k !== i))} className="text-xs text-stone-400 underline-offset-2 hover:text-stone-600 hover:underline">{analyzer.jd.removePosting}</button>
+                    </div>
+                  )}
+                  <textarea id={`posting-${i}`} value={text} onChange={(e) => setPostings((p) => p.map((t, k) => (k === i ? e.target.value : t)))} rows={6} placeholder={analyzer.jd.placeholder} className="w-full resize-y rounded-lg border border-stone-300 p-3 text-sm outline-none transition hover:border-stone-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+                </div>
+              ))}
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <button type="button" onClick={runJd} disabled={!postings.some((t) => t.trim())} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40">{analyzer.jd.button}</button>
+                {postings.length < MAX_POSTINGS && (
+                  <button type="button" onClick={() => setPostings((p) => [...p, ''])} className="rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50">{analyzer.jd.addPosting}</button>
+                )}
+              </div>
+
+              {jdResults.length > 1 && (
+                <div className="mt-5 overflow-x-auto">
+                  <h3 className="text-sm font-medium text-stone-700">{analyzer.jd.compareHeading}</h3>
+                  <table className="mt-2 w-full text-left text-sm">
+                    <thead className="text-xs uppercase tracking-wide text-stone-400">
+                      <tr><th className="py-1 pr-3 font-medium">{analyzer.jd.colPosting}</th><th className="py-1 pr-3 font-medium">{analyzer.jd.colCoverage}</th><th className="py-1 font-medium">{analyzer.jd.colMissing}</th></tr>
+                    </thead>
+                    <tbody>
+                      {jdResults.map((r, i) => (
+                        <tr key={i} className={`border-t border-stone-200 ${i === selectedJd ? 'bg-indigo-50/60' : ''}`}>
+                          <td className="py-2 pr-3">
+                            <button type="button" aria-pressed={i === selectedJd} onClick={() => { setSelectedJd(i); setShowCv(false) }} className="text-left font-medium text-stone-800 underline-offset-2 hover:underline">{r.label}</button>
+                          </td>
+                          <td className="py-2 pr-3 tabular-nums">
+                            <span className={jdCoverageClass(r.match.coverage)}>{r.match.coverage}%</span>
+                            {r.match.coverage === bestCoverage && <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700 ring-1 ring-emerald-200">{analyzer.jd.bestMatch}</span>}
+                          </td>
+                          <td className="py-2 tabular-nums text-stone-600">{r.match.missing.length}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
 
               {jd && (
                 <div className="mt-5">
