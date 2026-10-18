@@ -36,7 +36,6 @@ export const ptBR: Messages = {
     headline: ['Pontuação ATS grátis.', 'Privada por padrão.'],
     sub: ['Pontue PDF/DOCX em segundos.', 'Sem envio, cadastro ou LLM.'],
     chips: ['Roda no navegador', 'Sem envio', 'Sem LLM'],
-    cardLabel: 'No navegador',
   },
 
   languages: {

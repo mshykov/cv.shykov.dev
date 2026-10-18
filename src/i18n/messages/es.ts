@@ -37,7 +37,6 @@ export const es: Messages = {
     headline: ['Puntuación ATS rápida.', 'Privado por defecto.'],
     sub: ['Puntúa archivos PDF/DOCX en segundos.', 'Sin subidas, cuentas ni llamadas a LLM.'],
     chips: ['En tu navegador', 'Sin subidas', 'Sin LLM'],
-    cardLabel: 'En tu navegador',
   },
 
   languages: {

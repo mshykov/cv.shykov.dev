@@ -48,7 +48,6 @@ export const en = {
     headline: ['Fast ATS score.', 'Private by default.'],
     sub: ['Score PDF/DOCX files in seconds.', 'No uploads, accounts, or LLM calls.'],
     chips: ['Runs in browser', 'No uploads', 'No LLM'],
-    cardLabel: 'In your browser',
   },
 
   languages: {

@@ -151,7 +151,7 @@ the inline logo in the header (`LogoMark`).
 
 The social cards (`public/og-image.png` for English, `public/og/<code>.png`) are drawn by
 `npm run og-images` (needs Google Chrome), from `messages.og` and the self-hosted fonts: the
-headline (no full stops), a supporting line, three plain facts and one neon block with an example
+headline (no full stops), a supporting line, three plain facts and one square neon block hugging an example
 score. Redraw them whenever the headline or the look changes. A network caches a card per URL, so a
 link that was already shared keeps its old picture until its debugger (LinkedIn Post Inspector,
 Facebook Sharing Debugger) re-scrapes it.

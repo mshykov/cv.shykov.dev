@@ -38,7 +38,6 @@ export const ptPT: Messages = {
     headline: ['Pontuação ATS rápida.', 'Privado por defeito.'],
     sub: ['Pontue ficheiros PDF/DOCX em segundos.', 'Sem carregamentos, contas nem LLM.'],
     chips: ['Corre no navegador', 'Sem carregar', 'Sem LLM'],
-    cardLabel: 'No navegador',
   },
 
   languages: {

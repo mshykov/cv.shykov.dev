@@ -52,10 +52,9 @@ function card(og) {
   .facts { position: absolute; left: 80px; bottom: 56px; display: flex; gap: 34px; list-style: none; padding: 0; font-size: 26px; font-weight: 600; letter-spacing: -.01em; }
   .facts li { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
   .facts i { width: 15px; height: 15px; background: #ccff00; outline: 2px solid #0a0a0a; display: block; }
-  .block { position: absolute; left: 790px; top: 130px; width: 330px; height: 370px; background: #ccff00; padding: 30px 32px; display: flex; flex-direction: column; justify-content: space-between; }
-  .block .label { font: 600 22px/1.2 "SF Mono", Menlo, monospace; letter-spacing: .04em; text-transform: uppercase; }
-  .block .num { font-weight: 700; letter-spacing: -.08em; line-height: .78; font-size: 205px; display: flex; align-items: flex-end; gap: 6px; }
-  .block .num small { font-size: 38px; font-weight: 600; letter-spacing: 0; padding-bottom: 10px; }
+  .block { position: absolute; left: 790px; top: 145px; width: 330px; height: 330px; background: #ccff00; display: grid; place-items: center; }
+  .block .num { font-weight: 700; letter-spacing: -.08em; line-height: .78; font-size: 215px; display: flex; flex-direction: column; align-items: flex-end; gap: 22px; }
+  .block .num small { font-size: 42px; font-weight: 600; letter-spacing: 0; line-height: 1; }
   .rule { position: absolute; left: 80px; right: 80px; bottom: 124px; height: 2px; background: #0a0a0a; }
 </style></head><body>
   <div class="brand"><img src="${logo}" alt="">cv.shykov.dev</div>
@@ -63,7 +62,7 @@ function card(og) {
   <div class="sub" id="s">${og.sub.map((l) => `<span>${esc(stripStop(l))}</span>`).join('')}</div>
   <div class="rule"></div>
   <ul class="facts" id="f">${og.chips.map((c) => `<li><i></i>${esc(c)}</li>`).join('')}</ul>
-  <div class="block"><div class="label">${esc(og.cardLabel)}</div><div class="num">83<small>/100</small></div></div>
+  <div class="block"><div class="num">83<small>/100</small></div></div>
   <script>
     // Longer languages: shrink each text block until it fits its column, so a German
     // headline never runs under the block.
@@ -75,8 +74,6 @@ function card(og) {
     fit('h', 96, 40, 660); fit('s', 28, 18, 660)
     const facts = document.getElementById('f'); let fs = 26
     while (fs > 15 && facts.scrollWidth > 1040) { fs -= 1; facts.style.fontSize = fs + 'px'; facts.style.gap = Math.round(fs * 1.2) + 'px' }
-    const label = document.querySelector('.block .label'); let ls = 22
-    while (ls > 12 && label.scrollWidth > 266) { ls -= 1; label.style.fontSize = ls + 'px' }
   </script>
 </body></html>`
 }

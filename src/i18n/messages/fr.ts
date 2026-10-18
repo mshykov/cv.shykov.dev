@@ -39,7 +39,6 @@ export const fr: Messages = {
     headline: ['Score ATS en secondes.', 'Votre CV reste privé.'],
     sub: ['Analysez vos PDF/DOCX en secondes.', 'Sans envoi, sans compte, sans IA.'],
     chips: ['Dans le navigateur', 'Sans envoi', 'Sans LLM'],
-    cardLabel: 'Dans le navigateur',
   },
 
   languages: {

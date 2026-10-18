@@ -39,7 +39,6 @@ export const de: Messages = {
     headline: ['Lebenslauf ATS Check.', 'Privat im Browser.'],
     sub: ['PDF/DOCX in Sekunden prüfen.', 'Kein Upload, kein Konto, keine KI.'],
     chips: ['Läuft im Browser', 'Kein Upload', 'Kein LLM'],
-    cardLabel: 'Im Browser',
   },
 
   languages: {
