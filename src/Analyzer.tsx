@@ -7,6 +7,7 @@ import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
 import type { Advisory } from './lib/advisories'
+import { markNow, observeNetworkSince, type NetworkReport } from './lib/network'
 import { TONE } from './components/tone'
 import { ScoreRing } from './components/ScoreRing'
 import { useLocale, useMessages } from './i18n/context.ts'
@@ -129,6 +130,23 @@ function TopFixes({ fixes }: TopFixesProps) {
 
 const STYLE_STATUS: Record<StyleLevel, Status> = { ok: 'pass', minor: 'warn', major: 'fail' }
 
+type NetworkNoteProps = Readonly<{ report: NetworkReport }>
+
+// States only what the page can observe about itself (Resource Timing): where its
+// requests went and of what kind. It cannot read a request body, so it never says
+// "secure" or "nothing was stored", only what was counted.
+function NetworkNote({ report }: NetworkNoteProps) {
+  const { analyzer } = useMessages()
+  const clean = report.otherOrigin === 0 && report.data === 0
+  return (
+    <details className="mt-4 rounded-xl bg-stone-50 p-3 text-sm text-stone-600 ring-1 ring-stone-200">
+      <summary className="cursor-pointer font-medium text-stone-700">{analyzer.network.summary}</summary>
+      <p className="mt-2">{clean ? analyzer.network.ok(report.total) : analyzer.network.warn(report.otherOrigin, report.data)}</p>
+      <p className="mt-1 text-xs text-stone-500">{analyzer.network.hint}</p>
+    </details>
+  )
+}
+
 type AdvisoryCardProps = Readonly<{ advisories: Advisory[] }>
 
 // Conventions that are not part of the score: length and bullet balance. Kept in
@@ -233,6 +251,7 @@ export default function Analyzer() {
   // The CV has too little text for the style checks to say anything (an empty report would read 100).
   const [styleTooShort, setStyleTooShort] = useState(false)
   const [advisories, setAdvisories] = useState<Advisory[]>([])
+  const [network, setNetwork] = useState<NetworkReport | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   // Nothing blocks a second upload while the first is still parsing - the
   // dropzone stays droppable and `busy` only swaps a caption. Two runs then
@@ -243,9 +262,11 @@ export default function Analyzer() {
 
   const run = useCallback(async (file: File) => {
     const id = (runId.current += 1)
-    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([])
+    setError(''); setErrDetail(''); setReport(null); setResume(null); setJd(null); setStyle(null); setStyleSkipped(false); setStyleTooShort(false); setAdvisories([]); setNetwork(null)
     if (!isSupportedDocument(file)) { setError(analyzer.chooseFile); return }
     setBusy(true); setFileName(file.name); setTab('analyze')
+    // Everything the page requests from here on belongs to this file: see NetworkNote.
+    const mark = markNow()
     let stage: Stage = 'loading'
     try {
       const [{ extractDocument }, { analyze }, { parseResume }, { analyzeStyle }, { detectLanguage }, { getAdvisories }] = await Promise.all([
@@ -257,7 +278,7 @@ export default function Analyzer() {
       const rep = analyze(ex, m.analysis)
       stage = 'parsing'
       const res = parseResume(ex)
-      const adv = getAdvisories(ex, res, m.analysis.advisories, { locale })
+      const adv = getAdvisories(ex, res, m.analysis.advisories, { locale, fileName: file.name })
       stage = 'style'
       // The writing-style signals look for English stock phrases and English
       // passive voice. On a Spanish or German CV they would measure nothing.
@@ -267,7 +288,7 @@ export default function Analyzer() {
       const tooShort = analysed?.insufficient === true
       const sty = tooShort ? null : analysed
       if (runId.current !== id) return
-      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort); setAdvisories(adv)
+      setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort); setAdvisories(adv); setNetwork(observeNetworkSince(mark))
     } catch (e) {
       if (runId.current !== id) return
       const err = e instanceof Error ? e : new Error(String(e))
@@ -400,6 +421,8 @@ export default function Analyzer() {
             {style && <HumanizationCard style={style} onOpen={() => setTab('style')} />}
 
             {advisories.length > 0 && <AdvisoryCard advisories={advisories} />}
+
+            {network && <NetworkNote report={network} />}
 
             <div className="mt-4 flex sm:justify-end">
               <nav className="grid w-full grid-cols-2 gap-1 rounded-lg bg-stone-100 p-1 text-sm font-medium sm:flex sm:w-auto sm:shrink-0">

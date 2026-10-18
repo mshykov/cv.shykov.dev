@@ -159,6 +159,12 @@ export const ptBR: Messages = {
     copyDetails: 'Copiar detalhes',
     scoreHeading: 'Pontuação ATS',
     estimateNote: 'Uma estimativa de quão bem um analisador lê este arquivo, não uma previsão de decisão de contratação.',
+    network: {
+      summary: 'Veja o que esta página enviou',
+      ok: (n: number) => `Desde que você escolheu o arquivo, esta página fez ${n} requisições, todas para este mesmo site. Nenhuma foi para outro site e nenhuma foi fetch, XHR ou beacon.`,
+      warn: (other: number, data: number) => `Desde que você escolheu o arquivo, ${other} requisições foram para outro site e ${data} foram fetch, XHR ou beacon. Abra a aba Rede para vê-las.`,
+      hint: 'Abra a aba Rede do navegador e escolha o arquivo de novo para conferir por conta própria.',
+    },
     topFixes: 'Principais correções',
     downloadReport: '↓ Relatório',
     noPriorityFixes: 'Nenhuma correção prioritária encontrada. O restante do relatório é, em sua maior parte, confirmação.',
@@ -214,6 +220,8 @@ export const ptBR: Messages = {
       length: { detail: (words: number) => `${number(words)} palavras, o que é longo para a maioria das vagas.`, fix: 'Abaixo de cerca de 1.000 palavras, o currículo se lê melhor à primeira vista. Corte as experiências mais antigas e os marcadores repetidos. Currículos executivos, acadêmicos e de alguns cargos públicos costumam ser mais longos.' },
       thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'experiência tem' : 'experiências têm'} apenas um marcador.`, fix: 'Uma experiência com um único marcador parece rasa. Acrescente um ou dois resultados concretos, ou resuma-a em uma linha de experiências anteriores.' },
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'marcador passa' : 'marcadores passam'} de 40 palavras.`, fix: 'Divida os marcadores longos em um resultado e em como você chegou a ele. Uma a duas linhas cada um são mais fáceis de ler.' },
+      fileName: { detail: (name: string) => `O arquivo se chama “${name}”.`, fix: 'Recrutadores salvam muitos arquivos. Chame-o de Nome_Sobrenome_CV.pdf, sem palavras como “final”, números de versão ou datas.' },
+      properties: { detail: (author?: string, title?: string) => `As propriedades do arquivo mostram ${[author && `o autor “${author}”`, title && `o título “${title}”`].filter(Boolean).join(' e ')}.`, fix: 'Qualquer pessoa que abra as propriedades do arquivo vê esses campos. Coloque seu nome como autor e um título como “Nome Sobrenome CV” e exporte de novo.' },
     },
     categories: { Parseability: 'Legibilidade', Contact: 'Contato', Sections: 'Seções', Format: 'Formato', Content: 'Conteúdo' },
     labels: {

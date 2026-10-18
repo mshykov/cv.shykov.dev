@@ -168,6 +168,12 @@ export const fr: Messages = {
     copyDetails: 'Copier les détails',
     scoreHeading: 'Score ATS rapide',
     estimateNote: 'Une estimation de la façon dont un analyseur lira ce fichier, pas une prédiction d’une décision d’embauche.',
+    network: {
+      summary: 'Vérifiez ce que cette page a envoyé',
+      ok: (n: number) => `Depuis que vous avez choisi le fichier, cette page a fait ${n} requêtes, toutes vers ce même site. Aucune n’est partie vers un autre site et aucune n’était un fetch, un XHR ou un beacon.`,
+      warn: (other: number, data: number) => `Depuis que vous avez choisi le fichier, ${other} requêtes sont parties vers un autre site et ${data} étaient des fetch, XHR ou beacon. Ouvrez l’onglet Réseau pour les voir.`,
+      hint: 'Ouvrez l’onglet Réseau du navigateur et choisissez à nouveau le fichier pour le vérifier vous-même.',
+    },
     topFixes: 'Corrections prioritaires',
     downloadReport: '↓ Rapport',
     noPriorityFixes: 'Aucune correction prioritaire. Le reste du rapport est surtout une confirmation.',
@@ -223,6 +229,8 @@ export const fr: Messages = {
       length: { detail: (words: number) => `${number(words)} mots, ce qui est long pour la plupart des postes.`, fix: 'En dessous d’environ 1 000 mots, le CV se lit mieux au premier coup d’œil. Coupez les postes les plus anciens et les puces répétées. Les CV de direction, les CV universitaires et ceux de certains postes publics sont souvent plus longs.' },
       thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'poste n’a' : 'postes n’ont'} qu’une seule puce.`, fix: 'Un poste avec une seule puce paraît mince. Ajoutez un ou deux résultats concrets, ou résumez-le en une ligne d’expérience antérieure.' },
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'puce dépasse' : 'puces dépassent'} 40 mots.`, fix: 'Découpez les puces longues en un résultat et la façon de l’obtenir. Une à deux lignes chacune se parcourent plus vite.' },
+      fileName: { detail: (name: string) => `Le fichier s’appelle « ${name} ».`, fix: 'Les recruteurs enregistrent beaucoup de fichiers. Nommez-le Prenom_Nom_CV.pdf, sans mots comme « final », numéros de version ni dates.' },
+      properties: { detail: (author?: string, title?: string) => `Les propriétés du fichier indiquent ${[author && `l’auteur « ${author} »`, title && `le titre « ${title} »`].filter(Boolean).join(' et ')}.`, fix: 'Quiconque ouvre les propriétés du fichier voit ces champs. Mettez votre nom comme auteur et un titre du type « Prénom Nom CV », puis exportez à nouveau.' },
     },
     categories: { Parseability: 'Lisibilité', Contact: 'Contact', Sections: 'Rubriques', Format: 'Format', Content: 'Contenu' },
     labels: {

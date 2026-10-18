@@ -174,6 +174,12 @@ export const en = {
     copyDetails: 'Copy details',
     scoreHeading: 'Fast ATS score',
     estimateNote: 'An estimate of how well a parser will read this file, not a prediction of a hiring decision.',
+    network: {
+      summary: 'Check what this page sent',
+      ok: (n: number) => `Since you chose the file, this page made ${n} requests, all to this site. None went to another site, and none was a fetch, XHR or beacon.`,
+      warn: (other: number, data: number) => `Since you chose the file, ${other} requests went to another site and ${data} were fetch, XHR or beacon requests. Open the Network tab to see them.`,
+      hint: 'Open your browser’s Network tab and choose the file again to check this yourself.',
+    },
     topFixes: 'Top fixes',
     downloadReport: '↓ Report',
     noPriorityFixes: 'No priority fixes found. The remaining report is mostly confirmation.',
@@ -231,6 +237,8 @@ export const en = {
       length: { detail: (words: number) => `${number(words)} words, which is long for most roles.`, fix: 'Under about 1,000 words is easier to read at first glance. Cut the oldest roles and repeated bullets. Executive, academic and some public-sector CVs are normally longer.' },
       thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'role has' : 'roles have'} only one bullet.`, fix: 'A role with a single bullet looks thin. Add one or two concrete results, or fold the role into a one-line earlier-experience entry.' },
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'bullet runs' : 'bullets run'} past 40 words.`, fix: 'Split long bullets into a result and how you got it. One to two lines each is easier to skim.' },
+      fileName: { detail: (name: string) => `The file is called “${name}”.`, fix: 'Recruiters save many files. Name it Firstname_Lastname_CV.pdf, without words like “final”, version numbers or dates.' },
+      properties: { detail: (author?: string, title?: string) => `The file’s properties show ${[author && `the author “${author}”`, title && `the title “${title}”`].filter(Boolean).join(' and ')}.`, fix: 'Anyone who opens the file’s properties can see these fields. Set the author to your name and the title to something like “Firstname Lastname CV”, then export again.' },
     },
     categories: { Parseability: 'Parseability', Contact: 'Contact', Sections: 'Sections', Format: 'Format', Content: 'Content' },
     labels: {
