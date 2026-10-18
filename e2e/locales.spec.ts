@@ -5,6 +5,7 @@ import { ptBR } from '../src/i18n/messages/pt-br.ts'
 import { ptPT } from '../src/i18n/messages/pt-pt.ts'
 import { fr } from '../src/i18n/messages/fr.ts'
 import { de } from '../src/i18n/messages/de.ts'
+import { uk } from '../src/i18n/messages/uk.ts'
 
 // One real run per language, on WebKit under the production CSP: the page comes
 // up in its language (the locale chunk loads), a CV is scored with that
@@ -12,7 +13,7 @@ import { de } from '../src/i18n/messages/de.ts'
 // exports a PDF. A language whose chunk 404s, or whose messages throw, fails here
 // instead of for a visitor.
 
-const MESSAGES = { es, 'pt-br': ptBR, 'pt-pt': ptPT, fr, de }
+const MESSAGES = { es, 'pt-br': ptBR, 'pt-pt': ptPT, fr, de, uk }
 
 for (const loc of LOCALES.filter((l) => l.code !== 'en')) {
   const m = MESSAGES[loc.code as keyof typeof MESSAGES]
