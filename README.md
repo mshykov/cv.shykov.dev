@@ -117,6 +117,8 @@ because they vary by country, seniority and sector (`src/lib/advisories.ts`):
 | Thin role | the CV has at least two roles and one of them has exactly one bullet |
 | Long bullets | a bullet runs past 40 words |
 | Graduation year | English interface only: an education entry whose latest year is more than 15 years back |
+| Columns / table | PDF only: two or more text columns side by side (a sidebar), or three or more aligned columns; right-aligned dates and indented bullets are not columns |
+| Contacts in header/footer | PDF with 2+ pages only: your email or phone appears only in a header or footer that repeats on every page |
 | File name | the file is called something like `cv_final_v3` or `Resume (2)` |
 | Document properties | a PDF whose Author shares no word with the name on the CV, or whose Title looks like a scratch name |
 

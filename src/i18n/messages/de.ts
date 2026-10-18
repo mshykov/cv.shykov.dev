@@ -225,6 +225,9 @@ export const de: Messages = {
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'Aufzählungspunkt umfasst' : 'Aufzählungspunkte umfassen'} mehr als 40 Wörter.`, fix: 'Teilen Sie lange Punkte in ein Ergebnis und den Weg dorthin. Eine bis zwei Zeilen je Punkt lassen sich schneller überfliegen.' },
       fileName: { detail: (name: string) => `Die Datei heißt „${name}“.`, fix: 'Recruiter speichern viele Dateien. Nennen Sie sie Vorname_Nachname_Lebenslauf.pdf, ohne Wörter wie „final“, Versionsnummern oder Datumsangaben.' },
       properties: { detail: (author?: string, title?: string) => `Die Dateieigenschaften zeigen ${[author && `den Autor „${author}“`, title && `den Titel „${title}“`].filter(Boolean).join(' und ')}.`, fix: 'Wer die Dateieigenschaften öffnet, sieht diese Felder. Tragen Sie Ihren Namen als Autor und einen Titel wie „Vorname Nachname Lebenslauf“ ein und exportieren Sie erneut.' },
+      columns: { detail: 'Das Layout wirkt wie zwei oder mehr Textspalten.', fix: 'Parser lesen eine Seite Zeile für Zeile, deshalb kann Text in Spalten vermischt ausgegeben werden. Wenn die Reihenfolge wichtig ist (eine Stelle neben ihren Daten), nutzen Sie eine einzige Spalte.' },
+      table: { detail: 'Ein Teil der Seite wirkt wie eine Tabelle.', fix: 'Tabellen und Textfelder können in falscher Reihenfolge ausgelesen werden. Bevorzugen Sie für Wichtiges einfache Zeilen und Aufzählungspunkte.' },
+      headerContact: { detail: 'Ihre E-Mail-Adresse oder Telefonnummer steht nur in der Kopf- oder Fußzeile.', fix: 'Manche Parser überspringen Kopf- und Fußzeilen. Wiederholen Sie Ihre Kontaktdaten im Textbereich der ersten Seite.' },
     },
     categories: { Parseability: 'Lesbarkeit', Contact: 'Kontakt', Sections: 'Abschnitte', Format: 'Format', Content: 'Inhalt' },
     labels: {

@@ -223,6 +223,9 @@ export const es: Messages = {
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'viñeta supera' : 'viñetas superan'} las 40 palabras.`, fix: 'Divide las viñetas largas en un resultado y en cómo lo conseguiste. Una o dos líneas cada una se leen más rápido.' },
       fileName: { detail: (name: string) => `El archivo se llama «${name}».`, fix: 'Los reclutadores guardan muchos archivos. Llámalo Nombre_Apellido_CV.pdf, sin palabras como «final», números de versión ni fechas.' },
       properties: { detail: (author?: string, title?: string) => `Las propiedades del archivo muestran ${[author && `el autor «${author}»`, title && `el título «${title}»`].filter(Boolean).join(' y ')}.`, fix: 'Cualquiera que abra las propiedades del archivo puede ver estos campos. Pon tu nombre como autor y un título como «Nombre Apellido CV», y vuelve a exportar.' },
+      columns: { detail: 'La maquetación parece tener dos o más columnas de texto.', fix: 'Los analizadores leen la página línea a línea, así que el texto en columnas puede salir mezclado. Si el orden importa (un puesto junto a sus fechas), usa una sola columna.' },
+      table: { detail: 'Parte de la página parece una tabla.', fix: 'Las tablas y los cuadros de texto pueden salir en el orden equivocado. Para lo importante, prefiere líneas sencillas y viñetas.' },
+      headerContact: { detail: 'Tu correo o teléfono aparece solo en el encabezado o en el pie de página.', fix: 'Algunos analizadores se saltan el encabezado y el pie. Repite tus datos de contacto en el cuerpo de la primera página.' },
     },
     categories: { Parseability: 'Legibilidad', Contact: 'Contacto', Sections: 'Secciones', Format: 'Formato', Content: 'Contenido' },
     labels: {

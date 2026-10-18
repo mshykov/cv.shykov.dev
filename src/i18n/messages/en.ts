@@ -239,6 +239,9 @@ export const en = {
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'bullet runs' : 'bullets run'} past 40 words.`, fix: 'Split long bullets into a result and how you got it. One to two lines each is easier to skim.' },
       fileName: { detail: (name: string) => `The file is called “${name}”.`, fix: 'Recruiters save many files. Name it Firstname_Lastname_CV.pdf, without words like “final”, version numbers or dates.' },
       properties: { detail: (author?: string, title?: string) => `The file’s properties show ${[author && `the author “${author}”`, title && `the title “${title}”`].filter(Boolean).join(' and ')}.`, fix: 'Anyone who opens the file’s properties can see these fields. Set the author to your name and the title to something like “Firstname Lastname CV”, then export again.' },
+      columns: { detail: 'The layout looks like two or more text columns.', fix: 'Parsers read a page line by line, so text in columns can come out interleaved. If the order matters (a role next to its dates), use a single column.' },
+      table: { detail: 'Part of the page looks like a table.', fix: 'Tables and text boxes can come out in the wrong order. For anything important, prefer plain lines and bullets.' },
+      headerContact: { detail: 'Your email or phone appears only in the page header or footer.', fix: 'Some parsers skip header and footer regions. Repeat your contact details in the body of the first page.' },
     },
     categories: { Parseability: 'Parseability', Contact: 'Contact', Sections: 'Sections', Format: 'Format', Content: 'Content' },
     labels: {

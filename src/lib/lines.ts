@@ -43,16 +43,14 @@ function joinLine(pieces: TextPiece[]): string {
     .trim()
 }
 
-/** Group pieces into visual lines, in reading order: page, then top to bottom. */
-export function groupIntoLines(pieces: TextPiece[]): string[] {
+/** Group pieces into visual rows (left to right inside a row), in reading order: page, then top to bottom. */
+export function groupIntoRows(pieces: TextPiece[]): TextPiece[][] {
   const ordered = [...pieces].sort((a, b) => a.page - b.page || b.y - a.y || a.x - b.x)
-  const lines: string[] = []
+  const rows: TextPiece[][] = []
   let current: TextPiece[] = []
 
   const flush = () => {
-    if (!current.length) return
-    const text = joinLine(current)
-    if (text) lines.push(text)
+    if (current.length) rows.push([...current].sort((a, b) => a.x - b.x))
     current = []
   }
 
@@ -64,5 +62,10 @@ export function groupIntoLines(pieces: TextPiece[]): string[] {
   }
   flush()
 
-  return lines
+  return rows
+}
+
+/** Group pieces into visual lines, in reading order: page, then top to bottom. */
+export function groupIntoLines(pieces: TextPiece[]): string[] {
+  return groupIntoRows(pieces).map(joinLine).filter((text) => text.length > 0)
 }
