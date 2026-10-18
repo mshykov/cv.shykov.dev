@@ -78,7 +78,11 @@ export const ptBR: Messages = {
         { q: 'A pontuação pode ter viés?', a: 'Não há modelo nem dados de treinamento, então não existe um conjunto de dados que possa ter viés. As regras, porém, carregam suposições, como os títulos de seção e as convenções de currículo que aceitam, e a revisão de estilo cobre apenas currículos em inglês e pode marcar textos bem escritos. Não é um detector de IA. Nada é decidido sobre você: cada ponto mostra a regra por trás dele e você decide o que mudar.' },
       ],
     },
-    guides: { aria: 'Guias', heading: 'Guias' },
+    guides: {
+      aria: 'Guias',
+      heading: 'Guias',
+      description: 'Guias sobre como funciona a leitura de currículos por um ATS, o que a pontuação ATS mede, PDF ou DOCX e um checklist do que corrigir primeiro.',
+    },
     footer: {
       disclaimer: 'Orientação heurística, não uma garantia. Criado por',
       author: 'Maksym Shykov',
@@ -103,9 +107,6 @@ export const ptBR: Messages = {
     published: 'Publicado em',
     updated: 'Atualizado em',
     by: 'por',
-    footerRuns: 'roda no seu navegador.',
-    footerNo: 'Sem envio de arquivo, sem cadastro, sem rastreamento.',
-    openSource: 'Código aberto no GitHub',
     bonusPoints: (points: number) => `${points} (bônus)`,
   },
 
@@ -270,6 +271,8 @@ export const ptBR: Messages = {
 
   builder: {
     heading: 'Crie um currículo para ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Crie um currículo para ATS no navegador: texto simples, seções padrão, pontuação e prévia ao vivo, e exporte um PDF selecionável. Sem envio de arquivo nem cadastro.',
     liveScore: 'Pontuação ao vivo',
     importCv: 'Importar currículo',
     exportPdf: '↓ Exportar PDF',

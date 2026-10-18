@@ -189,10 +189,9 @@ export default function Builder() {
 
   return (
     <div>
-      <h1 className="max-w-[12em] text-balance text-[clamp(2.25rem,8vw,6rem)] font-semibold leading-[0.95] tracking-[-0.055em]">{b.heading}</h1>
 
       {/* toolbar */}
-      <div className="sticky top-0 z-10 mb-10 mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-rule bg-paper py-3">
+      <div className="sticky top-0 z-10 mb-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-rule bg-paper py-3">
         <div className="flex items-center gap-3">
           <div className={`grid h-12 min-w-12 place-items-center px-2 text-2xl font-semibold tabular-nums ${TONE[score.band.tone].block}`}>{score.score}</div>
           <div>

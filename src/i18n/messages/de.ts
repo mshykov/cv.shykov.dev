@@ -81,7 +81,11 @@ export const de: Messages = {
         { q: 'Kann der Score voreingenommen sein?', a: 'Es gibt weder ein Modell noch Trainingsdaten, also auch keinen Datensatz, der verzerrt sein könnte. Die Regeln enthalten dennoch Annahmen, etwa die akzeptierten Abschnittsüberschriften und Lebenslauf-Konventionen, und die Stilprüfung gilt nur für englische Lebensläufe und kann gut geschriebene Texte markieren. Sie ist kein KI-Detektor. Über Sie wird nichts entschieden: Jeder Punkt zeigt die Regel dahinter, und Sie entscheiden, was Sie ändern.' },
       ],
     },
-    guides: { aria: 'Ratgeber', heading: 'Ratgeber' },
+    guides: {
+      aria: 'Ratgeber',
+      heading: 'Ratgeber',
+      description: 'Ratgeber dazu, wie ATS Lebensläufe auslesen, was der ATS-Score misst, PDF oder DOCX und eine Checkliste, was zuerst zu korrigieren ist.',
+    },
     footer: {
       disclaimer: 'Heuristische Orientierung, keine Garantie. Entwickelt von',
       author: 'Maksym Shykov',
@@ -106,9 +110,6 @@ export const de: Messages = {
     published: 'Veröffentlicht',
     updated: 'Aktualisiert',
     by: 'von',
-    footerRuns: 'läuft in Ihrem Browser.',
-    footerNo: 'Kein Upload, keine Konten, kein Tracking.',
-    openSource: 'Open Source auf GitHub',
     bonusPoints: (points: number) => `${points} (Bonus)`,
   },
 
@@ -273,6 +274,8 @@ export const de: Messages = {
 
   builder: {
     heading: 'ATS-tauglichen Lebenslauf erstellen',
+    // <meta name="description"> of the Build page.
+    description: 'ATS-tauglichen Lebenslauf im Browser erstellen: reiner Text, Standardabschnitte, Live-Score und Vorschau, dann als auswählbares PDF exportieren. Ohne Upload und Konto.',
     liveScore: 'Live-Score',
     importCv: 'Lebenslauf importieren',
     exportPdf: '↓ PDF exportieren',

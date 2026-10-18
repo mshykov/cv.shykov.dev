@@ -81,7 +81,11 @@ export const fr: Messages = {
         { q: 'Le score peut-il être biaisé ?', a: 'Il n’y a ni modèle ni données d’entraînement, donc aucun jeu de données susceptible d’être biaisé. Les règles reposent toutefois sur des hypothèses, comme les intitulés de rubrique et les conventions de CV qu’elles acceptent, et la vérification du style ne couvre que les CV en anglais et peut signaler un texte bien écrit. Ce n’est pas un détecteur d’IA. Rien n’est décidé à votre sujet : chaque point montre la règle qui le produit, et c’est vous qui décidez quoi modifier.' },
       ],
     },
-    guides: { aria: 'Guides', heading: 'Guides' },
+    guides: {
+      aria: 'Guides',
+      heading: 'Guides',
+      description: 'Guides sur le fonctionnement de l’analyse de CV par un ATS, ce que mesure le score ATS, PDF ou DOCX et une liste de ce qu’il faut corriger d’abord.',
+    },
     footer: {
       disclaimer: 'Indications heuristiques, sans garantie. Conçu par',
       author: 'Maksym Shykov',
@@ -106,9 +110,6 @@ export const fr: Messages = {
     published: 'Publié le',
     updated: 'Mis à jour le',
     by: 'par',
-    footerRuns: 'fonctionne dans votre navigateur.',
-    footerNo: 'Aucun envoi, aucun compte, aucun suivi.',
-    openSource: 'Code source ouvert sur GitHub',
     bonusPoints: (points: number) => `${points} (bonus)`,
   },
 
@@ -279,6 +280,8 @@ export const fr: Messages = {
 
   builder: {
     heading: 'Créez un CV compatible ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Créez un CV compatible ATS dans votre navigateur : texte brut, rubriques standard, score et aperçu en direct, puis export en PDF sélectionnable. Sans envoi ni compte.',
     liveScore: 'Score en direct',
     importCv: 'Importer un CV',
     exportPdf: '↓ Exporter en PDF',

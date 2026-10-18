@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { loadLocale } from './i18n/load.ts'
-import { DEFAULT_LOCALE, isLocale, localeFromHtmlLang, localeFromPath } from './i18n/locales.ts'
+import { DEFAULT_LOCALE, isBuildPath, isLocale, localeFromHtmlLang, localeFromPath } from './i18n/locales.ts'
 
 // The URL names the language (/es/ → Spanish) and the build writes the matching
 // <html lang> into each page. The path comes first because the dev server serves
@@ -24,7 +24,7 @@ const bundle = await loadLocale(locale)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App bundle={bundle} />
+    <App bundle={bundle} mode={isBuildPath(location.pathname) ? 'build' : 'analyze'} />
   </StrictMode>,
 )
 

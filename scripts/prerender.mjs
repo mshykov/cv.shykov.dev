@@ -40,7 +40,7 @@ await build({
 })
 
 const server = await import(pathToFileURL(new URL('entry-server.js', OUT).pathname))
-const { render, renderArticle, localeIndex, homePath, guidePath, homeHead, guideHead, escapeAttr } = server
+const { render, renderArticle, renderGuides, localeIndex, homePath, buildPath, guidesPath, guidePath, homeHead, buildHead, guidesHead, guideHead, escapeAttr } = server
 const locales = localeIndex()
 
 const template = readFileSync(HTML, 'utf8')
@@ -69,6 +69,15 @@ for (const loc of locales) {
   // English keeps /index.html; Spanish is /es/index.html, served at /es/.
   write(`${homePath(loc.locale).slice(1)}index.html`, page)
   console.log(`prerender: ${loc.locale} homepage, ${body.length} bytes of static HTML`)
+
+  // The Build page is its own URL, so the Back button works. "<prefix>build.html" is served at
+  // /build (/es/build), the same way the guides are.
+  const buildBody = render(loc.locale, 'build')
+  const buildPage = template
+    .replace('<html lang="en">', `<html lang="${loc.info.htmlLang}">`)
+    .replace(seoBlock, buildHead(loc.locale, loc.messages, loc.buildAlternates, loc.buildJsonLd).trimStart())
+    .replace(marker, `<div id="root">${buildBody}</div>`)
+  write(`${buildPath(loc.locale).slice(1)}.html`, buildPage)
 }
 
 // Guides reuse the app's stylesheet rather than carrying their own, so the two
@@ -81,8 +90,7 @@ if (!cssHref) throw new Error('prerender: could not find the built stylesheet in
 // The font the page preloads (index.html), so a guide's first paint is in it too.
 const fontPreload = template.match(/<link rel="preload"[^>]*as="font"[^>]*>/)?.[0] ?? ''
 
-function guidePage(loc, meta, body) {
-  const head = guideHead(loc.locale, loc.messages, meta, meta.alternates, meta.jsonLd)
+function guidePage(loc, head, body) {
   // No app script: a guide is prose, and the bundle would only slow it down.
   return `<!doctype html>
 <html lang="${loc.info.htmlLang}">
@@ -138,12 +146,13 @@ let guideCount = 0
 for (const loc of locales) {
   const prefix = homePath(loc.locale).slice(1) // "" for English, "es/" for Spanish
   write(`${prefix}404.html`, notFoundPage(loc))
+  write(`${guidesPath(loc.locale).slice(1)}.html`, guidePage(loc, guidesHead(loc.locale, loc.messages, loc.guidesAlternates, loc.guidesJsonLd), renderGuides(loc.locale)))
   for (const meta of loc.articles) {
     // "<slug>.html", not "<slug>/index.html". Cloudflare's auto-trailing-slash
     // asset handling serves the former at /<slug> with a 200, while the latter
     // 307-redirects /<slug> to /<slug>/ - which would have made every canonical
     // tag and sitemap entry here point at a URL that redirects.
-    write(`${prefix}${meta.slug}.html`, guidePage(loc, meta, renderArticle(loc.locale, meta.id)))
+    write(`${prefix}${meta.slug}.html`, guidePage(loc, guideHead(loc.locale, loc.messages, meta, meta.alternates, meta.jsonLd), renderArticle(loc.locale, meta.id)))
     guideCount += 1
   }
 }
@@ -200,6 +209,8 @@ const homeDate = homeLastmod()
 const urls = []
 for (const loc of locales) {
   urls.push({ loc: `${SITE}${homePath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: loc.locale === 'en' ? '1.0' : '0.9', alternates: loc.homeAlternates })
+  urls.push({ loc: `${SITE}${buildPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.buildAlternates })
+  urls.push({ loc: `${SITE}${guidesPath(loc.locale)}`, lastmod: homeDate, changefreq: 'monthly', priority: '0.8', alternates: loc.guidesAlternates })
   for (const g of loc.articles) {
     urls.push({ loc: `${SITE}${guidePath(loc.locale, g.slug)}`, lastmod: g.updated, changefreq: 'yearly', priority: '0.8', alternates: g.alternates })
   }

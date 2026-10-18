@@ -43,7 +43,8 @@ for (const loc of LOCALES.filter((l) => l.code !== 'en')) {
 
     test('the builder opens in this language and exports a PDF', async ({ page }) => {
       await page.goto(homePath(loc.code))
-      await page.getByRole('button', { name: m.home.header.build, exact: true }).click()
+      await page.getByRole('navigation', { name: m.home.header.primaryMode }).getByRole('link', { name: m.home.header.build, exact: true }).click()
+      await expect(page).toHaveURL(/\/build$/)
       await expect(page.getByText(m.builder.sample.name).first()).toBeVisible({ timeout: 30_000 })
       await expect(page.getByText(m.builder.docSections.experience, { exact: true }).first()).toBeVisible()
       const download = page.waitForEvent('download', { timeout: 60_000 })

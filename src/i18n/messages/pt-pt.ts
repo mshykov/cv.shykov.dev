@@ -80,7 +80,11 @@ export const ptPT: Messages = {
         { q: 'A pontuação pode ser enviesada?', a: 'Não existe modelo nem dados de treino, pelo que não há um conjunto de dados que possa ser enviesado. Ainda assim, as regras assentam em pressupostos, como os títulos de secção e as convenções de CV que aceitam, e a verificação de estilo cobre apenas CV em inglês e pode assinalar textos bem escritos. Não é um detetor de IA. Nada é decidido a seu respeito: cada ponto mostra a regra que o origina, e é a própria pessoa que decide o que alterar.' },
       ],
     },
-    guides: { aria: 'Guias', heading: 'Guias' },
+    guides: {
+      aria: 'Guias',
+      heading: 'Guias',
+      description: 'Guias sobre como funciona a leitura de CV por um ATS, o que mede a pontuação ATS, PDF ou DOCX e uma lista do que corrigir primeiro.',
+    },
     footer: {
       disclaimer: 'Orientação heurística, não uma garantia. Criado por',
       author: 'Maksym Shykov',
@@ -105,9 +109,6 @@ export const ptPT: Messages = {
     published: 'Publicado em',
     updated: 'Atualizado em',
     by: 'por',
-    footerRuns: 'funciona no seu navegador.',
-    footerNo: 'Sem carregamentos, sem contas, sem rastreamento.',
-    openSource: 'Código aberto no GitHub',
     bonusPoints: (points: number) => `${points} (bónus)`,
   },
 
@@ -272,6 +273,8 @@ export const ptPT: Messages = {
 
   builder: {
     heading: 'Crie um CV compatível com ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Crie um CV compatível com ATS no navegador: texto simples, secções padrão, pontuação e pré-visualização em direto, e exporte um PDF selecionável. Sem envio nem conta.',
     liveScore: 'Pontuação em direto',
     importCv: 'Importar CV',
     exportPdf: '↓ Exportar PDF',

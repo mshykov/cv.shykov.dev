@@ -91,7 +91,11 @@ export const en = {
         { q: 'Can the score be biased?', a: 'There is no model and no training data, so there is no dataset to be biased. The rules still carry assumptions, such as the section headings and CV conventions they accept, and the writing-style check covers English CVs only and can flag good writing. It is not an AI detector. Nothing is decided about you: each point shows the rule behind it, and you decide what to change.' },
       ],
     },
-    guides: { aria: 'Guides', heading: 'Guides' },
+    guides: {
+      aria: 'Guides',
+      heading: 'Guides',
+      description: 'Guides on how ATS resume parsing works, what an ATS score measures, PDF or DOCX, and a checklist of what to fix first. Plain answers, no hype.',
+    },
     footer: {
       disclaimer: 'Heuristic guidance, not a guarantee. Built by',
       author: 'Maksym Shykov',
@@ -117,9 +121,6 @@ export const en = {
     published: 'Published',
     updated: 'Updated',
     by: 'by',
-    footerRuns: 'runs in your browser.',
-    footerNo: 'No uploads, no accounts, no tracking.',
-    openSource: 'Open source on GitHub',
     bonusPoints: (points: number) => `${points} (bonus)`,
   },
 
@@ -288,6 +289,8 @@ export const en = {
 
   builder: {
     heading: 'Build an ATS-clean CV',
+    // <meta name="description"> of the Build page.
+    description: 'Build an ATS-clean CV in your browser: plain text, standard sections, live score and preview, then export a selectable PDF. No upload, no account.',
     liveScore: 'Live score',
     importCv: 'Import CV',
     exportPdf: '↓ Export PDF',

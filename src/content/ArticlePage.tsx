@@ -2,35 +2,15 @@
 // pages are prose, so the app bundle would cost load time and buy nothing.
 import type { Article } from './types.ts'
 import { ArrowUpRight } from '../components/ArrowUpRight'
-import { REPO_URL } from '../components/repo'
-import { LanguageFooter, LanguageSwitcher, type LanguageLink } from '../components/LanguageSwitcher'
+import type { LanguageLink } from '../components/LanguageSwitcher'
+import { SiteFooter } from '../components/SiteFooter'
+import { SiteHeader } from '../components/SiteHeader'
 import { LocaleProvider, useLocale, type LocaleBundle } from '../i18n/context.ts'
-import { guidePath, homePath } from '../i18n/locales.ts'
-import { SIBLINGS } from '../components/siblings.ts'
+import { guidePath, guidesPath, homePath } from '../i18n/locales.ts'
 
 type PageProps = Readonly<{ article: Article; bundle: LocaleBundle; links: LanguageLink[] }>
 
 const LINK = 'font-medium underline underline-offset-4 decoration-rule-2 hover:decoration-ink'
-
-function SiteHeader({ links }: Readonly<{ links: LanguageLink[] }>) {
-  const { locale, messages: m } = useLocale()
-  const home = homePath(locale)
-  return (
-    <header className="border-b border-rule">
-      <div className="mx-auto flex min-h-16 max-w-300 items-center justify-between gap-3 px-5 sm:px-8">
-        <a href={home} className="flex min-w-0 items-center gap-2.5">
-          <span aria-hidden className="size-3 shrink-0 bg-neon outline outline-1 outline-ink" />
-          <span className="truncate text-lg font-bold tracking-[-0.02em]">cv.shykov.dev</span>
-          <span className="hidden truncate font-mono text-xs uppercase text-ink-2 sm:inline">{m.brand}</span>
-        </a>
-        <div className="flex shrink-0 items-center gap-1">
-          <LanguageSwitcher current={locale} links={links} label={m.languages.label} />
-          <a href={home} className="btn-sm bg-ink text-paper hover:bg-neon hover:text-on-neon">{m.article.check}</a>
-        </div>
-      </div>
-    </header>
-  )
-}
 
 function MoreGuides({ current }: { current: string }) {
   const { locale, messages: m, guides } = useLocale()
@@ -65,7 +45,7 @@ function Breadcrumbs({ title }: { title: string }) {
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <li><a href={home} className={LINK}>{m.brand}</a></li>
         <li aria-hidden>/</li>
-        <li><a href={`${home}#guides`} className={LINK}>{m.article.guidesCrumb}</a></li>
+        <li><a href={guidesPath(locale)} className={LINK}>{m.article.guidesCrumb}</a></li>
         <li aria-hidden>/</li>
         <li aria-current="page" className="text-ink">{title}</li>
       </ol>
@@ -106,10 +86,10 @@ function Faq({ items }: { items: Article['faq'] }) {
 }
 
 function Page({ article, links }: Readonly<{ article: Article; links: LanguageLink[] }>) {
-  const { locale, messages: m } = useLocale()
+  const { messages: m } = useLocale()
   return (
     <div className="min-h-screen bg-paper">
-      <SiteHeader links={links} />
+      <SiteHeader current="guides" links={links} />
       <main className="mx-auto max-w-3xl px-5 pb-20 pt-10 sm:px-8">
         <Breadcrumbs title={article.title} />
         <article className="mt-8">
@@ -126,26 +106,7 @@ function Page({ article, links }: Readonly<{ article: Article; links: LanguageLi
         </article>
         <MoreGuides current={article.slug} />
       </main>
-      <footer className="border-t border-rule">
-        <div className="mx-auto max-w-3xl px-5 py-6 text-sm text-ink-2 sm:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p>
-              <a href={homePath(locale)} className={LINK}>{m.brand}</a> — {m.article.footerRuns}
-            </p>
-            <p>
-              {m.article.footerNo}{' '}
-              <a href={REPO_URL} className={LINK}>{m.article.openSource}</a>.
-            </p>
-          </div>
-          <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-            <span>{m.home.footer.moreFrom}:</span>
-            {SIBLINGS.map((s) => (
-              <a key={s.name} href={s.href} className={LINK}>{s.name}</a>
-            ))}
-          </nav>
-          <LanguageFooter current={locale} links={links} label={m.languages.footerLabel} />
-        </div>
-      </footer>
+      <div className="mx-auto max-w-3xl px-5 pb-10 sm:px-8"><SiteFooter links={links} /></div>
     </div>
   )
 }

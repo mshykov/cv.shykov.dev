@@ -79,7 +79,11 @@ export const es: Messages = {
         { q: '¿Puede la puntuación tener sesgos?', a: 'No hay ningún modelo ni datos de entrenamiento, así que no existe un conjunto de datos que pueda estar sesgado. Aun así, las reglas contienen supuestos, como los encabezados de sección y las convenciones de CV que aceptan, y la revisión de estilo solo cubre CV en inglés y puede marcar textos bien escritos. No es un detector de IA. Nada se decide sobre ti: cada punto muestra la regla que lo origina y tú decides qué cambiar.' },
       ],
     },
-    guides: { aria: 'Guías', heading: 'Guías' },
+    guides: {
+      aria: 'Guías',
+      heading: 'Guías',
+      description: 'Guías sobre cómo funciona el análisis de CV en un ATS, qué mide la puntuación ATS, PDF o DOCX y una lista de qué corregir primero. Respuestas claras.',
+    },
     footer: {
       disclaimer: 'Orientación heurística, no una garantía. Creado por',
       author: 'Maksym Shykov',
@@ -104,9 +108,6 @@ export const es: Messages = {
     published: 'Publicado',
     updated: 'Actualizado',
     by: 'por',
-    footerRuns: 'funciona en tu navegador.',
-    footerNo: 'Sin subidas, sin cuentas, sin rastreo.',
-    openSource: 'Código abierto en GitHub',
     bonusPoints: (points: number) => `${points} (extra)`,
   },
 
@@ -271,6 +272,8 @@ export const es: Messages = {
 
   builder: {
     heading: 'Crea un CV compatible con ATS',
+    // <meta name="description"> of the Build page.
+    description: 'Crea un CV compatible con ATS en tu navegador: texto plano, secciones estándar, puntuación y vista previa en vivo, y exporta un PDF seleccionable. Sin subida ni cuenta.',
     liveScore: 'Puntuación en directo',
     importCv: 'Importar CV',
     exportPdf: '↓ Exportar PDF',

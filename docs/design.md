@@ -36,6 +36,23 @@ inspect" section (the same claims are the strike-through line and the FAQ), the 
 GitHub button in the header, the humanization card next to the score. If something wants back
 in, it goes below the fold or into a closed disclosure, never above the drop line.
 
+## Pages and navigation
+
+Four kinds of page, one header (`SiteHeader`: wordmark, **Fast ATS Score · Build a CV · Guides**,
+GitHub, language) and one footer (`SiteFooter`):
+
+| URL (en / es) | Page | Built how |
+|---|---|---|
+| `/` · `/es/` | score checker | `App` (mode `analyze`), prerendered |
+| `/build` · `/es/build` | Build a CV | `App` (mode `build`), prerendered, same bundle |
+| `/guides` · `/es/guides` | guide index | `GuidesPage`, static, no JavaScript |
+| `/<slug>` | a guide | `ArticlePage`, static, no JavaScript |
+
+Every page change is a **real navigation** (plain `<a href>`), so the browser's Back button
+works and each page has its own title, canonical, hreflang and sitemap entry (`scripts/prerender.mjs`,
+`buildHead`/`guidesHead` in `src/i18n/head.ts`). The score report is not carried to another page.
+On phones the three links drop to a second row under the wordmark.
+
 ## The Build view
 
 Same language, smaller scale: an H1 ("Build an ATS-clean CV", `messages.builder.heading`), one

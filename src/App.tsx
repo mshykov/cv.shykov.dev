@@ -1,12 +1,10 @@
 import { lazy, Suspense, useRef, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
-import { ArrowUpRight } from './components/ArrowUpRight'
-import { GitHubMark } from './components/GitHubMark'
-import { REPO_URL } from './components/repo'
-import { LanguageFooter, LanguageSwitcher, type LanguageLink } from './components/LanguageSwitcher'
+import { SiteFooter } from './components/SiteFooter'
+import { SiteHeader } from './components/SiteHeader'
+import type { LanguageLink } from './components/LanguageSwitcher'
 import { LocaleProvider, useLocale, useMessages, type LocaleBundle } from './i18n/context.ts'
-import { LOCALES, guidePath, homePath } from './i18n/locales.ts'
-import { SIBLINGS } from './components/siblings.ts'
+import { LOCALES, buildPath, guidePath, homePath } from './i18n/locales.ts'
 import type { Job } from './lib/job.ts'
 
 // The page is a sentence, the drop line and three crossed-out words; everything else
@@ -16,13 +14,12 @@ const loadAnalyzer = () => import('./Analyzer')
 const Analyzer = lazy(loadAnalyzer)
 const Builder = lazy(() => import('./builder/Builder'))
 
-type Mode = 'analyze' | 'build'
-type ModeSwitchProps = Readonly<{ mode: Mode; onSwitch: (next: Mode) => void }>
+export type Mode = 'analyze' | 'build'
 
-// The homepage of every language, for the switcher and the footer.
-const HOME_LINKS: LanguageLink[] = LOCALES.map((l) => ({ locale: l.code, href: homePath(l.code) }))
-
-const TEXT_LINK = 'font-medium underline underline-offset-4 decoration-rule-2 hover:decoration-ink'
+// The same page in every language, for the language menu and the footer.
+const pageLinks = (path: (code: (typeof LOCALES)[number]['code']) => string): LanguageLink[] => LOCALES.map((l) => ({ locale: l.code, href: path(l.code) }))
+const HOME_LINKS = pageLinks(homePath)
+const BUILD_LINKS = pageLinks(buildPath)
 
 // Headline steps: the shorter the sentence, the bigger it is set. On a laptop the size is
 // also capped by the height of the window, so the whole first screen stays in view.
@@ -55,48 +52,6 @@ function SampleReport() {
         ))}
       </ol>
     </div>
-  )
-}
-
-function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
-  const { home: { header } } = useMessages()
-  const next: Mode = mode === 'analyze' ? 'build' : 'analyze'
-  return (
-    <nav aria-label={header.primaryMode}>
-      <button
-        type="button"
-        onClick={() => onSwitch(next)}
-        className="inline-flex min-h-11 items-center px-2 text-base font-medium text-ink-2 transition-colors hover:text-ink sm:px-3"
-      >
-        {next === 'build' ? header.build : header.analyze}
-      </button>
-    </nav>
-  )
-}
-
-function SiteHeader({ mode, onSwitch }: ModeSwitchProps) {
-  const { locale, messages: { languages, home: { header, footer } } } = useLocale()
-  return (
-    <header>
-      <div className="mx-auto flex min-h-16 max-w-300 items-center justify-between gap-3 px-5 sm:px-8">
-        <span className="min-w-0 truncate text-base font-semibold tracking-[-0.01em]">cv.shykov.dev</span>
-        <div className="flex shrink-0 items-center">
-          <ModeSwitch mode={mode} onSwitch={onSwitch} />
-          <a
-            href={REPO_URL}
-            rel="noreferrer"
-            target="_blank"
-            aria-label={footer.openSource}
-            title={footer.openSource}
-            className="inline-flex min-h-11 items-center gap-2 px-2 text-base font-medium text-ink-2 transition-colors hover:text-ink sm:px-3"
-          >
-            <GitHubMark className="size-5" />
-            <span className="hidden md:inline">{header.openSource}</span>
-          </a>
-          <LanguageSwitcher current={locale} links={HOME_LINKS} label={languages.label} />
-        </div>
-      </div>
-    </header>
   )
 }
 
@@ -191,30 +146,25 @@ function Guides() {
   )
 }
 
-function SiteFooter() {
-  const { locale, messages: m } = useLocale()
+function BuildPage() {
+  const { home: { loading }, builder } = useMessages()
   return (
-    <footer className="mt-16 border-t border-rule pt-6 text-sm text-ink-2">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-        <span>{m.home.footer.disclaimer} <a href="https://shykov.dev/" className={TEXT_LINK}>{m.home.footer.author}</a></span>
-        <a href={REPO_URL} rel="noreferrer" target="_blank" className={`inline-flex items-center gap-1 ${TEXT_LINK}`}>{m.home.footer.openSource}<ArrowUpRight /></a>
-      </div>
-      <p className="mt-2">{m.home.footer.noTracking}</p>
-      <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-        <span>{m.home.footer.moreFrom}:</span>
-        {SIBLINGS.map((s) => (
-          <a key={s.name} href={s.href} className={TEXT_LINK}>{s.name}</a>
+    <>
+      <h1 className={`pb-8 pt-6 font-semibold leading-[0.92] tracking-[-0.055em] sm:text-balance ${headlineSize(builder.heading)}`}>
+        {builder.heading.split(' ').map((word, i) => (
+          // A short hyphenated word ("ATS-clean") must not break at its hyphen; a long one may.
+          <span key={word} className={word.includes('-') && word.length <= 10 ? 'whitespace-nowrap' : undefined}>{i > 0 && ' '}{word}</span>
         ))}
-      </nav>
-      <LanguageFooter current={locale} links={HOME_LINKS} label={m.languages.footerLabel} />
-    </footer>
+      </h1>
+      <Suspense fallback={<p className="py-20 text-mute">{loading.builder}</p>}>
+        <Builder />
+      </Suspense>
+    </>
   )
 }
 
-function AppBody() {
+function AnalyzePage() {
   const { messages: m } = useLocale()
-  const [mode, setMode] = useState<Mode>('analyze')
-  const [buildLoaded, setBuildLoaded] = useState(false)
   const [job, setJob] = useState<Job | null>(null)
   const [busy, setBusy] = useState(false)
   const [drag, setDrag] = useState(false)
@@ -226,65 +176,59 @@ function AppBody() {
     setBusy(true)
     setJob({ file, id: jobCount.current })
   }
-
-  const switchMode = (next: Mode) => {
-    if (next === 'build') setBuildLoaded(true)
-    setMode(next)
-    globalThis.scrollTo({ top: 0 })
-  }
-
   const browse = () => inputRef.current?.click()
 
   return (
+    <>
+      {typeof document !== 'undefined' && <input
+        ref={inputRef}
+        type="file"
+        aria-label={m.analyzer.srHeading}
+        accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) choose(file)
+          e.currentTarget.value = ''
+        }}
+      />}
+      <Hero compact={job !== null} busy={busy} drag={drag} onBrowse={browse} onDrop={choose} onDrag={setDrag} />
+      {job && (
+        <Suspense fallback={<p className="py-20 text-mute">{m.home.loading.score}</p>}>
+          <Analyzer key={job.id} job={job} onBusyChange={setBusy} onAnother={browse} />
+        </Suspense>
+      )}
+    </>
+  )
+}
+
+function AppBody({ mode }: Readonly<{ mode: Mode }>) {
+  const { messages: m } = useLocale()
+  const links = mode === 'build' ? BUILD_LINKS : HOME_LINKS
+  return (
     <div className="min-h-full bg-paper">
-      <SiteHeader mode={mode} onSwitch={switchMode} />
+      <SiteHeader current={mode} links={links} />
       <div className="mx-auto flex max-w-300 flex-col px-5 pb-10 sm:px-8 sm:pb-14">
         <main className="flex-1">
-          {typeof document !== 'undefined' && <input
-            ref={inputRef}
-            type="file"
-            aria-label={m.analyzer.srHeading}
-            accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file) choose(file)
-              e.currentTarget.value = ''
-            }}
-          />}
           <ErrorBoundary labels={m.home.errorBoundary}>
-            <div className={mode === 'analyze' ? 'block' : 'hidden'}>
-              <Hero compact={job !== null} busy={busy} drag={drag} onBrowse={browse} onDrop={choose} onDrag={setDrag} />
-              {job && (
-                <Suspense fallback={<p className="py-20 text-mute">{m.home.loading.score}</p>}>
-                  <Analyzer key={job.id} job={job} onBusyChange={setBusy} onAnother={browse} />
-                </Suspense>
-              )}
-            </div>
-            {(mode === 'build' || buildLoaded) && (
-              <Suspense fallback={<p className="py-20 text-mute">{m.home.loading.builder}</p>}>
-                <div className={mode === 'build' ? 'block' : 'hidden'}>
-                  <Builder />
-                </div>
-              </Suspense>
-            )}
+            {mode === 'build' ? <BuildPage /> : <AnalyzePage />}
           </ErrorBoundary>
         </main>
 
-        <div className="mt-28 grid gap-12 border-t border-rule pt-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-24">
-          <Questions />
+        <div className={`mt-28 grid gap-12 border-t border-rule pt-12 ${mode === 'analyze' ? 'lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-24' : ''}`}>
+          {mode === 'analyze' && <Questions />}
           <Guides />
         </div>
-        <SiteFooter />
+        <SiteFooter links={links} />
       </div>
     </div>
   )
 }
 
-export default function App({ bundle }: Readonly<{ bundle: LocaleBundle }>) {
+export default function App({ bundle, mode = 'analyze' }: Readonly<{ bundle: LocaleBundle; mode?: Mode }>) {
   return (
     <LocaleProvider value={bundle}>
-      <AppBody />
+      <AppBody mode={mode} />
     </LocaleProvider>
   )
 }
