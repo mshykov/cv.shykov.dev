@@ -146,10 +146,15 @@ when the Build view opens, as before. The FAQ questions are `<h2>` inside `<summ
 
 ## Icons
 
-`public/favicon.svg`, `favicon.ico`, `logo.png`: neon square with an ink check on ink. The
-social cards (`public/og-image.png`, `public/og/*.png`) still show the previous indigo look:
-they are already shared and cached by networks, so they are redrawn on the owner's say-so
-(`npm run og-images -- --en`), not as a side effect of a redesign.
+`public/favicon.svg`, `favicon.ico`, `logo.png`: neon square with an ink check on ink; the same mark is
+the inline logo in the header (`LogoMark`).
+
+The social cards (`public/og-image.png` for English, `public/og/<code>.png`) are drawn by
+`npm run og-images` (needs Google Chrome), from `messages.og` and the self-hosted fonts: the
+headline (no full stops), a supporting line, three plain facts and one neon block with an example
+score. Redraw them whenever the headline or the look changes. A network caches a card per URL, so a
+link that was already shared keeps its old picture until its debugger (LinkedIn Post Inspector,
+Facebook Sharing Debugger) re-scrapes it.
 
 ## Checks before a design PR
 

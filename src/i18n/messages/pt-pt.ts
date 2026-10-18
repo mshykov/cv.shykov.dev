@@ -35,12 +35,10 @@ export const ptPT: Messages = {
   },
 
   og: {
-    badge: 'Análise de CV 100% no navegador',
     headline: ['Pontuação ATS rápida.', 'Privado por defeito.'],
     sub: ['Pontue ficheiros PDF/DOCX em segundos.', 'Sem carregamentos, contas nem LLM.'],
     chips: ['Corre no navegador', 'Sem carregar', 'Sem LLM'],
     cardLabel: 'No navegador',
-    cardChips: ['Sem carregar', 'Sem LLM', 'PDF/DOCX'],
   },
 
   languages: {

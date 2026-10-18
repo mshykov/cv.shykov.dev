@@ -45,12 +45,10 @@ export const en = {
 
   // Text drawn on the social-card image (scripts/og-images.mjs).
   og: {
-    badge: '100% in-browser resume analysis',
     headline: ['Fast ATS score.', 'Private by default.'],
     sub: ['Score PDF/DOCX files in seconds.', 'No uploads, accounts, or LLM calls.'],
     chips: ['Runs in browser', 'No uploads', 'No LLM'],
     cardLabel: 'In your browser',
-    cardChips: ['No upload', 'No LLM', 'PDF/DOCX'],
   },
 
   languages: {

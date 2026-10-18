@@ -34,12 +34,10 @@ export const es: Messages = {
   },
 
   og: {
-    badge: 'Análisis de CV 100% en tu navegador',
     headline: ['Puntuación ATS rápida.', 'Privado por defecto.'],
     sub: ['Puntúa archivos PDF/DOCX en segundos.', 'Sin subidas, cuentas ni llamadas a LLM.'],
     chips: ['En tu navegador', 'Sin subidas', 'Sin LLM'],
     cardLabel: 'En tu navegador',
-    cardChips: ['Sin subida', 'Sin LLM', 'PDF/DOCX'],
   },
 
   languages: {

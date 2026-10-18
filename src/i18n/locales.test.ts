@@ -166,7 +166,6 @@ for (const loc of LOCALES) {
     assert.equal(m.og.headline.length, 2)
     assert.equal(m.og.sub.length, 2)
     assert.equal(m.og.chips.length, 3)
-    assert.equal(m.og.cardChips.length, 3)
     assert.ok(m.og.headline.every((line) => line.length <= 26), `OG headline lines must fit the card: ${m.og.headline.join(' / ')}`)
   })
 

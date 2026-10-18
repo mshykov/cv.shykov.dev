@@ -36,12 +36,10 @@ export const fr: Messages = {
   },
 
   og: {
-    badge: 'Analyse du CV 100 % dans le navigateur',
     headline: ['Score ATS en secondes.', 'Votre CV reste privé.'],
     sub: ['Analysez vos PDF/DOCX en secondes.', 'Sans envoi, sans compte, sans IA.'],
     chips: ['Dans le navigateur', 'Sans envoi', 'Sans LLM'],
     cardLabel: 'Dans le navigateur',
-    cardChips: ['Sans envoi', 'Sans LLM', 'PDF/DOCX'],
   },
 
   languages: {

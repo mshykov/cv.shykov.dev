@@ -33,12 +33,10 @@ export const ptBR: Messages = {
   },
 
   og: {
-    badge: 'Análise de currículo 100% no navegador',
     headline: ['Pontuação ATS grátis.', 'Privada por padrão.'],
     sub: ['Pontue PDF/DOCX em segundos.', 'Sem envio, cadastro ou LLM.'],
     chips: ['Roda no navegador', 'Sem envio', 'Sem LLM'],
     cardLabel: 'No navegador',
-    cardChips: ['Sem envio', 'Sem LLM', 'PDF/DOCX'],
   },
 
   languages: {
