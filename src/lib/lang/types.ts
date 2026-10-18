@@ -1,7 +1,7 @@
 // What the scorer, parser and job matcher need to know about one language.
 // Data only. Each language file fills this in; index.ts merges them, so a CV
 // is understood whatever language the page around it is in.
-export type LangCode = 'en' | 'es' | 'pt' | 'fr' | 'de'
+export type LangCode = 'en' | 'es' | 'pt' | 'fr' | 'de' | 'uk'
 
 export interface ScorerSections {
   experience: string[]

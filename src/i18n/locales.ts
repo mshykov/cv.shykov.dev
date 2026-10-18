@@ -28,6 +28,7 @@ export const LOCALES = [
   { code: 'pt-pt', htmlLang: 'pt-PT', lang: 'pt', ogLocale: 'pt_PT', nativeName: 'Português (Portugal)', intl: 'pt-PT' },
   { code: 'fr', htmlLang: 'fr-FR', lang: 'fr', ogLocale: 'fr_FR', nativeName: 'Français', intl: 'fr-FR' },
   { code: 'de', htmlLang: 'de-DE', lang: 'de', ogLocale: 'de_DE', nativeName: 'Deutsch', intl: 'de-DE' },
+  { code: 'uk', htmlLang: 'uk-UA', lang: 'uk', ogLocale: 'uk_UA', nativeName: 'Українська', intl: 'uk-UA' },
 ] as const satisfies readonly LocaleInfo[]
 
 export type Locale = (typeof LOCALES)[number]['code']

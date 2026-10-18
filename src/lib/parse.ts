@@ -78,17 +78,15 @@ function sectionize(lines: string[]): { preamble: string[]; sections: Record<str
   return { preamble, sections }
 }
 
+// Unicode letters, not a-z: "Ana Pérez", "José", "Müller" and "Олена Коваленко" are names.
+const LETTER_RE = /\p{L}/u
+
 function hasLetter(value: string): boolean {
-  for (const char of value) {
-    const code = char.toLowerCase().codePointAt(0) ?? 0
-    if (code >= 97 && code <= 122) return true
-  }
-  return false
+  return LETTER_RE.test(value)
 }
 
 function isNameChar(char: string): boolean {
-  const code = char.toLowerCase().codePointAt(0) ?? 0
-  return (code >= 97 && code <= 122) || char === ' ' || char === '.' || char === '\'' || char === '-'
+  return LETTER_RE.test(char) || char === ' ' || char === '.' || char === '\'' || char === '’' || char === 'ʼ' || char === '-'
 }
 
 function isLikelyName(value: string): boolean {

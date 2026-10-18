@@ -10,12 +10,13 @@ import { en } from './en.ts'
 import { es } from './es.ts'
 import { fr } from './fr.ts'
 import { pt } from './pt.ts'
+import { uk } from './uk.ts'
 import type { LangCode, LangData, ParserSectionKey, ScorerSections } from './types.ts'
 
 export type { LangCode, LangData, ParserSectionKey, ScorerSections } from './types.ts'
 export { fold, foldHeading } from './fold.ts'
 
-export const LANGS: Record<LangCode, LangData> = { en, es, pt, fr, de }
+export const LANGS: Record<LangCode, LangData> = { en, es, pt, fr, de, uk }
 const ALL = Object.values(LANGS)
 
 const unique = (items: string[]) => [...new Set(items)]
@@ -60,7 +61,7 @@ const DETECT = ALL.map((lang) => ({ code: lang.code, words: new Set(lang.detectW
  * English-only writing-style checks make sense — never to gate the ATS score.
  */
 export function detectLanguage(text: string): LangCode | 'unknown' {
-  const tokens = fold(text).match(/[a-z]+/g) ?? []
+  const tokens = fold(text).match(/[a-z\u0400-\u04ff]+/g) ?? []
   if (tokens.length < 40) return 'unknown'
   const scored = DETECT.map(({ code, words }) => ({ code, hits: tokens.filter((t) => words.has(t)).length }))
     .sort((a, b) => b.hits - a.hits)

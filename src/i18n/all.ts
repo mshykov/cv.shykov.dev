@@ -9,14 +9,16 @@ import { bundle as ptBR } from './bundles/pt-br.ts'
 import { bundle as ptPT } from './bundles/pt-pt.ts'
 import { bundle as fr } from './bundles/fr.ts'
 import { bundle as de } from './bundles/de.ts'
+import { bundle as uk } from './bundles/uk.ts'
 import { ARTICLES as enArticles } from '../content/en/articles.tsx'
 import { ARTICLES as esArticles } from '../content/es/articles.tsx'
 import { ARTICLES as ptBRArticles } from '../content/pt-br/articles.tsx'
 import { ARTICLES as ptPTArticles } from '../content/pt-pt/articles.tsx'
 import { ARTICLES as frArticles } from '../content/fr/articles.tsx'
 import { ARTICLES as deArticles } from '../content/de/articles.tsx'
+import { ARTICLES as ukArticles } from '../content/uk/articles.tsx'
 
-export const BUNDLES: Record<Locale, LocaleBundle> = { en, es, 'pt-br': ptBR, 'pt-pt': ptPT, fr, de }
+export const BUNDLES: Record<Locale, LocaleBundle> = { en, es, 'pt-br': ptBR, 'pt-pt': ptPT, fr, de, uk }
 export const ARTICLES: Record<Locale, Article[]> = {
-  en: enArticles, es: esArticles, 'pt-br': ptBRArticles, 'pt-pt': ptPTArticles, fr: frArticles, de: deArticles,
+  en: enArticles, es: esArticles, 'pt-br': ptBRArticles, 'pt-pt': ptPTArticles, fr: frArticles, de: deArticles, uk: ukArticles,
 }
