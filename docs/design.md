@@ -54,7 +54,7 @@ works and each page has its own title, canonical, hreflang and sitemap entry (`s
 On phones the three links drop to a second row under the wordmark.
 
 Every page starts the same distance below the header: `--first-gap` (`index.css`) is the space that
-centres the score page's first screen (about 33 rem tall) in the window, never less than 2.5 rem,
+centres the score page's first screen (about 37 rem tall) in the window, never less than 4.5 rem,
 and the build, guides and article pages use the same value from 1024 px up.
 
 ## The Build view

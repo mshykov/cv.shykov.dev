@@ -76,9 +76,9 @@ body,
 html {
   background: var(--color-paper);
   /* The space between the header and the first content on every page: the score page's first
-     screen (about 33rem tall) centred in the window, and the same distance on the other
+     screen (about 37rem tall) centred in the window, and the same distance on the other
      pages. Never less than 2.5rem. Phones use a fixed, smaller offset. */
-  --first-gap: max(2.5rem, calc((100svh - 4rem - 33rem) / 2));
+  --first-gap: max(4.5rem, calc((100svh - 4rem - 37rem) / 2));
 }
 
 body {

@@ -28,20 +28,20 @@ function SampleReport() {
   const { home: { hero }, analysis: { labels } } = useMessages()
   const fixes = [[5, labels.phone], [3, labels.links], [2, labels.quant]] as const
   return (
-    <div aria-hidden className="hidden flex-col justify-between border border-rule-2 p-4 lg:mb-3 lg:mt-2 lg:flex">
+    <div aria-hidden className="hidden flex-col justify-center border border-rule-2 p-5 lg:-mb-8 lg:-mt-8 lg:flex">
       <div>
         <div className="flex items-end justify-between gap-3">
           <div className="flex items-end gap-2">
-            <span className="text-[3.5rem] font-semibold leading-[0.8] tracking-[-0.07em] tabular-nums">90</span>
+            <span className="text-[4rem] font-semibold leading-[0.8] tracking-[-0.07em] tabular-nums">90</span>
             <span className="pb-0.5 text-base font-medium text-ink-2">/100</span>
           </div>
           <span className="lab">{hero.example}</span>
         </div>
         <div className="mt-3 h-1.5 bg-rule"><div className="h-full w-[90%] bg-neon outline outline-1 outline-ink" /></div>
       </div>
-      <ol className="mt-3">
+      <ol className="mt-5">
         {fixes.map(([points, label]) => (
-          <li key={label} className="flex items-center justify-between gap-3 border-t border-rule py-1.5 text-sm">
+          <li key={label} className="flex items-center justify-between gap-3 border-t border-rule py-2 text-sm">
             <span className="truncate">{label}</span>
             <span className="neon-block shrink-0 px-1.5 py-0.5 font-mono text-xs font-semibold">−{points}</span>
           </li>
@@ -64,7 +64,7 @@ function Hero({ busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
   const { home: { hero }, analyzer } = useMessages()
   return (
     <section
-      className="flex flex-col gap-10 pb-12 pt-8 lg:gap-12 lg:pt-[var(--first-gap)]"
+      className="flex flex-col gap-10 pb-12 pt-8 lg:gap-20 lg:pt-[var(--first-gap)]"
       onDragOver={(e) => { e.preventDefault(); onDrag(true) }}
       onDragLeave={() => onDrag(false)}
       onDrop={(e) => {
@@ -74,7 +74,7 @@ function Hero({ busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
         if (file) onDrop(file)
       }}
     >
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-stretch lg:gap-14">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-stretch lg:gap-14">
         <h1 className={`whitespace-pre-line text-balance font-semibold leading-[0.92] tracking-[-0.055em] ${headlineSize(hero.h1)}`}>{hero.h1}</h1>
         <SampleReport />
       </div>
