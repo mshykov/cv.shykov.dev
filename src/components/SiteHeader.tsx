@@ -4,6 +4,7 @@
 import { useLocale } from '../i18n/context.ts'
 import { buildPath, guidesPath, homePath } from '../i18n/locales.ts'
 import { GitHubMark } from './GitHubMark'
+import { LogoMark } from './LogoMark'
 import { LanguageSwitcher, type LanguageLink } from './LanguageSwitcher'
 import { REPO_URL } from './repo'
 
@@ -22,7 +23,7 @@ export function SiteHeader({ current, links }: Props) {
   return (
     <header>
       <div className="mx-auto flex max-w-300 flex-wrap items-center gap-x-2 px-5 sm:px-8">
-        <a href={homePath(locale)} className="mr-auto flex min-h-14 items-center text-base font-semibold tracking-[-0.01em]">cv.shykov.dev</a>
+        <a href={homePath(locale)} className="mr-auto flex min-h-14 items-center gap-2.5 text-base font-semibold tracking-[-0.01em]"><LogoMark />cv.shykov.dev</a>
         <nav aria-label={header.primaryMode} className="order-3 -ml-2 flex w-full sm:order-none sm:ml-0 sm:w-auto">
           {pages.map(([id, href, label]) => (
             <a
