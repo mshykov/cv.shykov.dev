@@ -161,6 +161,12 @@ export const ptPT: Messages = {
     copyDetails: 'Copiar detalhes',
     scoreHeading: 'Pontuação ATS rápida',
     estimateNote: 'Uma estimativa da forma como um analisador lê este ficheiro, não uma previsão de uma decisão de contratação.',
+    network: {
+      summary: 'Veja o que esta página enviou',
+      ok: (n: number) => `Desde que escolheu o ficheiro, esta página fez ${n} pedidos, todos para este mesmo site. Nenhum foi para outro site e nenhum foi fetch, XHR ou beacon.`,
+      warn: (other: number, data: number) => `Desde que escolheu o ficheiro, ${other} pedidos foram para outro site e ${data} foram fetch, XHR ou beacon. Abra o separador Rede para os ver.`,
+      hint: 'Abra o separador Rede do navegador e escolha o ficheiro outra vez para confirmar por si.',
+    },
     topFixes: 'Principais correções',
     downloadReport: '↓ Relatório',
     noPriorityFixes: 'Não há correções prioritárias. O resto do relatório é sobretudo confirmação.',
@@ -216,6 +222,8 @@ export const ptPT: Messages = {
       length: { detail: (words: number) => `${number(words)} palavras, o que é longo para a maioria das funções.`, fix: 'Abaixo de cerca de 1000 palavras, o CV lê-se melhor à primeira vista. Corte as experiências mais antigas e os marcadores repetidos. Os CV de direção, os académicos e os de alguns cargos públicos costumam ser mais longos.' },
       thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'função tem' : 'funções têm'} apenas um marcador.`, fix: 'Uma função com um único marcador parece escassa. Acrescente um ou dois resultados concretos, ou resuma-a numa linha de experiência anterior.' },
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'marcador ultrapassa' : 'marcadores ultrapassam'} as 40 palavras.`, fix: 'Divida os marcadores longos num resultado e na forma como o alcançou. Entre uma e duas linhas cada um lê-se mais depressa.' },
+      fileName: { detail: (name: string) => `O ficheiro chama-se “${name}”.`, fix: 'Os recrutadores guardam muitos ficheiros. Chame-lhe Nome_Apelido_CV.pdf, sem palavras como “final”, números de versão ou datas.' },
+      properties: { detail: (author?: string, title?: string) => `As propriedades do ficheiro mostram ${[author && `o autor “${author}”`, title && `o título “${title}”`].filter(Boolean).join(' e ')}.`, fix: 'Qualquer pessoa que abra as propriedades do ficheiro vê estes campos. Indique o seu nome como autor e um título como “Nome Apelido CV” e exporte novamente.' },
     },
     categories: { Parseability: 'Legibilidade', Contact: 'Contactos', Sections: 'Secções', Format: 'Formato', Content: 'Conteúdo' },
     labels: {

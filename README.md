@@ -108,7 +108,7 @@ A section heading only earns points when text follows it (or it carries its own,
 
 ### Advisories (not scored)
 
-Four conventions are shown in a separate "Worth a look" card and never change the score,
+Conventions are shown in a separate "Worth a look" card and never change the score,
 because they vary by country, seniority and sector (`src/lib/advisories.ts`):
 
 | Advisory | Shown when |
@@ -117,6 +117,8 @@ because they vary by country, seniority and sector (`src/lib/advisories.ts`):
 | Thin role | the CV has at least two roles and one of them has exactly one bullet |
 | Long bullets | a bullet runs past 40 words |
 | Graduation year | English interface only: an education entry whose latest year is more than 15 years back |
+| File name | the file is called something like `cv_final_v3` or `Resume (2)` |
+| Document properties | a PDF whose Author shares no word with the name on the CV, or whose Title looks like a scratch name |
 
 PDF text extraction uses `pdf.js`. DOCX extraction uses `mammoth`.
 PDF export uses `@react-pdf/renderer`.
@@ -161,6 +163,15 @@ Read this before you trust a number.
 If the score is wrong for your CV, or you can break the order above, open a
 [Wrong score](https://github.com/mshykov/cv.shykov.dev/issues/new?template=wrong-score.md)
 issue (do not attach your CV; paste the line involved).
+
+### "Check what this page sent"
+
+After an analysis, a collapsed note states what the page observed about its own network
+activity since the file was chosen, using Resource Timing (`src/lib/network.ts`): how many
+requests it made, how many went to another site (expected: none) and how many were `fetch`,
+XHR or beacon requests (expected: none; `data:` and `blob:` URLs do not leave the page). A page
+cannot read a request body, so this is what was counted, not a guarantee; the note tells the
+reader how to check in the browser's Network tab.
 
 ## Writing Style Check
 

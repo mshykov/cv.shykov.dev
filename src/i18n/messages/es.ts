@@ -160,6 +160,12 @@ export const es: Messages = {
     copyDetails: 'Copiar detalles',
     scoreHeading: 'Puntuación ATS rápida',
     estimateNote: 'Una estimación de lo bien que un analizador leerá este archivo, no una predicción de una decisión de contratación.',
+    network: {
+      summary: 'Comprueba qué envió esta página',
+      ok: (n: number) => `Desde que elegiste el archivo, esta página hizo ${n} solicitudes, todas a este mismo sitio. Ninguna fue a otro sitio y ninguna fue fetch, XHR ni beacon.`,
+      warn: (other: number, data: number) => `Desde que elegiste el archivo, ${other} solicitudes fueron a otro sitio y ${data} fueron fetch, XHR o beacon. Abre la pestaña Red para verlas.`,
+      hint: 'Abre la pestaña Red del navegador y vuelve a elegir el archivo para comprobarlo por tu cuenta.',
+    },
     topFixes: 'Correcciones principales',
     downloadReport: '↓ Informe',
     noPriorityFixes: 'No hay correcciones prioritarias. El resto del informe es sobre todo confirmación.',
@@ -215,6 +221,8 @@ export const es: Messages = {
       length: { detail: (words: number) => `${number(words)} palabras, algo largo para la mayoría de los puestos.`, fix: 'Por debajo de unas 1000 palabras se lee mejor a primera vista. Recorta los puestos más antiguos y las viñetas repetidas. Los CV de dirección, los académicos y los de algunos puestos públicos suelen ser más largos.' },
       thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'puesto tiene' : 'puestos tienen'} una sola viñeta.`, fix: 'Un puesto con una sola viñeta parece escaso. Añade uno o dos resultados concretos, o resúmelo en una línea de experiencia anterior.' },
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'viñeta supera' : 'viñetas superan'} las 40 palabras.`, fix: 'Divide las viñetas largas en un resultado y en cómo lo conseguiste. Una o dos líneas cada una se leen más rápido.' },
+      fileName: { detail: (name: string) => `El archivo se llama «${name}».`, fix: 'Los reclutadores guardan muchos archivos. Llámalo Nombre_Apellido_CV.pdf, sin palabras como «final», números de versión ni fechas.' },
+      properties: { detail: (author?: string, title?: string) => `Las propiedades del archivo muestran ${[author && `el autor «${author}»`, title && `el título «${title}»`].filter(Boolean).join(' y ')}.`, fix: 'Cualquiera que abra las propiedades del archivo puede ver estos campos. Pon tu nombre como autor y un título como «Nombre Apellido CV», y vuelve a exportar.' },
     },
     categories: { Parseability: 'Legibilidad', Contact: 'Contacto', Sections: 'Secciones', Format: 'Formato', Content: 'Contenido' },
     labels: {

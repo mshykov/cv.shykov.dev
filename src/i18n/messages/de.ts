@@ -162,6 +162,12 @@ export const de: Messages = {
     copyDetails: 'Details kopieren',
     scoreHeading: 'Schneller ATS-Score',
     estimateNote: 'Eine Schätzung, wie gut ein Parser diese Datei lesen kann, keine Vorhersage einer Einstellungsentscheidung.',
+    network: {
+      summary: 'Prüfen, was diese Seite gesendet hat',
+      ok: (n: number) => `Seit Sie die Datei gewählt haben, hat diese Seite ${n} Anfragen gestellt, alle an diese Website. Keine ging an eine andere Website, und keine war ein Fetch, XHR oder Beacon.`,
+      warn: (other: number, data: number) => `Seit Sie die Datei gewählt haben, gingen ${other} Anfragen an eine andere Website, und ${data} waren Fetch-, XHR- oder Beacon-Anfragen. Öffnen Sie den Netzwerk-Tab, um sie zu sehen.`,
+      hint: 'Öffnen Sie den Netzwerk-Tab des Browsers und wählen Sie die Datei erneut, um es selbst zu prüfen.',
+    },
     topFixes: 'Wichtigste Korrekturen',
     downloadReport: '↓ Bericht',
     noPriorityFixes: 'Keine vorrangigen Korrekturen gefunden. Der restliche Bericht ist überwiegend Bestätigung.',
@@ -217,6 +223,8 @@ export const de: Messages = {
       length: { detail: (words: number) => `${number(words)} Wörter, für die meisten Stellen eher lang.`, fix: 'Unter etwa 1.000 Wörtern lässt sich ein Lebenslauf auf den ersten Blick besser lesen. Kürzen Sie die ältesten Stationen und wiederholte Aufzählungspunkte. Lebensläufe für Führungspositionen, aus der Wissenschaft und für manche Behörden sind üblicherweise länger.' },
       thinRole: { detail: (n: number) => `${n} ${n === 1 ? 'Station hat' : 'Stationen haben'} nur einen Aufzählungspunkt.`, fix: 'Eine Station mit nur einem Punkt wirkt dünn. Ergänzen Sie ein oder zwei konkrete Ergebnisse oder fassen Sie sie in einer Zeile früherer Erfahrung zusammen.' },
       longBullets: { detail: (n: number) => `${n} ${n === 1 ? 'Aufzählungspunkt umfasst' : 'Aufzählungspunkte umfassen'} mehr als 40 Wörter.`, fix: 'Teilen Sie lange Punkte in ein Ergebnis und den Weg dorthin. Eine bis zwei Zeilen je Punkt lassen sich schneller überfliegen.' },
+      fileName: { detail: (name: string) => `Die Datei heißt „${name}“.`, fix: 'Recruiter speichern viele Dateien. Nennen Sie sie Vorname_Nachname_Lebenslauf.pdf, ohne Wörter wie „final“, Versionsnummern oder Datumsangaben.' },
+      properties: { detail: (author?: string, title?: string) => `Die Dateieigenschaften zeigen ${[author && `den Autor „${author}“`, title && `den Titel „${title}“`].filter(Boolean).join(' und ')}.`, fix: 'Wer die Dateieigenschaften öffnet, sieht diese Felder. Tragen Sie Ihren Namen als Autor und einen Titel wie „Vorname Nachname Lebenslauf“ ein und exportieren Sie erneut.' },
     },
     categories: { Parseability: 'Lesbarkeit', Contact: 'Kontakt', Sections: 'Abschnitte', Format: 'Format', Content: 'Inhalt' },
     labels: {

@@ -34,6 +34,8 @@ export interface Extracted {
   text: string
   /** PDF hyperlink targets. These may not be visible to ATS-style text parsers. */
   linkTargets?: string[]
+  /** PDF document properties (Title, Author) when present. */
+  properties?: { title?: string; author?: string }
   numPages: number
   charCount: number
   /** Which extractor produced this (affects which checks are meaningful). */
@@ -109,6 +111,19 @@ async function collectPage(page: PdfPageLike, pageNumber: number, pieces: TextPi
   }
 }
 
+async function readProperties(doc: { getMetadata?: () => Promise<{ info?: unknown }> }): Promise<Extracted['properties']> {
+  // Metadata is a nicety: a malformed info dictionary must never fail the analysis.
+  try {
+    const info = (await doc.getMetadata?.())?.info as { Title?: unknown; Author?: unknown } | undefined
+    const clean = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 200) : undefined)
+    const title = clean(info?.Title)
+    const author = clean(info?.Author)
+    return title || author ? { title, author } : undefined
+  } catch {
+    return undefined
+  }
+}
+
 export async function extractPdf(file: File): Promise<Extracted> {
   const data = new Uint8Array(await file.arrayBuffer())
   await ensureMainThreadWorker()
@@ -116,6 +131,7 @@ export async function extractPdf(file: File): Promise<Extracted> {
   const doc = await task.promise
   const pieces: TextPiece[] = []
   const linkTargets = new Set<string>()
+  const properties = await readProperties(doc)
 
   try {
     for (let p = 1; p <= doc.numPages; p++) {
@@ -135,6 +151,7 @@ export async function extractPdf(file: File): Promise<Extracted> {
     lines,
     text,
     linkTargets: [...linkTargets],
+    properties,
     numPages: doc.numPages,
     charCount: text.replace(/\s/g, '').length,
     source: 'pdf',

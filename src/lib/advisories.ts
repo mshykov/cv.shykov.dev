@@ -8,7 +8,7 @@ import type { Extracted } from './pdf.ts'
 import type { Resume } from './parse.ts'
 import type { AnalysisMessages } from './analyze.ts'
 
-export type AdvisoryId = 'length' | 'thin-role' | 'long-bullets' | 'graduation-year'
+export type AdvisoryId = 'length' | 'thin-role' | 'long-bullets' | 'graduation-year' | 'file-name' | 'document-properties'
 
 export interface Advisory {
   id: AdvisoryId
@@ -25,6 +25,23 @@ export const LONG_BULLET_WORDS = 40
 
 const wordCount = (text: string) => text.match(/\p{L}[\p{L}\p{N}'’-]*|\p{N}+/gu)?.length ?? 0
 
+const fold = (text: string) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+const wordsOf = (text: string) => fold(text).match(/\p{L}+/gu) ?? []
+
+/** Names recruiters cannot tell apart: "final", versions, copies, "untitled", long numeric ids. */
+const SCRATCH_NAME_RE = /(^|[^a-z])(final|draft|copy|untitled|latest|new|real|v\d+|version\s*\d+)([^a-z]|$)|\(\d+\)|\d{6,}|^microsoft word/i
+
+export function looksLikeScratchName(name: string): boolean {
+  return SCRATCH_NAME_RE.test(name.replace(/\.[^.]+$/, ''))
+}
+
+/** True when an author field shares no word with the name on the CV (a template, a colleague, an old CV). */
+export function authorLooksForeign(author: string, cvName: string): boolean {
+  const mine = new Set(wordsOf(cvName).filter((w) => w.length > 1))
+  const theirs = wordsOf(author).filter((w) => w.length > 1)
+  return mine.size > 0 && theirs.length > 0 && !theirs.some((w) => mine.has(w))
+}
+
 const YEAR_RE = /\b(?:19|20)\d{2}\b/g
 
 /** Education entries whose latest year is more than OLD_GRADUATION_YEARS before `now`. */
@@ -38,6 +55,8 @@ export function countOldGraduationYears(resume: Resume, now: number): number {
 export interface AdvisoryOptions {
   /** Interface language. The graduation-year advice is only given in English. */
   locale?: string
+  /** Name of the uploaded file, for the file-name advice. */
+  fileName?: string
   /** Current year; injectable so the check does not drift with the calendar in tests. */
   now?: number
 }
@@ -59,6 +78,19 @@ export function getAdvisories(ex: Extracted, resume: Resume, m: AnalysisMessages
 
   const longBullets = roles.flatMap((r) => r.bullets).filter((b) => wordCount(b) > LONG_BULLET_WORDS).length
   if (longBullets > 0) out.push({ id: 'long-bullets', detail: m.longBullets.detail(longBullets), fix: m.longBullets.fix })
+
+  if (opts.fileName && looksLikeScratchName(opts.fileName)) {
+    out.push({ id: 'file-name', detail: m.fileName.detail(opts.fileName.replace(/\.[^.]+$/, '')), fix: m.fileName.fix })
+  }
+
+  const props = ex.properties
+  if (props) {
+    const author = props.author && authorLooksForeign(props.author, resume.profile.name) ? props.author : undefined
+    const title = props.title && looksLikeScratchName(props.title) ? props.title : undefined
+    if (author || title) {
+      out.push({ id: 'document-properties', detail: m.properties.detail(author, title), fix: m.properties.fix })
+    }
+  }
 
   // English only, on purpose: whether to show a graduation year is a convention that
   // differs by country (customary in much of Europe and in academic CVs), and a
