@@ -11,7 +11,7 @@ import { fold } from '../lib/lang/index.ts'
 // left in place), working functions, and a builder sample that scores well with
 // that language's own headings. docs/localization.md describes the workflow.
 
-const MODULES: Record<string, string> = { es: 'es', 'pt-br': 'ptBR', 'pt-pt': 'ptPT', fr: 'fr', de: 'de' }
+const MODULES: Record<string, string> = { es: 'es', 'pt-br': 'ptBR', 'pt-pt': 'ptPT', fr: 'fr', de: 'de', uk: 'uk' }
 
 async function messagesOf(code: string): Promise<Messages> {
   if (code === DEFAULT_LOCALE) return en

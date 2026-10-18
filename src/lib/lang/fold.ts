@@ -11,10 +11,10 @@ export function fold(value: string): string {
     .replaceAll('œ', 'oe')
 }
 
-/** Fold, then keep only what a section heading can contain (see normalizeHeader). */
+/** Fold, then keep only what a section heading can contain: Latin and Cyrillic letters, & and / (see normalizeHeader). */
 export function foldHeading(value: string): string {
   return fold(value)
-    .replaceAll(/[^a-z&/ ]/g, ' ')
+    .replaceAll(/[^a-z\u0400-\u04ff&/ ]/g, ' ')
     .replaceAll(/\s+/g, ' ')
     .trim()
 }

@@ -101,3 +101,12 @@ test('a LANGUAGES header terminates the education section (no bleed)', () => {
   const dates = parseResume(ex(LINES)).education.map((e) => e.date).join(' ')
   assert.ok(!/LANGUAGES|English/.test(dates), 'education dates leaked into next section')
 })
+
+test('names with accents or Cyrillic letters are found, with their location', () => {
+  const r = parseResume(ex(['Ana Pérez-Müller', 'ana@example.com', 'Lisboa, Portugal', 'EXPERIENCE', 'Engineer — Acme Jan 2020 – now', '• Built things 3x']))
+  assert.equal(r.profile.name, 'Ana Pérez-Müller')
+  assert.equal(r.profile.location, 'Lisboa, Portugal')
+  const uk = parseResume(ex(['ОЛЕНА КОВАЛЕНКО', 'olena@example.com', 'Київ, Україна', 'ДОСВІД РОБОТИ', 'Інженер — Acme січ 2020 – наразі', '• Побудувала сервіс 3x']))
+  assert.equal(uk.profile.name, 'ОЛЕНА КОВАЛЕНКО')
+  assert.equal(uk.profile.location, 'Київ, Україна')
+})
