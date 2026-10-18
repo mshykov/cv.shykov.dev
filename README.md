@@ -253,7 +253,7 @@ arrays, so none of them can drift out of step with the pages that actually exist
 
 The toolkit and the guides are published in English (`/`), Spanish (`/es/`),
 Brazilian Portuguese (`/pt-br/`), European Portuguese (`/pt-pt/`), French (`/fr/`)
-German (`/de/`) and Ukrainian (`/uk/`, interface and tool; its guides are still to come). The
+German (`/de/`) and Ukrainian (`/uk/`). The
 interface, the scorer's messages, the report export and the
 builder are translated, and the scorer reads CVs written in any of these languages
 whatever language the page is in. `docs/localization.md` describes the architecture

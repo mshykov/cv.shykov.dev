@@ -11,6 +11,7 @@ hiring decision. See "Limitations And Bias" in the [README](../README.md).
 
 - **Ukrainian CVs are read** with Ukrainian section headings, month names, action verbs and units.
   Names with accents or Cyrillic letters are now found by the parser (previously only a-z names).
+  The six guides are available in Ukrainian too (no change to any score).
 
 - **Not scored, new advice** (shown in a separate "Worth a look" card; none of it changes the score):
   - file name that looks like a scratch copy (`cv_final_v3`, `Resume (2)`);
