@@ -329,17 +329,13 @@ been Safari-only. The end-to-end suite scores a CV in every language, opens the 
 every language and exports a PDF, and checks that the Back button returns from `/build` to the
 score page.
 
-**Lighthouse** (mobile, simulated slow 4G with a 4x CPU slowdown, Lighthouse 12/13, 2026-10-18).
-These were measured on a local build served with Brotli, as Cloudflare serves it, not on production:
+**Lighthouse** (mobile, cv.shykov.dev/, simulated slow 4G with a 4x CPU slowdown, Lighthouse 13.4.1, 2026-10-18, after the redesign):
 
 | Performance | Accessibility | Best Practices | SEO |
 |--------------|----------------|-----------------|-----|
-| 96 | 100 | 100 | 100 |
+| 100 | 100 | 100 | 100 |
 
-FCP 2.0 s · LCP 2.3 s · TBT 0 ms · CLS 0 · transfer 118 KiB. The same measurement of the previous
-design scored 91-94 (Speed Index 4.3-5.8 s against 2.8-3.3 s now). Production has not been re-measured
-since the redesign; the earlier production figures (99, FCP 1.5 s, LCP 1.7 s, 2026-09-01) were taken on
-a different Lighthouse version and profile and are not comparable.
+FCP 0.9 s · LCP 1.1 s · TBT 0 ms · CLS 0 · Speed Index 0.9 s · 153 KiB transferred · zero console errors.
 
 Best Practices was 93 until 2026-09-01. Cloudflare was auto-injecting its Web
 Analytics beacon, and this site's own CSP blocked it, logging a violation in
