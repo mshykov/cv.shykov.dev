@@ -124,6 +124,7 @@ export const ptPT: Messages = {
       noTracking: 'Sem rastreamento, sem carregamentos, sem contas.',
       openSource: 'Código aberto no GitHub',
       moreFrom: 'Mais do autor',
+      scoringChangelog: 'Histórico de alterações da pontuação',
     },
     errorBoundary: {
       title: 'Algo correu mal',
@@ -161,6 +162,11 @@ export const ptPT: Messages = {
     copyDetails: 'Copiar detalhes',
     scoreHeading: 'Pontuação ATS rápida',
     estimateNote: 'Uma estimativa da forma como um analisador lê este ficheiro, não uma previsão de uma decisão de contratação.',
+    delta: {
+      up: (n: number, previous: number) => `+${n} face ao ficheiro anterior (${previous})`,
+      down: (n: number, previous: number) => `−${n} face ao ficheiro anterior (${previous})`,
+      same: (previous: number) => `Mesma pontuação do ficheiro anterior (${previous})`,
+    },
     network: {
       summary: 'Veja o que esta página enviou',
       ok: (n: number) => `Desde que escolheu o ficheiro, esta página fez ${n} pedidos, todos para este mesmo site. Nenhum foi para outro site e nenhum foi fetch, XHR ou beacon.`,

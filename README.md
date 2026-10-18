@@ -143,6 +143,8 @@ The Job match tab extracts the keywords a pasted posting emphasises and checks y
   mentioned both as required and as preferred stays a must-have. English markers only.
 - **Copy the missing list** with one click.
 
+The history of every change that moved a score is in [docs/scoring-changelog.md](docs/scoring-changelog.md).
+
 ## Limitations And Bias
 
 Read this before you trust a number.

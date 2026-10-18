@@ -123,6 +123,7 @@ export const es: Messages = {
       noTracking: 'Sin rastreo, sin subidas, sin cuentas.',
       openSource: 'Código abierto en GitHub',
       moreFrom: 'Más del autor',
+      scoringChangelog: 'Cambios en la puntuación',
     },
     errorBoundary: {
       title: 'Algo ha salido mal',
@@ -160,6 +161,11 @@ export const es: Messages = {
     copyDetails: 'Copiar detalles',
     scoreHeading: 'Puntuación ATS rápida',
     estimateNote: 'Una estimación de lo bien que un analizador leerá este archivo, no una predicción de una decisión de contratación.',
+    delta: {
+      up: (n: number, previous: number) => `+${n} respecto al archivo anterior (${previous})`,
+      down: (n: number, previous: number) => `−${n} respecto al archivo anterior (${previous})`,
+      same: (previous: number) => `Misma puntuación que el archivo anterior (${previous})`,
+    },
     network: {
       summary: 'Comprueba qué envió esta página',
       ok: (n: number) => `Desde que elegiste el archivo, esta página hizo ${n} solicitudes, todas a este mismo sitio. Ninguna fue a otro sitio y ninguna fue fetch, XHR ni beacon.`,
