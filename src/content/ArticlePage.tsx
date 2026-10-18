@@ -139,7 +139,9 @@ function Page({ article, links }: Readonly<{ article: Article; links: LanguageLi
             </p>
           </div>
           <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span>{m.home.footer.moreFrom}:</span>
+            <a href={`${REPO_URL}/blob/main/docs/scoring-changelog.md`} rel="noreferrer" target="_blank" className="font-medium text-stone-700 underline underline-offset-2">{m.home.footer.scoringChangelog}</a>
+          <span aria-hidden>·</span>
+          <span>{m.home.footer.moreFrom}:</span>
             {SIBLINGS.map((s) => (
               <a key={s.name} href={s.href} className="font-medium text-stone-700 underline underline-offset-2">{s.name}</a>
             ))}

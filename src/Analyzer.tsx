@@ -7,6 +7,7 @@ import type { Resume } from './lib/parse'
 import type { JDMatch } from './lib/jdmatch'
 import type { StyleReport, StyleLevel, StyleSignal } from './lib/style'
 import type { Advisory } from './lib/advisories'
+import { deltaBetween, snapshotOf, type Delta, type Snapshot } from './lib/delta'
 import { markNow, observeNetworkSince, type NetworkReport } from './lib/network'
 import { TONE } from './components/tone'
 import { ScoreRing } from './components/ScoreRing'
@@ -23,7 +24,7 @@ const STYLE_TONE: Record<StyleLevel, { dot: string; text: string }> = {
   major: TONE.fail,
 }
 type CheckRowProps = Readonly<{ c: Check }>
-type CategoryBreakdownProps = Readonly<{ report: Report }>
+type CategoryBreakdownProps = Readonly<{ report: Report; deltas?: Record<string, number> }>
 type TopFixesProps = Readonly<{ fixes: Check[] }>
 
 // Stage names for the developer-facing error detail stay English on purpose: it is
@@ -68,7 +69,7 @@ function CheckRow({ c }: CheckRowProps) {
   )
 }
 
-function CategoryBreakdown({ report }: CategoryBreakdownProps) {
+function CategoryBreakdown({ report, deltas }: CategoryBreakdownProps) {
   const { analysis } = useMessages()
   const categories = [...new Set(report.checks.map((c) => c.category))]
 
@@ -84,7 +85,12 @@ function CategoryBreakdown({ report }: CategoryBreakdownProps) {
           <div key={cat} className="min-w-34 flex-1 rounded-xl bg-stone-50 px-3 py-2 ring-1 ring-stone-200">
             <div className="flex items-baseline justify-between gap-3">
               <span className="text-xs font-medium text-stone-500">{analysis.categories[cat]}</span>
-              <span className="text-xs tabular-nums text-stone-400">{points}/{max}</span>
+              <span className="text-xs tabular-nums text-stone-400">
+                {points}/{max}
+                {deltas && deltas[cat] !== 0 && deltas[cat] !== undefined && (
+                  <span className={`ml-1 font-medium ${deltas[cat] > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{deltas[cat] > 0 ? '+' : '−'}{Math.abs(deltas[cat])}</span>
+                )}
+              </span>
             </div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-stone-200">
               <div className="h-full rounded-full bg-stone-900 transition-[width]" style={{ width: `${pct}%` }} />
@@ -253,6 +259,9 @@ export default function Analyzer() {
   const [styleTooShort, setStyleTooShort] = useState(false)
   const [advisories, setAdvisories] = useState<Advisory[]>([])
   const [network, setNetwork] = useState<NetworkReport | null>(null)
+  // The previous file's score in this session, in memory only, so a second upload shows what changed.
+  const previousSnapshot = useRef<Snapshot | null>(null)
+  const [delta, setDelta] = useState<Delta | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   // Nothing blocks a second upload while the first is still parsing - the
   // dropzone stays droppable and `busy` only swaps a caption. Two runs then
@@ -290,6 +299,9 @@ export default function Analyzer() {
       const sty = tooShort ? null : analysed
       if (runId.current !== id) return
       setReport(rep); setResume(res); setCvText(ex.text); setStyle(sty); setStyleSkipped(skip); setStyleTooShort(tooShort); setAdvisories(adv); setNetwork(observeNetworkSince(mark))
+      const snap = snapshotOf(rep)
+      setDelta(previousSnapshot.current ? deltaBetween(previousSnapshot.current, snap) : null)
+      previousSnapshot.current = snap
     } catch (e) {
       if (runId.current !== id) return
       const err = e instanceof Error ? e : new Error(String(e))
@@ -405,10 +417,15 @@ export default function Analyzer() {
                     </div>
                     <h2 className="mt-3 text-xl font-semibold tracking-tight text-stone-900">{analyzer.scoreHeading}</h2>
                     <p className="mt-1 text-sm text-stone-500">{reportMetaSummary(m, report)}</p>
+                    {delta && (
+                      <p className={`mt-1 text-sm font-medium ${delta.change > 0 ? 'text-emerald-700' : delta.change < 0 ? 'text-rose-700' : 'text-stone-500'}`}>
+                        {delta.change > 0 ? analyzer.delta.up(delta.change, delta.previous) : delta.change < 0 ? analyzer.delta.down(-delta.change, delta.previous) : analyzer.delta.same(delta.previous)}
+                      </p>
+                    )}
                     <p className="mt-1 text-xs text-stone-500">{analyzer.estimateNote}</p>
                   </div>
                 </div>
-                <div className="mt-4"><CategoryBreakdown report={report} /></div>
+                <div className="mt-4"><CategoryBreakdown report={report} deltas={delta?.categories} /></div>
               </div>
               <div className="min-w-0">
                 <div className="mb-2 flex items-center justify-between gap-3">

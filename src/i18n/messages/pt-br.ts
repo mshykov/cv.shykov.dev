@@ -122,6 +122,7 @@ export const ptBR: Messages = {
       noTracking: 'Sem rastreamento, sem envio de arquivo, sem cadastro.',
       openSource: 'Código aberto no GitHub',
       moreFrom: 'Mais do autor',
+      scoringChangelog: 'Histórico de mudanças da pontuação',
     },
     errorBoundary: {
       title: 'Algo deu errado',
@@ -159,6 +160,11 @@ export const ptBR: Messages = {
     copyDetails: 'Copiar detalhes',
     scoreHeading: 'Pontuação ATS',
     estimateNote: 'Uma estimativa de quão bem um analisador lê este arquivo, não uma previsão de decisão de contratação.',
+    delta: {
+      up: (n: number, previous: number) => `+${n} em relação ao arquivo anterior (${previous})`,
+      down: (n: number, previous: number) => `−${n} em relação ao arquivo anterior (${previous})`,
+      same: (previous: number) => `Mesma pontuação do arquivo anterior (${previous})`,
+    },
     network: {
       summary: 'Veja o que esta página enviou',
       ok: (n: number) => `Desde que você escolheu o arquivo, esta página fez ${n} requisições, todas para este mesmo site. Nenhuma foi para outro site e nenhuma foi fetch, XHR ou beacon.`,

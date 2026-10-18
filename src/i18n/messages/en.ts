@@ -135,6 +135,7 @@ export const en = {
       noTracking: 'No tracking, no uploads, no accounts.',
       openSource: 'Open source on GitHub',
       moreFrom: 'More from the author',
+      scoringChangelog: 'Scoring changelog',
     },
     errorBoundary: {
       title: 'Something went wrong',
@@ -174,6 +175,11 @@ export const en = {
     copyDetails: 'Copy details',
     scoreHeading: 'Fast ATS score',
     estimateNote: 'An estimate of how well a parser will read this file, not a prediction of a hiring decision.',
+    delta: {
+      up: (n: number, previous: number) => `+${n} since the previous file (${previous})`,
+      down: (n: number, previous: number) => `−${n} since the previous file (${previous})`,
+      same: (previous: number) => `Same score as the previous file (${previous})`,
+    },
     network: {
       summary: 'Check what this page sent',
       ok: (n: number) => `Since you chose the file, this page made ${n} requests, all to this site. None went to another site, and none was a fetch, XHR or beacon.`,

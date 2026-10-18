@@ -125,6 +125,7 @@ export const fr: Messages = {
       noTracking: 'Aucun suivi, aucun envoi, aucun compte.',
       openSource: 'Code source ouvert sur GitHub',
       moreFrom: 'Du même auteur',
+      scoringChangelog: 'Historique du score',
     },
     errorBoundary: {
       title: 'Une erreur est survenue',
@@ -168,6 +169,11 @@ export const fr: Messages = {
     copyDetails: 'Copier les détails',
     scoreHeading: 'Score ATS rapide',
     estimateNote: 'Une estimation de la façon dont un analyseur lira ce fichier, pas une prédiction d’une décision d’embauche.',
+    delta: {
+      up: (n: number, previous: number) => `+${n} par rapport au fichier précédent (${previous})`,
+      down: (n: number, previous: number) => `−${n} par rapport au fichier précédent (${previous})`,
+      same: (previous: number) => `Même score que le fichier précédent (${previous})`,
+    },
     network: {
       summary: 'Vérifiez ce que cette page a envoyé',
       ok: (n: number) => `Depuis que vous avez choisi le fichier, cette page a fait ${n} requêtes, toutes vers ce même site. Aucune n’est partie vers un autre site et aucune n’était un fetch, un XHR ou un beacon.`,

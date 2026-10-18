@@ -125,6 +125,7 @@ export const de: Messages = {
       noTracking: 'Kein Tracking, kein Upload, keine Konten.',
       openSource: 'Open Source auf GitHub',
       moreFrom: 'Vom selben Autor',
+      scoringChangelog: 'Änderungen am Scoring',
     },
     errorBoundary: {
       title: 'Etwas ist schiefgelaufen',
@@ -162,6 +163,11 @@ export const de: Messages = {
     copyDetails: 'Details kopieren',
     scoreHeading: 'Schneller ATS-Score',
     estimateNote: 'Eine Schätzung, wie gut ein Parser diese Datei lesen kann, keine Vorhersage einer Einstellungsentscheidung.',
+    delta: {
+      up: (n: number, previous: number) => `+${n} gegenüber der vorherigen Datei (${previous})`,
+      down: (n: number, previous: number) => `−${n} gegenüber der vorherigen Datei (${previous})`,
+      same: (previous: number) => `Gleicher Score wie bei der vorherigen Datei (${previous})`,
+    },
     network: {
       summary: 'Prüfen, was diese Seite gesendet hat',
       ok: (n: number) => `Seit Sie die Datei gewählt haben, hat diese Seite ${n} Anfragen gestellt, alle an diese Website. Keine ging an eine andere Website, und keine war ein Fetch, XHR oder Beacon.`,

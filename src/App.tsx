@@ -350,6 +350,8 @@ function AppBody() {
           <p className="mt-1 sm:mt-0">{m.home.footer.noTracking} <a href={REPO_URL} rel="noreferrer" target="_blank" className="font-medium text-stone-600 underline-offset-2 hover:underline">{m.home.footer.openSource}</a>.</p>
         </div>
         <nav aria-label={m.home.footer.moreFrom} className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <a href={`${REPO_URL}/blob/main/docs/scoring-changelog.md`} rel="noreferrer" target="_blank" className="font-medium text-stone-600 underline-offset-2 hover:underline">{m.home.footer.scoringChangelog}</a>
+          <span aria-hidden>·</span>
           <span>{m.home.footer.moreFrom}:</span>
           {SIBLINGS.map((s) => (
             <a key={s.name} href={s.href} className="font-medium text-stone-600 underline-offset-2 hover:underline">{s.name}</a>
