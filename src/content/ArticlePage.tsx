@@ -90,7 +90,7 @@ function Page({ article, links }: Readonly<{ article: Article; links: LanguageLi
   return (
     <div className="min-h-screen bg-paper">
       <SiteHeader current="guides" links={links} />
-      <main className="mx-auto max-w-3xl px-5 pb-20 pt-10 sm:px-8">
+      <main className="mx-auto max-w-3xl px-5 pb-20 pt-10 sm:px-8 lg:pt-[var(--first-gap)]">
         <Breadcrumbs title={article.title} />
         <article className="mt-8">
           <h1 className="text-[clamp(2.25rem,7vw,3.75rem)] font-bold leading-[1.04] tracking-[-0.04em]">{article.title}</h1>

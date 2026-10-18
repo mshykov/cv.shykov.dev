@@ -16,7 +16,7 @@ function Page({ links }: Readonly<{ links: LanguageLink[] }>) {
       <SiteHeader current="guides" links={links} />
       <div className="mx-auto max-w-300 px-5 pb-10 sm:px-8">
         <main>
-          <h1 className={`pb-8 pt-8 font-semibold leading-[0.92] tracking-[-0.055em] lg:pt-12 ${headlineSize(m.home.guides.heading)}`}>{m.home.guides.heading}</h1>
+          <h1 className={`pb-8 pt-8 font-semibold leading-[0.92] tracking-[-0.055em] lg:pt-[var(--first-gap)] ${headlineSize(m.home.guides.heading)}`}>{m.home.guides.heading}</h1>
           <p className="max-w-[34em] text-xl text-ink-2">{m.home.guides.description}</p>
           <ul className="mt-12 border-t-2 border-ink">
             {guides.map((a) => (

@@ -53,6 +53,10 @@ works and each page has its own title, canonical, hreflang and sitemap entry (`s
 `buildHead`/`guidesHead` in `src/i18n/head.ts`). The score report is not carried to another page.
 On phones the three links drop to a second row under the wordmark.
 
+Every page starts the same distance below the header: `--first-gap` (`index.css`) is the space that
+centres the score page's first screen (about 33 rem tall) in the window, never less than 2.5 rem,
+and the build, guides and article pages use the same value from 1024 px up.
+
 ## The Build view
 
 Same language, smaller scale: an H1 ("ATS-clean CV builder", `messages.builder.heading`), one

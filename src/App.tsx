@@ -64,7 +64,7 @@ function Hero({ busy, drag, onBrowse, onDrop, onDrag }: HeroProps) {
   const { home: { hero }, analyzer } = useMessages()
   return (
     <section
-      className="flex flex-col gap-10 pb-12 pt-8 lg:gap-12 lg:pt-12"
+      className="flex flex-col gap-10 pb-12 pt-8 lg:gap-12 lg:pt-[var(--first-gap)]"
       onDragOver={(e) => { e.preventDefault(); onDrag(true) }}
       onDragLeave={() => onDrag(false)}
       onDrop={(e) => {
@@ -145,7 +145,7 @@ function BuildPage() {
   const { home: { loading }, builder } = useMessages()
   return (
     <>
-      <h1 className={`pb-8 pt-8 lg:pt-12 font-semibold leading-[0.92] tracking-[-0.055em] sm:text-balance ${headlineSize(builder.heading)}`}>
+      <h1 className={`pb-8 pt-8 font-semibold lg:pt-[var(--first-gap)] leading-[0.92] tracking-[-0.055em] sm:text-balance ${headlineSize(builder.heading)}`}>
         {builder.heading.split(' ').map((word, i) => (
           // A short hyphenated word ("ATS-clean") must not break at its hyphen; a long one may.
           <span key={word} className={word.includes('-') && word.length <= 10 ? 'whitespace-nowrap' : undefined}>{i > 0 && ' '}{word}</span>
