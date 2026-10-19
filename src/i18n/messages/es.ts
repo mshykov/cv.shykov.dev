@@ -14,7 +14,7 @@ export const es: Messages = {
     ogTitle: 'Revisar CV ATS gratis: puntuación ATS de tu CV',
     ogDescription: 'Analizador de CV gratis: puntuación ATS al instante para PDF y DOCX. Solo en tu navegador, privado, sin subir archivos y sin LLM.',
     twitterDescription: 'Puntuación ATS inmediata para tu CV en PDF o DOCX. Se calcula en tu navegador, sin subir archivos y sin LLM.',
-    ogImageAlt: 'Puntuación ATS rápida. Privado por defecto. Funciona en tu navegador, sin subir archivos y sin llamadas a un LLM.',
+    ogImageAlt: 'Puntuación ATS gratis. Privado por defecto. Funciona en tu navegador, sin subir archivos y sin llamadas a un LLM.',
     appDescription: 'Un comprobador de CV ATS gratuito y privado, con comparación de palabras clave con la oferta de empleo y un creador de CV compatible con ATS que funciona en el navegador.',
     featureList: [
       'Puntuación ATS inmediata del CV',
@@ -34,7 +34,7 @@ export const es: Messages = {
   },
 
   og: {
-    headline: ['Puntuación ATS rápida.', 'Privado por defecto.'],
+    headline: ['Puntuación ATS gratis.', 'Privado por defecto.'],
     sub: ['Puntúa archivos PDF/DOCX en segundos.', 'Sin subidas, cuentas ni llamadas a LLM.'],
     chips: ['En tu navegador', 'Sin subidas', 'Sin LLM'],
   },

@@ -23,7 +23,7 @@ export const en = {
     ogTitle: 'Free CV ATS Score Checker',
     ogDescription: 'Free CV score checker: instant ATS score for PDF and DOCX. Browser-only, privacy-first, no uploads, no LLMs.',
     twitterDescription: 'Instant ATS resume score for PDF and DOCX files. Runs locally in your browser with no uploads and no LLMs.',
-    ogImageAlt: 'Fast ATS resume score. Private by default. Runs in your browser with no uploads and no LLM calls.',
+    ogImageAlt: 'Free ATS resume score. Private by default. Runs in your browser with no uploads and no LLM calls.',
     appDescription: 'A free, privacy-first CV ATS score checker (ATS resume checker), job-description keyword matcher, and ATS-clean CV builder that runs in the browser.',
     featureList: [
       'Instant ATS resume score',
@@ -45,7 +45,7 @@ export const en = {
 
   // Text drawn on the social-card image (scripts/og-images.mjs).
   og: {
-    headline: ['Fast ATS score.', 'Private by default.'],
+    headline: ['Free ATS score.', 'Private by default.'],
     sub: ['Score PDF/DOCX files in seconds.', 'No uploads, accounts, or LLM calls.'],
     chips: ['Runs in browser', 'No uploads', 'No LLM'],
   },

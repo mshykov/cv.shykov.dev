@@ -15,7 +15,7 @@ export const ptPT: Messages = {
     ogTitle: 'Verificador de CV ATS gratuito',
     ogDescription: 'Verificador de CV ATS gratuito: pontuação ATS imediata para PDF e DOCX. Só no navegador, privado, sem carregar ficheiros, sem LLM.',
     twitterDescription: 'Pontuação ATS imediata para CV em PDF e DOCX. Funciona localmente no navegador, sem carregar ficheiros e sem LLM.',
-    ogImageAlt: 'Pontuação ATS rápida do CV. Privado por defeito. Funciona no navegador, sem carregar ficheiros e sem chamadas a LLM.',
+    ogImageAlt: 'Pontuação ATS gratuita do CV. Privado por defeito. Funciona no navegador, sem carregar ficheiros e sem chamadas a LLM.',
     appDescription: 'Um verificador de CV ATS gratuito e centrado na privacidade, com comparação de palavras-chave de anúncios de emprego e um criador de CV compatível com ATS, tudo a funcionar no navegador.',
     featureList: [
       'Pontuação ATS imediata do CV',
@@ -35,7 +35,7 @@ export const ptPT: Messages = {
   },
 
   og: {
-    headline: ['Pontuação ATS rápida.', 'Privado por defeito.'],
+    headline: ['Pontuação ATS gratuita.', 'Privado por defeito.'],
     sub: ['Pontue ficheiros PDF/DOCX em segundos.', 'Sem carregamentos, contas nem LLM.'],
     chips: ['Corre no navegador', 'Sem carregar', 'Sem LLM'],
   },
