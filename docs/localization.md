@@ -153,8 +153,9 @@ the tests tell you what you missed.
    body, `summary`, `faq`; link to `/it/<slug>` and `/it/`; use `rubricRows` /
    `sectionRows` from `../tables.ts` with the new messages and `LangCode`).
 6. **`_headers`** — add the `/it/` and `/it/index.html` no-cache pair.
-7. **OG image fonts/text** — nothing to do unless the language needs a glyph the
-   card font lacks; then see `scripts/og-images.mjs`.
+7. **OG image fonts/text** — the card uses the site's self-hosted fonts (Schibsted
+   Grotesk for Latin, Onest for Cyrillic); a script with other glyphs needs a font file in
+   `src/fonts/` and an `@font-face` in `scripts/og-images.mjs`.
 8. **Generate the social card** — `npm run og-images` (needs Google Chrome), commit
    `public/og/it.png`.
 9. **Validate** — `npm run lint && npm test && npm run build && npm run smoke:build`.

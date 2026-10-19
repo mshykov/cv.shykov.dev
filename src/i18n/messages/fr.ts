@@ -16,7 +16,7 @@ export const fr: Messages = {
     ogTitle: 'Vérificateur de CV ATS gratuit',
     ogDescription: 'Vérificateur de CV ATS gratuit : score ATS instantané pour PDF et DOCX. Dans le navigateur, sans envoi de fichier, sans IA.',
     twitterDescription: 'Score ATS instantané pour votre CV en PDF ou DOCX. Tout se passe dans votre navigateur : aucun envoi, aucune IA.',
-    ogImageAlt: 'Score ATS rapide. Privé par défaut. Fonctionne dans votre navigateur, sans envoi de fichier ni appel à une IA.',
+    ogImageAlt: 'Score ATS gratuit. Privé par défaut. Fonctionne dans votre navigateur, sans envoi de fichier ni appel à une IA.',
     appDescription: 'Un vérificateur de score ATS de CV gratuit et respectueux de la vie privée, un outil de correspondance de mots-clés avec une offre d’emploi et un créateur de CV compatible ATS, qui fonctionnent dans le navigateur.',
     featureList: [
       'Score ATS du CV instantané',
@@ -36,12 +36,9 @@ export const fr: Messages = {
   },
 
   og: {
-    badge: 'Analyse du CV 100 % dans le navigateur',
-    headline: ['Score ATS en secondes.', 'Votre CV reste privé.'],
+    headline: ['Score ATS gratuit.', 'Votre CV reste privé.'],
     sub: ['Analysez vos PDF/DOCX en secondes.', 'Sans envoi, sans compte, sans IA.'],
     chips: ['Dans le navigateur', 'Sans envoi', 'Sans LLM'],
-    cardLabel: 'Dans le navigateur',
-    cardChips: ['Sans envoi', 'Sans LLM', 'PDF/DOCX'],
   },
 
   languages: {

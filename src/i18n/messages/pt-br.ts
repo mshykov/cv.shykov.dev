@@ -13,7 +13,7 @@ export const ptBR: Messages = {
     ogTitle: 'Verificador de Currículo ATS Grátis',
     ogDescription: 'Verificador de currículo ATS grátis: pontuação ATS na hora para PDF e DOCX. Roda no navegador, sem envio de arquivo e sem IA.',
     twitterDescription: 'Pontuação ATS do currículo na hora, para PDF e DOCX. Roda no seu navegador, sem envio de arquivo e sem IA.',
-    ogImageAlt: 'Pontuação ATS rápida do currículo. Privado por padrão. Roda no navegador, sem envio de arquivo e sem chamadas a LLM.',
+    ogImageAlt: 'Pontuação ATS grátis do currículo. Privado por padrão. Roda no navegador, sem envio de arquivo e sem chamadas a LLM.',
     appDescription: 'Um verificador de currículo ATS grátis e focado em privacidade, com comparação de palavras-chave da vaga e construtor de currículo compatível com ATS, tudo no navegador.',
     featureList: [
       'Pontuação ATS do currículo na hora',
@@ -33,12 +33,9 @@ export const ptBR: Messages = {
   },
 
   og: {
-    badge: 'Análise de currículo 100% no navegador',
     headline: ['Pontuação ATS grátis.', 'Privada por padrão.'],
     sub: ['Pontue PDF/DOCX em segundos.', 'Sem envio, cadastro ou LLM.'],
     chips: ['Roda no navegador', 'Sem envio', 'Sem LLM'],
-    cardLabel: 'No navegador',
-    cardChips: ['Sem envio', 'Sem LLM', 'PDF/DOCX'],
   },
 
   languages: {

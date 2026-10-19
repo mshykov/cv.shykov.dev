@@ -38,7 +38,7 @@ npm run build    # tsc + vite build (CI gate runs lint + test + build)
 npm run build:debug # same build with production source maps for stack traces
 npx vite preview --port 4319   # serves the prod build WITH the production CSP
 npm run indexnow -- --dry-run  # IndexNow payload; without --dry-run it SUBMITS (external write — owner approval)
-npm run og-images              # redraw public/og/<locale>.png from messages.og (needs Google Chrome)
+npm run og-images              # redraw public/og-image.png and public/og/<locale>.png from messages.og (needs Google Chrome)
 npm run smoke:build            # after build: every built page in every language (lang, hreflang, canonical, JSON-LD, dead links)
 ```
 

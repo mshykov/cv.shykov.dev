@@ -16,7 +16,7 @@ export const de: Messages = {
     ogTitle: 'Lebenslauf ATS Check kostenlos',
     ogDescription: 'Lebenslauf ATS Check kostenlos: sofortiger ATS-Score für PDF und DOCX. Nur im Browser, datensparsam, ohne Upload, ohne LLM.',
     twitterDescription: 'Sofortiger ATS-Score für Ihren Lebenslauf als PDF oder DOCX. Läuft lokal in Ihrem Browser, ohne Upload und ohne LLM.',
-    ogImageAlt: 'Schneller ATS-Score für den Lebenslauf. Standardmäßig privat. Läuft im Browser, ohne Upload und ohne LLM-Aufrufe.',
+    ogImageAlt: 'Kostenloser ATS-Score für den Lebenslauf. Standardmäßig privat. Läuft im Browser, ohne Upload und ohne LLM-Aufrufe.',
     appDescription: 'Ein kostenloser, datensparsamer ATS-Check für den Lebenslauf (CV-Check), Keyword-Abgleich mit der Stellenanzeige und Editor für ATS-taugliche Lebensläufe, der im Browser läuft.',
     featureList: [
       'Sofortiger ATS-Score für den Lebenslauf',
@@ -36,12 +36,9 @@ export const de: Messages = {
   },
 
   og: {
-    badge: '100 % Lebenslauf-Analyse im Browser',
-    headline: ['Lebenslauf ATS Check.', 'Privat im Browser.'],
+    headline: ['Kostenloser ATS-Score.', 'Privat im Browser.'],
     sub: ['PDF/DOCX in Sekunden prüfen.', 'Kein Upload, kein Konto, keine KI.'],
     chips: ['Läuft im Browser', 'Kein Upload', 'Kein LLM'],
-    cardLabel: 'Im Browser',
-    cardChips: ['Kein Upload', 'Kein LLM', 'PDF/DOCX'],
   },
 
   languages: {
